@@ -20,7 +20,7 @@
 on:
   push:
     branches:
-      - master
+      - CD/backend/initial
   workflow_dispatch:
 
 env:
