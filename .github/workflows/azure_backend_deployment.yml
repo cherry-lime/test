@@ -27,7 +27,6 @@ jobs:
 
       - name: "Resolve Project Dependencies Using Npm"
         shell: bash
-        working-directory: ./advisor-backend
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           npm install
