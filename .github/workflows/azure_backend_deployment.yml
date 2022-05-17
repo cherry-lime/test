@@ -25,7 +25,6 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: TestINGAdvisorBackend    # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: './dist'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '16.x'                # set this to the node version to use
 
 permissions:
@@ -42,12 +41,10 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
 
-    - name: npm install, build, and test
+    - name: npm install
       working-directory: ./advisor-backend
       run: |
         npm install
-        npm run build --if-present
-        npm run test --if-present
         
     - name: Zip artifact for deployment
       run: zip ../backend.zip ./* -r
@@ -83,4 +80,3 @@ jobs:
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_BACKEND }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
