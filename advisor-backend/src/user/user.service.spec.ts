@@ -8,11 +8,11 @@ const moduleMocker = new ModuleMocker(global);
 // Mock users array
 const userArray = [
   {
-    user_id: '7db7a72e-327e-488a-9a99-3b0e0dac2f26',
+    user_id: 1,
     password_hash: 'fdsfdsfds',
   },
   {
-    user_id: '7db7a72e-327e-488a-9a99-3b0e0dac2f27',
+    user_id: 2,
     password_hash: 'fdsfdsdfdfdsdsfss',
   },
 ];
@@ -63,9 +63,7 @@ describe('UserService', () => {
 
   describe('getUsers', () => {
     it('Should return the found users', async () => {
-      expect(
-        userService.getUser('7db7a72e-327e-488a-9a99-3b0e0dac2f26')
-      ).resolves.toBe(aUser);
+      expect(userService.getUser(1)).resolves.toBe(aUser);
     });
   });
 });
