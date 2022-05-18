@@ -11,14 +11,16 @@ datasource db {
 }
 
 model User {
-  user_id                String                   @id @default(uuid()) @db.Uuid
-  password_hash          String?
+  user_id                Int                      @id @default(autoincrement())
+  username               String
+  password_hash          String
   role                   Role                     @default(USER)
   created_at             DateTime                 @default(now())
   updated_at             DateTime                 @updatedAt
   UserInTeam             UserInTeam[]
   AssessmentParticipants AssessmentParticipants[]
 
+  TeamInvite TeamInvite[]
   @@index([role])
 }
 
@@ -37,6 +39,7 @@ model Checkpoint {
 model PossibleAnswers {
   possible_answer_id                Int                                 @id @default(autoincrement())
   answer                            String
+  answer_weight                     Float
   disabled                          Boolean                             @default(false)
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 }
@@ -46,12 +49,14 @@ model Maturity {
   maturity_name  String
   maturity_order Int
   Checkpoint     Checkpoint[]
+  Feedback       Feedback[]
 }
 
 model Topic {
   topic_id          Int                 @id @default(autoincrement())
   topic_name        String
   CheckpointInTopic CheckpointInTopic[]
+  Feedback          Feedback[]
 }
 
 model CheckpointInTopic {
@@ -67,13 +72,24 @@ model Team {
   team_id    Int          @id @default(autoincrement())
   team_name  String
   UserInTeam UserInTeam[]
+  TeamInvite TeamInvite[]
+}
+
+model TeamInvite {
+  team_invite_id String   @id @default(uuid()) @db.Uuid()
+  Team           Team     @relation(fields: [team_id], references: [team_id])
+  team_id        Int
+  User           User     @relation(fields: [user_id], references: [user_id])
+  user_id        Int
+  created_at     DateTime @default(now())
 }
 
 model UserInTeam {
-  user    User   @relation(fields: [user_id], references: [user_id])
-  user_id String @db.Uuid
-  team    Team   @relation(fields: [team_id], references: [team_id])
-  team_id Int
+  user      User     @relation(fields: [user_id], references: [user_id])
+  user_id   Int
+  team      Team     @relation(fields: [team_id], references: [team_id])
+  team_id   Int
+  joined_at DateTime @default(now())
 
   @@id([user_id, team_id])
   @@index([team_id, user_id])
@@ -96,7 +112,7 @@ model Assessment {
 
 model AssessmentParticipants {
   User          User       @relation(fields: [user_id], references: [user_id])
-  user_id       String     @db.Uuid
+  user_id       Int
   Assessment    Assessment @relation(fields: [assessment_id], references: [assessment_id])
   assessment_id Int
   role          Role
@@ -106,31 +122,32 @@ model AssessmentParticipants {
 }
 
 model AssessmentTemplate {
-  template_id                  Int                            @id @default(autoincrement())
-  template_name                String
-  template_type                AssessmentType
-  Assessment                   Assessment[]
-  CategoryInTemplate           CategoryInTemplate[]
-  CheckpointInTemplateCategory CheckpointInTemplateCategory[]
-  SubAreaInTemplateCategory    SubAreaInTemplateCategory[]
+  template_id        Int                  @id @default(autoincrement())
+  template_name      String
+  template_type      AssessmentType
+  disabled           Boolean              @default(false)
+  Assessment         Assessment[]
+  CategoryInTemplate CategoryInTemplate[]
 }
 
 model Category {
-  category_id                  Int                            @id @default(autoincrement())
-  category_name                String
-  color                        Int
-  CategoryInTemplate           CategoryInTemplate[]
-  CheckpointInTemplateCategory CheckpointInTemplateCategory[]
-  SubAreaInTemplateCategory    SubAreaInTemplateCategory[]
+  category_id        Int                  @id @default(autoincrement())
+  category_name      String
+  color              Int
+  CategoryInTemplate CategoryInTemplate[]
+  Feedback           Feedback[]
 }
 
 model CategoryInTemplate {
-  category    Category           @relation(fields: [category_id], references: [category_id])
-  category_id Int
-  template    AssessmentTemplate @relation(fields: [template_id], references: [template_id])
-  template_id Int
+  template_category_id         Int                            @id @default(autoincrement())
+  category                     Category                       @relation(fields: [category_id], references: [category_id])
+  category_id                  Int
+  template                     AssessmentTemplate             @relation(fields: [template_id], references: [template_id])
+  template_id                  Int
+  CheckpointInTemplateCategory CheckpointInTemplateCategory[]
 
-  @@id([template_id, category_id])
+  SubAreaInTemplateCategory SubAreaInTemplateCategory[]
+  @@index([template_id, category_id])
 }
 
 model SubArea {
@@ -142,25 +159,22 @@ model SubArea {
 }
 
 model CheckpointInTemplateCategory {
-  checkpoint    Checkpoint         @relation(fields: [checkpoint_id], references: [checkpoint_id])
-  checkpoint_id Int
-  template      AssessmentTemplate @relation(fields: [template_id], references: [template_id])
-  template_id   Int
-  category      Category           @relation(fields: [category_id], references: [category_id])
-  category_id   Int
+  CategoryInTemplate   CategoryInTemplate @relation(fields: [template_category_id], references: [template_category_id])
+  template_category_id Int
+  Checkpoint           Checkpoint         @relation(fields: [checkpoint_id], references: [checkpoint_id])
+  checkpoint_id        Int
 
-  @@id([template_id, category_id, checkpoint_id])
+
+  @@id([template_category_id, checkpoint_id])
 }
 
 model SubAreaInTemplateCategory {
-  subarea     SubArea            @relation(fields: [subarea_id], references: [subarea_id])
-  subarea_id  Int
-  template    AssessmentTemplate @relation(fields: [template_id], references: [template_id])
-  template_id Int
-  category    Category           @relation(fields: [category_id], references: [category_id])
-  category_id Int
+  CategoryInTemplate   CategoryInTemplate @relation(fields: [template_category_id], references: [template_category_id])
+  template_category_id Int
+  subarea              SubArea            @relation(fields: [subarea_id], references: [subarea_id])
+  subarea_id           Int
 
-  @@id([template_id, category_id, subarea_id])
+  @@id([template_category_id, subarea_id])
 }
 
 model CheckpointAndAnswersInAssessments {
@@ -172,6 +186,20 @@ model CheckpointAndAnswersInAssessments {
   possible_answer_id Int
 
   @@id([assessment_id, checkpoint_id])
+}
+
+model Feedback {
+  feedback_id   Int      @id @default(autoincrement())
+  feedback_name String
+  feedback_text String
+  Topic         Topic    @relation(fields: [topic_id], references: [topic_id])
+  topic_id      Int
+  Maturity      Maturity @relation(fields: [maturity_id], references: [maturity_id])
+  maturity_id   Int
+  answer_weight Float
+  Category      Category @relation(fields: [category_id], references: [category_id])
+  category_id   Int
+  weight_factor Int
 }
 
 enum AssessmentType {
