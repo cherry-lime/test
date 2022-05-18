@@ -9,3 +9,178 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  user_id                String                   @id @default(uuid()) @db.Uuid
+  password_hash          String?
+  role                   Role                     @default(USER)
+  created_at             DateTime                 @default(now())
+  updated_at             DateTime                 @updatedAt
+  UserInTeam             UserInTeam[]
+  AssessmentParticipants AssessmentParticipants[]
+
+  @@index([role])
+}
+
+model Checkpoint {
+  checkpoint_id                     Int                                 @id @default(autoincrement())
+  checkpoint_name                   String
+  checkpoint_description            String
+  weight                            Int
+  Maturity                          Maturity                            @relation(fields: [maturity_id], references: [maturity_id])
+  maturity_id                       Int
+  CheckpointInTopic                 CheckpointInTopic[]
+  CheckpointInTemplateCategory      CheckpointInTemplateCategory[]
+  CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+}
+
+model PossibleAnswers {
+  possible_answer_id                Int                                 @id @default(autoincrement())
+  answer                            String
+  disabled                          Boolean                             @default(false)
+  CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+}
+
+model Maturity {
+  maturity_id    Int          @id @default(autoincrement())
+  maturity_name  String
+  maturity_order Int
+  Checkpoint     Checkpoint[]
+}
+
+model Topic {
+  topic_id          Int                 @id @default(autoincrement())
+  topic_name        String
+  CheckpointInTopic CheckpointInTopic[]
+}
+
+model CheckpointInTopic {
+  checkpoint    Checkpoint @relation(fields: [checkpoint_id], references: [checkpoint_id])
+  checkpoint_id Int
+  topic         Topic      @relation(fields: [topic_id], references: [topic_id])
+  topic_id      Int
+
+  @@id([topic_id, checkpoint_id])
+}
+
+model Team {
+  team_id    Int          @id @default(autoincrement())
+  team_name  String
+  UserInTeam UserInTeam[]
+}
+
+model UserInTeam {
+  user    User   @relation(fields: [user_id], references: [user_id])
+  user_id String @db.Uuid
+  team    Team   @relation(fields: [team_id], references: [team_id])
+  team_id Int
+
+  @@id([user_id, team_id])
+  @@index([team_id, user_id])
+}
+
+model Assessment {
+  assessment_id                     Int                                 @id @default(autoincrement())
+  assessment_name                   String
+  country_name                      String
+  department_name                   String
+  created_at                        DateTime                            @default(now())
+  updated_at                        DateTime                            @updatedAt
+  completed_at                      DateTime
+  assessment_type                   AssessmentType
+  template                          AssessmentTemplate                  @relation(fields: [template_id], references: [template_id])
+  template_id                       Int
+  AssessmentParticipants            AssessmentParticipants[]
+  CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+}
+
+model AssessmentParticipants {
+  User          User       @relation(fields: [user_id], references: [user_id])
+  user_id       String     @db.Uuid
+  Assessment    Assessment @relation(fields: [assessment_id], references: [assessment_id])
+  assessment_id Int
+  role          Role
+
+  @@id([user_id, assessment_id])
+  @@index([assessment_id, user_id])
+}
+
+model AssessmentTemplate {
+  template_id                  Int                            @id @default(autoincrement())
+  template_name                String
+  template_type                AssessmentType
+  Assessment                   Assessment[]
+  CategoryInTemplate           CategoryInTemplate[]
+  CheckpointInTemplateCategory CheckpointInTemplateCategory[]
+  SubAreaInTemplateCategory    SubAreaInTemplateCategory[]
+}
+
+model Category {
+  category_id                  Int                            @id @default(autoincrement())
+  category_name                String
+  color                        Int
+  CategoryInTemplate           CategoryInTemplate[]
+  CheckpointInTemplateCategory CheckpointInTemplateCategory[]
+  SubAreaInTemplateCategory    SubAreaInTemplateCategory[]
+}
+
+model CategoryInTemplate {
+  category    Category           @relation(fields: [category_id], references: [category_id])
+  category_id Int
+  template    AssessmentTemplate @relation(fields: [template_id], references: [template_id])
+  template_id Int
+
+  @@id([template_id, category_id])
+}
+
+model SubArea {
+  subarea_id                Int                         @id @default(autoincrement())
+  subarea_name              String
+  subarea_summary           String
+  subarea_description       String
+  SubAreaInTemplateCategory SubAreaInTemplateCategory[]
+}
+
+model CheckpointInTemplateCategory {
+  checkpoint    Checkpoint         @relation(fields: [checkpoint_id], references: [checkpoint_id])
+  checkpoint_id Int
+  template      AssessmentTemplate @relation(fields: [template_id], references: [template_id])
+  template_id   Int
+  category      Category           @relation(fields: [category_id], references: [category_id])
+  category_id   Int
+
+  @@id([template_id, category_id, checkpoint_id])
+}
+
+model SubAreaInTemplateCategory {
+  subarea     SubArea            @relation(fields: [subarea_id], references: [subarea_id])
+  subarea_id  Int
+  template    AssessmentTemplate @relation(fields: [template_id], references: [template_id])
+  template_id Int
+  category    Category           @relation(fields: [category_id], references: [category_id])
+  category_id Int
+
+  @@id([template_id, category_id, subarea_id])
+}
+
+model CheckpointAndAnswersInAssessments {
+  assessment         Assessment      @relation(fields: [assessment_id], references: [assessment_id])
+  assessment_id      Int
+  checkpoint         Checkpoint      @relation(fields: [checkpoint_id], references: [checkpoint_id])
+  checkpoint_id      Int
+  answer             PossibleAnswers @relation(fields: [possible_answer_id], references: [possible_answer_id])
+  possible_answer_id Int
+
+  @@id([assessment_id, checkpoint_id])
+}
+
+enum AssessmentType {
+  INDIVIDUAL
+  TEAM
+}
+
+enum Role {
+  USER
+  ASSESSOR
+  ADMIN
+}
