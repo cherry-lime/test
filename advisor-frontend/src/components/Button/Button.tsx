@@ -1,16 +1,21 @@
-import React from 'react';
 import './Button.css';
 
 type Message = {
 	name: string;
-  };
-  
-  export const Button = ({ 
+};
+
+export const Button = ({ 
 	name
-  }: Message) => {
+}: Message) => {
+	
+	const handleClick = () => {
+		console.log(`Hello ${name}`);
+	};
+	
 	return (
-	  <div data-testid = "Button" className = "Button-style">
-		  <p>{name}</p>
-	  </div>
-	);
-  };
+		<button data-testid = "Button" className = "Button-style" onClick={handleClick}>
+			{name}
+		</button>
+		);
+	};
+	
