@@ -1,18 +1,17 @@
-import React from 'react';
 import {Button} from '../Button';
-import { render, cleanup } from '@testing-library/react';
-import { createRoot } from 'react-dom/client';
-import {act} from 'react-dom/test-utils';
+import { render, cleanup, screen, fireEvent } from '@testing-library/react';
 
 afterEach(cleanup);
 
 it("rendering without crash", () => {
-	const div = document.createElement("div");
-	act(() => {
-		const root = createRoot(div!);
-		root.render(<Button name = "ClickButton"></Button>);
-	});
-	const {getByTestId} = render(<Button name = "ClickButton"></Button>)
-	expect(getByTestId('Button')).toHaveTextContent("ClickButton") // the correct one
+	render(<Button name = "ClickButton"></Button>)
+	expect(screen.getByTestId('Button')).toHaveTextContent("ClickButton") // the correct one
 	//expect(getByTestId('Button')).toHaveTextContent("ClickButton2") // on purpose created an error
+})
+
+it('Prints the message to console', () => {
+	render(<Button name = "ClickButton"></Button>)
+	const button = screen.getByTestId('Button');
+	fireEvent.click(button)
+	expect(button).toHaveTextContent("Hello ClickButton");
 })
