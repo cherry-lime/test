@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
@@ -10,7 +10,11 @@ export class UserService {
    * @param uuid uuid of user
    * @returns user object corresponding to userid, null if not found
    */
-  async getUser(uuid: string) {
-    return;
+  async getUser(uuid: string): Promise<any> {
+    return await this.prisma.user.findFirst({
+      where: {
+        user_id: uuid,
+      },
+    });
   }
 }
