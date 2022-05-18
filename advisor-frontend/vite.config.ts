@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 import react from "@vitejs/plugin-react";
 
@@ -10,4 +10,11 @@ export default defineConfig({
     outDir: "build",
   },
   plugins: [reactRefresh(), react()],
+  test: {
+    globals: true,
+
+    environment: "jsdom",
+
+    setupFiles: "./src/setupTests.ts",
+  },
 });
