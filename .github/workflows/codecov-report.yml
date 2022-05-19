@@ -37,9 +37,11 @@ jobs:
       with:
         flags: frontend
         files: ./advisor-frontend/coverage/coverage-final.json
+        token: ${{ secrets.CODECOV_TOKEN }}
         
     - name: Backend - Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
         flags: backend
         files: ./advisor-backend/coverage/coverage-final.json
+        token: ${{ secrets.CODECOV_TOKEN }}
