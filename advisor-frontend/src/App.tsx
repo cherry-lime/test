@@ -1,8 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Greetings } from './components/SampleText/SampleText';
-import { Button } from './components/Button/Button';
+import Greetings from './components/SampleText/SampleText';
+import Button from './components/Button/Button';
 
 function App() {
   return (
