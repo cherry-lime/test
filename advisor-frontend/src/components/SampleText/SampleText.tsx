@@ -1,13 +1,17 @@
-type Message = {
-	name: string;
-  };
-  
-  export const Greetings = ({ 
-	name
-  }: Message) => {
-	return (
-	  <div>
-		<p>Hello {name}!</p>
-	  </div>
-	);
-  };
+type Message = { name: string; };
+
+function Greetings({
+  name,
+}: Message) {
+  return (
+    <div>
+      <p>
+        Hello
+        {name}
+        !
+      </p>
+    </div>
+  );
+}
+
+export default Greetings;
