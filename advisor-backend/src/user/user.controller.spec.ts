@@ -6,7 +6,7 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 const moduleMocker = new ModuleMocker(global);
 
 const mockUser = {
-  user_id: '7db7a72e-327e-488a-9a99-3b0e0dac2f26',
+  user_id: 1,
   password_hash: 'fdsfdsfds',
 };
 
@@ -45,9 +45,7 @@ describe('UserController', () => {
 
   describe('getUser', () => {
     it('Should return the found user', async () => {
-      expect(
-        userController.getUser('7db7a72e-327e-488a-9a99-3b0e0dac2f26')
-      ).resolves.toBe(mockUser);
+      expect(userController.getUser(1)).resolves.toBe(mockUser);
     });
   });
 });
