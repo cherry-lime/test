@@ -1,4 +1,4 @@
-# .husky/pre-commit
+# .husky/pre-push
 # ...
 cd advisor-frontend
 npm run test && npm run build
