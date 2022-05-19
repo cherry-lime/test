@@ -1,0 +1,43 @@
+name: Coverage report upload
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Test frontend
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Node.js version
+      uses: actions/setup-node@v1
+      with:
+        node-version: "16.x"
+    - name: Frontend - npm install
+      working-directory: advisor-frontend
+      run: |
+          npm install
+          
+    - name: Frontend - Run tests and collect coverage
+      run: |
+          npm run coverage
+          
+    - name: Backend - npm install
+      working-directory: advisor-backend
+      run: |
+          npm install
+    
+    - name: Backend - Run tests and collect coverage
+      run: |
+          npm run test:cov
+    
+    - name: Frontend - Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        flags: frontend
+        files: ./advisor-frontend/coverage/coverage-final.json
+        
+    - name: Backend - Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        flags: backend
+        files: ./advisor-backend/coverage/coverage-final.json
