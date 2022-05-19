@@ -3,11 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: [
-    "plugin:react/recommended",
-    "airbnb",
-    "plugin:@typescript-eslint/recommended",
-  ],
+  extends: ["plugin:react/recommended", "airbnb", "plugin:@typescript-eslint/recommended"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
@@ -37,6 +33,7 @@ module.exports = {
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
     "react/react-in-jsx-scope": "off",
+    "linebreak-style": 0,
     // Extras
     // "@typescript-eslint/explicit-function-return-type": [
     //   "error",
