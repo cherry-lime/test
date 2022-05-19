@@ -1,4 +1,4 @@
-# .husky/pre-push
-# ...
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 cd advisor-frontend
-npm run test && npm run build
+npm run test
