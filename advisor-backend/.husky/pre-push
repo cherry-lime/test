@@ -1,0 +1,4 @@
+# .husky/pre-commit
+# ...
+cd advisor-backend
+npm run test && npm run build
