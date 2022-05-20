@@ -31,10 +31,9 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
-      - name: print secrets
+      - name: Write secret to file
         run: |
           echo DATABASE_URL=$URL >> .env
-          cat src/.env
         working-directory: ./advisor-backend
         shell: bash
         env:
