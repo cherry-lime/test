@@ -24,6 +24,14 @@ jobs:
         with:
           node-version: "16.x"
 
+      - name: Write secret to file
+        run: |
+          echo DATABASE_URL=$URL >> .env
+        working-directory: ./advisor-backend
+        shell: bash
+        env:
+          URL: ${{ secrets.DATABASE_URL }}
+
       - name: npm install, build, and test
         working-directory: ./advisor-backend
         run: |
@@ -31,20 +39,10 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
-      - name: Write secret to file
-        run: |
-          echo DATABASE_URL=$URL >> .env
-        working-directory: ./advisor-backend
-        shell: bash
-        id: wait-for-secrets
-        env:
-          URL: ${{ secrets.DATABASE_URL }}
-
       - name: Push Prisma migration to database
         working-directory: ./advisor-backend
         run: |
           npx prisma db push
-        if: steps.wait-for-secrets.outputs.conclusion == 'success'
 
       - name: Zip artifact for deployment
         run: zip ../backend.zip ./* -x node_modules -r
