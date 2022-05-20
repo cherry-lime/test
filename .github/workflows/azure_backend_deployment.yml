@@ -38,7 +38,7 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: node-app
+          name: node-app-backend
           path: ./backend.zip
 
   deploy:
@@ -52,7 +52,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: node-app
+          name: node-app-backend
 
       - name: unzip artifact for deployment
         run: unzip backend.zip
@@ -64,4 +64,3 @@ jobs:
           app-name: "TABackend"
           slot-name: "Production"
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_BACKEND }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
