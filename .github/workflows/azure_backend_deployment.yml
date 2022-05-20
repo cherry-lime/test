@@ -6,7 +6,7 @@ name: Build and Deploy Backend
 on:
   push:
     branches:
-      - CD/backend/initial
+      - master
   workflow_dispatch:
 
 env:
