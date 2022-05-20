@@ -27,7 +27,6 @@ jobs:
       - name: Write secret to file
         run: |
           echo DATABASE_URL=$URL >> .env
-          cat .env
         working-directory: ./advisor-backend
         shell: bash
         env:
