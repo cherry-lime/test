@@ -1,11 +1,9 @@
-import { useState } from 'react';
-import './Button.css';
+import { useState } from "react";
+import "./Button.css";
 
-type Message = { name: string; };
+type Message = { name: string };
 
-function Button({
-  name,
-}: Message) {
+function Button({ name }: Message) {
   const [text, setText] = useState(name);
 
   const handleClick = () => {
@@ -13,7 +11,12 @@ function Button({
   };
 
   return (
-    <button type="button" data-testid="Button" className="Button-style" onClick={handleClick}>
+    <button
+      type="button"
+      data-testid="Button"
+      className="Button-style"
+      onClick={handleClick}
+    >
       {text}
     </button>
   );

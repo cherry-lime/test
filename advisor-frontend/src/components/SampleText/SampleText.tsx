@@ -1,14 +1,11 @@
-type Message = { name: string; };
+type Message = { name: string };
 
-function Greetings({
-  name,
-}: Message) {
+function Greetings({ name }: Message) {
   return (
     <div>
       <p>
         Hello
-        {name}
-        !
+        {name}!
       </p>
     </div>
   );
