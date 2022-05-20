@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ["plugin:react/recommended", "airbnb", "plugin:@typescript-eslint/recommended", "prettier"], // Prettier must be last in the array to override other configs
+  extends: ["plugin:react/recommended", "airbnb", "plugin:@typescript-eslint/recommended", "plugin:import/typescript", "prettier"], // Prettier must be last in the array to override other configs
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
@@ -34,6 +34,15 @@ module.exports = {
     "@typescript-eslint/no-shadow": ["error"],
     "react/react-in-jsx-scope": "off",
     "linebreak-style": 0,
+    "max-lines": ["error", 400],
+    "complexity": ["error", 20],
+    "max-classes-per-file": ["error", 20],
+    "import/no-cycle": [
+      "error",
+      {
+        // "ignoreExternal": true // prevent the cycle detection to expand to external modules
+      }
+    ]
     // Extras
     // "@typescript-eslint/explicit-function-return-type": [
     //   "error",
