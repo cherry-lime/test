@@ -36,6 +36,7 @@ jobs:
           echo DATABASE_URL=$URL >> .env
         working-directory: ./advisor-backend
         shell: bash
+        id: wait-for-secrets
         env:
           URL: ${{ secrets.DATABASE_URL }}
 
@@ -43,6 +44,7 @@ jobs:
         working-directory: ./advisor-backend
         run: |
           npx prisma db push
+        if: steps.wait-for-secrets.outputs.conclusion == 'success'
 
       - name: Zip artifact for deployment
         run: zip ../backend.zip ./* -x node_modules -r
