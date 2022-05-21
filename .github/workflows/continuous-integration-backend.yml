@@ -1,0 +1,38 @@
+name: Automated testing of code quality/correctness/style (backend)
+
+on:
+  push:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  running-checks:
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js version
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+        
+    - name: npm install, build, and test
+      working-directory: ./advisor-backend
+      run: |
+       npm install
+       npm run build --if-present
+       npm run test --if-present
+       npm run test:watch --if-present
+       npm run test:cov --if-present
+       npm run test:debug --if-present
+       npm run test:e2e --if-present
+         
+    - name: test code quality (ESLint)
+      working-directory: ./advisor-backend
+      run: npm run lint
+     
+    - name: stylize code (Prettier)
+      working-directory: ./advisor-backend
+      run: npx prettier --check \"src/**/*.ts\" \"test/**/*.ts\""
