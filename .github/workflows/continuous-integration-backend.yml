@@ -26,4 +26,4 @@ jobs:
      
     - name: stylize code (Prettier)
       working-directory: ./advisor-backend
-      run: npx prettier --check \"src/**/*.ts\" \"test/**/*.ts\""
+      run: npx prettier --check \"src/**/*.ts\" \"test/**/*.ts\"
