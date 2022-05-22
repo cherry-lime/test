@@ -27,8 +27,8 @@ jobs:
          
     - name: test code quality (ESLint)
       working-directory: ./advisor-frontend
-      run: npx eslint "./src/**/*.{ts,tsx,js,jsx}"
+      run: npm run lint
      
     - name: stylize code (Prettier)
       working-directory: ./advisor-frontend
-      run: npx prettier --check "./src/**/*.{ts,tsx,js,jsx}"
+      run: npm run prettier-check

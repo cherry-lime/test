@@ -33,7 +33,7 @@ jobs:
 
       - name: test code quality (ESLint)
         working-directory: ./advisor-frontend
-        run: npx eslint "./src/**/*.{ts,tsx,js,jsx}"
+        run: npm run lint
 
       - name: Zip artifact for deployment
         run: zip ../frontend.zip ./* -r
