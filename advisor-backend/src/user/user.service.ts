@@ -59,15 +59,15 @@ export class UserService {
     }
 
   /**
-   * Get user object by uuid
-   * @param uuid uuid of user
-   * @returns user object corresponding to userid, null if not found
+   * Get user object by id
+   * @param id id of user
+   * @returns user object corresponding to user_id, null if not found
    */
-  // async getUser(uuid: string): Promise<any> {
-  //   return await this.prisma.user.findFirst({
-  //     where: {
-  //       user_id: uuid,
-  //     },
-  //   });
-  // }
+//   async getUser(id: number): Promise<any> {
+//     return await this.prisma.user.findFirst({
+//       where: {
+//         user_id: id,
+//       },
+//     });
+//   }
 }
