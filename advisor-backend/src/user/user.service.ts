@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './../auth/dto/register-user.dto';
 import { User } from '.prisma/client';
+// import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -34,12 +35,15 @@ export class UserService {
             throw new ConflictException('username already exists');
         }
 
-        const hashedPassword = await bcrypt.hash(data.password_hash, 10);
+        // const hashedPassword = await bcrypt.hash(data.password_hash, 10);
+        // const uuid_pass = prismaService.user.
+        // const uuid_pass: User = await prismaService.user({ email: 'ada@prisma.io' })
 
         const user = await this.prismaService.user.create({
             data: {
-                ...data,
-                password_hash: hashedPassword
+                ...data
+                // username: data.username
+                // password_hash: hashedPassword
             }
         });
 
