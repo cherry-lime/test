@@ -1,4 +1,4 @@
-import {Button} from '../Button';
+import { Button } from '../Button';
 import { render, cleanup, screen, fireEvent } from '@testing-library/react';
 
 afterEach(cleanup);
@@ -9,7 +9,7 @@ it("rendering without crash", () => {
 	//expect(getByTestId('Button')).toHaveTextContent("ClickButton2") // on purpose created an error
 })
 
-it('Prints the message to console', () => {
+it('Correctly change text on button on click', () => {
 	render(<Button name = "ClickButton"></Button>)
 	const button = screen.getByTestId('Button');
 	fireEvent.click(button)

@@ -1,13 +1,13 @@
 type Message = {
 	name: string;
-  };
-  
-  export const Greetings = ({ 
+};
+
+export const Greetings = ({ 
 	name
-  }: Message) => {
+}: Message) => {
 	return (
-	  <div>
-		<p>Hello {name}!</p>
-	  </div>
-	);
-  };
+		<div>
+			<p>Hello {name}!</p>
+		</div>
+		);
+	};
