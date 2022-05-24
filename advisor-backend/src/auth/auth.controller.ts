@@ -9,23 +9,21 @@ import { CreateUserDto } from './dto/register-user.dto';
 
 @Controller('auth')
 export class AuthController {
+  constructor(private readonly authService: AuthService) {}
 
-    constructor(private readonly authService:AuthService) { } 
+  @Post('/login')
+  login(@Body() loginDto: LoginDto): Promise<AuthResponse> {
+    return this.authService.login(loginDto);
+  }
 
-    @Post('/login')
-    login(@Body() loginDto:LoginDto): Promise<AuthResponse> {
-        return this.authService.login(loginDto);
-    }
+  @Post('/register')
+  register(@Body() createUserDto: CreateUserDto): Promise<AuthResponse> {
+    return this.authService.register(createUserDto);
+  }
 
-    @Post('/register')
-    register(@Body() createUserDto:CreateUserDto): Promise<AuthResponse> {
-        return this.authService.register(createUserDto);
-    }
-   
-    @UseGuards(AuthGuard('jwt'))
-    @Get('/profile')
-    getLoggedUser(@AuthUser() user: User): User {
-        return user;
-    }
-
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/profile')
+  getLoggedUser(@AuthUser() user: User): User {
+    return user;
+  }
 }
