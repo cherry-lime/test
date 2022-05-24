@@ -3,13 +3,13 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login-user.dto';
 import { JwtService } from '../../node_modules/@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { AuthResponse } from './dto/auth-response.dto';
 import { CreateUserDto } from './dto/register-user.dto';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
