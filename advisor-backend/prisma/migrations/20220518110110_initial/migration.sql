@@ -7,7 +7,6 @@ CREATE TYPE "Role" AS ENUM ('USER', 'ASSESSOR', 'ADMIN');
 -- CreateTable
 CREATE TABLE "User" (
     "user_id" UUID NOT NULL,
-    "password_hash" TEXT,
     "role" "Role" NOT NULL DEFAULT E'USER',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,

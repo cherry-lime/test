@@ -14,7 +14,7 @@ export class AuthService {
     constructor(private readonly prismaService: PrismaService, private jwtService: JwtService, private readonly usersService: UserService) { }
 
     async login(loginDto:LoginDto): Promise<AuthResponse> {
-        const { username, password_hash } = loginDto;
+        const { username } = loginDto;
 
         const user = await this.prismaService.user.findUnique({
             where: { username }
@@ -24,10 +24,10 @@ export class AuthService {
             throw new NotFoundException('user not found');
         }
 
-        const validatePassword = await bcrypt.compare(password_hash, user.password_hash);
+        // const validatePassword = await bcrypt.compare(username, user.username);
 
-        if (!validatePassword) {
-            throw new UnauthorizedException('invalid password');
+        if (username != user.username) {
+            throw new UnauthorizedException('invalid username'); //password
         }
 
         return {

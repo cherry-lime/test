@@ -4,7 +4,7 @@ import { User } from ".prisma/client";
 const AuthUser = createParamDecorator((_, ctx: ExecutionContext)=>{
     const request = ctx.switchToHttp().getRequest();
     const user = request.user as User;
-    delete user.password_hash;
+    // delete user.username;
     return user;
 })
 

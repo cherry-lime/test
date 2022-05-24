@@ -9,10 +9,6 @@ export class CreateUserDto {
     @Length(1, 10)
     username: string;
 
-    @IsString()
-    @Length(6, 12)
-    password_hash: string;
-
     @Length(5, 10)
     role : Role;
 }
