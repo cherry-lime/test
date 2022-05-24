@@ -74,6 +74,7 @@ ALTER TABLE "User" DROP CONSTRAINT "User_pkey",
 ADD COLUMN     "username" TEXT NOT NULL,
 DROP COLUMN "user_id",
 ADD COLUMN     "user_id" SERIAL NOT NULL,
+ALTER COLUMN "password_hash" SET NOT NULL,
 ADD CONSTRAINT "User_pkey" PRIMARY KEY ("user_id");
 
 -- AlterTable

@@ -18,7 +18,7 @@ export class UserService {
             throw new NotFoundException();
         }
 
-        // delete user.username;
+        delete user.password_hash;
         return user;
 
     }
@@ -42,19 +42,19 @@ export class UserService {
         });
 
         if(existing_username) {
-            throw new ConflictException('username already exists');
+            throw new ConflictException('user_id already exists');
         }
 
-        // const hashedPassword = await bcrypt.hash(data.username, 10);
+        const hashedPassword = await bcrypt.hash(data.password_hash, 10);
 
         const user = await this.prismaService.user.create({
             data: {
                 ...data,
-                username: data.username
+                password_hash: hashedPassword
             }
         });
 
-        // delete user.username;
+        delete user.password_hash;
         return user;
     }
 
