@@ -20,29 +20,18 @@ export class UserService {
 
         delete user.password_hash;
         return user;
-
     }
 
     async createUser(data: CreateUserDto): Promise<User> {
       
-        const existing_id = await this.prismaService.user.findUnique({
-            where: {
-                user_id: data.user_id
-            }
-        });
-
-        if(existing_id) {
-            throw new ConflictException('user_id already exists');
-        }
-
-        const existing_username = await this.prismaService.user.findUnique({
+        const existing = await this.prismaService.user.findUnique({
             where: {
                 username: data.username
             }
         });
 
-        if(existing_username) {
-            throw new ConflictException('user_id already exists');
+        if(existing) {
+            throw new ConflictException('username already exists');
         }
 
         const hashedPassword = await bcrypt.hash(data.password_hash, 10);
