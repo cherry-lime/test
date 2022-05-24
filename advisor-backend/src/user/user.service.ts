@@ -25,9 +25,26 @@ export class UserService {
 
     async createUser(data: CreateUserDto): Promise<User> {
       
+        // const hashedPassword = await bcrypt.hash(data.password_hash, 10);
+        // const uuid_pass = prismaService.user.
+        // const uuid_pass: User = await prismaService.user({ email: 'ada@prisma.io' })
+
+        // generate random usernames
+        var randomWords = require('random-words');
+        const new_username = randomWords({min: 2, max: 3, join: '_'});
+
         const existing = await this.prismaService.user.findUnique({
             where: {
-                username: data.username
+                username: new_username
+            }
+        });
+
+        const user = await this.prismaService.user.create({
+            data: {
+                ...data,
+                username:new_username,
+                // username: data.username
+                // password_hash: hashedPassword
             }
         });
 
@@ -35,20 +52,9 @@ export class UserService {
             throw new ConflictException('username already exists');
         }
 
-        // const hashedPassword = await bcrypt.hash(data.password_hash, 10);
-        // const uuid_pass = prismaService.user.
-        // const uuid_pass: User = await prismaService.user({ email: 'ada@prisma.io' })
-
-        const user = await this.prismaService.user.create({
-            data: {
-                ...data
-                // username: data.username
-                // password_hash: hashedPassword
-            }
-        });
-
         delete user.password_hash;
         return user;
+
     }
 
   /**

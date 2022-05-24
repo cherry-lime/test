@@ -2,10 +2,10 @@ import { Role } from '@prisma/client';
 import { IsString, Length } from 'class-validator';
 
 export class CreateUserDto {
-    @IsString()
-    @Length(1, 10)
-    username: string;
+    //@IsString()
+    //@Length(1, 10)
+    //username: string;
 
-    @Length(5, 10)
+    @Length(1, 10)
     role : Role;
 }
