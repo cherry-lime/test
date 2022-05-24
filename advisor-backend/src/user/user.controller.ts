@@ -10,8 +10,8 @@ export class UserController {
    * @param id user_id
    * @returns user object
    */
-//   @Get(':id')
-//   getUser(@Param('id', ParseIntPipe) id: number) {
-//     return this.userService.getUser(id);
-//   }
+  @Get(':id')
+  getUser(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.getUser(id);
+  }
 }

@@ -8,7 +8,11 @@ import { User } from '.prisma/client';
 @Injectable()
 export class UserService {
   constructor(private readonly prismaService:PrismaService) {}
-
+    /**
+     * Get user object by id
+     * @param user_id id of user
+     * @returns user object corresponding to user_id, NotFoundException if not found
+     */
     async getUser(user_id: number): Promise<User> {
 
         const user = await this.prismaService.user.findUnique({
