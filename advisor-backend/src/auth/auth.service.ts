@@ -6,7 +6,6 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login-user.dto';
 import { JwtService } from '../../node_modules/@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import { AuthResponse } from './dto/auth-response.dto';
 import { CreateUserDto } from './dto/register-user.dto';
 import { UserService } from '../user/user.service';

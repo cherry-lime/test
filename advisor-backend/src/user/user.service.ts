@@ -4,7 +4,6 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './../auth/dto/register-user.dto';
 import { User } from '.prisma/client';
 // import { PrismaClient } from '@prisma/client';
@@ -27,10 +26,6 @@ export class UserService {
   }
 
   async createUser(data: CreateUserDto): Promise<User> {
-    // const hashedPassword = await bcrypt.hash(data.password_hash, 10);
-    // const uuid_pass = prismaService.user.
-    // const uuid_pass: User = await prismaService.user({ email: 'ada@prisma.io' })
-
     // generate random usernames
     const randomWords = require('random-words');
     const new_username = randomWords({ min: 2, max: 3, join: '_' });
@@ -45,8 +40,6 @@ export class UserService {
       data: {
         ...data,
         username: new_username,
-        // username: data.username
-        // password_hash: hashedPassword
       },
     });
 
