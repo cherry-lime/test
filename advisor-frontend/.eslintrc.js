@@ -18,6 +18,7 @@ module.exports = {
       typescript: {},
     },
   },
+  ignorePatterns: ["src/react-app-env.d.ts"],
   rules: {
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"],
