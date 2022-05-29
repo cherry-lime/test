@@ -1,4 +1,10 @@
-import { Controller, Get, Param, ParseIntPipe,  UseGuards, } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
@@ -16,7 +22,7 @@ export class UserController {
    */
   @Get(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.ASSESSOR)
   getUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getUser(id);
   }
