@@ -47,6 +47,10 @@
     {
       "name": "subarea",
       "description": "Operations about subareas"
+    },
+    {
+      "name": "template",
+      "description": "Operations about templates"
     }
   ],
   "schemes": [
@@ -80,6 +84,9 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "OK"
+          },
           "405": {
             "description": "Invalid input"
           }
@@ -104,7 +111,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/CreatedUser"
             }
           }
         }
@@ -370,7 +377,48 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/Team"
+            }
+          },
+          "404": {
+            "description": "Team not found"
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
+    },
+    "/team/{team_id}/members": {
+      "get": {
+        "tags": [
+          "team"
+        ],
+        "summary": "Get members of team",
+        "description": "Only allowed by member of team or admin",
+        "operationId": "getTeamMembers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "The team id of the team.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
             }
           },
           "404": {
@@ -413,6 +461,41 @@
           },
           "404": {
             "description": "Team not found"
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
+    },
+    "/team/join/{invite_token}": {
+      "post": {
+        "tags": [
+          "team"
+        ],
+        "summary": "Join team with invite id",
+        "description": "",
+        "operationId": "JoinTeamByInvite",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "invite_token",
+            "in": "path",
+            "description": "Invite token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Invite token not found"
           }
         },
         "security": [
@@ -483,6 +566,54 @@
             "description": "checkpoint id to get checkpoint from",
             "required": true,
             "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TeamInvite"
+            }
+          },
+          "400": {
+            "description": "Invalid checkpoint id"
+          },
+          "404": {
+            "description": "Checkpoint not found"
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "checkpoint"
+        ],
+        "summary": "Update checkpoint by id",
+        "description": "",
+        "operationId": "updateCheckpoint",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "checkpoint_id",
+            "in": "path",
+            "description": "checkpoint id to update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "checkpoint",
+            "in": "body",
+            "description": "checkpoint information to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Checkpoint"
+            }
           }
         ],
         "responses": {
@@ -614,7 +745,7 @@
       }
     },
     "/assessment/update": {
-      "post": {
+      "put": {
         "tags": [
           "assessment"
         ],
@@ -794,6 +925,48 @@
             "testingadvisor_auth": []
           }
         ]
+      },
+      "put": {
+        "tags": [
+          "maturity"
+        ],
+        "summary": "Update maturity from id",
+        "description": "",
+        "operationId": "updateMaturity",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "maturity_id",
+            "description": "maturity_id to update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "maturity",
+            "description": "maturity data to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Maturity"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Maturity updated"
+          },
+          "404": {
+            "description": "Maturity not found"
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
       }
     },
     "/subarea/{subarea_id}": {
@@ -832,6 +1005,51 @@
             "testingadvisor_auth": []
           }
         ]
+      },
+      "put": {
+        "tags": [
+          "subarea"
+        ],
+        "summary": "Update subarea",
+        "description": "",
+        "operationId": "updateSubarea",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subarea_id",
+            "description": "subarea id to update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "Subarea",
+            "description": "Subarea data to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Subarea"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Subarea",
+            "schema": {
+              "$ref": "#/definitions/Subarea"
+            }
+          },
+          "404": {
+            "description": "Subarea not found"
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
       }
     }
   },
@@ -841,13 +1059,24 @@
     }
   },
   "definitions": {
-    "User": {
+    "CreatedUser": {
       "type": "object",
       "properties": {
         "username": {
           "type": "string"
         },
         "login_token": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "username": {
           "type": "string"
         },
         "role": {
@@ -878,6 +1107,17 @@
       "type": "object",
       "properties": {
         "teamName": {
+          "type": "string"
+        }
+      }
+    },
+    "Team": {
+      "type": "object",
+      "properties": {
+        "team_id": {
+          "type": "integer"
+        },
+        "team_name": {
           "type": "string"
         }
       }
