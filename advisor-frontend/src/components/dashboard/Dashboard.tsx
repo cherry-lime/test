@@ -19,6 +19,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import HomeIcon from '@mui/icons-material/Home';
+import { red } from '@mui/material/colors';
 
 import Deposits from './Deposits';
 import Orders from './Orders';
@@ -86,7 +87,13 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const mdTheme = createTheme();
+const mdTheme = createTheme({
+  palette: {
+    primary: {
+      main: red[500],
+    },
+  },
+});
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(true);
@@ -114,7 +121,7 @@ function DashboardContent() {
                 ...(open && { display: 'none' }),
               }}
             >
-              <HomeIcon />
+              <MenuIcon />
             </IconButton>
             <Typography
               component="h1"
@@ -123,7 +130,7 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              Home
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">

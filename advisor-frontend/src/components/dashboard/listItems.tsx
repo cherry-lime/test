@@ -9,38 +9,44 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
+import GroupsIcon from '@mui/icons-material/Groups';
+import SettingsIcon from '@mui/icons-material/Settings';
+
+
 
 export const mainListItems = (
   <React.Fragment>
     <ListItemButton>
       <ListItemIcon>
-        <DashboardIcon />
+        <HomeIcon />
       </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
+      <ListItemText primary="Home" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
-      <ListItemText primary="Reports" />
+      <ListItemText primary="Evaluations" />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <LayersIcon />
+        <GroupsIcon />
       </ListItemIcon>
-      <ListItemText primary="Integrations" />
+      <ListItemText primary="Teams" />
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <SettingsIcon />
+      </ListItemIcon>
+      <ListItemText primary="Settings" />
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <LogoutIcon />
+      </ListItemIcon>
+      <ListItemText primary="Sign Out" />
     </ListItemButton>
   </React.Fragment>
 );
