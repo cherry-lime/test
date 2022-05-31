@@ -3,14 +3,17 @@ import logo from "./logo.svg";
 import "./App.css";
 import Greetings from "./components/SampleText/SampleText";
 import Button from "./components/Button/Button";
+import ButtonRegular from "./components/ButtonRegular/ButtonRegular";
+import ButtonInverted from "./components/ButtonInverted/ButtonInverted";
+import Checkpoint from "./components/Checkpoint/Checkpoint";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        Hello World
-        <Greetings name="This is a test to test a component" />
-        <Button name="Buttontext" />
+        <ButtonRegular name = "Regular ING Bold"/>
+        <ButtonInverted name2 = "Inverted ING Bold"/>
+        <Checkpoint description = "Checkpoint Description"/>
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
