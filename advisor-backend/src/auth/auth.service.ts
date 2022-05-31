@@ -9,6 +9,7 @@ import { JwtService } from '../../node_modules/@nestjs/jwt';
 import { AuthResponse } from './dto/auth-response.dto';
 import { CreateUserDto } from './dto/register-user.dto';
 import { UserService } from '../user/user.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -29,9 +30,17 @@ export class AuthService {
       throw new NotFoundException('user not found');
     }
 
-    if (password_hash != user.password_hash) {
-      throw new UnauthorizedException('invalid password');
+    const new_hashed_password = await bcrypt.hash(user.password_hash, 10);
+
+    const validatePassword = await bcrypt.compare(password_hash, new_hashed_password);
+
+    if (!validatePassword) {
+        throw new UnauthorizedException('invalid password');
     }
+
+    // if (password_hash != user.password_hash) {
+    //   throw new UnauthorizedException('invalid password');
+    // }
 
     return {
       token: this.jwtService.sign({

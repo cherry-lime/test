@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';

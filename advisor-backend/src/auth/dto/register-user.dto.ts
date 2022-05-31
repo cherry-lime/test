@@ -1,8 +1,8 @@
 import { Role } from '@prisma/client';
-import { IsIn } from 'class-validator';
+import { IsIn, IsString, Length } from 'class-validator';
 
 export class CreateUserDto {
 
-  @IsIn([Role.ASSESSOR, Role.USER])
+  @IsIn([Role.USER, Role.ASSESSOR])
   roles: Role;
 }

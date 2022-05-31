@@ -1,5 +1,4 @@
-import { IsString } from 'class-validator';
-// import { IsUUID } from 'class-validator';
+import { IsString, IsUUID, Length } from 'class-validator';
 
 export class LoginDto {
   @IsString()

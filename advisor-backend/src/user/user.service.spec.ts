@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from './user.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
