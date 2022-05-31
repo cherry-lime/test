@@ -15,7 +15,7 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",
-    "vitest": "^0.12.6"
+    "vitest": "^0.13.0"
   },
   "scripts": {
     "start": "vite",
