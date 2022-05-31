@@ -6,6 +6,10 @@ Before running, make sure a database URL, a secret key JWT_SECRET and an expirat
 $ npm install prisma --save-dev
 $ npx prisma generate
 ```
+### When there is a change in the database schema:
+```
+$ npx prisma migrate dev 
+```
 
 ### Install the node modules:
 ```
@@ -21,7 +25,6 @@ $ npm i --save class-validator class-transformer
 
 $ npm install bcrypt 
 ```
-
 
 ### Run the web app:
 ```bash
