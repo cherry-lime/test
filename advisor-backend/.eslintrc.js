@@ -6,9 +6,15 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
+  settings: {
+    "import/resolver": {
+      typescript: {},
+    },
+  },
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
+    'plugin:import/recommended',
   ],
   root: true,
   env: {
@@ -21,5 +27,14 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    "max-lines": ["error", 400],
+    "complexity": ["error", 20],
+    "max-classes-per-file": ["error", 20],
+    "import/no-cycle": [
+      "error",
+      {
+        // "ignoreExternal": true // prevent the cycle detection to expand to external modules
+      }
+    ]
   },
 };
