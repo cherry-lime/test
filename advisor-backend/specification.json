@@ -51,6 +51,10 @@
     {
       "name": "template",
       "description": "Operations about templates"
+    },
+    {
+      "name": "category",
+      "description": "Operations about categories"
     }
   ],
   "schemes": [
@@ -343,7 +347,10 @@
         ],
         "responses": {
           "default": {
-            "description": "successful operation"
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Team"
+            }
           }
         },
         "security": [
@@ -419,44 +426,6 @@
               "items": {
                 "$ref": "#/definitions/User"
               }
-            }
-          },
-          "404": {
-            "description": "Team not found"
-          }
-        },
-        "security": [
-          {
-            "testingadvisor_auth": []
-          }
-        ]
-      }
-    },
-    "/team/{team_id}/invite": {
-      "post": {
-        "tags": [
-          "team"
-        ],
-        "summary": "Create invite for team",
-        "description": "This can only be done by an assessor",
-        "operationId": "createTeamInvite",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "team_id",
-            "in": "path",
-            "description": "The team id for which to create an invite.",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/TeamInvite"
             }
           },
           "404": {
@@ -889,6 +858,43 @@
         ]
       }
     },
+    "/maturity/create": {
+      "post": {
+        "tags": [
+          "maturity"
+        ],
+        "summary": "Create new maturity",
+        "description": "Only allowed by admins",
+        "operationId": "createMaturity",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Template id and maturity data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MaturityDTO"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Maturity with maturity_id",
+            "schema": {
+              "$ref": "#/definitions/Maturity"
+            }
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
+    },
     "/maturity/{maturity_id}": {
       "get": {
         "tags": [
@@ -931,7 +937,7 @@
           "maturity"
         ],
         "summary": "Update maturity from id",
-        "description": "",
+        "description": "Only allowed by Admins",
         "operationId": "updateMaturity",
         "parameters": [
           {
@@ -960,6 +966,40 @@
           },
           "404": {
             "description": "Maturity not found"
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
+    },
+    "/subarea/create": {
+      "post": {
+        "tags": [
+          "subarea"
+        ],
+        "summary": "Create new subarea",
+        "description": "Only allowed by admins",
+        "operationId": "createSubarea",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Category id and subarea data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SubareaDTO"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         },
         "security": [
@@ -1051,6 +1091,217 @@
           }
         ]
       }
+    },
+    "/category/create": {
+      "post": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Create new category",
+        "description": "Only allowed by admins",
+        "operationId": "createCategory",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Template id and category data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CategoryDTO"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
+    },
+    "/category/{category_id}": {
+      "get": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Get category from id",
+        "description": "",
+        "operationId": "getCategory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category_id",
+            "description": "category id to fetch",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Category",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Update category",
+        "description": "Only allowed by admins",
+        "operationId": "updateCategory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category_id",
+            "description": "category id to update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "Category",
+            "description": "Category data to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Category",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
+    },
+    "/template/create": {
+      "post": {
+        "tags": [
+          "template"
+        ],
+        "summary": "Create new template",
+        "description": "Only allowed by admins",
+        "operationId": "createTemplate",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Template"
+            }
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
+    },
+    "/template/{template_id}": {
+      "get": {
+        "tags": [
+          "template"
+        ],
+        "summary": "Get template from id",
+        "description": "",
+        "operationId": "getTemplate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "description": "Template id to fetch",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Template"
+            }
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "template"
+        ],
+        "summary": "update template from id",
+        "description": "Only allowed by admins",
+        "operationId": "updateTemplate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "description": "Template id to update",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Template"
+            }
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
     }
   },
   "securityDefinitions": {
@@ -1119,10 +1370,13 @@
         },
         "team_name": {
           "type": "string"
+        },
+        "invite_token": {
+          "type": "string"
         }
       }
     },
-    "CheckpointDTO": {
+    "CheckpointData": {
       "type": "object",
       "properties": {
         "checkpointName": {
@@ -1139,6 +1393,17 @@
         }
       }
     },
+    "CheckpointDTO": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer"
+        },
+        "checkpoint_data": {
+          "$ref": "#/definitions/CheckpointData"
+        }
+      }
+    },
     "Checkpoint": {
       "type": "object",
       "properties": {
@@ -1150,6 +1415,17 @@
         },
         "maturityId": {
           "type": "integer"
+        }
+      }
+    },
+    "MaturityDTO": {
+      "type": "object",
+      "properties": {
+        "template_id": {
+          "type": "integer"
+        },
+        "maturity_data": {
+          "$ref": "#/definitions/Maturity"
         }
       }
     },
@@ -1237,6 +1513,17 @@
         }
       }
     },
+    "SubareaDTO": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer"
+        },
+        "maturity_data": {
+          "$ref": "#/definitions/Subarea"
+        }
+      }
+    },
     "Subarea": {
       "type": "object",
       "properties": {
@@ -1251,6 +1538,57 @@
         },
         "subarea_description": {
           "type": "string"
+        }
+      }
+    },
+    "CategoryDTO": {
+      "type": "object",
+      "properties": {
+        "template_id": {
+          "type": "integer"
+        },
+        "maturity_data": {
+          "$ref": "#/definitions/Category"
+        }
+      }
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "category_name": {
+          "type": "string"
+        },
+        "category_color": {
+          "type": "integer"
+        }
+      }
+    },
+    "Template": {
+      "type": "object",
+      "properties": {
+        "template_id": {
+          "type": "integer"
+        },
+        "template_name": {
+          "type": "string"
+        },
+        "template_type": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "weight_range_min": {
+          "type": "integer"
+        },
+        "weight_range_max": {
+          "type": "integer"
+        },
+        "score_formula": {
+          "type": "string"
+        },
+        "include_no_answer": {
+          "type": "boolean"
         }
       }
     },
