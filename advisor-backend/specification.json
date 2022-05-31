@@ -88,7 +88,7 @@
           }
         ],
         "responses": {
-          "400": {
+          "200": {
             "description": "OK"
           },
           "405": {
@@ -122,7 +122,7 @@
       }
     },
     "/auth/logout": {
-      "post": {
+      "delete": {
         "tags": [
           "auth"
         ],
@@ -171,48 +171,6 @@
           },
           "400": {
             "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        },
-        "security": [
-          {
-            "testingadvisor_auth": []
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Updated user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "updateUser",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "name that need to be updated",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Updated user object",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid user supplied"
           },
           "404": {
             "description": "User not found"
@@ -474,7 +432,38 @@
         ]
       }
     },
-    "/checkpoints/create": {
+    "/category/{category_id}/checkpoint": {
+      "get": {
+        "tags": [
+          "checkpoint"
+        ],
+        "summary": "Get checkpoints in a category",
+        "description": "",
+        "operationId": "getCheckpointsInCategory",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category_id",
+            "description": "category_id to get checkpoints for",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of checkpoints",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Checkpoint"
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "checkpoint"
@@ -487,9 +476,16 @@
         ],
         "parameters": [
           {
+            "in": "path",
+            "name": "category_id",
+            "description": "category_id to create checkpoint in",
+            "required": true,
+            "type": "integer"
+          },
+          {
             "in": "body",
             "name": "body",
-            "description": "Created team object",
+            "description": "Checkpoint data",
             "required": true,
             "schema": {
               "$ref": "#/definitions/CheckpointDTO"
@@ -747,19 +743,19 @@
         ]
       }
     },
-    "/assessment/{assessment_id}/checkpoints": {
+    "/template/{template_id}/maturity": {
       "get": {
         "tags": [
-          "assessment"
+          "maturity"
         ],
-        "summary": "Get checkpoints in assessment",
-        "description": "Only allowed by users within the assessment",
-        "operationId": "getAssessmentCheckpoints",
+        "summary": "Get all maturities in assessment",
+        "description": "",
+        "operationId": "getMaturityInTemplate",
         "parameters": [
           {
             "in": "path",
-            "name": "assessment_id",
-            "description": "assessment to get report for",
+            "name": "template_id",
+            "description": "Template id to create maturity for",
             "required": true,
             "type": "integer"
           }
@@ -769,12 +765,49 @@
         ],
         "responses": {
           "200": {
-            "description": "Array of checkpoints",
+            "description": "List of maturities",
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/Checkpoint"
+                "$ref": "#/definitions/Maturity"
               }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "maturity"
+        ],
+        "summary": "Create new maturity",
+        "description": "Only allowed by admins",
+        "operationId": "createMaturity",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "description": "Template id to create maturity for",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "maturity data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MaturityDTO"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Maturity with maturity_id",
+            "schema": {
+              "$ref": "#/definitions/Maturity"
             }
           }
         },
@@ -848,43 +881,6 @@
               "items": {
                 "$ref": "#/definitions/Feedback"
               }
-            }
-          }
-        },
-        "security": [
-          {
-            "testingadvisor_auth": []
-          }
-        ]
-      }
-    },
-    "/maturity/create": {
-      "post": {
-        "tags": [
-          "maturity"
-        ],
-        "summary": "Create new maturity",
-        "description": "Only allowed by admins",
-        "operationId": "createMaturity",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Template id and maturity data",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/MaturityDTO"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Maturity with maturity_id",
-            "schema": {
-              "$ref": "#/definitions/Maturity"
             }
           }
         },
@@ -975,7 +971,38 @@
         ]
       }
     },
-    "/subarea/create": {
+    "/category/{category_id}/subarea": {
+      "get": {
+        "tags": [
+          "subarea"
+        ],
+        "summary": "Get all subareas in category",
+        "description": "Only for assessor and admin",
+        "operationId": "getSubareasInCategory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category_id",
+            "description": "category_id to create subarea in",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Subareas",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Subarea"
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "subarea"
@@ -985,9 +1012,16 @@
         "operationId": "createSubarea",
         "parameters": [
           {
+            "in": "path",
+            "name": "category_id",
+            "description": "category_id to create subarea in",
+            "required": true,
+            "type": "integer"
+          },
+          {
             "in": "body",
             "name": "body",
-            "description": "Category id and subarea data",
+            "description": "subarea data",
             "required": true,
             "schema": {
               "$ref": "#/definitions/SubareaDTO"
@@ -1092,7 +1126,38 @@
         ]
       }
     },
-    "/category/create": {
+    "/template/{template_id}/category": {
+      "get": {
+        "tags": [
+          "category"
+        ],
+        "summary": "Get all categories in template",
+        "description": "",
+        "operationId": "getCategoriesInTemplate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "description": "Template id to create category in",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of categories",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Category"
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "category"
@@ -1102,9 +1167,16 @@
         "operationId": "createCategory",
         "parameters": [
           {
+            "in": "path",
+            "name": "template_id",
+            "description": "Template id to create category in",
+            "required": true,
+            "type": "integer"
+          },
+          {
             "in": "body",
             "name": "body",
-            "description": "Template id and category data",
+            "description": "Category data",
             "required": true,
             "schema": {
               "$ref": "#/definitions/CategoryDTO"
@@ -1200,6 +1272,44 @@
           },
           "404": {
             "description": "Category not found"
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
+    },
+    "/category/{category_id}/checkpoints": {
+      "get": {
+        "tags": [
+          "checkpoint"
+        ],
+        "summary": "Get checkpoints in category",
+        "description": "",
+        "operationId": "getCategoryCheckpoints",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category_id",
+            "description": "category to get checkpoints",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of checkpoints",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Checkpoint"
+              }
+            }
           }
         },
         "security": [
@@ -1376,44 +1486,33 @@
         }
       }
     },
-    "CheckpointData": {
-      "type": "object",
-      "properties": {
-        "checkpointName": {
-          "type": "string"
-        },
-        "checkpointDescription": {
-          "type": "string"
-        },
-        "maturityId": {
-          "type": "integer"
-        },
-        "weight": {
-          "type": "integer"
-        }
-      }
-    },
     "CheckpointDTO": {
       "type": "object",
       "properties": {
-        "category_id": {
-          "type": "integer"
+        "checkpoint_name": {
+          "type": "string"
         },
-        "checkpoint_data": {
-          "$ref": "#/definitions/CheckpointData"
+        "checkpoint_description": {
+          "type": "string"
+        },
+        "maturity_id": {
+          "type": "integer"
         }
       }
     },
     "Checkpoint": {
       "type": "object",
       "properties": {
-        "checkpointName": {
+        "checkpoint_id": {
+          "type": "integer"
+        },
+        "checkpoint_name": {
           "type": "string"
         },
-        "checkpointDescription": {
+        "checkpoint_description": {
           "type": "string"
         },
-        "maturityId": {
+        "maturity_id": {
           "type": "integer"
         }
       }
@@ -1421,18 +1520,18 @@
     "MaturityDTO": {
       "type": "object",
       "properties": {
-        "template_id": {
-          "type": "integer"
+        "maturityName": {
+          "type": "string"
         },
-        "maturity_data": {
-          "$ref": "#/definitions/Maturity"
+        "maturity_order": {
+          "type": "integer"
         }
       }
     },
     "Maturity": {
       "type": "object",
       "properties": {
-        "maturityId": {
+        "maturity_id": {
           "type": "integer"
         },
         "maturityName": {
@@ -1454,10 +1553,14 @@
     "Login": {
       "type": "object",
       "required": [
-        "loginToken"
+        "password",
+        "username"
       ],
       "properties": {
-        "login_token": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
           "type": "string"
         }
       }
@@ -1488,6 +1591,9 @@
         },
         "assessment_type": {
           "type": "string"
+        },
+        "template_id": {
+          "type": "integer"
         }
       }
     },
@@ -1496,6 +1602,9 @@
       "properties": {
         "assessment_type": {
           "type": "string"
+        },
+        "template_id": {
+          "type": "integer"
         }
       }
     },
@@ -1516,11 +1625,14 @@
     "SubareaDTO": {
       "type": "object",
       "properties": {
-        "category_id": {
-          "type": "integer"
+        "subarea_name": {
+          "type": "string"
         },
-        "maturity_data": {
-          "$ref": "#/definitions/Subarea"
+        "subarea_summary": {
+          "type": "string"
+        },
+        "subarea_description": {
+          "type": "string"
         }
       }
     },
