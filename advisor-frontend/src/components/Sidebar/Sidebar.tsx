@@ -96,14 +96,14 @@ const mdTheme = createTheme({
 });
 
 function DashboardContent() {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex' }} data-testid = "Sidebar">
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
@@ -156,7 +156,7 @@ function DashboardContent() {
           <List component="nav">
             {mainListItems}
             <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
+            {}
           </List>
         </Drawer>
         <Box
@@ -183,7 +183,7 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  
+                  First box
                 </Paper>
               </Grid>
               {/* Recent Deposits */}
@@ -196,13 +196,13 @@ function DashboardContent() {
                     height: 240,
                   }}
                 >
-                  <Deposits />
+                  helloo
                 </Paper>
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
+                  
                 </Paper>
               </Grid>
             </Grid>
@@ -214,6 +214,6 @@ function DashboardContent() {
   );
 }
 
-export default function Dashboard() {
+export default function Sidebar() {
   return <DashboardContent />;
 }

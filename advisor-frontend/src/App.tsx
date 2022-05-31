@@ -3,12 +3,12 @@ import logo from '/src/logo.svg';
 import './App.css';
 import {Greetings} from './components/SampleText/SampleText';
 import {Button} from './components/Button/Button';
-import Dashboard from './components/dashboard/Dashboard';
+import Sidebar from './components/Sidebar/Sidebar';
 
 function App() {
   return (
     <div className="App">
-      <Dashboard />
+      <Sidebar />
     </div>
   );
 }
