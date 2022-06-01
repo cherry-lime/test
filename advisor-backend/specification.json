@@ -55,6 +55,10 @@
     {
       "name": "category",
       "description": "Operations about categories"
+    },
+    {
+      "name": "answer",
+      "description": "Operations about possible answers"
     }
   ],
   "schemes": [
@@ -140,6 +144,35 @@
             "description": "successful operation"
           }
         }
+      }
+    },
+    "/user/all": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get all users",
+        "description": "This can only be done by an assessor or admin",
+        "operationId": "getAllUsers",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
       }
     },
     "/user/{username}": {
@@ -281,7 +314,31 @@
         ]
       }
     },
-    "/team/create": {
+    "/teams/my": {
+      "get": {
+        "tags": [
+          "team"
+        ],
+        "summary": "Get a list of teams of logged in user",
+        "description": "",
+        "operationId": "getTeams",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of teams",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserTeam"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/teams/create": {
       "post": {
         "tags": [
           "team"
@@ -318,7 +375,7 @@
         ]
       }
     },
-    "/team/{team_id}": {
+    "/teams/{team_id}": {
       "get": {
         "tags": [
           "team"
@@ -356,7 +413,7 @@
         ]
       }
     },
-    "/team/{team_id}/members": {
+    "/teams/{team_id}/members": {
       "get": {
         "tags": [
           "team"
@@ -397,7 +454,7 @@
         ]
       }
     },
-    "/team/join/{invite_token}": {
+    "/teams/join/{invite_token}": {
       "post": {
         "tags": [
           "team"
@@ -815,6 +872,42 @@
         ]
       }
     },
+    "/assessment/{assessment_id}/checkpoint": {
+      "post": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Add filled in answer for checkpoint",
+        "description": "Only allowed by users/assessors in the assessment",
+        "operationId": "saveCheckpointAnswer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "description": "assessment to save checkpoint answer for",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Save data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SaveCheckpoint"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Assessment not found"
+          }
+        }
+      }
+    },
     "/assessment/{assessment_id}/report": {
       "get": {
         "tags": [
@@ -879,6 +972,53 @@
                 "$ref": "#/definitions/Feedback"
               }
             }
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Add assessment feedback from id",
+        "description": "Only allowed by assessors within the assessment",
+        "operationId": "addAssessmentFeedback",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "description": "assessment to get feedback for",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Feedback to add",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "feedback_text": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Assessment not found"
           }
         },
         "security": [
@@ -1278,7 +1418,7 @@
         ]
       }
     },
-    "/template/create": {
+    "/template": {
       "post": {
         "tags": [
           "template"
@@ -1371,6 +1511,78 @@
           }
         ]
       }
+    },
+    "/template/{template_id}/answers": {
+      "get": {
+        "tags": [
+          "answer"
+        ],
+        "summary": "Get possible answers from template id",
+        "description": "",
+        "operationId": "getPossibleAnswers",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "description": "Template id to fetch",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Answer"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "answer"
+        ],
+        "summary": "Add new possible answer",
+        "description": "Only allowed by admins",
+        "operationId": "addPossibleAnswer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "description": "Template id to add answer to",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Answer data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AnswerDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Template not found"
+          }
+        }
+      }
     }
   },
   "securityDefinitions": {
@@ -1431,6 +1643,23 @@
         }
       }
     },
+    "UserTeam": {
+      "type": "object",
+      "properties": {
+        "team_id": {
+          "type": "integer"
+        },
+        "team_name": {
+          "type": "string"
+        },
+        "team_country": {
+          "type": "string"
+        },
+        "team_department": {
+          "type": "string"
+        }
+      }
+    },
     "Team": {
       "type": "object",
       "properties": {
@@ -1441,6 +1670,12 @@
           "type": "string"
         },
         "invite_token": {
+          "type": "string"
+        },
+        "team_country": {
+          "type": "string"
+        },
+        "team_department": {
           "type": "string"
         }
       }
@@ -1527,6 +1762,17 @@
         },
         "password": {
           "type": "string"
+        }
+      }
+    },
+    "SaveCheckpoint": {
+      "type": "object",
+      "properties": {
+        "checkpoint_id": {
+          "type": "integer"
+        },
+        "possible_answer_id": {
+          "type": "integer"
         }
       }
     },
@@ -1683,6 +1929,31 @@
         },
         "feedback_additional_information": {
           "type": "string"
+        }
+      }
+    },
+    "Answer": {
+      "type": "object",
+      "properties": {
+        "possible_answer_id": {
+          "type": "integer"
+        },
+        "answer_text": {
+          "type": "string"
+        },
+        "answer_weight": {
+          "type": "number"
+        }
+      }
+    },
+    "AnswerDTO": {
+      "type": "object",
+      "properties": {
+        "answer_text": {
+          "type": "string"
+        },
+        "answer_weight": {
+          "type": "number"
         }
       }
     }
