@@ -127,8 +127,6 @@ model Template {
   PossibleAnswers   PossibleAnswers[]
   Topic             Topic[]
   Category          Category[]
-
-  @@map("AssessmentTemplate")
 }
 
 model Category {
