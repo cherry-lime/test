@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import { styled, createTheme, ThemeProvider, makeStyles } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -19,7 +19,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import HomeIcon from '@mui/icons-material/Home';
-import { red } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 
 import Deposits from './Deposits';
 import Orders from './Orders';
@@ -37,7 +37,7 @@ function Copyright(props: any) {
   );
 }
 
-const drawerWidth: number = 240;
+const drawerWidth: number = 220;
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -90,9 +90,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme({
   palette: {
     primary: {
-      main: red[500],
+      main: grey[500],
     },
-  },
+  }
 });
 
 function DashboardContent() {
@@ -100,12 +100,11 @@ function DashboardContent() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }} data-testid = "Sidebar">
+      <Box sx={{ display: 'flex' }} data-testid = "Sidebar" >
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
+        {/* <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
               pr: '24px', // keep right padding when drawer closed
@@ -138,22 +137,29 @@ function DashboardContent() {
               </Badge>
             </IconButton>
           </Toolbar>
-        </AppBar>
-        <Drawer variant="permanent" open={open}>
+        </AppBar> */}
+        <Drawer variant="permanent" open={open} PaperProps={{
+          sx: {
+            backgroundColor: '#9e9e9e',
+          }
+        }}>
           <Toolbar
             sx={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
+              px: [1.5]
             }}
+            
           >
             <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
+              <MenuIcon />
             </IconButton>
           </Toolbar>
           <Divider />
-          <List component="nav">
+          <List component="nav" sx={{
+            px: [0.5],
+            alignItems: 'center'
+          }}>
             {mainListItems}
             <Divider sx={{ my: 1 }} />
             {}
@@ -172,42 +178,7 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  First box
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  helloo
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  
-                </Paper>
-              </Grid>
-            </Grid>
-            <Copyright sx={{ pt: 4 }} />
-          </Container>
+          
         </Box>
       </Box>
     </ThemeProvider>
