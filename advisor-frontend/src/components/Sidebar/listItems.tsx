@@ -17,47 +17,47 @@ const iconTheme = createTheme({
       main: red[500],
     },
     secondary: {
-      light: '#ff7961',
-      main: '#ffffff',
-      dark: '#ba000d',
-      contrastText: '#000',
-               },
+      light: "#ff7961",
+      main: "#ffffff",
+      dark: "#ba000d",
+      contrastText: "#000",
+    },
   },
 });
 
 export const mainListItems = (
-    <ThemeProvider theme={iconTheme}>
-      <ListItemButton>
-        <ListItemIcon>
-          <HomeIcon color="secondary" />
-        </ListItemIcon>
-        <ListItemText primary="Home" />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <BarChartIcon color="secondary"/>
-        </ListItemIcon>
-        <ListItemText primary="Evaluations" />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <GroupsIcon color="secondary"/>
-        </ListItemIcon>
-        <ListItemText primary="Teams" />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <SettingsIcon color="secondary"/>
-        </ListItemIcon>
-        <ListItemText primary="Settings" />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <LogoutIcon color="secondary"/>
-        </ListItemIcon>
-        <ListItemText primary="Sign Out" />
-      </ListItemButton>
-    </ThemeProvider>
+  <ThemeProvider theme={iconTheme}>
+    <ListItemButton>
+      <ListItemIcon>
+        <HomeIcon color="secondary" />
+      </ListItemIcon>
+      <ListItemText primary="Home" />
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <BarChartIcon color="secondary" />
+      </ListItemIcon>
+      <ListItemText primary="Evaluations" />
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <GroupsIcon color="secondary" />
+      </ListItemIcon>
+      <ListItemText primary="Teams" />
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <SettingsIcon color="secondary" />
+      </ListItemIcon>
+      <ListItemText primary="Settings" />
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <LogoutIcon color="secondary" />
+      </ListItemIcon>
+      <ListItemText primary="Sign Out" />
+    </ListItemButton>
+  </ThemeProvider>
 );
 
 export const secondaryListItems = (
