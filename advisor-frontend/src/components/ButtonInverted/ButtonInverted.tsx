@@ -1,5 +1,4 @@
-import { Button } from '@mui/material'
-import { createTheme, ThemeProvider } from '@mui/material'
+import { createTheme, ThemeProvider, Button } from '@mui/material'
 
 const theme = createTheme({
 	palette: {
