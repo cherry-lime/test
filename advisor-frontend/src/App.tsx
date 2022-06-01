@@ -1,31 +1,25 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import Greetings from "./components/SampleText/SampleText";
-import Button from "./components/Button/Button";
+import { Routes, Route, Link} from "react-router-dom";
+import AdminInterface from "./admin/AdminInterface";
+import AssessorInterface from "./assessor/AssessorInterface";
+import Home from "./Home";
+import UserInterface from "./user/UserInterface";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        Hello World
-        <Greetings name="This is a test to test a component" />
-        <Button name="Buttontext" />
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Link to="/"> Home </Link>
+      <Link to="/user"> User </Link>
+      <Link to="/assessor"> Assessor </Link>
+      <Link to="/admin"> Admin </Link>
+
+      <Routes>
+        <Route path="/" element={ <Home/> } />
+        <Route path="/user" element={ <UserInterface/> } />
+        <Route path="/assessor" element={ <AssessorInterface/> } />
+        <Route path="/admin" element={ <AdminInterface/> } />
+      </Routes>
     </div>
-  );
+  )
 }
 
 export default App;
