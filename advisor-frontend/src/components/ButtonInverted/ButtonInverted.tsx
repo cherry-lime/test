@@ -11,8 +11,6 @@ const theme = createTheme({
 
 type Message = { name2: string };
 
-
-
 function ButtonInverted({name2}:Message) {
 	return (
 		<ThemeProvider theme = {theme}>
