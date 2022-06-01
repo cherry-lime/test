@@ -31,6 +31,10 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
+      - name: test code quality (ESLint)
+        working-directory: ./advisor-frontend
+        run: npm run lint
+
       - name: Zip artifact for deployment
         run: zip ../frontend.zip ./* -r
         working-directory: ./advisor-frontend
