@@ -220,7 +220,7 @@
           "user"
         ],
         "summary": "Delete user",
-        "description": "This can only be done by the logged in user.",
+        "description": "This can only be done by admins.",
         "operationId": "deleteUser",
         "produces": [
           "application/xml",
@@ -236,6 +236,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "400": {
             "description": "Invalid username supplied"
           },
@@ -591,7 +594,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/TeamInvite"
+              "$ref": "#/definitions/Checkpoint"
             }
           },
           "400": {
@@ -637,10 +640,7 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/TeamInvite"
-            }
+            "description": "OK"
           },
           "400": {
             "description": "Invalid checkpoint id"
@@ -731,7 +731,7 @@
           "assessment"
         ],
         "summary": "Get assessments of team with team_id",
-        "description": "Team assessment only allowed by Assessor (or admin) role",
+        "description": "",
         "operationId": "getTeamAssessments",
         "parameters": [
           {
@@ -754,40 +754,6 @@
                 "$ref": "#/definitions/Assessment"
               }
             }
-          }
-        },
-        "security": [
-          {
-            "testingadvisor_auth": []
-          }
-        ]
-      }
-    },
-    "/assessment/update": {
-      "put": {
-        "tags": [
-          "assessment"
-        ],
-        "summary": "Update checkpoint within assessment",
-        "description": "Only allowed by users within the assessment",
-        "operationId": "updateAssessmentCheckpoint",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Information on checkpoint to update",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/UpdateAssessmentDTO"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         },
         "security": [
@@ -873,7 +839,7 @@
       }
     },
     "/assessment/{assessment_id}/checkpoint": {
-      "post": {
+      "put": {
         "tags": [
           "assessment"
         ],
@@ -906,6 +872,44 @@
             "description": "Assessment not found"
           }
         }
+      }
+    },
+    "/assessment/{assessment_id}/score": {
+      "get": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Get assessment score from id",
+        "description": "Only allowed by users within the assessment",
+        "operationId": "getAssessmentScore",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "description": "assessment to get report for",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of categories and maturities with score",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Score"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
       }
     },
     "/assessment/{assessment_id}/report": {
@@ -1450,7 +1454,7 @@
           "template"
         ],
         "summary": "Get template from id",
-        "description": "",
+        "description": "Only allowed by admins",
         "operationId": "getTemplate",
         "parameters": [
           {
@@ -1576,7 +1580,10 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Answer"
+            }
           },
           "404": {
             "description": "Template not found"
@@ -1742,14 +1749,6 @@
         }
       }
     },
-    "TeamInvite": {
-      "type": "object",
-      "properties": {
-        "InviteID": {
-          "type": "string"
-        }
-      }
-    },
     "Login": {
       "type": "object",
       "required": [
@@ -1873,7 +1872,7 @@
         "template_id": {
           "type": "integer"
         },
-        "maturity_data": {
+        "category_data": {
           "$ref": "#/definitions/Category"
         }
       }
@@ -1881,6 +1880,9 @@
     "Category": {
       "type": "object",
       "properties": {
+        "category_id": {
+          "type": "integer"
+        },
         "category_name": {
           "type": "string"
         },
@@ -1954,6 +1956,20 @@
         },
         "answer_weight": {
           "type": "number"
+        }
+      }
+    },
+    "Score": {
+      "type": "object",
+      "properties": {
+        "category_id": {
+          "type": "integer"
+        },
+        "maturity_id": {
+          "type": "integer"
+        },
+        "score": {
+          "type": "integer"
         }
       }
     }
