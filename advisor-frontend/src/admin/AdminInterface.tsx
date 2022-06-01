@@ -1,10 +1,9 @@
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
-
 function AdminInterface() {
-    return(
-        <h2> Admin Interface Here </h2>
-    );
+  return (
+    <div>
+      <h2> Admin Interface Here </h2>
+    </div>
+  );
 }
 
 export default AdminInterface;
