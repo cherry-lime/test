@@ -1,6 +1,6 @@
 // import React from "react";
 // import { render, screen } from "@testing-library/react";
- import { render } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import App from "./App";
 
 // test('renders learn react link', () => {
@@ -15,7 +15,7 @@ import App from "./App";
 
 describe("test suite of test cases", () => {
   test("testcase1", () => {
-    render(<App/>)
+    render(<App />);
     // expect(to be tested function or component).toBe(expected result of the component);
     // example:
     // test('1 represents a true value', () => {
