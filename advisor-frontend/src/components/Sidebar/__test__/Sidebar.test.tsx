@@ -1,5 +1,5 @@
+import { render, cleanup, screen } from '@testing-library/react';
 import Sidebar from '../Sidebar';
-import { render, cleanup, screen, fireEvent } from '@testing-library/react';
 
 afterEach(cleanup);
 
@@ -10,5 +10,5 @@ it("rendering without crash", () => {
 	expect(screen.getByTestId('Sidebar')).toHaveTextContent("Teams")
 	expect(screen.getByTestId('Sidebar')).toHaveTextContent("Settings")
 	expect(screen.getByTestId('Sidebar')).toHaveTextContent("Sign Out") // the correct one
-	//expect(screen.getByTestId('Sidebar')).toHaveTextContent("ClickButton2") // on purpose created an error
+	// expect(screen.getByTestId('Sidebar')).toHaveTextContent("ClickButton2") // on purpose created an error
 })
