@@ -14,7 +14,11 @@ function ButtonInverted({name2}:Message) {
 	return (
 		<ThemeProvider theme = {theme}>
 			<div>
-				<Button variant = 'outlined' color = 'secondary' style = {{fontWeight: '600'}}
+				<Button 
+				sx = {{
+					backgroundColor: 'white'
+				}}
+				variant = 'outlined' color = 'secondary' style = {{fontWeight: '600'}}
 				onClick = {() => {
 					alert('Clicked');
 				}}
