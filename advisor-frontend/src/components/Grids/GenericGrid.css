@@ -1,0 +1,9 @@
+.GenericGrid {
+    height: 500px;
+    width: 90%;
+    
+    margin-top: 75px;
+    margin-bottom: 75px;
+
+    border-radius: 5px;
+}
