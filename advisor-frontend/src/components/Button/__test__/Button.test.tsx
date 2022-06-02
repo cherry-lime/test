@@ -3,7 +3,7 @@ import Button from "../Button";
 
 afterEach(cleanup);
 
-it("rendering without crash", () => {
+it("Rendering without crash", () => {
   render(<Button name="ClickButton" />);
   expect(screen.getByTestId("Button")).toHaveTextContent("ClickButton"); // the correct one
   // expect(getByTestId('Button')).toHaveTextContent("ClickButton2") // on purpose created an error
