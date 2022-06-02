@@ -7,6 +7,9 @@ import { PrismaService } from './prisma/prisma.service';
 const moduleMocker = new ModuleMocker(global);
 
 describe('AppModule', () => {
+  process.env = {
+    DATABASE_URL: 'postgres://localhost:5432/test',
+  };
   let appModule: AppModule;
 
   beforeEach(async () => {
