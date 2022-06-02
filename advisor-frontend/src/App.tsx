@@ -1,13 +1,13 @@
-import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import ButtonRegular from "./components/ButtonRegular/ButtonRegular";
 import ButtonInverted from "./components/ButtonInverted/ButtonInverted";
 import Checkpoint from "./components/Checkpoint/Checkpoint";
 import TextfieldEdit from "./components/TextfieldEdit/TextfieldEdit";
-import TextfieldRead from "./components/TextfieldRead/TextfieldRead";
+import TextfieldRead from "./components/Textfield/Textfield";
 import {Stack} from '@mui/material';
-import Textbox from "./components/Textbox/Textbox";
+
+const longtextteststring = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
 
 function App() {
   return (
@@ -17,11 +17,10 @@ function App() {
           <ButtonRegular name = "Regular ING Bold"/>
           <ButtonInverted name2 = "Inverted ING Bold"/>
           <Checkpoint description = "Checkpoint Description"/>
-          <TextfieldEdit message = "Textfield Title Editable"/>
-          <TextfieldRead message2 = "Textfield Title Read-only"/>
-          <Textbox/>
+          <TextfieldEdit bodytext={longtextteststring}/>
+          <TextfieldRead bodytext2={longtextteststring}/>
+          <p></p>
         </Stack>
-        
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.

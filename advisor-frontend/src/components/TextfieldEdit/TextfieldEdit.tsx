@@ -1,7 +1,7 @@
-import { TextField, createTheme, ThemeProvider, makeStyles  } from '@mui/material'
+import { TextField, createTheme, ThemeProvider } from '@mui/material'
 import { useState } from 'react'
 
-type Message = { message: string };
+type Message = {bodytext: string};
 
 const theme = createTheme({
 	palette: {
@@ -11,20 +11,28 @@ const theme = createTheme({
 	},
   })
 
-function TextfieldEdit({message}:Message){
-	const [value, setValue] = useState('') 
+function TextfieldEdit({bodytext}:Message){
+	const initialState = bodytext
+	const [value, setValue] = useState(initialState)
 	console.log({value})
 	const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setValue(event.target.value);
 	}
 	return (
 		<ThemeProvider theme = {theme}>
-			<TextField 
+			<TextField
 			sx = {{
-				backgroundColor: 'white'
+				backgroundColor: 'white',
+				width: '50ch',
 			}}
-			label = {message} variant = 'filled' size = 'small' color = 'secondary' value = {value} onChange = {doSomething}/>
+			variant = 'outlined'
+			color='secondary'
+			multiline
+			rows={5}
+			maxRows={10}
+			size = 'small' InputProps = {{color:'secondary'}} value={value} onChange={doSomething} />
 		</ThemeProvider>
+
 	)
 }
 
