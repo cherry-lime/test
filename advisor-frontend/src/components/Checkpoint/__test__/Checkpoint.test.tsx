@@ -5,7 +5,9 @@ afterEach(cleanup);
 
 it('The checkpoint renders and buttons are checked in sequences 123 132 213 231 321 and 312 with 1=Yes, 2=No and 3=N/A', () => {
 
-render(<Checkpoint description="testcheckpointtitle"/>);
+const {getByText} = render(<Checkpoint description="testcheckpointtitle"/>);
+expect(getByText("testcheckpointtitle")).toBeInTheDocument();
+
 const radio1 = screen.getByLabelText('Yes'); 
 const radio2 = screen.getByLabelText('No');
 const radio3 = screen.getByLabelText('N/A'); 

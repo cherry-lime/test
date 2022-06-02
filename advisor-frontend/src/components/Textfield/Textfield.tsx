@@ -10,7 +10,7 @@ const theme = createTheme({
 	},
   })
 
-function TextfieldRead({bodytext2}:Message){
+function Textfield({bodytext2}:Message){
 	return (
 		<ThemeProvider theme = {theme}>
 			<TextField
@@ -24,10 +24,11 @@ function TextfieldRead({bodytext2}:Message){
 			multiline
 			rows={5}
 			maxRows={10}
-			InputProps = {{readOnly:true}}/>
+			InputProps = {{readOnly:true}}
+			/>
 		</ThemeProvider>
 
 	)
 }
 
-export default TextfieldRead;
+export default Textfield;
