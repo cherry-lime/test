@@ -32,6 +32,12 @@
 $ npm install
 ```
 
+## Generate Prisma db client
+
+```bash
+$ npx prisma generate
+```
+
 ## Running the app
 
 ```bash
@@ -45,17 +51,44 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Creating a development database
+
+* install PostreSQL (if not installed) and remember the username and password
+* create a PostreSQL data source
+* create a `.env` file in `testadvisor/advisor-backend`
+* create a `DATABASE_URL` variable in the `.env` file with an empty string as the value (`DATABASE_URL=""`)
+* change the `DATABASE_URL` varaible in the `.env` file to `postgresql://{PostgreSQL username}:{PostgreSQL password}@localhost:{port}/{database}`
+
+```bash
+# synchronize database with Prisma schema
+npx prisma migrate dev
+
+# (optional) view/alter database contents through UI
+npx prisma studio
+```
+
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
+npm run test
 
 # e2e tests
-$ npm run test:e2e
+npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+# test coverage 
+npm run test:cov
+
+# tests rerun on file change
+npm run test:watch
+```
+
+### View the generated API Documentation
+Running backend is required (via `npm run start` or `npm run start:dev`)
+```
+http://localhost:{process.env.PORT}/api
+OR, if port not specified
+http://localhost:5000/api
 ```
 
 ## Support
