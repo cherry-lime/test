@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TemplateController } from './template.controller';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { aTemplate } from '../prisma/mock/mockTemplate';
+import { aTemplate, updateTemplate } from '../prisma/mock/mockTemplate';
 import { TemplateService } from './template.service';
 
 const moduleMocker = new ModuleMocker(global);
@@ -20,6 +20,8 @@ describe('TemplateController', () => {
         if (token === TemplateService) {
           return {
             createTemplate: jest.fn().mockResolvedValue(aTemplate),
+            getTemplate: jest.fn().mockResolvedValue(aTemplate),
+            updateTemplate: jest.fn().mockResolvedValue(updateTemplate),
           };
         }
         if (typeof token === 'function') {

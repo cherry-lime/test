@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { AssessmentType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { UpdateTemplateDto } from './dto/UpdateTemplateDto';
 import { TemplateResponse } from './responses/TemplateResponse';
 
 @Injectable()
@@ -44,5 +45,30 @@ export class TemplateService {
 
     // Return template
     return template;
+  }
+
+  /**
+   * Update template
+   * @param id template_id
+   * @param updateTemplateDto Template properties
+   * @returns Updated template
+   * @throws Template not found
+   */
+  async updateTemplate(
+    id: number,
+    updateTemplateDto: UpdateTemplateDto
+  ): Promise<TemplateResponse> {
+    // Update template with id and data
+    return await this.prisma.template
+      .update({
+        where: {
+          template_id: id,
+        },
+        data: updateTemplateDto,
+      })
+      .catch(() => {
+        // Throw error if template not found
+        throw new NotFoundException('Template not found');
+      });
   }
 }

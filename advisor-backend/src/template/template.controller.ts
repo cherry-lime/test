@@ -5,9 +5,11 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateTemplateDto } from './dto/CreateTemplateDto';
+import { UpdateTemplateDto } from './dto/UpdateTemplateDto';
 import { TemplateResponse } from './responses/TemplateResponse';
 import { TemplateService } from './template.service';
 
@@ -30,7 +32,7 @@ export class TemplateController {
   }
 
   /**
-   * Get template by id
+   * [GET] /template/:id - Get template by id
    * @param id template_id
    * @returns Template object
    */
@@ -40,5 +42,14 @@ export class TemplateController {
     @Param('id', ParseIntPipe) id: number
   ): Promise<TemplateResponse> {
     return this.templateService.getTemplate(id);
+  }
+
+  @Put(':id')
+  @ApiResponse({ description: 'Template', type: TemplateResponse })
+  async updateTemplate(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateTemplateDto: UpdateTemplateDto
+  ): Promise<TemplateResponse> {
+    return this.templateService.updateTemplate(id, updateTemplateDto);
   }
 }

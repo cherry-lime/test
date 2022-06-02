@@ -3,11 +3,21 @@ import { PrismaService } from '../prisma/prisma.service';
 import { TemplateService } from './template.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
-import { aTemplate } from '../prisma/mock/mockTemplate';
+import { aTemplate, updateTemplate } from '../prisma/mock/mockTemplate';
 import { AssessmentType } from '@prisma/client';
-import { NotFoundException } from '@nestjs/common';
+import { UpdateTemplateDto } from './dto/UpdateTemplateDto';
 
 const moduleMocker = new ModuleMocker(global);
+
+const updateTemplateDto: UpdateTemplateDto = {
+  template_name: 'new_name',
+  template_type: 'INDIVIDUAL',
+  disabled: false,
+  weight_range_min: 1,
+  weight_range_max: 5,
+  score_formula: 'avg(x)',
+  include_no_answer: true,
+};
 
 describe('TemplateService', () => {
   let templateService: TemplateService;
@@ -49,10 +59,23 @@ describe('TemplateService', () => {
     it('Should return the found template', async () => {
       expect(templateService.getTemplate(1)).resolves.toBe(aTemplate);
     });
+
+    // TODO: Fix this test
+    // it('Should reject if template not found', async () => {
+    //   expect(templateService.getTemplate(2)).rejects.toThrow(NotFoundException);
+    // });
   });
 
-  // TODO: Fix this test
-  // it('Should reject if template not found', async () => {
-  //   expect(templateService.getTemplate(2)).rejects.toThrow(NotFoundException);
-  // });
+  describe('updateTemplate', () => {
+    it('Should return the found template', async () => {
+      expect(
+        templateService.updateTemplate(1, updateTemplateDto)
+      ).resolves.toBe(updateTemplate);
+    });
+
+    // TODO: Fix this test
+    // it('Should reject if template not found', async () => {
+    //   expect(templateService.updateTemplate(2, updateTemplateDto)).rejects.toThrow(NotFoundException);
+    // });
+  });
 });
