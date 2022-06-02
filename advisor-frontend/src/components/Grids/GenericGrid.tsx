@@ -53,8 +53,8 @@ export default function GenericGrid({
     rows,
     columns,
     hasToolbar,
-    addText,
-    addFunc
+    textAdd,
+    handleAdd
 }: any) {
     return (
         <ThemeProvider theme={theme}>
@@ -63,17 +63,18 @@ export default function GenericGrid({
                     rows={rows}
                     columns={columns}
                     components={hasToolbar && { Toolbar: GridToolbar }}
+                    // getRowHeight={() => 'auto'}
                     getRowClassName={(params: GridRowClassNameParams) =>
                         params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
                     }
                 />
-                {addText && addFunc && ( // if addText and addFunc not null
+                {textAdd && handleAdd && ( // if addText and addFunc not null
                     <Button
-                        onClick={addFunc}
+                        onClick={handleAdd}
                         variant="outlined"
                         style={{ width: "100%", backgroundColor: "white" }}
                     >
-                        <strong>+ {addText}</strong>
+                        <strong>+ {textAdd}</strong>
                     </Button>
                 )}
             </div>
