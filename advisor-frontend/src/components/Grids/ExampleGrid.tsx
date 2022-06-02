@@ -3,7 +3,9 @@ import { createTheme } from "@mui/material/styles";
 import { 
     GridActionsCellItem,
     GridColumns,
-    GridRenderCellParams } from "@mui/x-data-grid";
+    GridRenderCellParams, 
+    GridRowId} 
+from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,10 +13,6 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import GenericGrid from "./GenericGrid";
-
-function handleAdd() {
-    console.log(3);
-}
 
 const theme = createTheme({
     // Style color palette
@@ -39,10 +37,10 @@ const theme = createTheme({
 type Row = {
     id: number,
     name: string,
-    data: Date
+    date: Date
 }
   
-const rows = [
+const initialRows: Row[] = [
     {
         id: 1,
         name: "Alice",
@@ -66,6 +64,55 @@ const rows = [
 ];
   
 export default function ExampleGrid() {
+    const [rows, setRows] = React.useState<Row[]>(initialRows);
+
+    // Generate new id based on time
+    const generateId = () => Date.now();
+
+    const handleAdd = () => {
+        setRows((prevRows) => {
+            // Create new id
+            const newId = generateId();
+            console.log(`Adding row with id ${newId} to database`);
+
+            // Create new row with default content
+            const newRow = {id: newId, name: "name", date: new Date(0, 0, 0)};
+            return [...prevRows, newRow];
+        });
+    };
+
+    const handleDelete = React.useCallback(
+        (rowId: GridRowId) => () => {
+            // Use setTimeout to deal with delay
+            setTimeout(() => {
+                // Filter row with rowId from state
+                setRows((prevRows) => prevRows.filter((row) => row.id !== rowId));
+
+                // Update database to remove row with rowId
+                console.log(`Removing row with id ${rowId} from database`);
+            });
+        },
+        []
+    );
+
+    const handleDuplicate = React.useCallback(
+        (rowId: GridRowId) => () => {
+            setRows((prevRows) => {
+                // Get the row with rowId
+                const rowToDuplicate = prevRows.find((row) => row.id === rowId)!;
+
+                // Create new id
+                const newId = generateId();
+                console.log(`Adding row with id ${newId} to database`);
+
+                // Create new row with duplicated content
+                const newRow = { ...rowToDuplicate, id: newId }
+                return [...prevRows, newRow];
+            });
+        },
+        []
+    );
+
     const columns = React.useMemo<GridColumns<Row>>(
         () => [
             {
@@ -96,7 +143,7 @@ export default function ExampleGrid() {
                 field: 'actions',
                 type: 'actions',
                 width: 300,
-                getActions: () => [
+                getActions: (params) => [
                     <Button
                         variant="contained"
                     >
@@ -115,17 +162,19 @@ export default function ExampleGrid() {
                     <GridActionsCellItem
                         icon={<FileCopyIcon />}
                         label="Duplicate"
+                        onClick={handleDuplicate(params.id)}
                         showInMenu
                     />,
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
                         label="Delete"
+                        onClick={handleDelete(params.id)}
                         showInMenu
                     />
                 ]
             }
         ],
-        []
+        [handleDuplicate, handleDelete]
     );
 
     return (
