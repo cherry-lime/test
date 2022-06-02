@@ -2,16 +2,16 @@ import { Test } from '@nestjs/testing';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { UserController } from './user.controller';
-import { UserModule } from './user.module';
-import { UserService } from './user.service';
+import { AuthController } from './auth.controller';
+import { AuthModule } from './auth.module';
+import { AuthService } from './auth.service';
 
 const moduleMocker = new ModuleMocker(global);
 
 describe('TemplateModule', () => {
   it('should compile the module', async () => {
     const module = await Test.createTestingModule({
-      imports: [UserModule],
+      imports: [AuthModule],
     })
       .useMocker((token) => {
         if (token === PrismaService) {
@@ -28,7 +28,7 @@ describe('TemplateModule', () => {
       .compile();
 
     expect(module).toBeDefined();
-    expect(module.get(UserController)).toBeInstanceOf(UserController);
-    expect(module.get(UserService)).toBeInstanceOf(UserService);
+    expect(module.get(AuthController)).toBeInstanceOf(AuthController);
+    expect(module.get(AuthService)).toBeInstanceOf(AuthService);
   });
 });
