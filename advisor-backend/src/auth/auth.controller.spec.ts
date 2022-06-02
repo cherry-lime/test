@@ -12,14 +12,13 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { Role, User } from '@prisma/client';
 
 const mockUser = {
-    username: "hearing_refused_musical",
-    password_hash: "f894a202-2f5b-4a69-89f7-f7f8f28a9368",
-    
-  };
+  username: 'hearing_refused_musical',
+  password_hash: 'f894a202-2f5b-4a69-89f7-f7f8f28a9368',
+};
 
 const registerDto = {
-    roles: Role.ASSESSOR
-}
+  roles: Role.ASSESSOR,
+};
 
 //const userinfo = {
 //    user_id: 1,
@@ -33,71 +32,66 @@ const registerDto = {
 const moduleMocker = new ModuleMocker(global);
 
 describe('AuthController', () => {
-    let authController: AuthController;
-    //let app: INestApplication;
+  let authController: AuthController;
+  //let app: INestApplication;
 
-    beforeEach(async () => {
-        //const mock_AuthGuard: CanActivate = {canActivate: jest.fn(() => true)};
-        
-        const module: TestingModule = await Test
-            .createTestingModule({
-                controllers: [AuthController],
-                //providers: [
-                //    AuthService,
-                //    PrismaService,
-                //    JwtService,
-                //    UserService
-                //],
-            })
-            .useMocker((token) => {
-                if (token === AuthService) {
-                    return {
-                        register: jest.fn().mockResolvedValue(Role.ASSESSOR),
-                        login: jest.fn().mockResolvedValue(mockUser.username)
-                    };
-                }
-                if (typeof token === 'function') {
-                    const mockMetadata = moduleMocker.getMetadata(
-                        token
-                    ) as MockFunctionMetadata<any, any>;
-                        const Mock = moduleMocker.generateFromMetadata(mockMetadata);
-                        return new Mock();
-                    
-                }
-            })
-            //.overrideGuard(AuthGuard).useValue(mock_AuthGuard)
-            .compile();
-        //app = auth.createNestApplication();
-        //await app.init();
-        
-        authController = module.get<AuthController>(AuthController);     
+  beforeEach(async () => {
+    //const mock_AuthGuard: CanActivate = {canActivate: jest.fn(() => true)};
+
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [AuthController],
+      //providers: [
+      //    AuthService,
+      //    PrismaService,
+      //    JwtService,
+      //    UserService
+      //],
+    })
+      .useMocker((token) => {
+        if (token === AuthService) {
+          return {
+            register: jest.fn().mockResolvedValue(Role.ASSESSOR),
+            login: jest.fn().mockResolvedValue(mockUser.username),
+          };
+        }
+        if (typeof token === 'function') {
+          const mockMetadata = moduleMocker.getMetadata(
+            token
+          ) as MockFunctionMetadata<any, any>;
+          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
+          return new Mock();
+        }
+      })
+      //.overrideGuard(AuthGuard).useValue(mock_AuthGuard)
+      .compile();
+    //app = auth.createNestApplication();
+    //await app.init();
+
+    authController = module.get<AuthController>(AuthController);
+  });
+
+  it('should be defined', () => {
+    expect(authController).toBeDefined();
+  });
+
+  describe('register', () => {
+    it('Should return the created user', async () => {
+      expect(await authController.register(registerDto)); //.resolves.toBe(Role.ASSESSOR);
     });
+  });
 
-    it('should be defined', () => {
-        expect(authController).toBeDefined();
-      });
-
-    describe('register', () => {
-        it("Should return the created user", async () => {
-            expect(
-                await authController.register(registerDto)
-            )//.resolves.toBe(Role.ASSESSOR);
-        });
+  describe('login', () => {
+    it('should return token and user information', async () => {
+      expect(await authController.login(mockUser));
     });
-    
-    describe('login', () => {
-        it("should return token and user information", async () => {
-            expect(await authController.login(mockUser))
-        });
-    });
+  });
 
-    //describe('profile', () => {
-    //    it("Should return the user's profile", async () => {
-    //        expect(
-    //            await authController.getLoggedUser(userinfo)
-    //
-    //        )
-    //    })
-    //})
-}
-);
+  //describe('profile', () => {
+  //    it("Should return the user's profile", async () => {
+  //        expect(
+  //            await authController.getLoggedUser(userinfo)
+  //
+  //        )
+  //    })
+  //})
+});
