@@ -37,10 +37,11 @@ function clickradio3(){
 	expect(radio3).toBeChecked();
 }
 	alloff(); 
-	clickradio1(); clickradio2(); clickradio3();
+	clickradio1(); clickradio2(); clickradio3(); 
 	clickradio1(); clickradio3(); clickradio2();
 	clickradio2(); clickradio1(); clickradio3();
 	clickradio2(); clickradio3(); clickradio1();
 	clickradio3(); clickradio2(); clickradio1();
 	clickradio3(); clickradio1(); clickradio2();
+
 });
