@@ -23,7 +23,6 @@ function Textfield({bodytext2}:Message){
 			placeholder={bodytext2}
 			multiline
 			rows={5}
-			maxRows={10}
 			InputProps = {{readOnly:true}}
 			/>
 		</ThemeProvider>

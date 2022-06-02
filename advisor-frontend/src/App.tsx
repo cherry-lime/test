@@ -6,6 +6,7 @@ import Checkpoint from "./components/Checkpoint/Checkpoint";
 import TextfieldEdit from "./components/TextfieldEdit/TextfieldEdit";
 import TextfieldRead from "./components/Textfield/Textfield";
 import {Stack} from '@mui/material';
+import PageCard from "./components/PageCard/PageCard";
 
 const longtextteststring = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
 
@@ -21,6 +22,7 @@ function App() {
           <TextfieldRead bodytext2={longtextteststring}/>
           <p></p>
         </Stack>
+        <PageCard bodytext3={longtextteststring}/>
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.

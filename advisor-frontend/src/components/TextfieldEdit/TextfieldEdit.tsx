@@ -29,7 +29,6 @@ function TextfieldEdit({bodytext}:Message){
 			color='secondary'
 			multiline
 			rows={5}
-			maxRows={10}
 			size = 'small' InputProps = {{color:'secondary'}} value={value} onChange={doSomething} />
 		</ThemeProvider>
 
