@@ -12,6 +12,7 @@ import { grey, orange } from "@mui/material/colors";
 import TestPage from "../../page_format";
 
 import { mainListItems } from "./listItems";
+import { Grid } from "@mui/material";
 
 const drawerWidth = 220;
 
@@ -65,7 +66,7 @@ function DashboardContent() {
   };
   return (
     <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: "flex" }} data-testid="Sidebar">
+      <Grid sx={{ display: "flex" }} data-testid="Sidebar">
         <CssBaseline />
         <Drawer
           variant="permanent"
@@ -77,6 +78,7 @@ function DashboardContent() {
           }}
         >
           <Toolbar
+          disableGutters 
             sx={{
               display: "flex",
               alignItems: "center",
@@ -114,9 +116,8 @@ function DashboardContent() {
         >
           
           <TestPage />
-          <Toolbar />
         </Box>
-      </Box>
+      </Grid>
     </ThemeProvider>
   );
 }

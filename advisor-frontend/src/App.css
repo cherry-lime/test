@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.body {
+  width: 98%;
+  margin: 50px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -150px;
+  margin-bottom: -50px;
+  height: 85vh;
+  background-color: lightgrey;
+  border-radius: 20px;
+}
+
+.header {
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}

@@ -13,25 +13,25 @@ const Img = styled("img")({
   maxHeight: "100%",
 });
 
-type Message = { name: string };
 const headerHeight = "10vh";
 
-export default function Header({ name }: Message) {
-  const [text, setText] = useState(name);
+export default function Footer() {
   return (
     <Paper
       sx={{
-        borderBottomLeftRadius: "20px",
-        borderBottomRightRadius: "20px",
-        borderTopLeftRadius: "0px",
-        borderTopRightRadius: "0px",
+        borderBottomLeftRadius: "0px",
+        borderBottomRightRadius: "0px",
+        borderTopLeftRadius: "20px",
+        borderTopRightRadius: "20px",
         backgroundColor: "secondary.main",
+        position: "bottom"
       }}
     >
-      <Box alignContent='center' sx={{
+      <Box alignContent='bottom' sx={{
         height: "200px",
+        bottom: "0px"
       }} >
-        <Typography color="info.main">{text} </Typography>
+        <Typography color="info.main">text </Typography>
         
       </Box>
     </Paper>
