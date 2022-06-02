@@ -9,6 +9,12 @@ import { PrismaService } from './prisma/prisma.service';
 const moduleMocker = new ModuleMocker(global);
 
 describe('AppModule', () => {
+  beforeEach(async () => {
+    process.env = {
+      DATABASE_URL: 'postgres://postgres:postgres@localhost:5432/TestAdvisor',
+    };
+  });
+
   it('should compile the module', async () => {
     const module = await Test.createTestingModule({
       imports: [AppModule],
