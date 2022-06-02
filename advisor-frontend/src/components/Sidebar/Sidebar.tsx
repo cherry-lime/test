@@ -8,7 +8,8 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { grey } from "@mui/material/colors";
+import { grey, orange } from "@mui/material/colors";
+import TestPage from "../../page_format";
 
 import { mainListItems } from "./listItems";
 
@@ -45,6 +46,15 @@ const mdTheme = createTheme({
     primary: {
       main: grey[500],
     },
+    secondary: {
+      main: orange[500]
+    },
+    info: {
+      light: "#ff7961",
+      main: "#ffffff",
+      dark: "#ba000d",
+      contrastText: "#000",
+    }
   },
 });
 
@@ -102,6 +112,8 @@ function DashboardContent() {
             overflow: "auto",
           }}
         >
+          
+          <TestPage />
           <Toolbar />
         </Box>
       </Box>
