@@ -9,7 +9,7 @@ import { UpdateTemplateDto } from './dto/UpdateTemplateDto';
 
 const moduleMocker = new ModuleMocker(global);
 
-const updateTemplateDto: UpdateTemplateDto = {
+export const updateTemplateDto: UpdateTemplateDto = {
   template_name: 'new_name',
   template_type: 'INDIVIDUAL',
   disabled: false,
@@ -77,5 +77,11 @@ describe('TemplateService', () => {
     // it('Should reject if template not found', async () => {
     //   expect(templateService.updateTemplate(2, updateTemplateDto)).rejects.toThrow(NotFoundException);
     // });
+  });
+
+  describe('getAllTemplates', () => {
+    it('Should return all templates', async () => {
+      expect(templateService.getAllTemplates()).resolves.toEqual([aTemplate]);
+    });
   });
 });

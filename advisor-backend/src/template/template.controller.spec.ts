@@ -3,6 +3,7 @@ import { TemplateController } from './template.controller';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { aTemplate, updateTemplate } from '../prisma/mock/mockTemplate';
 import { TemplateService } from './template.service';
+import { updateTemplateDto } from './template.service.spec';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -22,6 +23,7 @@ describe('TemplateController', () => {
             createTemplate: jest.fn().mockResolvedValue(aTemplate),
             getTemplate: jest.fn().mockResolvedValue(aTemplate),
             updateTemplate: jest.fn().mockResolvedValue(updateTemplate),
+            getAllTemplates: jest.fn().mockResolvedValue([aTemplate]),
           };
         }
         if (typeof token === 'function') {
@@ -55,6 +57,22 @@ describe('TemplateController', () => {
   describe('getTemplate', () => {
     it('Should return the found template', async () => {
       expect(templateController.getTemplate(1)).resolves.toBe(aTemplate);
+    });
+  });
+
+  describe('updateTemplate', () => {
+    it('Should return the updated template', async () => {
+      expect(
+        templateController.updateTemplate(1, updateTemplateDto)
+      ).resolves.toBe(updateTemplate);
+    });
+  });
+
+  describe('getAllTemplates', () => {
+    it('Should return all templates', async () => {
+      expect(templateController.getAllTemplates()).resolves.toEqual(
+        expect.arrayContaining([aTemplate])
+      );
     });
   });
 });

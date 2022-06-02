@@ -9,7 +9,18 @@ export class TemplateService {
   constructor(private prisma: PrismaService) {}
 
   /**
-   * Create a new template
+   * Get all templates
+   * @returns All templates
+   */
+  async getAllTemplates(): Promise<TemplateResponse[]> {
+    // Return all templates from prisma
+    return await this.prisma.template.findMany();
+  }
+
+  /**
+   * Create template
+   * @param template_name Template name
+   * @param template_type Template type
    * @returns Created template
    */
   async createTemplate(

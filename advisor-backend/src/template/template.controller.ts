@@ -19,6 +19,20 @@ export class TemplateController {
   constructor(private templateService: TemplateService) {}
 
   /**
+   * [GET] /template - Get all templates
+   * @returns TemplateResponse[] List of all templates
+   */
+  @Get('')
+  @ApiResponse({
+    description: 'Found templates',
+    type: TemplateResponse,
+    isArray: true,
+  })
+  async getAllTemplates(): Promise<TemplateResponse[]> {
+    return this.templateService.getAllTemplates();
+  }
+
+  /**
    * [POST] /template - Create a new template
    * @param body - Template name and type
    * @returns Created template
