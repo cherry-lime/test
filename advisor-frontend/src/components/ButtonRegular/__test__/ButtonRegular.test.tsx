@@ -1,4 +1,4 @@
-import { render, cleanup, screen, fireEvent, getByDisplayValue } from "@testing-library/react";
+import { render, cleanup, fireEvent} from "@testing-library/react";
 import ButtonRegular from "../ButtonRegular";
 
 afterEach(cleanup);
