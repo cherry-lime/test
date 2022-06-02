@@ -1,23 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 
 /**
  * PrismaService is a wrapper around the PrismaClient.
  */
+
 @Injectable()
-export class PrismaService extends PrismaClient {
+export class PrismaService extends PrismaClient implements OnModuleInit {
   /**
-   * Set datasource of PrismaClient
-   * @param config
+   * Connect to the database when the module is initialized.
    */
-  constructor(config: ConfigService) {
-    super({
-      datasources: {
-        db: {
-          url: config.get('DATABASE_URL'),
-        },
-      },
+  async onModuleInit() {
+    await this.$connect();
+  }
+
+  /**
+   * Shut down app on database disconnect.
+   * @param app Nestjs application
+   */
+  async enableShutdownHooks(app: INestApplication) {
+    this.$on('beforeExit', async () => {
+      await app.close();
     });
   }
 }

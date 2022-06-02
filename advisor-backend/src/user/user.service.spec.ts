@@ -4,11 +4,13 @@ import { UserService } from './user.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { aUser } from '../prisma/mock/mockUser';
+import { NotFoundException } from '@nestjs/common';
 
 const moduleMocker = new ModuleMocker(global);
 
 describe('UserService', () => {
   let userService: UserService;
+  let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,15 +31,21 @@ describe('UserService', () => {
       .compile();
 
     userService = module.get<UserService>(UserService);
+    prisma = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
     expect(userService).toBeDefined();
   });
 
-  describe('getUsers', () => {
+  describe('getUser', () => {
     it('Should return the found users', async () => {
       expect(userService.getUser(1)).resolves.toBe(aUser);
+    });
+
+    it('Should throw NotFoundException if no user is found', async () => {
+      jest.spyOn(prisma.user, 'findFirst').mockReturnValueOnce(null);
+      expect(userService.getUser(2)).rejects.toThrow(NotFoundException);
     });
   });
 });

@@ -6,6 +6,7 @@ import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { aTemplate, updateTemplate } from '../prisma/mock/mockTemplate';
 import { AssessmentType } from '@prisma/client';
 import { UpdateTemplateDto } from './dto/UpdateTemplateDto';
+import { NotFoundException } from '@nestjs/common';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -21,6 +22,7 @@ export const updateTemplateDto: UpdateTemplateDto = {
 
 describe('TemplateService', () => {
   let templateService: TemplateService;
+  let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -41,6 +43,7 @@ describe('TemplateService', () => {
       .compile();
 
     templateService = module.get<TemplateService>(TemplateService);
+    prisma = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
@@ -60,10 +63,12 @@ describe('TemplateService', () => {
       expect(templateService.getTemplate(1)).resolves.toBe(aTemplate);
     });
 
-    // TODO: Fix this test
-    // it('Should reject if template not found', async () => {
-    //   expect(templateService.getTemplate(2)).rejects.toThrow(NotFoundException);
-    // });
+    it('Should reject if template not found', async () => {
+      jest.spyOn(prisma.template, 'findFirst').mockReturnValueOnce(null);
+      expect(templateService.getTemplate(2)).rejects.toThrowError(
+        NotFoundException
+      );
+    });
   });
 
   describe('updateTemplate', () => {
@@ -73,10 +78,12 @@ describe('TemplateService', () => {
       ).resolves.toBe(updateTemplate);
     });
 
-    // TODO: Fix this test
-    // it('Should reject if template not found', async () => {
-    //   expect(templateService.updateTemplate(2, updateTemplateDto)).rejects.toThrow(NotFoundException);
-    // });
+    it('Should reject if template not found', async () => {
+      jest.spyOn(prisma.template, 'update').mockRejectedValueOnce(new Error());
+      expect(
+        templateService.updateTemplate(2, updateTemplateDto)
+      ).rejects.toThrowError(NotFoundException);
+    });
   });
 
   describe('getAllTemplates', () => {
