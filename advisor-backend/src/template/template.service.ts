@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AssessmentType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { TemplateResponse } from './responses/TemplateResponse';
@@ -21,5 +21,28 @@ export class TemplateService {
         template_type,
       },
     });
+  }
+
+  /**
+   * Get template by id
+   * @param id template_id
+   * @returns Template object
+   * @throws Template not found
+   */
+  async getTemplate(id: number): Promise<TemplateResponse> {
+    // Get template by id from prisma
+    const template = await this.prisma.template.findFirst({
+      where: {
+        template_id: id,
+      },
+    });
+
+    // Throw error if template not found
+    if (!template) {
+      throw new NotFoundException('Template not found');
+    }
+
+    // Return template
+    return template;
   }
 }

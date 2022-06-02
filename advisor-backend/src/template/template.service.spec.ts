@@ -5,6 +5,7 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { aTemplate } from '../prisma/mock/mockTemplate';
 import { AssessmentType } from '@prisma/client';
+import { NotFoundException } from '@nestjs/common';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -43,4 +44,15 @@ describe('TemplateService', () => {
       ).resolves.toBe(aTemplate);
     });
   });
+
+  describe('getTemplate', () => {
+    it('Should return the found template', async () => {
+      expect(templateService.getTemplate(1)).resolves.toBe(aTemplate);
+    });
+  });
+
+  // TODO: Fix this test
+  // it('Should reject if template not found', async () => {
+  //   expect(templateService.getTemplate(2)).rejects.toThrow(NotFoundException);
+  // });
 });

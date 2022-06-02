@@ -49,4 +49,10 @@ describe('TemplateController', () => {
       ).resolves.toBe(aTemplate);
     });
   });
+
+  describe('getTemplate', () => {
+    it('Should return the found template', async () => {
+      expect(templateController.getTemplate(1)).resolves.toBe(aTemplate);
+    });
+  });
 });

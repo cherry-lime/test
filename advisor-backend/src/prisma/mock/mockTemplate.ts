@@ -11,4 +11,5 @@ export const aTemplate = {
 
 export const mockTemplate = {
   create: jest.fn().mockResolvedValue(aTemplate),
+  findFirst: jest.fn().mockResolvedValue(aTemplate),
 };
