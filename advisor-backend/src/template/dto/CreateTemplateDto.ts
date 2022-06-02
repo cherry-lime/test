@@ -6,11 +6,11 @@ import { IsEnum, MinLength } from 'class-validator';
  * DTO for creating a new template
  */
 export class CreateTemplateDto {
-  @ApiProperty()
+  @ApiProperty({ minLength: 4 })
   @MinLength(4)
   template_name: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: AssessmentType })
   @IsEnum(AssessmentType)
   template_type: AssessmentType;
 }

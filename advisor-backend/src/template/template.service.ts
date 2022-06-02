@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AssessmentType } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { TemplateResponse } from './responses/TemplateResponse';
 
 @Injectable()
 export class TemplateService {
@@ -10,7 +11,10 @@ export class TemplateService {
    * Create a new template
    * @returns Created template
    */
-  async createTemplate(template_name: string, template_type: AssessmentType) {
+  async createTemplate(
+    template_name: string,
+    template_type: AssessmentType
+  ): Promise<TemplateResponse> {
     return await this.prisma.template.create({
       data: {
         template_name,

@@ -11,7 +11,7 @@ export class TemplateResponse {
   @ApiProperty()
   template_name: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: AssessmentType })
   template_type: AssessmentType;
 
   @ApiProperty()
