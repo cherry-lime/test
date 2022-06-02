@@ -8,7 +8,7 @@ import { CreateUserDto } from './../auth/dto/register-user.dto';
 import { Prisma, PrismaClient, User } from '../../node_modules/.prisma/client';
 // import { bcrypt } from '../../node_modules/bcrypt'
 import * as bcrypt from 'bcrypt';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 // import { PrismaClient } from '@prisma/client';
 
 @Injectable()
@@ -47,7 +47,7 @@ export class UserService {
       throw new ConflictException('username already exists');
     }
 
-    let myuuid = uuidv4();
+    const myuuid = uuidv4();
 
     const hashedPassword = await bcrypt.hash(myuuid, 10);
 

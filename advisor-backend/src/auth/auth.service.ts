@@ -32,10 +32,13 @@ export class AuthService {
 
     const new_hashed_password = await bcrypt.hash(user.password_hash, 10);
 
-    const validatePassword = await bcrypt.compare(password_hash, new_hashed_password);
+    const validatePassword = await bcrypt.compare(
+      password_hash,
+      new_hashed_password
+    );
 
     if (!validatePassword) {
-        throw new UnauthorizedException('invalid password');
+      throw new UnauthorizedException('invalid password');
     }
 
     // if (password_hash != user.password_hash) {
