@@ -1,5 +1,5 @@
-import {render, cleanup, fireEvent} from "@testing-library/react";
-import TextfieldEdit from "../TextfieldEdit";
+import {render, cleanup, fireEvent} from '@testing-library/react';
+import TextfieldEdit from '../TextfieldEdit';
 
 afterEach(cleanup);
 

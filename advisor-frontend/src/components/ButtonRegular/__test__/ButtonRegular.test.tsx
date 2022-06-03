@@ -1,5 +1,5 @@
-import { render, cleanup, fireEvent} from "@testing-library/react";
-import ButtonRegular from "../ButtonRegular";
+import { render, cleanup, fireEvent} from '@testing-library/react';
+import ButtonRegular from '../ButtonRegular';
 
 afterEach(cleanup);
 

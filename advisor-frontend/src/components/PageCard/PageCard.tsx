@@ -3,9 +3,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import logo from './ING3.png';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import Divider from '@mui/material/Divider';
+import logo from './ING3.png';
 
 type Message ={bodytext3:string}
 
@@ -17,13 +17,12 @@ return (
           <Typography align="left" variant="h6" sx={{fontWeight:600}}>
             Individual Evaluation <AssessmentIcon fontSize="small" sx={{color:'#ff6200'}}/>
           </Typography>
-		  <Divider textAlign="left"></Divider>
+		  <Divider textAlign="left"/>
           <Typography variant="subtitle1" align="left" color="text.secondary" component="div">
             {bodytext3}
           </Typography>
         </CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}/>
       </Box>
       <CardMedia
         component="img"

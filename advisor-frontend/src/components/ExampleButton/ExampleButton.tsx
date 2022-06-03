@@ -1,5 +1,5 @@
-import { useState } from "react";
-import "./ExampleButton.css";
+import { useState } from 'react';
+import './ExampleButton.css';
 
 type Message = { name: string };
 

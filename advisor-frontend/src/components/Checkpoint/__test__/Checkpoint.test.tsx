@@ -1,5 +1,5 @@
-import { render, cleanup, screen, fireEvent } from "@testing-library/react";
-import Checkpoint from "../Checkpoint";
+import { render, cleanup, screen, fireEvent } from '@testing-library/react';
+import Checkpoint from '../Checkpoint';
 
 afterEach(cleanup);
 

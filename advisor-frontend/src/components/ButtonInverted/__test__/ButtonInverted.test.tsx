@@ -1,5 +1,5 @@
-import { render, cleanup, fireEvent} from "@testing-library/react";
-import ButtonInverted from "../ButtonInverted";
+import { render, cleanup, fireEvent} from '@testing-library/react';
+import ButtonInverted from '../ButtonInverted';
 
 afterEach(cleanup);
 

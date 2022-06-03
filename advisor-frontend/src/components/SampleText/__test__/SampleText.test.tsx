@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
-import Greetings from "../SampleText";
+import { render, screen } from '@testing-library/react';
+import Greetings from '../SampleText';
 
 describe("when rendered with a message as a prop", () => {
   it("should paste into the message text", () => {

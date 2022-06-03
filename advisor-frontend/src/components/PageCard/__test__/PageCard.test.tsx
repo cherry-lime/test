@@ -1,5 +1,5 @@
-import {render, cleanup} from "@testing-library/react";
-import PageCard from "../PageCard";
+import {render, cleanup} from '@testing-library/react';
+import PageCard from '../PageCard';
 
 afterEach(cleanup);
 
