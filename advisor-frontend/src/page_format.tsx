@@ -8,12 +8,8 @@ import Footer from "./components/Cards/Footer";
 function BlankPage() {
   return (
     <>
-      <Box
-        sx={{
-          zindex: 3,
-        }}
-      >
-        <Header name="Walao eha" />
+      <Box>
+        <Header name="Home" />
       </Box>
       <Body />
       <Footer />

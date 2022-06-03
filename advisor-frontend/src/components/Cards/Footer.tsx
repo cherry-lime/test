@@ -5,6 +5,8 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { Box, Stack } from "@mui/material";
 import { useState } from "react";
+import footerImg from "./footer_img.svg"
+import { display } from "@mui/system";
 
 const Img = styled("img")({
   margin: "auto",
@@ -29,10 +31,12 @@ export default function Footer() {
     >
       <Box alignContent='bottom' sx={{
         height: "200px",
-        bottom: "0px"
+        overflow: 'auto',
+        justifyContent: 'center',
+        alignItems: "center",
+        display: 'flex'
       }} >
-        <Typography color="info.main">text </Typography>
-        
+        <img src={footerImg} alt="ING logo"/>
       </Box>
     </Paper>
   );
