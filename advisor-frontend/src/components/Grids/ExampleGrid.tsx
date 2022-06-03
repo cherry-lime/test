@@ -40,11 +40,17 @@ type Row = {
   date: Date;
 };
 
+// Get row object with default values
+const getDefaultRow = () => { 
+  const defaultRow = { id: Date.now(), name: "Name", date: new Date() };
+  return defaultRow;
+};
+
 // Initial rows that are rendered in the grid
 const initialRows: Row[] = [
   {
     id: 1,
-    name: "Alice ".repeat(25),
+    name: "Alice ".repeat(50),
     date: new Date(1979, 0, 1)
   },
   {
@@ -75,10 +81,10 @@ export default function ExampleGrid() {
     setRows((prevRows) => {
       // Create new id
       const newId = generateId();
-      console.log(`Adding row with id ${newId} to database`);
 
       // Create new row with default content
-      const newRow = { id: newId, name: "name", date: new Date(0, 0, 0) };
+      const newRow = { ...getDefaultRow(), id: newId};
+      console.log(`Adding row ${JSON.stringify(newRow)} to database`);
       return [...prevRows, newRow];
     });
   };
@@ -107,10 +113,10 @@ export default function ExampleGrid() {
 
         // Create new id
         const newId = generateId();
-        console.log(`Adding row with id ${newId} to database`);
 
         // Create new row with duplicated content
         const newRow = { ...rowToDuplicate, id: newId };
+        console.log(`Adding row ${JSON.stringify(newRow)} to database`);
         return [...prevRows, newRow];
       });
     },
@@ -127,21 +133,9 @@ export default function ExampleGrid() {
       },
       {
         field: "date",
-        headerName: "Year",
-        flex: 1,
-        renderCell: (params: GridRenderCellParams<Date>) => (
-          <strong>
-            {params.value?.getFullYear() ?? ""}
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              style={{ marginLeft: 16 }}
-            >
-              Open
-            </Button>
-          </strong>
-        )
+        headerName: "Date",
+        type: "date",
+        width: 200
       },
       {
         field: "actions",
