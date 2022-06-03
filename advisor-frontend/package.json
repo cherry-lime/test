@@ -23,7 +23,6 @@
     "serve": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "prepare": "cd .. && husky install advisor-frontend/.husky",
     "lint": "npx eslint \"./src/**/*.{ts,tsx,js,jsx}\"",
     "prettier-write": "npx prettier --write \"./src/**/*.{ts,tsx,js,jsx}\"",
     "prettier-check": "npx prettier --check \"./src/**/*.{ts,tsx,js,jsx}\""
@@ -62,7 +61,6 @@
     "c8": "^7.11.3",
     "jsdom": "^19.0.0",
     "typescript": "^4.6.4",
-    "vite": "^2.3.2",
-    "husky": "^8.0.1"
+    "vite": "^2.3.2"
   }
 }
