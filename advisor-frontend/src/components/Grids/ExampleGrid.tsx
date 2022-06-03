@@ -1,37 +1,32 @@
-import * as React from "react";
-import { createTheme } from "@mui/material/styles";
-import {
-  GridActionsCellItem,
-  GridColumns,
-  GridRenderCellParams,
-  GridRowId
-} from "@mui/x-data-grid";
-import Button from "@mui/material/Button";
+import * as React from 'react';
+import { createTheme } from '@mui/material/styles';
+import { GridActionsCellItem, GridColumns, GridRowId } from '@mui/x-data-grid';
+import Button from '@mui/material/Button';
 
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
-import DeleteIcon from "@mui/icons-material/Delete";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-import GenericGrid from "./GenericGrid";
+import GenericGrid from './GenericGrid';
 
 const theme = createTheme({
   // Style color palette
   palette: {
     primary: {
-      light: "#FFD6B1", // Light Orange
-      main: "#FF6200", // Orange
-      dark: "#AA3909" // Dark Orange
+      light: '#FFD6B1', // Light Orange
+      main: '#FF6200', // Orange
+      dark: '#AA3909', // Dark Orange
     },
     secondary: {
       // Lightest Grey: #FAF6F3
-      light: "#EDE6E2", // Light Grey
-      main: "#8B817C", // Grey
-      dark: "#5A534F" // Dark Grey
+      light: '#EDE6E2', // Light Grey
+      main: '#8B817C', // Grey
+      dark: '#5A534F', // Dark Grey
     },
     text: {
-      primary: "#5A534F" // Dark Grey
-    }
-  }
+      primary: '#5A534F', // Dark Grey
+    },
+  },
 });
 
 type Row = {
@@ -41,8 +36,8 @@ type Row = {
 };
 
 // Get row object with default values
-const getDefaultRow = () => { 
-  const defaultRow = { id: Date.now(), name: "Name", date: new Date() };
+const getDefaultRow = () => {
+  const defaultRow = { id: Date.now(), name: 'Name', date: new Date() };
   return defaultRow;
 };
 
@@ -50,24 +45,24 @@ const getDefaultRow = () => {
 const initialRows: Row[] = [
   {
     id: 1,
-    name: "Alice ".repeat(50),
-    date: new Date(1979, 0, 1)
+    name: 'Alice '.repeat(50),
+    date: new Date(1979, 0, 1),
   },
   {
     id: 2,
-    name: "Bob",
-    date: new Date(1984, 1, 1)
+    name: 'Bob',
+    date: new Date(1984, 1, 1),
   },
   {
     id: 3,
-    name: "Charlie",
-    date: new Date(1992, 2, 1)
+    name: 'Charlie',
+    date: new Date(1992, 2, 1),
   },
   {
     id: 4,
-    name: "Denise",
-    date: new Date(1992, 2, 1)
-  }
+    name: 'Denise',
+    date: new Date(1992, 2, 1),
+  },
 ];
 
 export default function ExampleGrid() {
@@ -83,7 +78,7 @@ export default function ExampleGrid() {
       const newId = generateId();
 
       // Create new row with default content
-      const newRow = { ...getDefaultRow(), id: newId};
+      const newRow = { ...getDefaultRow(), id: newId };
       console.log(`Adding row ${JSON.stringify(newRow)} to database`);
       return [...prevRows, newRow];
     });
@@ -126,46 +121,43 @@ export default function ExampleGrid() {
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: "name",
-        headerName: "Name",
+        field: 'name',
+        headerName: 'Name',
         flex: 1,
-        editable: true
+        editable: true,
       },
       {
-        field: "date",
-        headerName: "Date",
-        type: "date",
-        width: 200
+        field: 'date',
+        headerName: 'Date',
+        type: 'date',
+        width: 200,
       },
       {
-        field: "actions",
-        type: "actions",
+        field: 'actions',
+        type: 'actions',
         width: 350,
         getActions: (params) => [
-          <Button variant="contained">
+          <Button variant='contained'>
             <strong>Contained</strong>
           </Button>,
-          <Button variant="outlined">
+          <Button variant='outlined'>
             <strong>Outlined</strong>
           </Button>,
-          <GridActionsCellItem 
-            icon={<ArrowForwardIcon />} 
-            label="Visit" 
-          />,
+          <GridActionsCellItem icon={<ArrowForwardIcon />} label='Visit' />,
           <GridActionsCellItem
             icon={<FileCopyIcon />}
-            label="Duplicate"
+            label='Duplicate'
             onClick={handleDuplicate(params.id)}
             showInMenu
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
-            label="Delete"
+            label='Delete'
             onClick={handleDelete(params.id)}
             showInMenu
-          />
-        ]
-      }
+          />,
+        ],
+      },
     ],
     [handleDuplicate, handleDelete]
   );
@@ -176,7 +168,7 @@ export default function ExampleGrid() {
       rows={rows}
       columns={columns}
       hasToolbar
-      textAdd="add user"
+      textAdd='add user'
       handleAdd={handleAdd}
     />
   );
