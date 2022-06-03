@@ -8,7 +8,7 @@ import {
 from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 
-import EditIcon from '@mui/icons-material/Edit';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -40,6 +40,7 @@ type Row = {
     date: Date
 }
   
+// Initial rows that are rendered in the grid
 const initialRows: Row[] = [
     {
         id: 1,
@@ -69,6 +70,7 @@ export default function ExampleGrid() {
     // Generate new id based on time
     const generateId = () => Date.now();
 
+    // Called when "Add" button is pressed below the grid
     const handleAdd = () => {
         setRows((prevRows) => {
             // Create new id
@@ -81,6 +83,7 @@ export default function ExampleGrid() {
         });
     };
 
+    // Called when the "Delete" action is pressed in the action menu
     const handleDelete = React.useCallback(
         (rowId: GridRowId) => () => {
             // Use setTimeout to deal with delay
@@ -95,6 +98,7 @@ export default function ExampleGrid() {
         []
     );
 
+    // Called when the "Duplicate" action is pressed in the action menu
     const handleDuplicate = React.useCallback(
         (rowId: GridRowId) => () => {
             setRows((prevRows) => {
@@ -142,7 +146,7 @@ export default function ExampleGrid() {
             {
                 field: 'actions',
                 type: 'actions',
-                width: 300,
+                width: 350,
                 getActions: (params) => [
                     <Button
                         variant="contained"
@@ -155,9 +159,8 @@ export default function ExampleGrid() {
                         <strong>Outlined</strong>
                     </Button>,
                     <GridActionsCellItem
-                        icon={<EditIcon />}
-                        label="Edit"
-                        showInMenu
+                        icon={<ArrowForwardIcon />}
+                        label="Visit"
                     />,
                     <GridActionsCellItem
                         icon={<FileCopyIcon />}
