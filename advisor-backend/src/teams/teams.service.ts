@@ -8,9 +8,16 @@ import { Team } from './entities/team.entity';
 export class TeamsService {
   constructor(private prisma: PrismaService) {}
 
-  create(createTeamDto: CreateTeamDto) {
-    return 'This action adds a new team';
-  }
+  /**
+   * Create team object using given team name
+   * @param name name of team
+   * @returns created team
+   */
+  // async create(createTeamDto: CreateTeamDto): Promise<Team> {
+  //   return await this.prisma.team.create({
+  //     data: createTeamDto,
+  //   });
+  // }
 
   findAll() {
     return `This action returns all teams`;
@@ -19,7 +26,7 @@ export class TeamsService {
   /**
    * Get team object by name
    * @param name name of team
-   * @returns team object corresponding to team_id, null if not found
+   * @returns team object corresponding to team_name, null if not found
    * @throws Team not found
    */
   async findOne(name: string): Promise<Team> {

@@ -7,7 +7,12 @@ import { UserModule } from './user/user.module';
 import { TeamsModule } from './teams/teams.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, UserModule, TeamsModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule,
+    UserModule,
+    TeamsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

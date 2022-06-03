@@ -23,14 +23,14 @@ export class TeamsController {
    * @param name team_name
    * @returns Team object
    */
-  @Post('')
-  @ApiResponse({
-    description: 'Create team with given team name',
-    type: Team,
-  })
-  create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
-    return this.teamsService.create(createTeamDto);
-  }
+  // @Post('')
+  // @ApiResponse({
+  //   description: 'Create team with given team name',
+  //   type: Team,
+  // })
+  // create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
+  //   return this.teamsService.create(createTeamDto);
+  // }
 
   // @Get()
   // findAll() {
