@@ -9,10 +9,10 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { grey, orange } from "@mui/material/colors";
-import TestPage from "../../page_format";
+import { Grid } from "@mui/material";
+import { AllPages } from "../../pages/page_format";
 
 import { mainListItems } from "./listItems";
-import { Grid } from "@mui/material";
 
 const drawerWidth = 220;
 
@@ -48,14 +48,14 @@ const mdTheme = createTheme({
       main: grey[500],
     },
     secondary: {
-      main: orange[500]
+      main: orange[500],
     },
     info: {
       light: "#ff7961",
       main: "#ffffff",
       dark: "#ba000d",
       contrastText: "#000",
-    }
+    },
   },
 });
 
@@ -78,7 +78,7 @@ function DashboardContent() {
           }}
         >
           <Toolbar
-          disableGutters 
+            disableGutters
             sx={{
               display: "flex",
               alignItems: "center",
@@ -86,7 +86,7 @@ function DashboardContent() {
             }}
           >
             <IconButton onClick={toggleDrawer}>
-              <MenuIcon />
+              <MenuIcon color="info" />
             </IconButton>
           </Toolbar>
           <Divider />
@@ -114,8 +114,7 @@ function DashboardContent() {
             overflow: "auto",
           }}
         >
-          
-          <TestPage />
+          <AllPages />
         </Box>
       </Grid>
     </ThemeProvider>

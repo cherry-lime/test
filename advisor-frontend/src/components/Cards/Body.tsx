@@ -1,13 +1,6 @@
-import { Box, Button } from "@mui/material";
-import "../../App.css"
-
-
+import { Box } from "@mui/material";
+import "../../App.css";
 
 export default function Body() {
-  return (
-    <Box className="body"> 
-        text
-    </Box>
-  );
+  return <Box className="body">text</Box>;
 }
-

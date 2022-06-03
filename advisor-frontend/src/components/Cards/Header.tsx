@@ -1,21 +1,9 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { Box, Stack } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import { useState } from "react";
-import headerImg from "./header_img.svg"
-
-const Img = styled("img")({
-  margin: "auto",
-  display: "block",
-  maxWidth: "100%",
-  maxHeight: "100%",
-});
+import headerImg from "./header_img.svg";
 
 type Message = { name: string };
-const headerHeight = 200;
 
 export default function Header({ name }: Message) {
   const [text, setText] = useState(name);
@@ -36,7 +24,7 @@ export default function Header({ name }: Message) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          flexDirection: "column"
+          flexDirection: "column",
         }}
       >
         <Typography
@@ -48,7 +36,7 @@ export default function Header({ name }: Message) {
         >
           {text}
         </Typography>
-        <img src={headerImg} alt="Title bar"/>
+        <img src={headerImg} alt="Title bar" />
       </Box>
     </Paper>
   );
