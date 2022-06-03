@@ -123,6 +123,7 @@ export default function ExampleGrid() {
       {
         field: 'name',
         headerName: 'Name',
+        type: 'string',
         flex: 1,
         editable: true,
       },
@@ -131,6 +132,7 @@ export default function ExampleGrid() {
         headerName: 'Date',
         type: 'date',
         width: 200,
+        editable: true,
       },
       {
         field: 'actions',

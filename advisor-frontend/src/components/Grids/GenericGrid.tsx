@@ -4,8 +4,10 @@ import {
   GridToolbar,
   gridClasses,
   GridRowClassNameParams,
+  GridRowsProp,
+  GridColumns,
 } from '@mui/x-data-grid';
-import { styled, ThemeProvider } from '@mui/material/styles';
+import { styled, Theme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import './GenericGrid.css';
 
@@ -53,6 +55,15 @@ const StyledGrid = styled(DataGrid)(({ theme }) => ({
   },
 }));
 
+type GenericGridProps = {
+  theme: Theme;
+  rows: GridRowsProp;
+  columns: GridColumns;
+  hasToolbar: boolean;
+  textAdd: string;
+  handleAdd: () => void;
+};
+
 export default function GenericGrid({
   theme,
   rows,
@@ -60,7 +71,7 @@ export default function GenericGrid({
   hasToolbar,
   textAdd,
   handleAdd,
-}: any) {
+}: GenericGridProps) {
   return (
     <ThemeProvider theme={theme}>
       <div
@@ -70,7 +81,7 @@ export default function GenericGrid({
         <StyledGrid
           rows={rows}
           columns={columns}
-          components={hasToolbar && { Toolbar: GridToolbar }}
+          components={hasToolbar ? { Toolbar: GridToolbar } : {}}
           getEstimatedRowHeight={() => 100}
           getRowHeight={() => 'auto'}
           sx={{
