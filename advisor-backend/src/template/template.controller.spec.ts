@@ -24,6 +24,8 @@ describe('TemplateController', () => {
             getTemplate: jest.fn().mockResolvedValue(aTemplate),
             updateTemplate: jest.fn().mockResolvedValue(updateTemplate),
             getAllTemplates: jest.fn().mockResolvedValue([aTemplate]),
+            cloneTemplate: jest.fn().mockResolvedValue(aTemplate),
+            deleteTemplate: jest.fn().mockResolvedValue(aTemplate),
           };
         }
         if (typeof token === 'function') {
@@ -68,11 +70,23 @@ describe('TemplateController', () => {
     });
   });
 
+  describe('deleteTemplate', () => {
+    it('Should return the deleted template', async () => {
+      expect(templateController.deleteTemplate(1)).resolves.toBe(aTemplate);
+    });
+  });
+
   describe('getAllTemplates', () => {
     it('Should return all templates', async () => {
       expect(templateController.getAllTemplates()).resolves.toEqual(
         expect.arrayContaining([aTemplate])
       );
+    });
+  });
+
+  describe('cloneTemplate', () => {
+    it('Should return the cloned template', async () => {
+      expect(templateController.cloneTemplate(1)).resolves.toBe(aTemplate);
     });
   });
 });

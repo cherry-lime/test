@@ -127,6 +127,8 @@ model Template {
   PossibleAnswers   PossibleAnswers[]
   Topic             Topic[]
   Category          Category[]
+
+  @@unique([template_name, template_type])
 }
 
 model Category {
