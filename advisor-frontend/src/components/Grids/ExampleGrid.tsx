@@ -44,7 +44,7 @@ type Row = {
 const initialRows: Row[] = [
   {
     id: 1,
-    name: "Alice",
+    name: "Alice ".repeat(25),
     date: new Date(1979, 0, 1)
   },
   {

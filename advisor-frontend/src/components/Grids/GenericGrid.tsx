@@ -41,7 +41,7 @@ const StyledGrid = styled(DataGrid)(({ theme }) => ({
   },
   // Style footer
   "& .MuiDataGrid-footerContainer": {
-    backgroundColor: "white" // Dark Grey
+    backgroundColor: "white" // White
   },
   // Style sort icon (arrow in header)
   "& .MuiDataGrid-sortIcon": {
@@ -71,8 +71,19 @@ export default function GenericGrid({
           rows={rows}
           columns={columns}
           components={hasToolbar && { Toolbar: GridToolbar }}
-          // onRowEditCommit={}
-          // getRowHeight={() => 'auto'}
+          getEstimatedRowHeight={() => 100}
+          getRowHeight={() => 'auto'}
+          sx={{
+            '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
+              py: '8px',
+            },
+            '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': {
+              py: '15px',
+            },
+            '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {
+              py: '22px',
+            },
+          }}
           getRowClassName={(params: GridRowClassNameParams) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
           }
