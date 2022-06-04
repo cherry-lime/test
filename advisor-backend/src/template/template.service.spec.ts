@@ -54,7 +54,7 @@ describe('TemplateService', () => {
     expect(templateService).toBeDefined();
   });
 
-  describe('createTemplate', () => {
+  describe('create', () => {
     it('Should return the created template', async () => {
       expect(
         templateService.create('test', AssessmentType.INDIVIDUAL)
@@ -80,20 +80,29 @@ describe('TemplateService', () => {
     });
   });
 
-  describe('getTemplate', () => {
+  describe('findOne', () => {
     it('Should return the found template', async () => {
       expect(templateService.findOne(1)).resolves.toBe(aTemplate);
     });
 
     it('Should reject if template not found', async () => {
-      jest.spyOn(prisma.template, 'findFirst').mockReturnValueOnce(null);
+      jest.spyOn(prisma.template, 'findFirst').mockResolvedValueOnce(null);
       expect(templateService.findOne(2)).rejects.toThrowError(
         NotFoundException
       );
     });
+
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.template, 'findFirst')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      expect(templateService.findOne(1)).rejects.toThrowError(
+        InternalServerErrorException
+      );
+    });
   });
 
-  describe('updateTemplate', () => {
+  describe('update', () => {
     it('Should return the found template', async () => {
       expect(templateService.update(1, updateTemplateDto)).resolves.toBe(
         updateTemplate
@@ -128,13 +137,13 @@ describe('TemplateService', () => {
     });
   });
 
-  describe('getAllTemplates', () => {
+  describe('findAll', () => {
     it('Should return all templates', async () => {
       expect(templateService.findAll()).resolves.toEqual([aTemplate]);
     });
   });
 
-  describe('cloneTemplate', () => {
+  describe('clone', () => {
     it('Should return the cloned template', async () => {
       expect(templateService.clone(1)).resolves.toBe(aTemplate);
     });
@@ -156,9 +165,18 @@ describe('TemplateService', () => {
       delete cloneTemplate.template_id;
       expect(templateService.clone(1)).resolves;
     });
+
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.template, 'create')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      expect(templateService.clone(1)).rejects.toThrowError(
+        InternalServerErrorException
+      );
+    });
   });
 
-  describe('deleteTemplate', () => {
+  describe('delete', () => {
     it('Should return the deleted template', async () => {
       expect(templateService.delete(1)).resolves.toBe(aTemplate);
     });
@@ -168,6 +186,15 @@ describe('TemplateService', () => {
         code: 'P2025',
       });
       expect(templateService.delete(2)).rejects.toThrowError(NotFoundException);
+    });
+
+    it('Should reject with unknown error', async () => {
+      jest.spyOn(prisma.template, 'delete').mockRejectedValueOnce({
+        code: 'TEST',
+      });
+      expect(templateService.delete(1)).rejects.toThrowError(
+        InternalServerErrorException
+      );
     });
   });
 });

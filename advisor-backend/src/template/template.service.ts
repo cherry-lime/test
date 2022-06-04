@@ -58,18 +58,21 @@ export class TemplateService {
    */
   async findOne(id: number): Promise<TemplateResponse> {
     // Get template by id from prisma
-    const template = await this.prisma.template.findFirst({
-      where: {
-        template_id: id,
-      },
-    });
+    const template = await this.prisma.template
+      .findFirst({
+        where: {
+          template_id: id,
+        },
+      })
+      .catch(() => {
+        throw new InternalServerErrorException();
+      });
 
     // Throw error if template not found
     if (!template) {
       throw new NotFoundException('Template not found');
     }
 
-    // Return template
     return template;
   }
 
@@ -101,9 +104,8 @@ export class TemplateService {
         } else if (error.code === 'P2025') {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
-        } else {
-          throw new InternalServerErrorException();
         }
+        throw new InternalServerErrorException();
       });
   }
 
@@ -144,7 +146,11 @@ export class TemplateService {
             ...template,
           },
         });
-      } catch (error) {}
+      } catch (error) {
+        if (error.code !== 'P2002') {
+          throw new InternalServerErrorException();
+        }
+      }
     }
     return newTemplate;
   }
@@ -163,9 +169,12 @@ export class TemplateService {
           template_id: id,
         },
       })
-      .catch(() => {
-        // Throw error if template not found
-        throw new NotFoundException('Template not found');
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          // Throw error if template not found
+          throw new NotFoundException('Template not found');
+        }
+        throw new InternalServerErrorException();
       });
   }
 }
