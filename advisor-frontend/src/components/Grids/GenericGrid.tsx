@@ -59,9 +59,12 @@ type GenericGridProps = {
   theme: Theme;
   rows: GridRowsProp;
   columns: GridColumns;
-  hasToolbar: boolean;
-  textAdd: string;
-  handleAdd: () => void;
+  // eslint-disable-next-line react/require-default-props
+  hasToolbar?: boolean;
+  // eslint-disable-next-line react/require-default-props
+  textAdd?: string;
+  // eslint-disable-next-line react/require-default-props
+  handleAdd?: () => void;
 };
 
 export default function GenericGrid({
@@ -85,6 +88,7 @@ export default function GenericGrid({
           getEstimatedRowHeight={() => 100}
           getRowHeight={() => 'auto'}
           sx={{
+            // Style rows for compact, standard, and comfortable density
             '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
               py: '8px',
             },
