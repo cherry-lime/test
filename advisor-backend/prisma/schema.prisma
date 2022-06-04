@@ -128,7 +128,7 @@ model Template {
   Topic             Topic[]
   Category          Category[]
 
-  @@map("AssessmentTemplate")
+  @@unique([template_name, template_type])
 }
 
 model Category {

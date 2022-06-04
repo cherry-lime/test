@@ -1,26 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { aUser } from '../prisma/mock/mockUser';
+import { AppService } from './app.service';
+import { mockPrisma } from './prisma/mock/mockPrisma';
+import { PrismaService } from './prisma/prisma.service';
 
 const moduleMocker = new ModuleMocker(global);
 
-/**
- * Test user controller
- */
-describe('UserController', () => {
-  let userController: UserController;
+describe('AppService', () => {
+  let appService: AppService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [UserController],
+      providers: [AppService],
     })
       .useMocker((token) => {
-        if (token === UserService) {
-          return {
-            getUser: jest.fn().mockResolvedValue(aUser),
-          };
+        if (token === PrismaService) {
+          return mockPrisma;
         }
         if (typeof token === 'function') {
           const mockMetadata = moduleMocker.getMetadata(
@@ -32,16 +27,16 @@ describe('UserController', () => {
       })
       .compile();
 
-    userController = module.get<UserController>(UserController);
+    appService = module.get<AppService>(AppService);
   });
 
   it('should be defined', () => {
-    expect(userController).toBeDefined();
+    expect(appService).toBeDefined();
   });
 
-  describe('getUser', () => {
-    it('Should return the found user', async () => {
-      expect(userController.getUser(1)).resolves.toBe(aUser);
+  describe('getHello', () => {
+    it('Should return `Hello World!`', async () => {
+      expect(appService.getHello()).toBe('Hello World!');
     });
   });
 });
