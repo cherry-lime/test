@@ -8,12 +8,18 @@ import {
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import {
+  ApiConflictResponse,
+  ApiNotFoundResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AssessmentService } from './assessment.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { AssessmentResponse } from './responses/AssessmentResponse';
 
+@ApiTags('assessment')
 @Controller('assessment')
 export class AssessmentController {
   constructor(private readonly assessmentService: AssessmentService) {}
@@ -24,6 +30,9 @@ export class AssessmentController {
    * @returns created assessment
    */
   @Post()
+  @ApiConflictResponse({
+    description: 'Assessment with this name and type already exists',
+  })
   create(@Body() createAssessmentDto: CreateAssessmentDto) {
     return this.assessmentService.create(createAssessmentDto);
   }
@@ -49,6 +58,7 @@ export class AssessmentController {
    */
   @Get(':id')
   @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.assessmentService.findOne(id);
   }
@@ -61,6 +71,10 @@ export class AssessmentController {
    */
   @Patch(':id')
   @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
+  @ApiConflictResponse({
+    description: 'Assessment with this name and type already exists',
+  })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAssessmentDto: UpdateAssessmentDto
@@ -75,6 +89,7 @@ export class AssessmentController {
    */
   @Delete(':id')
   @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.assessmentService.delete(id);
   }
