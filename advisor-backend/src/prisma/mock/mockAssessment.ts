@@ -11,7 +11,7 @@ export const aAssessment = {
 
 export const mockAssessment = {
   create: jest.fn().mockResolvedValue(aAssessment),
-  findFirst: jest.fn().mockResolvedValue(aAssessment),
+  findUnique: jest.fn().mockResolvedValue(aAssessment),
   update: jest.fn().mockResolvedValue(aAssessment),
   findMany: jest.fn().mockResolvedValue([aAssessment]),
   delete: jest.fn().mockResolvedValue(aAssessment),

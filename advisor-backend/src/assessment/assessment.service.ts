@@ -50,19 +50,22 @@ export class AssessmentService {
    * @throws Assessment not found
    */
   async findOne(id: number) {
-    return await this.prisma.assessment
-      .findFirst({
+    const assessment = await this.prisma.assessment
+      .findUnique({
         where: {
           assessment_id: id,
         },
       })
-      .catch((error) => {
-        if (error.code === 'P2001') {
-          throw new NotFoundException('Assessment not found');
-        } else {
-          throw new InternalServerErrorException();
-        }
+      .catch(() => {
+        throw new InternalServerErrorException();
       });
+
+    // throw NotFoundException if assessment not found
+    if (!assessment) {
+      throw new NotFoundException();
+    }
+
+    return assessment;
   }
 
   /**

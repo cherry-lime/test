@@ -81,9 +81,7 @@ describe('AssessmentService', () => {
     });
 
     it('Should throw NotFoundException if not found', async () => {
-      jest
-        .spyOn(prisma.assessment, 'findFirst')
-        .mockRejectedValueOnce({ code: 'P2001' });
+      jest.spyOn(prisma.assessment, 'findUnique').mockResolvedValueOnce(null);
       expect(
         assessmentService.findOne(aAssessment.template_id)
       ).rejects.toThrowError(NotFoundException);
@@ -91,7 +89,7 @@ describe('AssessmentService', () => {
 
     it('Should reject with unknown error', async () => {
       jest
-        .spyOn(prisma.assessment, 'findFirst')
+        .spyOn(prisma.assessment, 'findUnique')
         .mockRejectedValueOnce({ code: 'TEST' });
       expect(
         assessmentService.findOne(aAssessment.template_id)
