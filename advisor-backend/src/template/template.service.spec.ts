@@ -86,7 +86,7 @@ describe('TemplateService', () => {
     });
 
     it('Should reject if template not found', async () => {
-      jest.spyOn(prisma.template, 'findFirst').mockResolvedValueOnce(null);
+      jest.spyOn(prisma.template, 'findUnique').mockResolvedValueOnce(null);
       expect(templateService.findOne(2)).rejects.toThrowError(
         NotFoundException
       );
@@ -94,7 +94,7 @@ describe('TemplateService', () => {
 
     it('Should reject with unknown error', async () => {
       jest
-        .spyOn(prisma.template, 'findFirst')
+        .spyOn(prisma.template, 'findUnique')
         .mockRejectedValueOnce({ code: 'TEST' });
       expect(templateService.findOne(1)).rejects.toThrowError(
         InternalServerErrorException
@@ -149,7 +149,7 @@ describe('TemplateService', () => {
     });
 
     it('Should reject if template not found', async () => {
-      jest.spyOn(prisma.template, 'findFirst').mockReturnValueOnce(null);
+      jest.spyOn(prisma.template, 'findUnique').mockReturnValueOnce(null);
       expect(templateService.clone(2)).rejects.toThrowError(NotFoundException);
     });
 
