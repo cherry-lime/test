@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { AssessmentType, Template } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { UpdateTemplateDto } from './dto/UpdateTemplateDto';
+import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateResponse } from './responses/TemplateResponse';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class TemplateService {
    * Get all templates
    * @returns All templates
    */
-  async getAllTemplates(): Promise<TemplateResponse[]> {
+  async findAll(): Promise<TemplateResponse[]> {
     // Return all templates from prisma
     return await this.prisma.template.findMany();
   }
@@ -28,7 +28,7 @@ export class TemplateService {
    * @param template_type Template type
    * @returns Created template
    */
-  async createTemplate(
+  async create(
     template_name: string,
     template_type: AssessmentType
   ): Promise<TemplateResponse> {
@@ -56,7 +56,7 @@ export class TemplateService {
    * @returns Template object
    * @throws Template not found
    */
-  async getTemplate(id: number): Promise<TemplateResponse> {
+  async findOne(id: number): Promise<TemplateResponse> {
     // Get template by id from prisma
     const template = await this.prisma.template.findFirst({
       where: {
@@ -80,7 +80,7 @@ export class TemplateService {
    * @returns Updated template
    * @throws Template not found
    */
-  async updateTemplate(
+  async update(
     id: number,
     updateTemplateDto: UpdateTemplateDto
   ): Promise<TemplateResponse> {
@@ -113,7 +113,7 @@ export class TemplateService {
    * @returns Cloned template
    * @throws Template not found
    */
-  async cloneTemplate(id: number): Promise<TemplateResponse> {
+  async clone(id: number): Promise<TemplateResponse> {
     // Get template by id from prisma
     const template = await this.prisma.template.findFirst({
       where: {
@@ -155,7 +155,7 @@ export class TemplateService {
    * @returns Deleted template
    * @throws Template not found
    */
-  async deleteTemplate(id: number): Promise<TemplateResponse> {
+  async delete(id: number): Promise<TemplateResponse> {
     // Delete template by id from prisma
     return await this.prisma.template
       .delete({

@@ -8,24 +8,24 @@ import { IsEnum, MinLength } from 'class-validator';
 export class UpdateTemplateDto {
   @ApiProperty({ minLength: 4 })
   @MinLength(4)
-  template_name: string;
+  template_name?: string;
 
   @ApiProperty({ enum: AssessmentType })
   @IsEnum(AssessmentType)
-  template_type: AssessmentType;
+  template_type?: AssessmentType;
 
   @ApiProperty()
-  disabled: boolean;
+  disabled?: boolean;
 
   @ApiProperty()
-  weight_range_min: number;
+  weight_range_min?: number;
 
   @ApiProperty()
-  weight_range_max: number;
+  weight_range_max?: number;
 
   @ApiProperty()
-  score_formula: string;
+  score_formula?: string;
 
   @ApiProperty()
-  include_no_answer: boolean;
+  include_no_answer?: boolean;
 }
