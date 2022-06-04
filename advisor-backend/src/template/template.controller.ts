@@ -8,7 +8,12 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiConflictResponse,
+  ApiNotFoundResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateResponse } from './responses/TemplateResponse';
@@ -29,8 +34,8 @@ export class TemplateController {
     type: TemplateResponse,
     isArray: true,
   })
-  async getAllTemplates(): Promise<TemplateResponse[]> {
-    return this.templateService.getAllTemplates();
+  async findAll(): Promise<TemplateResponse[]> {
+    return this.templateService.findAll();
   }
 
   /**
@@ -40,10 +45,13 @@ export class TemplateController {
    */
   @Post('')
   @ApiResponse({ description: 'Created template', type: TemplateResponse })
-  async createTemplate(
+  @ApiConflictResponse({
+    description: 'Template with this name and type already exists',
+  })
+  async create(
     @Body() { template_name, template_type }: CreateTemplateDto
   ): Promise<TemplateResponse> {
-    return this.templateService.createTemplate(template_name, template_type);
+    return this.templateService.create(template_name, template_type);
   }
 
   /**
@@ -53,50 +61,57 @@ export class TemplateController {
    */
   @Get(':id')
   @ApiResponse({ description: 'Template', type: TemplateResponse })
-  async getTemplate(
+  @ApiNotFoundResponse()
+  async findOne(
     @Param('id', ParseIntPipe) id: number
   ): Promise<TemplateResponse> {
-    return this.templateService.getTemplate(id);
+    return this.templateService.findOne(id);
   }
 
   /**
-   * Update template from template_id
+   * [PATCH] /template/:id - Update template by id
    * @param id template_id
    * @param updateTemplateDto Template data
    * @returns Updated template
    */
   @Patch(':id')
   @ApiResponse({ description: 'Template', type: TemplateResponse })
-  async updateTemplate(
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  @ApiConflictResponse({
+    description: 'Template with this name and type already exists',
+  })
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTemplateDto: UpdateTemplateDto
   ): Promise<TemplateResponse> {
-    return this.templateService.updateTemplate(id, updateTemplateDto);
+    return this.templateService.update(id, updateTemplateDto);
   }
 
   /**
-   * Delete template from template_id
+   * [DELETE] /template/:id - Delete template by id
    * @param id template_id
    * @returns Deleted template
    */
   @Delete(':id')
   @ApiResponse({ description: 'Deleted template', type: TemplateResponse })
-  async deleteTemplate(
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  async delete(
     @Param('id', ParseIntPipe) id: number
   ): Promise<TemplateResponse> {
-    return this.templateService.deleteTemplate(id);
+    return this.templateService.delete(id);
   }
 
   /**
-   * Clone template from template_id
+   * [POST] /template/:id/clone - Clone template by id
    * @param id template_id
    * @returns Cloned template
    */
   @Post(':id/clone')
   @ApiResponse({ description: 'Template', type: TemplateResponse })
-  async cloneTemplate(
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  async clone(
     @Param('id', ParseIntPipe) id: number
   ): Promise<TemplateResponse> {
-    return this.templateService.cloneTemplate(id);
+    return this.templateService.clone(id);
   }
 }

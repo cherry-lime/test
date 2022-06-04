@@ -20,12 +20,12 @@ describe('TemplateController', () => {
       .useMocker((token) => {
         if (token === TemplateService) {
           return {
-            createTemplate: jest.fn().mockResolvedValue(aTemplate),
-            getTemplate: jest.fn().mockResolvedValue(aTemplate),
-            updateTemplate: jest.fn().mockResolvedValue(updateTemplate),
-            getAllTemplates: jest.fn().mockResolvedValue([aTemplate]),
-            cloneTemplate: jest.fn().mockResolvedValue(aTemplate),
-            deleteTemplate: jest.fn().mockResolvedValue(aTemplate),
+            create: jest.fn().mockResolvedValue(aTemplate),
+            findOne: jest.fn().mockResolvedValue(aTemplate),
+            update: jest.fn().mockResolvedValue(updateTemplate),
+            findAll: jest.fn().mockResolvedValue([aTemplate]),
+            clone: jest.fn().mockResolvedValue(aTemplate),
+            delete: jest.fn().mockResolvedValue(aTemplate),
           };
         }
         if (typeof token === 'function') {
@@ -48,7 +48,7 @@ describe('TemplateController', () => {
   describe('createTemplate', () => {
     it('Should return the created template', async () => {
       expect(
-        templateController.createTemplate({
+        templateController.create({
           template_name: 'test',
           template_type: 'INDIVIDUAL',
         })
@@ -58,27 +58,27 @@ describe('TemplateController', () => {
 
   describe('getTemplate', () => {
     it('Should return the found template', async () => {
-      expect(templateController.getTemplate(1)).resolves.toBe(aTemplate);
+      expect(templateController.findOne(1)).resolves.toBe(aTemplate);
     });
   });
 
   describe('updateTemplate', () => {
     it('Should return the updated template', async () => {
-      expect(
-        templateController.updateTemplate(1, updateTemplateDto)
-      ).resolves.toBe(updateTemplate);
+      expect(templateController.update(1, updateTemplateDto)).resolves.toBe(
+        updateTemplate
+      );
     });
   });
 
   describe('deleteTemplate', () => {
     it('Should return the deleted template', async () => {
-      expect(templateController.deleteTemplate(1)).resolves.toBe(aTemplate);
+      expect(templateController.delete(1)).resolves.toBe(aTemplate);
     });
   });
 
   describe('getAllTemplates', () => {
     it('Should return all templates', async () => {
-      expect(templateController.getAllTemplates()).resolves.toEqual(
+      expect(templateController.findAll()).resolves.toEqual(
         expect.arrayContaining([aTemplate])
       );
     });
@@ -86,7 +86,7 @@ describe('TemplateController', () => {
 
   describe('cloneTemplate', () => {
     it('Should return the cloned template', async () => {
-      expect(templateController.cloneTemplate(1)).resolves.toBe(aTemplate);
+      expect(templateController.clone(1)).resolves.toBe(aTemplate);
     });
   });
 });
