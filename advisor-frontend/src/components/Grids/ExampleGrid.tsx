@@ -191,8 +191,8 @@ export default function ExampleGrid() {
       rows={rows}
       columns={columns}
       hasToolbar
-      textAdd='Add User'
-      handleAdd={handleAdd}
+      hasCheckbox
+      add={{ text: 'Add user', handler: handleAdd }}
     />
   );
 }

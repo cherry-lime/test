@@ -62,9 +62,12 @@ type GenericGridProps = {
   // eslint-disable-next-line react/require-default-props
   hasToolbar?: boolean;
   // eslint-disable-next-line react/require-default-props
-  textAdd?: string;
+  hasCheckbox?: boolean;
   // eslint-disable-next-line react/require-default-props
-  handleAdd?: () => void;
+  add?: {
+    text: string;
+    handler: () => void;
+  };
 };
 
 export default function GenericGrid({
@@ -72,8 +75,8 @@ export default function GenericGrid({
   rows,
   columns,
   hasToolbar,
-  textAdd,
-  handleAdd,
+  hasCheckbox,
+  add,
 }: GenericGridProps) {
   return (
     <ThemeProvider theme={theme}>
@@ -85,6 +88,7 @@ export default function GenericGrid({
           rows={rows}
           columns={columns}
           components={hasToolbar ? { Toolbar: GridToolbar } : {}}
+          checkboxSelection={hasCheckbox}
           getEstimatedRowHeight={() => 100}
           getRowHeight={() => 'auto'}
           sx={{
@@ -104,16 +108,15 @@ export default function GenericGrid({
             params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
           }
         />
-        {textAdd &&
-          handleAdd && ( // if addText and addFunc not null
-            <Button
-              onClick={handleAdd}
-              variant='outlined'
-              style={{ width: '100%', backgroundColor: 'white' }}
-            >
-              <strong>+ {textAdd}</strong>
-            </Button>
-          )}
+        {add && (
+          <Button
+            onClick={add.handler}
+            variant='outlined'
+            style={{ width: '100%', backgroundColor: 'white' }}
+          >
+            <strong>+ {add.text}</strong>
+          </Button>
+        )}
       </div>
     </ThemeProvider>
   );
