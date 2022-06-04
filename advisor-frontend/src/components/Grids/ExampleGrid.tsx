@@ -35,12 +35,6 @@ type Row = {
   date: Date;
 };
 
-// Get row object with default values
-const getDefaultRow = () => {
-  const defaultRow = { id: Date.now(), name: 'Name', date: new Date() };
-  return defaultRow;
-};
-
 // Initial rows that are rendered in the grid
 const initialRows: Row[] = [
   {
@@ -65,11 +59,23 @@ const initialRows: Row[] = [
   },
 ];
 
-export default function ExampleGrid() {
-  const [rows, setRows] = React.useState<Row[]>(initialRows);
+// Get row object with default values
+const getDefaultRow = () => {
+  const defaultRow = { id: Date.now(), name: 'Name', date: new Date() };
+  return defaultRow;
+};
 
-  // Generate new id based on time
-  const generateId = () => Date.now();
+// Generate new id based on time
+const generateId = () => Date.now();
+
+export default function ExampleGrid() {
+  const [rows, setRows] = React.useState<Row[]>([]);
+
+  // Fetch initial rows of the grid
+  React.useEffect(() => {
+    // TODO Replace this by API fetch
+    setRows(() => initialRows);
+  }, []);
 
   // Called when "Add" button is pressed below the grid
   const handleAdd = () => {
@@ -83,6 +89,15 @@ export default function ExampleGrid() {
       return [...prevRows, newRow];
     });
   };
+
+  // Called when the "Visit" action is pressed
+  const handleVisit = React.useCallback(
+    (rowId: GridRowId) => () => {
+      // Change link based on rowId
+      window.location.href = 'http://google.com';
+    },
+    []
+  );
 
   // Called when the "Delete" action is pressed in the action menu
   const handleDelete = React.useCallback(
@@ -145,7 +160,11 @@ export default function ExampleGrid() {
           <Button variant='outlined'>
             <strong>Outlined</strong>
           </Button>,
-          <GridActionsCellItem icon={<ArrowForwardIcon />} label='Visit' />,
+          <GridActionsCellItem
+            icon={<ArrowForwardIcon />}
+            label='Visit'
+            onClick={handleVisit(params.id)}
+          />,
           <GridActionsCellItem
             icon={<FileCopyIcon />}
             label='Duplicate'
