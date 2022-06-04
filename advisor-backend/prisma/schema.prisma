@@ -96,12 +96,14 @@ model Assessment {
   department_name                   String
   created_at                        DateTime                            @default(now())
   updated_at                        DateTime                            @updatedAt
-  completed_at                      DateTime
+  completed_at                      DateTime?
   assessment_type                   AssessmentType
   template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
   AssessmentParticipants            AssessmentParticipants[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+
+  @@unique([assessment_name, assessment_type])
 }
 
 model AssessmentParticipants {

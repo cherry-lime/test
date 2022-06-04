@@ -5,7 +5,7 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { aTemplate, updateTemplate } from '../prisma/mock/mockTemplate';
 import { AssessmentType } from '@prisma/client';
-import { UpdateTemplateDto } from './dto/UpdateTemplateDto';
+import { UpdateTemplateDto } from './dto/update-template.dto';
 import {
   ConflictException,
   InternalServerErrorException,

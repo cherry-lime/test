@@ -9,8 +9,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateTemplateDto } from './dto/CreateTemplateDto';
-import { UpdateTemplateDto } from './dto/UpdateTemplateDto';
+import { CreateTemplateDto } from './dto/create-template.dto';
+import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateResponse } from './responses/TemplateResponse';
 import { TemplateService } from './template.service';
 

@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { AssessmentType, Template } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { UpdateTemplateDto } from './dto/UpdateTemplateDto';
+import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateResponse } from './responses/TemplateResponse';
 
 @Injectable()

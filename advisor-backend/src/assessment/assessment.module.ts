@@ -4,6 +4,6 @@ import { AssessmentController } from './assessment.controller';
 
 @Module({
   controllers: [AssessmentController],
-  providers: [AssessmentService]
+  providers: [AssessmentService],
 })
 export class AssessmentModule {}
