@@ -9,8 +9,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import GenericGrid from './GenericGrid';
 
+// Style color palette
 const theme = createTheme({
-  // Style color palette
   palette: {
     primary: {
       light: '#FFD6B1', // Light Orange
@@ -29,6 +29,7 @@ const theme = createTheme({
   },
 });
 
+// Define type for the rows in the grid
 type Row = {
   id: number;
   name: string;
@@ -77,24 +78,11 @@ export default function ExampleGrid() {
     setRows(() => initialRows);
   }, []);
 
-  // Called when "Add" button is pressed below the grid
-  const handleAdd = () => {
-    setRows((prevRows) => {
-      // Create new id
-      const newId = generateId();
-
-      // Create new row with default content
-      const newRow = { ...getDefaultRow(), id: newId };
-      console.log(`Adding row ${JSON.stringify(newRow)} to database`);
-      return [...prevRows, newRow];
-    });
-  };
-
   // Called when the "Visit" action is pressed
   const handleVisit = React.useCallback(
     (rowId: GridRowId) => () => {
-      // Change link based on rowId
-      window.location.href = 'http://google.com';
+      // TODO Replace this by correct link
+      window.location.href = `http://google.com/search?q=${rowId}`;
     },
     []
   );
@@ -107,8 +95,8 @@ export default function ExampleGrid() {
         // Filter row with rowId from state
         setRows((prevRows) => prevRows.filter((row) => row.id !== rowId));
 
-        // Update database to remove row with rowId
-        console.log(`Removing row with id ${rowId} from database`);
+        // Delete row with rowId from database
+        // TODO
       });
     },
     []
@@ -119,19 +107,33 @@ export default function ExampleGrid() {
     (rowId: GridRowId) => () => {
       setRows((prevRows) => {
         // Get the row with rowId
-        const rowToDuplicate = prevRows.find((row) => row.id === rowId)!;
+        const rowToDuplicate =
+          prevRows.find((row) => row.id === rowId) ?? getDefaultRow();
 
-        // Create new id
-        const newId = generateId();
+        // Create new row with duplicated content and generated id
+        const newRow = { ...rowToDuplicate, id: generateId() };
 
-        // Create new row with duplicated content
-        const newRow = { ...rowToDuplicate, id: newId };
-        console.log(`Adding row ${JSON.stringify(newRow)} to database`);
+        // Create newRow in database
+        // TODO
+
         return [...prevRows, newRow];
       });
     },
     []
   );
+
+  // Called when "Add" button is pressed below the grid
+  const handleAdd = () => {
+    setRows((prevRows) => {
+      // Create new row with default content and generated id
+      const newRow = { ...getDefaultRow(), id: generateId() };
+
+      // Create newRow in database
+      // TODO
+
+      return [...prevRows, newRow];
+    });
+  };
 
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
@@ -180,7 +182,7 @@ export default function ExampleGrid() {
         ],
       },
     ],
-    [handleDuplicate, handleDelete]
+    [handleVisit, handleDuplicate, handleDelete]
   );
 
   return (
@@ -189,7 +191,7 @@ export default function ExampleGrid() {
       rows={rows}
       columns={columns}
       hasToolbar
-      textAdd='add user'
+      textAdd='Add User'
       handleAdd={handleAdd}
     />
   );

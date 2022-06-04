@@ -99,6 +99,7 @@ export default function GenericGrid({
               py: '22px',
             },
           }}
+          // Define even and odd for styling
           getRowClassName={(params: GridRowClassNameParams) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
           }
