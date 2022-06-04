@@ -59,7 +59,7 @@ export class TemplateService {
   async findOne(id: number): Promise<TemplateResponse> {
     // Get template by id from prisma
     const template = await this.prisma.template
-      .findFirst({
+      .findUnique({
         where: {
           template_id: id,
         },
@@ -117,7 +117,7 @@ export class TemplateService {
    */
   async clone(id: number): Promise<TemplateResponse> {
     // Get template by id from prisma
-    const template = await this.prisma.template.findFirst({
+    const template = await this.prisma.template.findUnique({
       where: {
         template_id: id,
       },

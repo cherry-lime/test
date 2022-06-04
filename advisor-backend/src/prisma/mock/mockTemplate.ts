@@ -22,7 +22,7 @@ export const updateTemplate = {
 
 export const mockTemplate = {
   create: jest.fn().mockResolvedValue(aTemplate),
-  findFirst: jest.fn().mockResolvedValue(aTemplate),
+  findUnique: jest.fn().mockResolvedValue(aTemplate),
   update: jest.fn().mockResolvedValue(updateTemplate),
   findMany: jest.fn().mockResolvedValue([aTemplate]),
   delete: jest.fn().mockResolvedValue(aTemplate),
