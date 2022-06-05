@@ -10,7 +10,7 @@ const defaultProps = {
 };
 
 export default function Header({ name, bgcolor }: Message) {
-  const [text, setText] = useState(name);
+  const [text] = useState(name);
   return (
     <Paper
       sx={{
