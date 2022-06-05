@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AssessmentType } from '@prisma/client';
-import { IsEnum } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
 
 export class CreateAssessmentDto {
   @ApiProperty()
@@ -18,4 +18,8 @@ export class CreateAssessmentDto {
 
   @ApiProperty()
   department_name: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  team_id?: number;
 }

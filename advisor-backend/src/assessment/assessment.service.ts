@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { AssessmentType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
@@ -17,12 +19,45 @@ export class AssessmentService {
    * @param createAssessmentDto Assessment data
    * @returns created assessment
    * @throws Assessment with this name and type already exists
+   * @throws Team id is required for team assessment
+   * @throws Team with id does not exist
    */
   async create(createAssessmentDto: CreateAssessmentDto) {
+    let users = [{ user_id: (await this.prisma.user.findFirst()).user_id }];
+    if (createAssessmentDto.assessment_type === AssessmentType.TEAM) {
+      if (!createAssessmentDto.team_id) {
+        throw new BadRequestException(
+          'Team id is required for team assessment'
+        );
+      }
+
+      const team = await this.prisma.team.findUnique({
+        where: {
+          team_id: createAssessmentDto.team_id,
+        },
+        include: {
+          UserInTeam: true,
+        },
+      });
+
+      if (!team) {
+        throw new NotFoundException(
+          `Team with id ${createAssessmentDto.team_id} not found`
+        );
+      }
+
+      users = team.UserInTeam.map((user) => ({
+        user_id: user.user_id,
+      }));
+    }
+
     return await this.prisma.assessment
       .create({
         data: {
           ...createAssessmentDto,
+          AssessmentParticipants: {
+            create: users,
+          },
         },
       })
       .catch((error) => {

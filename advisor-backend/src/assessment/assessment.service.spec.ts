@@ -1,14 +1,16 @@
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { Test, TestingModule } from '@nestjs/testing';
-import { aAssessment } from '../prisma/mock/mockAssessment';
+import { aAssessment, aTeamAssessment } from '../prisma/mock/mockAssessment';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { PrismaService } from '../prisma/prisma.service';
 import { AssessmentService } from './assessment.service';
 import {
+  BadRequestException,
   ConflictException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { aTeam } from '../prisma/mock/mockTeam';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -63,6 +65,30 @@ describe('AssessmentService', () => {
         .mockRejectedValueOnce({ code: 'TEST' });
       expect(assessmentService.create(aAssessment)).rejects.toThrowError(
         InternalServerErrorException
+      );
+    });
+
+    it('Should reject with NotFoundException on team not found', async () => {
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(null);
+      expect(assessmentService.create(aTeamAssessment)).rejects.toThrowError(
+        NotFoundException
+      );
+    });
+
+    it('Should reject with BadRequestException if type team but no team_id', async () => {
+      const aTeamAssessment2 = {
+        ...aTeamAssessment,
+      };
+      delete aTeamAssessment2.team_id;
+      expect(assessmentService.create(aTeamAssessment2)).rejects.toThrowError(
+        BadRequestException
+      );
+    });
+
+    it('Should return created team on correct team assessment', async () => {
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(aTeam);
+      expect(assessmentService.create(aTeamAssessment)).resolves.toBe(
+        aAssessment
       );
     });
   });
