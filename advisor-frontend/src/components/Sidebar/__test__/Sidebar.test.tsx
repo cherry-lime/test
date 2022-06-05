@@ -10,5 +10,7 @@ it("rendering without crash", () => {
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Teams");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Settings");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Sign Out"); // the correct one
+  expect(screen.getByTestId("DrawerButton")).not.toBeDisabled();
+
   // expect(screen.getByTestId('Sidebar')).toHaveTextContent("ClickButton2") // on purpose created an error
 });
