@@ -21,7 +21,7 @@ export default function PageLayout({
   headerColor,
 }: PageProps) {
   return (
-    <body>
+    <div className="main_container">
       <Header name={title} bgcolor={headerColor} />
       {footer ? (
         <>
@@ -31,7 +31,7 @@ export default function PageLayout({
       ) : (
         <Box className="body"> {children} </Box>
       )}
-    </body>
+    </div>
   );
 }
 PageLayout.defaultProps = defaultProps;
