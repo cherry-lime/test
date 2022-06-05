@@ -3,9 +3,13 @@ import { Box, Paper } from "@mui/material";
 import { useState } from "react";
 import headerImg from "./header_img.svg";
 
-type Message = { name: string };
+type Message = { name: string, bgcolor?: string };
 
-export default function Header({ name }: Message) {
+const defaultProps = {
+  bgcolor: "secondary.main"
+};
+
+export default function Header({ name, bgcolor }: Message) {
   const [text, setText] = useState(name);
   return (
     <Paper
@@ -14,7 +18,7 @@ export default function Header({ name }: Message) {
         borderBottomRightRadius: "20px",
         borderTopLeftRadius: "0px",
         borderTopRightRadius: "0px",
-        backgroundColor: "secondary.main",
+        backgroundColor: bgcolor,
       }}
     >
       <Box
@@ -41,3 +45,4 @@ export default function Header({ name }: Message) {
     </Paper>
   );
 }
+Header.defaultProps = defaultProps;

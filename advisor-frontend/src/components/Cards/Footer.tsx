@@ -1,30 +1,42 @@
 import Paper from "@mui/material/Paper";
-import { Box } from "@mui/material";
+import { Box, Typography, Link } from "@mui/material";
 import footerImg from "./footer_img.svg";
+
+function Copyright() {
+  return (
+    <Typography variant="body2" color="text.secondary">
+      {'Copyright © '}
+      <Link color="inherit" href="https://tue.nl">
+        TU/e
+      </Link>{' '}
+      {new Date().getFullYear()}
+      .
+    </Typography>
+  );
+}
 
 export default function Footer() {
   return (
     <Paper
       sx={{
-        borderBottomLeftRadius: "0px",
-        borderBottomRightRadius: "0px",
         borderTopLeftRadius: "20px",
         borderTopRightRadius: "20px",
         backgroundColor: "secondary.main",
-        position: "bottom",
+        width: "100%",
       }}
     >
       <Box
-        alignContent="bottom"
         sx={{
           height: "200px",
-          overflow: "auto",
           justifyContent: "center",
           alignItems: "center",
           display: "flex",
+          flexDirection: "column",
+          marginTop: "auto"
         }}
       >
         <img src={footerImg} alt="ING logo" />
+        <Copyright/>
       </Box>
     </Paper>
   );

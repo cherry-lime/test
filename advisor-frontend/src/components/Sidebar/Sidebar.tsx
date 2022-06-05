@@ -10,9 +10,10 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { grey, orange } from "@mui/material/colors";
 import { Grid } from "@mui/material";
-import { AllPages } from "../../pages/page_format";
-
+import AllPages from "../../pages/PageManager";
 import { mainListItems } from "./listItems";
+
+import INGTheme from "../../Theme";
 
 const drawerWidth = 220;
 
@@ -42,31 +43,14 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-const mdTheme = createTheme({
-  palette: {
-    primary: {
-      main: grey[500],
-    },
-    secondary: {
-      main: orange[500],
-    },
-    info: {
-      light: "#ff7961",
-      main: "#ffffff",
-      dark: "#ba000d",
-      contrastText: "#000",
-    },
-  },
-});
-
 function DashboardContent() {
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
   };
   return (
-    <ThemeProvider theme={mdTheme}>
-      <Grid sx={{ display: "flex" }} data-testid="Sidebar">
+    <ThemeProvider theme={INGTheme}>
+      <Grid sx={{ display: "flex", minHeight: "100vh" }} data-testid="Sidebar">
         <CssBaseline />
         <Drawer
           variant="permanent"
@@ -109,9 +93,12 @@ function DashboardContent() {
               theme.palette.mode === "light"
                 ? theme.palette.grey[100]
                 : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
+            width: "100vw",
             overflow: "auto",
+            flexDirection: "column",
+            height: "100vh",
+            margin: "0",
+            padding: "0"
           }}
         >
           <AllPages />
