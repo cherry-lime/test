@@ -74,7 +74,7 @@ model CheckpointInTopic {
 model Team {
   team_id      Int          @id @default(autoincrement())
   team_name    String       @unique
-  invite_token String       @default(uuid()) @db.Uuid
+  invite_token String       @unique @default(uuid()) @db.Uuid
   UserInTeam   UserInTeam[]
 }
 

@@ -12,6 +12,7 @@ import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Team } from './entities/team.entity';
+import { TeamMembers } from './entities/team.members.entity';
 
 @ApiTags('teams')
 @Controller('teams')
@@ -19,23 +20,18 @@ export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
   /**
-   * [POST] /team - Get team by team name
+   * [POST] /team/create - Get team by team name
    * @param name team_name
    * @returns Team object
    */
-  // @Post('')
-  // @ApiResponse({
-  //   description: 'Create team with given team name',
-  //   type: Team,
-  // })
-  // create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
-  //   return this.teamsService.create(createTeamDto);
-  // }
-
-  // @Get()
-  // findAll() {
-  //   return this.teamsService.findAll();
-  // }
+  @Post('create')
+  @ApiResponse({
+    description: 'Create team with given team name',
+    type: Team,
+  })
+  create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
+    return this.teamsService.create(createTeamDto);
+  }
 
   /**
    * [GET] /team/:name - Get team by team name
@@ -49,6 +45,32 @@ export class TeamsController {
   })
   findOne(@Param('name') name: string): Promise<Team> {
     return this.teamsService.findOne(name);
+  }
+
+  /**
+   * [GET] /team/:name/members - Get members of a team given a team name
+   * @param name team_name
+   * @returns Team members object
+   */
+  @Get(':name/members')
+  @ApiResponse({
+    description: 'Get members of a team given a team name',
+    type: TeamMembers,
+  })
+  findTeamMembers(@Param('name') name: string): Promise<TeamMembers> {
+    return this.teamsService.findTeamMembers(name);
+  }
+
+  /**
+   * [PATCH] /team/join/:invite_token - Join team via invite_token
+   * @param name invitie_token
+   * @returns Udated team members object
+   */
+  @Patch('join/:invite_token')
+  addTeamMember(
+    @Param('invite_token') invite_token: string
+  ): Promise<TeamMembers> {
+    return this.teamsService.addTeamMember(invite_token);
   }
 
   // @Patch(':id')
