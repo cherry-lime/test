@@ -76,6 +76,7 @@ model Team {
   team_name    String       @unique
   invite_token String       @unique @default(uuid()) @db.Uuid
   UserInTeam   UserInTeam[]
+  Assessment   Assessment[]
 }
 
 model UserInTeam {
@@ -96,12 +97,16 @@ model Assessment {
   department_name                   String
   created_at                        DateTime                            @default(now())
   updated_at                        DateTime                            @updatedAt
-  completed_at                      DateTime
+  completed_at                      DateTime?
   assessment_type                   AssessmentType
   template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
+  Team                              Team?                               @relation(fields: [team_id], references: [team_id])
+  team_id                           Int?
   AssessmentParticipants            AssessmentParticipants[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+
+  @@unique([assessment_name, assessment_type])
 }
 
 model AssessmentParticipants {
@@ -128,7 +133,7 @@ model Template {
   Topic             Topic[]
   Category          Category[]
 
-  @@map("AssessmentTemplate")
+  @@unique([template_name, template_type])
 }
 
 model Category {
