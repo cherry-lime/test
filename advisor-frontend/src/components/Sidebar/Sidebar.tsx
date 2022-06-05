@@ -97,7 +97,7 @@ function DashboardContent() {
             flexDirection: "column",
             height: "100vh",
             margin: "0",
-            padding: "0"
+            padding: "0",
           }}
         >
           <AllPages />

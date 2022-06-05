@@ -3,7 +3,7 @@ import Room from "./newpage";
 
 export default function AllPages() {
   return (
-    <Box >
+    <Box>
       <Room />
     </Box>
   );

@@ -3,10 +3,10 @@ import { Box, Paper } from "@mui/material";
 import { useState } from "react";
 import headerImg from "./header_img.svg";
 
-type Message = { name: string, bgcolor?: string };
+type Message = { name: string; bgcolor?: string };
 
 const defaultProps = {
-  bgcolor: "secondary.main"
+  bgcolor: "secondary.main",
 };
 
 export default function Header({ name, bgcolor }: Message) {

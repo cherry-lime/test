@@ -6,24 +6,31 @@ type PageProps = {
   footer?: boolean;
   title: string;
   children: React.ReactNode;
-  headerColor?: string
+  headerColor?: string;
 };
 const defaultProps = {
   footer: false,
-  headerColor: "secondary.main"
+  headerColor: "secondary.main",
 };
 
 // Page template, footer and headerColor are optional, declare when you need them
-export default function PageLayout({ children, footer, title, headerColor }: PageProps) {
+export default function PageLayout({
+  children,
+  footer,
+  title,
+  headerColor,
+}: PageProps) {
   return (
-    <body> 
+    <body>
       <Header name={title} bgcolor={headerColor} />
       {footer ? (
         <>
           <Box className="body_footer"> {children} </Box>
           <Footer />
         </>
-      ) : <Box className="body"> {children} </Box>}
+      ) : (
+        <Box className="body"> {children} </Box>
+      )}
     </body>
   );
 }

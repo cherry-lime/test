@@ -5,12 +5,11 @@ import footerImg from "./footer_img.svg";
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary">
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="https://tue.nl">
         TU/e
-      </Link>{' '}
-      {new Date().getFullYear()}
-      .
+      </Link>{" "}
+      {new Date().getFullYear()}.
     </Typography>
   );
 }
@@ -32,11 +31,11 @@ export default function Footer() {
           alignItems: "center",
           display: "flex",
           flexDirection: "column",
-          marginTop: "auto"
+          marginTop: "auto",
         }}
       >
         <img src={footerImg} alt="ING logo" />
-        <Copyright/>
+        <Copyright />
       </Box>
     </Paper>
   );
