@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 function ListOfTemplates() {
   const location = useLocation();
   const data = location.state;
+  const templateIds = [21, 32, 5];
 
   return (
     <div>
@@ -15,10 +16,18 @@ function ListOfTemplates() {
 
       <h2> List of Templates</h2>
 
-      <Link to="/admin/templates/template" state={data}>
-        {" "}
-        Template{" "}
-      </Link>
+      {templateIds.map((templateId) => (
+        <div>
+          <Link
+            to={`/admin/templates/template?templateid=${templateId}`}
+            state={data}
+          >
+            {" "}
+            Template with id {templateId}{" "}
+          </Link>
+          <br />
+        </div>
+      ))}
     </div>
   );
 }

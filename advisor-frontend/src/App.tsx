@@ -5,6 +5,7 @@ import ListOfTemplates from "./admin/templates/ListOfTemplates";
 import Template from "./admin/templates/Template";
 import AssessorInterface from "./assessor/AssessorInterface";
 import IndividualEvaluation from "./evaluations/IndividualEvaluation";
+import IndividualFeedback from "./evaluations/IndividualFeedback";
 import TeamEvaluation from "./evaluations/TeamEvaluation";
 import TeamFeedback from "./evaluations/TeamFeedback";
 import Home from "./Home";
@@ -35,18 +36,22 @@ function App() {
 
         <Route path="/user" element={<UserInterface />} />
         <Route
-          path="/user/individual-evals"
+          path="/user/self_evaluations"
           element={<IndividualEvaluations />}
         />
         <Route
-          path="/user/individual-evals/evaluation"
+          path="/user/self_evaluations/evaluation"
           element={<IndividualEvaluation />}
+        />
+        <Route
+          path="/user/self_evaluations/feedback"
+          element={<IndividualFeedback />}
         />
 
         <Route path="/teams" element={<TeamList />} />
-        <Route path="/teams/a-team" element={<Team />} />
-        <Route path="/teams/a-team/evaluation" element={<TeamEvaluation />} />
-        <Route path="/teams/a-team/feedback" element={<TeamFeedback />} />
+        <Route path="/teams/team" element={<Team />} />
+        <Route path="/teams/team/evaluation" element={<TeamEvaluation />} />
+        <Route path="/teams/team/feedback" element={<TeamFeedback />} />
 
         <Route path="/assessor" element={<AssessorInterface />} />
 

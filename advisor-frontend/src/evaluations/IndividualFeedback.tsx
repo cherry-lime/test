@@ -1,19 +1,21 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 function IndividualFeedback() {
   const location = useLocation();
   const data = location.state;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const assessmentId = searchParams.get("assessmentid");
 
   return (
     <div>
       <p> {data} view </p>
-      <Link to="/user/individual-evals" state={data}>
+      <Link to="/user/self_evaluations" state={data}>
         {" "}
         Go Back to Evaluations Page{" "}
       </Link>
 
-      <h2> Recommendations </h2>
+      <h2> Recommendations for assessment with id {assessmentId} </h2>
 
       <h3>List of recommendations</h3>
     </div>

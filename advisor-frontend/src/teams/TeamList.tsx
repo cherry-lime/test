@@ -5,6 +5,7 @@ import Button from "../components/Button/Button";
 function TeamList() {
   const location = useLocation();
   const data = location.state;
+  const teamIds = [2, 4, 5];
 
   return (
     <div>
@@ -21,10 +22,15 @@ function TeamList() {
 
       <br />
 
-      <Link to="/teams/a-team" state={data}>
-        {" "}
-        Go to Specific Team{" "}
-      </Link>
+      {teamIds.map((teamId) => (
+        <div>
+          <Link to={`/teams/team?teamid=${teamId}`} state={data}>
+            {" "}
+            Go to Team with id {teamId}{" "}
+          </Link>
+          <br />
+        </div>
+      ))}
     </div>
   );
 }

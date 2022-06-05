@@ -1,11 +1,16 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import Button from "../components/Button/Button";
-import TeamEvaluation from "../evaluations/TeamEvaluation";
 
 function Team() {
   const location = useLocation();
   const data = location.state;
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const teamId = searchParams.get("teamid");
+
+  const assessmentIds = [234, 56, 76];
+  const feedbackIds = [123, 555, 23];
 
   return (
     <div>
@@ -15,7 +20,7 @@ function Team() {
         Go Back to List of Teams{" "}
       </Link>
 
-      <h2> A Specific Team </h2>
+      <h2> A Specific Team with id {teamId} </h2>
       {data === "assessor" && <p> Editable team info </p>}
 
       {data === "user" && <p> Non-editable team info </p>}
@@ -29,17 +34,35 @@ function Team() {
       {data === "assessor" && <Button name="Add New Member" />}
 
       <h3>Evaluations in progress</h3>
-      <Link to="/teams/a-team/evaluation" state={data}>
-        {" "}
-        Team Evaluation{" "}
-      </Link>
+
+      {assessmentIds.map((assessmentId) => (
+        <div>
+          {/* later to get teamid can use api in evaluation page instead of passing it */}
+          <Link
+            to={`/teams/team/evaluation?teamid=${teamId}&${assessmentId}`}
+            state={data}
+          >
+            {" "}
+            Team Evaluation with id {assessmentId}{" "}
+          </Link>
+          <br />
+        </div>
+      ))}
 
       <h3>Completed evaluations</h3>
 
-      <Link to="/teams/a-team/feedback" state={data}>
-        {" "}
-        Team Feedback{" "}
-      </Link>
+      {feedbackIds.map((feedbackId) => (
+        <div>
+          <Link
+            to={`/teams/team/feedback?teamid=${teamId}&assessmentid=${feedbackId}`}
+            state={data}
+          >
+            {" "}
+            Team Feedback with id {feedbackId}{" "}
+          </Link>
+          <br />
+        </div>
+      ))}
     </div>
   );
 }

@@ -1,19 +1,22 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 function TeamFeedback() {
   const location = useLocation();
   const data = location.state;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const assessmentId = searchParams.get("assessmentid");
+  const teamId = searchParams.get("teamid");
 
   return (
     <div>
       <p> {data} view </p>
-      <Link to="/teams/a-team" state={data}>
+      <Link to={`/teams/team?teamid=${teamId}`} state={data}>
         {" "}
         Go Back to Team{" "}
       </Link>
 
-      <h2> A Team Evaluation Feedback </h2>
+      <h2> A Team Evaluation Feedback for assessment with id {assessmentId}</h2>
 
       {data === "assessor" && <p> Evaluation Feedback can be edited </p>}
 

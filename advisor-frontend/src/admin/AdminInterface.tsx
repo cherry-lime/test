@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 function AdminInterface() {
   const location = useLocation();
@@ -6,7 +6,7 @@ function AdminInterface() {
 
   return (
     <div>
-      <h2> Admin Interface Here </h2>
+      <h2> Admin Interface </h2>
       <Link to="/admin/individuals" state={data}>
         {" "}
         Individuals{" "}

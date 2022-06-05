@@ -9,7 +9,7 @@ function UserInterface() {
     <div>
       <h2> User Interface Here </h2>
 
-      <Link to="/user/individual-evals" state={data}>
+      <Link to="/user/self_evaluations" state={data}>
         {" "}
         Individual Evaluations{" "}
       </Link>
