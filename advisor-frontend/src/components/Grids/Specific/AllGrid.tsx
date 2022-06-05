@@ -2,6 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 import ExampleGrid from './ExampleGrid';
 import TeamGrid from './TeamGrid';
+import AssessorGrid from './AssessorGrid';
 
 // Style color palette
 const theme = createTheme({
@@ -24,12 +25,16 @@ const theme = createTheme({
 });
 
 export default function AllGrid() {
+  const isAssessor = true;
+
   return (
     <div style={{ width: '90%' }}>
       <strong>Example Grid</strong>
       <ExampleGrid theme={theme} />
       <strong>Team Grid</strong>
-      <TeamGrid theme={theme} isAssessor />
+      <TeamGrid theme={theme} isAssessor={isAssessor} />
+      <strong>Assessor Grid</strong>
+      <AssessorGrid theme={theme} isAssessor={isAssessor} />
     </div>
   );
 }

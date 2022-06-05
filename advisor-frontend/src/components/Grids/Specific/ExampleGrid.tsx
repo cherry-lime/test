@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
   GridActionsCellItem,
   GridColumns,
@@ -178,7 +179,7 @@ export default function ExampleGrid({ theme }: ExampleGridProps) {
         field: 'actions',
         type: 'actions',
         width: 350,
-        getActions: (params) => [
+        getActions: (params: { id: GridRowId }) => [
           <Button variant='contained'>
             <strong>Contained</strong>
           </Button>,

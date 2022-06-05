@@ -8,7 +8,6 @@ import {
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
 
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RemoveIcon from '@mui/icons-material/HighlightOff';
 
 import GenericGrid from '../Generic/GenericGrid';
@@ -23,7 +22,7 @@ type Row = {
 const getDefaultRow = () => {
   const defaultRow = {
     id: Date.now(),
-    name: 'New Team',
+    name: '',
   };
   return defaultRow;
 };
@@ -60,15 +59,6 @@ export default function TeamGrid({ theme, isAssessor }: TeamGridProps) {
     []
   );
 
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
-    },
-    []
-  );
-
   // Called when the "Remove" action is pressed
   const handleRemove = React.useCallback(
     (rowId: GridRowId) => () => {
@@ -101,30 +91,29 @@ export default function TeamGrid({ theme, isAssessor }: TeamGridProps) {
     () => [
       {
         field: 'name',
-        headerName: 'Team Name',
+        headerName: 'Assessor Name',
         type: 'string',
         flex: 1,
         editable: isAssessor,
       },
-      {
-        field: 'actions',
-        type: 'actions',
-        width: 100,
-        getActions: (params: { id: GridRowId }) => [
-          <GridActionsCellItem
-            icon={<ArrowForwardIcon />}
-            label='Visit'
-            onClick={handleVisit(params.id)}
-          />,
-          <GridActionsCellItem
-            icon={<RemoveIcon />}
-            label='Remove'
-            onClick={handleRemove(params.id)}
-          />,
-        ],
-      },
+      ...(isAssessor
+        ? [
+            {
+              field: 'actions',
+              type: 'actions',
+              width: 100,
+              getActions: (params: { id: GridRowId }) => [
+                <GridActionsCellItem
+                  icon={<RemoveIcon />}
+                  label='Remove'
+                  onClick={handleRemove(params.id)}
+                />,
+              ],
+            },
+          ]
+        : []),
     ],
-    [handleVisit, handleRemove]
+    [handleRemove]
   );
 
   return (
@@ -135,7 +124,7 @@ export default function TeamGrid({ theme, isAssessor }: TeamGridProps) {
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={
-        isAssessor ? { text: 'Create new team', handler: handleAdd } : undefined
+        isAssessor ? { text: 'Add assessor', handler: handleAdd } : undefined
       }
     />
   );

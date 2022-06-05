@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
   DataGrid,
   GridToolbar,
@@ -9,7 +10,9 @@ import {
   GridRowModel,
 } from '@mui/x-data-grid';
 import { styled, Theme, ThemeProvider } from '@mui/material/styles';
+
 import Button from '@mui/material/Button';
+
 import './GenericGrid.css';
 
 const StyledGrid = styled(DataGrid)(({ theme }) => ({
@@ -60,7 +63,8 @@ type GenericGridProps = {
   theme: Theme;
   rows: GridRowsProp;
   columns: GridColumns;
-  processRowUpdate: (
+  // eslint-disable-next-line react/require-default-props
+  processRowUpdate?: (
     newRow: GridRowModel,
     oldRow: GridRowModel
   ) => Promise<GridRowModel>;
