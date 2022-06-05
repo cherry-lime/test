@@ -3,7 +3,9 @@ import logo from './logo.svg';
 import './App.css';
 import Greetings from './components/SampleText/SampleText';
 import Button from './components/Button/Button';
-import ExampleGrid from './components/Grids/ExampleGrid';
+
+import AllGrid from './components/Grids/Specific/AllGrid';
+import ExampleGrid from './components/Grids/Specific/ExampleGrid';
 
 function App() {
   return (
@@ -24,7 +26,7 @@ function App() {
         >
           Learn React
         </a>
-        <ExampleGrid />
+        <AllGrid />
       </header>
     </div>
   );

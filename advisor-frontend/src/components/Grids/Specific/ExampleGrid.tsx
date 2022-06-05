@@ -1,38 +1,19 @@
 import * as React from 'react';
-import { createTheme } from '@mui/material/styles';
 import {
   GridActionsCellItem,
   GridColumns,
   GridRowId,
   GridRowModel,
 } from '@mui/x-data-grid';
-import Button from '@mui/material/Button';
+import { Theme } from '@mui/material/styles';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import GenericGrid from './GenericGrid';
+import Button from '@mui/material/Button';
 
-// Style color palette
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: '#FFD6B1', // Light Orange
-      main: '#FF6200', // Orange
-      dark: '#AA3909', // Dark Orange
-    },
-    secondary: {
-      // Lightest Grey: #FAF6F3
-      light: '#EDE6E2', // Light Grey
-      main: '#8B817C', // Grey
-      dark: '#5A534F', // Dark Grey
-    },
-    text: {
-      primary: '#5A534F', // Dark Grey
-    },
-  },
-});
+import GenericGrid from '../Generic/GenericGrid';
 
 // Define type for the rows in the grid
 type Row = {
@@ -84,7 +65,11 @@ const getDefaultRow = () => {
 // Generate new id based on time
 const generateId = () => Date.now();
 
-export default function ExampleGrid() {
+type ExampleGridProps = {
+  theme: Theme;
+};
+
+export default function ExampleGrid({ theme }: ExampleGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
   // Fetch initial rows of the grid
@@ -154,7 +139,7 @@ export default function ExampleGrid() {
   );
 
   // Called when "Add" button is pressed below the grid
-  const handleAdd = () => {
+  const handleAdd = React.useCallback(() => {
     setRows((prevRows) => {
       // Create new row with default content and generated id
       const newRow = { ...getDefaultRow(), id: generateId() };
@@ -164,7 +149,7 @@ export default function ExampleGrid() {
 
       return [...prevRows, newRow];
     });
-  };
+  }, []);
 
   const columns = React.useMemo<GridColumns<Row>>(
     () => [

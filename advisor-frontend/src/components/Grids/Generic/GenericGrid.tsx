@@ -85,7 +85,9 @@ export default function GenericGrid({
     <ThemeProvider theme={theme}>
       <div
         className='GenericGrid'
-        style={{ backgroundColor: theme.palette.secondary.dark }}
+        style={{
+          backgroundColor: theme.palette.secondary.dark,
+        }}
       >
         <StyledGrid
           rows={rows}
