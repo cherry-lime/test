@@ -30,12 +30,17 @@ const getDefaultRow = () => {
 // Generate new id based on time
 const generateId = () => Date.now();
 
-type TeamGridProps = {
+type MemberGridProps = {
   theme: Theme;
-  isAssessor: boolean;
+  isAssessor: boolean; // Is the role assessor (true) or user (false)
+  forAssessors: boolean; // Is the grid for assessors (true) or users (false)
 };
 
-export default function TeamGrid({ theme, isAssessor }: TeamGridProps) {
+export default function MemberGrid({
+  theme,
+  isAssessor,
+  forAssessors,
+}: MemberGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
   // Fetch initial rows of the grid
@@ -91,7 +96,7 @@ export default function TeamGrid({ theme, isAssessor }: TeamGridProps) {
     () => [
       {
         field: 'name',
-        headerName: 'Assessor Name',
+        headerName: forAssessors ? 'Assessor Name' : 'Member Name',
         type: 'string',
         flex: 1,
         editable: isAssessor,
@@ -124,7 +129,12 @@ export default function TeamGrid({ theme, isAssessor }: TeamGridProps) {
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={
-        isAssessor ? { text: 'Add assessor', handler: handleAdd } : undefined
+        isAssessor
+          ? {
+              text: forAssessors ? 'Add Assessor' : 'Add Member',
+              handler: handleAdd,
+            }
+          : undefined
       }
     />
   );

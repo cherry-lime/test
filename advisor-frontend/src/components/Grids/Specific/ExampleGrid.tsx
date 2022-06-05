@@ -216,7 +216,7 @@ export default function ExampleGrid({ theme }: ExampleGridProps) {
       columns={columns}
       processRowUpdate={processRowUpdate}
       hasToolbar
-      add={{ text: 'Add user', handler: handleAdd }}
+      add={{ text: 'Add User', handler: handleAdd }}
     />
   );
 }

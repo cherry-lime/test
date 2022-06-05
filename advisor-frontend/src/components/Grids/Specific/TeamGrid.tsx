@@ -33,7 +33,7 @@ const generateId = () => Date.now();
 
 type TeamGridProps = {
   theme: Theme;
-  isAssessor: boolean;
+  isAssessor: boolean; // Is the role assessor (true) or user (false)
 };
 
 export default function TeamGrid({ theme, isAssessor }: TeamGridProps) {
