@@ -9,6 +9,7 @@ import { UpdateTeamDto } from './dto/update-team.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Team } from './entities/team.entity';
 import { TeamMembers } from './entities/team.members.entity';
+import { AssessmentResponse } from 'src/assessment/responses/AssessmentResponse';
 
 @Injectable()
 export class TeamsService {
@@ -208,9 +209,79 @@ export class TeamsService {
     return teamMembers;
   }
 
-  // TODO findtokenofteam
+  /**
+   * Get invite_token of team given a team name
+   * @param name name of team
+   * @returns team members object corresponding to team_name, null if not found
+   * @throws Team not found
+   */
+  async getInviteToken(name: string): Promise<string> {
+    // Get team id and associated user ids from team with team_name from prisma
+    const invite_token = await this.prisma.team
+      .findUnique({
+        where: {
+          team_name: name,
+        },
+        select: {
+          invite_token: true,
+        },
+      })
+      .catch(() => {
+        throw new InternalServerErrorException();
+      });
+
+    if (!invite_token) {
+      // Throw error if team with given team name not found
+      throw new NotFoundException('Team with given team name not found');
+    }
+
+    return invite_token.invite_token;
+  }
+
+  /**
+   * Get assessments of a team given a team name
+   * @param name name of team
+   * @returns assessment objects corresponding to team_name
+   * @throws Team not found
+   */
+  async getAssessments(name: string): Promise<AssessmentResponse[]> {
+    let assessments = await this.prisma.team
+      .findUnique({
+        where: {
+          team_name: name,
+        },
+        select: {
+          Assessment: true,
+        },
+      })
+      .catch(() => {
+        throw new InternalServerErrorException();
+      });
+
+    if (!assessments) {
+      // Throw error if team with given team name not found
+      throw new NotFoundException('Team with given team name not found');
+    }
+
+    assessments = assessments.Assessment.map((a) => {return new AssessmentResponse().from(a)});
+      // assessment_id: a.assessment_id,
+      // assessment_name: a.assessment_name,
+      // assessment_type: a.assessment_type,
+      // country_name: a.country_name,
+      // department_name: a.department_name,
+      // template_id: a.template_id,
+      // created_at: a.created_at,
+      // updated_at: a.updated_at,
+      // completed_at: a.completed_at,
+    };
+  }
+
+    return assessments;
+  }
+
   // TODO get team assessments
   // TODO get all teams of user
+  // TODO permissions for all endpoints
 
   // update(id: number, updateTeamDto: UpdateTeamDto) {
   //   return `This action updates a #${id} team`;
