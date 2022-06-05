@@ -8,9 +8,17 @@ function IndividualEvaluations() {
   return (
     <div>
       <h2> Individual Evaluations Page </h2>
+
       <Link to="/user" state={data}>
         {" "}
         Go Back to User Interface{" "}
+      </Link>
+
+      <h3>List of evaluations</h3>
+
+      <Link to="/user/individual-evals/evaluation" state={data}>
+        {" "}
+        Evaluation{" "}
       </Link>
     </div>
   );

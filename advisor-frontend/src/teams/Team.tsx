@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import Button from "../components/Button/Button";
+import TeamEvaluation from "../evaluations/TeamEvaluation";
 
 function Team() {
   const location = useLocation();
@@ -28,8 +29,17 @@ function Team() {
       {data === "assessor" && <Button name="Add New Member" />}
 
       <h3>Evaluations in progress</h3>
+      <Link to="/teams/a-team/evaluation" state={data}>
+        {" "}
+        Team Evaluation{" "}
+      </Link>
 
       <h3>Completed evaluations</h3>
+
+      <Link to="/teams/a-team/feedback" state={data}>
+        {" "}
+        Team Feedback{" "}
+      </Link>
     </div>
   );
 }
