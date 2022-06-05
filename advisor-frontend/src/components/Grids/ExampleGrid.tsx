@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { createTheme } from '@mui/material/styles';
-import { GridActionsCellItem, GridColumns, GridRowId } from '@mui/x-data-grid';
+import {
+  GridActionsCellItem,
+  GridColumns,
+  GridRowId,
+  GridRowModel,
+} from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -34,6 +39,7 @@ type Row = {
   id: number;
   name: string;
   date: Date;
+  enabled: boolean;
 };
 
 // Initial rows that are rendered in the grid
@@ -42,27 +48,36 @@ const initialRows: Row[] = [
     id: 1,
     name: 'Alice '.repeat(50),
     date: new Date(1979, 0, 1),
+    enabled: true,
   },
   {
     id: 2,
     name: 'Bob',
     date: new Date(1984, 1, 1),
+    enabled: false,
   },
   {
     id: 3,
     name: 'Charlie',
-    date: new Date(1992, 2, 1),
+    date: new Date(1992, 11, 30),
+    enabled: false,
   },
   {
     id: 4,
     name: 'Denise',
     date: new Date(1992, 2, 1),
+    enabled: true,
   },
 ];
 
 // Get row object with default values
 const getDefaultRow = () => {
-  const defaultRow = { id: Date.now(), name: 'Name', date: new Date() };
+  const defaultRow = {
+    id: Date.now(),
+    name: 'Name',
+    date: new Date(),
+    enabled: true,
+  };
   return defaultRow;
 };
 
@@ -77,6 +92,22 @@ export default function ExampleGrid() {
     // TODO Replace this by API fetch
     setRows(() => initialRows);
   }, []);
+
+  // Called when a row is edited
+  const processRowUpdate = React.useCallback(
+    (newRow: GridRowModel, oldRow: GridRowModel) =>
+      new Promise<GridRowModel>((resolve) => {
+        if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
+          resolve(oldRow);
+        } else {
+          // Update the database with row changes
+          // TODO
+
+          resolve(newRow);
+        }
+      }),
+    []
+  );
 
   // Called when the "Visit" action is pressed
   const handleVisit = React.useCallback(
@@ -148,7 +179,14 @@ export default function ExampleGrid() {
         field: 'date',
         headerName: 'Date',
         type: 'date',
-        width: 200,
+        width: 100,
+        editable: true,
+      },
+      {
+        field: 'enabled',
+        headerName: 'Enabled',
+        type: 'boolean',
+        width: 125,
         editable: true,
       },
       {
@@ -159,7 +197,7 @@ export default function ExampleGrid() {
           <Button variant='contained'>
             <strong>Contained</strong>
           </Button>,
-          <Button variant='outlined'>
+          <Button variant='outlined' style={{ backgroundColor: 'white' }}>
             <strong>Outlined</strong>
           </Button>,
           <GridActionsCellItem
@@ -190,8 +228,8 @@ export default function ExampleGrid() {
       theme={theme}
       rows={rows}
       columns={columns}
+      processRowUpdate={processRowUpdate}
       hasToolbar
-      hasCheckbox
       add={{ text: 'Add user', handler: handleAdd }}
     />
   );

@@ -6,6 +6,7 @@ import {
   GridRowClassNameParams,
   GridRowsProp,
   GridColumns,
+  GridRowModel,
 } from '@mui/x-data-grid';
 import { styled, Theme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -59,10 +60,12 @@ type GenericGridProps = {
   theme: Theme;
   rows: GridRowsProp;
   columns: GridColumns;
+  processRowUpdate: (
+    newRow: GridRowModel,
+    oldRow: GridRowModel
+  ) => Promise<GridRowModel>;
   // eslint-disable-next-line react/require-default-props
   hasToolbar?: boolean;
-  // eslint-disable-next-line react/require-default-props
-  hasCheckbox?: boolean;
   // eslint-disable-next-line react/require-default-props
   add?: {
     text: string;
@@ -74,8 +77,8 @@ export default function GenericGrid({
   theme,
   rows,
   columns,
+  processRowUpdate,
   hasToolbar,
-  hasCheckbox,
   add,
 }: GenericGridProps) {
   return (
@@ -87,8 +90,9 @@ export default function GenericGrid({
         <StyledGrid
           rows={rows}
           columns={columns}
+          experimentalFeatures={{ newEditingApi: true }}
+          processRowUpdate={processRowUpdate}
           components={hasToolbar ? { Toolbar: GridToolbar } : {}}
-          checkboxSelection={hasCheckbox}
           getEstimatedRowHeight={() => 100}
           getRowHeight={() => 'auto'}
           sx={{
