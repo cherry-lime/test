@@ -44,9 +44,7 @@ const Drawer = styled(MuiDrawer, {
 
 function DashboardContent() {
   const [open, setOpen] = React.useState(false);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  const toggleDrawer = () =>  {setOpen((isOpen) => !isOpen)};
   return (
     <ThemeProvider theme={INGTheme}>
       <Grid sx={{ display: "flex", minHeight: "100vh" }} data-testid="Sidebar">
