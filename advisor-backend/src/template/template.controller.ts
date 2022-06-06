@@ -21,13 +21,17 @@ import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateResponse } from './responses/TemplateResponse';
 import { TemplateService } from './template.service';
+import { MaturityDto } from '../maturity/dto/maturity.dto';
+import { CreateMaturityDto } from '../maturity/dto/create-maturity.dto';
+import { MaturityService } from '../maturity/maturity.service';
 
 @Controller('template')
 @ApiTags('template')
 export class TemplateController {
   constructor(
     private readonly templateService: TemplateService,
-    private readonly categoryService: CategoryService
+    private readonly categoryService: CategoryService,
+    private readonly maturityService: MaturityService
   ) {}
 
   /**
@@ -156,5 +160,43 @@ export class TemplateController {
     @Param('id', ParseIntPipe) id: number
   ): Promise<CategoryResponse[]> {
     return this.categoryService.findAll(id);
+  }
+
+  /**
+   * [POST] /template/:id/maturity - Create new maturity for template
+   * @param id template_id
+   * @param body Maturity data
+   * @returns Created maturity
+   */
+  @Post(':id/maturity')
+  @ApiResponse({ description: 'Maturity', type: MaturityDto })
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  @ApiConflictResponse({
+    description: 'Maturity with this name already exists',
+  })
+  async createMaturity(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() maturityDto: CreateMaturityDto
+  ): Promise<MaturityDto> {
+    return this.maturityService.create(id, maturityDto);
+  }
+
+  /**
+   * [GET] /template/:id/maturity - Get all maturity for template
+   * @param id template_id
+   * @returns MaturityDto[] List of all maturity
+   * @throws NotFoundException if template not found
+   */
+  @Get(':id/maturity')
+  @ApiResponse({
+    description: 'Found maturities',
+    type: MaturityDto,
+    isArray: true,
+  })
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  async findAllMaturity(
+    @Param('id', ParseIntPipe) id: number
+  ): Promise<MaturityDto[]> {
+    return this.maturityService.findAll(id);
   }
 }

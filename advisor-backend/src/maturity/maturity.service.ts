@@ -4,11 +4,11 @@ import { UpdateMaturityDto } from './dto/update-maturity.dto';
 
 @Injectable()
 export class MaturityService {
-  create(createMaturityDto: CreateMaturityDto) {
-    return 'This action adds a new maturity';
+  create(template_id: number, createMaturityDto: CreateMaturityDto) {
+    return {};
   }
 
-  findAll() {
+  findAll(template_id: number) {
     return `This action returns all maturity`;
   }
 

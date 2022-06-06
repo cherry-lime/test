@@ -49,8 +49,12 @@ model Maturity {
   maturity_id    Int          @id @default(autoincrement())
   maturity_name  String
   maturity_order Int
+  Template       Template     @relation(fields: [template_id], references: [template_id])
+  template_id    Int
   Checkpoint     Checkpoint[]
   Feedback       Feedback[]
+
+  @@unique([maturity_name, template_id])
 }
 
 model Topic {
@@ -133,6 +137,7 @@ model Template {
   Topic             Topic[]
   Category          Category[]
 
+  Maturity Maturity[]
   @@unique([template_name, template_type])
 }
 

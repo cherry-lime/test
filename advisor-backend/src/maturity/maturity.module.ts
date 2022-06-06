@@ -4,6 +4,6 @@ import { MaturityController } from './maturity.controller';
 
 @Module({
   controllers: [MaturityController],
-  providers: [MaturityService]
+  providers: [MaturityService],
 })
 export class MaturityModule {}
