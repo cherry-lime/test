@@ -51,4 +51,12 @@ describe('AuthController (e2e)', () => {
   //expect(response.body.user.roles).toStrictEqual(["ADMIN"]);
   //authToken = response.body.token;
   //});
+
+  it('should throw invalid token exception', async () => {
+    return request(app.getHttpServer())
+    .get('/user/1')
+    .set('Authorization', `Bearer ${null}`)
+    .expect(HttpStatus.UNAUTHORIZED);
+  });
+
 });
