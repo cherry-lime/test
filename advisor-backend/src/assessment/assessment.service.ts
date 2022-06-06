@@ -24,7 +24,7 @@ export class AssessmentService {
    * @throws team_id is not allowed for individual assessment
    */
   async create(createAssessmentDto: CreateAssessmentDto) {
-    let users = [];
+    let users = [{ user_id: (await this.prisma.user.findFirst()).user_id }];
     if (createAssessmentDto.assessment_type === AssessmentType.TEAM) {
       if (!createAssessmentDto.team_id) {
         throw new BadRequestException(
