@@ -148,11 +148,11 @@ describe('AssessmentService', () => {
       ).rejects.toThrowError(ConflictException);
     });
 
-    it('Should throw NotFoundError if team not found', async () => {
+    it('Should throw BadRequestException if team_id specified', async () => {
       jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(null);
       expect(
         assessmentService.update(aTeamAssessment.assessment_id, aTeamAssessment)
-      ).rejects.toThrowError(NotFoundException);
+      ).rejects.toThrowError(BadRequestException);
     });
 
     it('Should reject with unknown error', async () => {
