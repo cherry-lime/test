@@ -138,7 +138,7 @@ model Template {
 
 model Category {
   category_id   Int          @id @default(autoincrement())
-  category_name String
+  category_name String       @unique
   color         Int
   Template      Template     @relation(fields: [template_id], references: [template_id])
   template_id   Int

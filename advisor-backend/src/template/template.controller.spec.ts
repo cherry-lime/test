@@ -4,6 +4,8 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { aTemplate, updateTemplate } from '../prisma/mock/mockTemplate';
 import { TemplateService } from './template.service';
 import { updateTemplateDto } from './template.service.spec';
+import { CategoryService } from '../category/category.service';
+import { aCategory } from '../prisma/mock/mockCategory';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -26,6 +28,12 @@ describe('TemplateController', () => {
             findAll: jest.fn().mockResolvedValue([aTemplate]),
             clone: jest.fn().mockResolvedValue(aTemplate),
             delete: jest.fn().mockResolvedValue(aTemplate),
+          };
+        }
+        if (token === CategoryService) {
+          return {
+            create: jest.fn().mockResolvedValue(aCategory),
+            findAll: jest.fn().mockResolvedValue([aCategory]),
           };
         }
         if (typeof token === 'function') {
@@ -87,6 +95,25 @@ describe('TemplateController', () => {
   describe('cloneTemplate', () => {
     it('Should return the cloned template', async () => {
       expect(templateController.clone(1)).resolves.toBe(aTemplate);
+    });
+  });
+
+  describe('createCategory', () => {
+    it('Should return the created category', async () => {
+      expect(
+        templateController.createCategory(1, {
+          category_name: 'test',
+          color: 0,
+        })
+      ).resolves.toBe(aCategory);
+    });
+  });
+
+  describe('getAllCategories', () => {
+    it('Should return all categories', async () => {
+      expect(templateController.findAllCategories(1)).resolves.toEqual([
+        aCategory,
+      ]);
     });
   });
 });

@@ -14,6 +14,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { CategoryResponse } from '../category/responses/CategoryResponse';
+import { CategoryService } from '../category/category.service';
+import { CreateCategoryDto } from '../category/dto/create-category.dto';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateResponse } from './responses/TemplateResponse';
@@ -22,7 +25,10 @@ import { TemplateService } from './template.service';
 @Controller('template')
 @ApiTags('template')
 export class TemplateController {
-  constructor(private templateService: TemplateService) {}
+  constructor(
+    private readonly templateService: TemplateService,
+    private readonly categoryService: CategoryService
+  ) {}
 
   /**
    * [GET] /template - Get all templates
@@ -113,5 +119,42 @@ export class TemplateController {
     @Param('id', ParseIntPipe) id: number
   ): Promise<TemplateResponse> {
     return this.templateService.clone(id);
+  }
+
+  /**
+   * [POST] /template/:id/category - Create new category for template
+   * @param id template_id
+   * @param body Category data
+   * @returns Created category
+   */
+  @Post(':id/category')
+  @ApiResponse({ description: 'Category', type: CategoryResponse })
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  @ApiConflictResponse({
+    description: 'Category with this already exists',
+  })
+  async createCategory(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createCategoryDto: CreateCategoryDto
+  ): Promise<CategoryResponse> {
+    return this.categoryService.create(id, createCategoryDto);
+  }
+
+  /**
+   * [GET] /template/:id/category - Get all categories for template
+   * @param id template_id
+   * @returns CategoryResponse[] List of all categories
+   */
+  @Get(':id/category')
+  @ApiResponse({
+    description: 'Found categories',
+    type: CategoryResponse,
+    isArray: true,
+  })
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  async findAllCategories(
+    @Param('id', ParseIntPipe) id: number
+  ): Promise<CategoryResponse[]> {
+    return this.categoryService.findAll(id);
   }
 }
