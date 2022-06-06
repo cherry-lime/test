@@ -112,6 +112,9 @@ const mockPrisma = {
 
 
 describe('AuthService', () => {
+  process.env = {
+    DATABASE_URL: 'postgres://localhost:5432/test',
+  };
   let authService: AuthService;
 
   // ---------------- Working when using the local database (or azure) ----------------
