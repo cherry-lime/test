@@ -49,8 +49,8 @@ describe('CategoryService', () => {
 
     it('should throw NotFoundException on not existing template_id', async () => {
       jest
-        .spyOn(prisma.maturity, 'create')
-        .mockRejectedValueOnce({ code: 'P2025' });
+        .spyOn(prisma.category, 'create')
+        .mockRejectedValueOnce({ code: 'P2003' });
       expect(categoryService.create(0, aCategory)).rejects.toThrowError(
         NotFoundException
       );
@@ -58,7 +58,7 @@ describe('CategoryService', () => {
 
     it('should throw ConflictException on duplicate name', async () => {
       jest
-        .spyOn(prisma.maturity, 'create')
+        .spyOn(prisma.category, 'create')
         .mockRejectedValueOnce({ code: 'P2002' });
       expect(categoryService.create(1, aCategory)).rejects.toThrowError(
         ConflictException
@@ -67,7 +67,7 @@ describe('CategoryService', () => {
 
     it('should reject with unknown error', async () => {
       jest
-        .spyOn(prisma.maturity, 'create')
+        .spyOn(prisma.category, 'create')
         .mockRejectedValueOnce({ code: 'TEST' });
       expect(categoryService.create(1, aCategory)).rejects.toThrowError(
         InternalServerErrorException
@@ -87,7 +87,7 @@ describe('CategoryService', () => {
     });
 
     it('should throw NotFoundException on not existing category_id', async () => {
-      jest.spyOn(prisma.maturity, 'findUnique').mockResolvedValueOnce(null);
+      jest.spyOn(prisma.category, 'findUnique').mockResolvedValueOnce(null);
       expect(categoryService.findOne(1)).rejects.toThrowError(
         NotFoundException
       );
@@ -101,7 +101,7 @@ describe('CategoryService', () => {
 
     it('should throw NotFoundException on not existing category_id', async () => {
       jest
-        .spyOn(prisma.maturity, 'update')
+        .spyOn(prisma.category, 'update')
         .mockRejectedValueOnce({ code: 'P2025' });
       expect(categoryService.update(0, aCategory)).rejects.toThrowError(
         NotFoundException
@@ -110,7 +110,7 @@ describe('CategoryService', () => {
 
     it('should throw ConflictException on duplicate name', async () => {
       jest
-        .spyOn(prisma.maturity, 'update')
+        .spyOn(prisma.category, 'update')
         .mockRejectedValueOnce({ code: 'P2002' });
       expect(categoryService.update(1, aCategory)).rejects.toThrowError(
         ConflictException
@@ -119,7 +119,7 @@ describe('CategoryService', () => {
 
     it('should reject with unknown error', async () => {
       jest
-        .spyOn(prisma.maturity, 'update')
+        .spyOn(prisma.category, 'update')
         .mockRejectedValueOnce({ code: 'TEST' });
       expect(categoryService.update(1, aCategory)).rejects.toThrowError(
         InternalServerErrorException
@@ -134,14 +134,14 @@ describe('CategoryService', () => {
 
     it('should throw NotFoundException on not existing category_id', async () => {
       jest
-        .spyOn(prisma.maturity, 'delete')
+        .spyOn(prisma.category, 'delete')
         .mockRejectedValueOnce({ code: 'P2025' });
       expect(categoryService.delete(0)).rejects.toThrowError(NotFoundException);
     });
 
     it('should reject with unknown error', async () => {
       jest
-        .spyOn(prisma.maturity, 'delete')
+        .spyOn(prisma.category, 'delete')
         .mockRejectedValueOnce({ code: 'TEST' });
       expect(categoryService.delete(1)).rejects.toThrowError(
         InternalServerErrorException
