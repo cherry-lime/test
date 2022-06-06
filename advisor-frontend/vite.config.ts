@@ -11,6 +11,10 @@ export default defineConfig({
   },
   plugins: [reactRefresh(), react()],
   test: {
+    coverage: {
+      reporter: ["json", "html"]
+    },
+    
     globals: true,
 
     environment: "jsdom",
