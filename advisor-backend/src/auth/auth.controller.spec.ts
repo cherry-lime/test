@@ -3,13 +3,18 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 //import { AuthGuard } from './auth.guard';
 //import { CanActivate, UnauthorizedException } from '@nestjs/common';
-//import { PrismaService } from '../prisma/prisma.service';
-//import { JwtService } from '@nestjs/jwt';
-//import { UserService } from '../user/user.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from '../user/user.service';
 //import { request } from 'http';
 //import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { Role, User } from '@prisma/client';
+import { AuthResponse } from './dto/auth-response.dto';
+import { NotFoundException } from '@nestjs/common';
+// Random start and update date
+let myStartDate: any = new Date();
+let myEndDate: any = new Date();
 
 const mockUser = {
   username: 'hearing_refused_musical',
@@ -20,14 +25,20 @@ const registerDto = {
   roles: Role.ASSESSOR,
 };
 
-//const userinfo = {
-//    user_id: 1,
-//    username: "discussion_believed_pleasant",
-//    roles: Role.ADMIN,
-//    created_at: "2022-05-29T08:58:20.369Z",
-//    updated_at: "2022-05-29T08:58:20.372Z",
-//    password_hash: "044498e8-6478-4184-b26f-d7b9be6a00d1"
-//}
+const userinfo = {
+    user_id: 1,
+    username: "discussion_believed_pleasant",
+    roles: [Role.ASSESSOR], //, {USER}, "ADMIN"
+    created_at: myStartDate,
+    updated_at: myEndDate,
+    password_hash: "044498e8-6478-4184-b26f-d7b9be6a00d1"
+}
+
+let userAuthenticationLog = new AuthResponse();
+userAuthenticationLog = {
+  token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV",
+  user : userinfo
+};
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -40,18 +51,12 @@ describe('AuthController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      //providers: [
-      //    AuthService,
-      //    PrismaService,
-      //    JwtService,
-      //    UserService
-      //],
     })
       .useMocker((token) => {
         if (token === AuthService) {
           return {
-            register: jest.fn().mockResolvedValue(Role.ASSESSOR),
-            login: jest.fn().mockResolvedValue(mockUser.username),
+            register: jest.fn().mockResolvedValue(userAuthenticationLog),
+            login: jest.fn().mockResolvedValue(userAuthenticationLog),
           };
         }
         if (typeof token === 'function') {
@@ -76,13 +81,17 @@ describe('AuthController', () => {
 
   describe('register', () => {
     it('Should return the created user', async () => {
-      expect(await authController.register(registerDto)); //.resolves.toBe(Role.ASSESSOR);
+      expect(authController.register(registerDto)).resolves.toBe(userAuthenticationLog);
     });
   });
 
   describe('login', () => {
+    //it('should return not found exception', async () => {
+    //  expect(authController.login(null))
+    //  .rejects.toThrowError(NotFoundException);
+    //})
     it('should return token and user information', async () => {
-      expect(await authController.login(mockUser));
+      expect(authController.login(mockUser)).resolves.toBe(userAuthenticationLog);
     });
   });
 
