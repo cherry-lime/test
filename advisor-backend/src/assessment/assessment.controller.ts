@@ -17,7 +17,7 @@ import {
 import { AssessmentService } from './assessment.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
-import { AssessmentResponse } from './responses/AssessmentResponse';
+import { AssessmentDto } from './dto/assessment.dto';
 
 @ApiTags('assessment')
 @Controller('assessment')
@@ -47,7 +47,7 @@ export class AssessmentController {
   @Get()
   @ApiResponse({
     description: 'Found assessments',
-    type: AssessmentResponse,
+    type: AssessmentDto,
     isArray: true,
   })
   findAll() {
@@ -60,7 +60,7 @@ export class AssessmentController {
    * @returns Assessment object
    */
   @Get(':id')
-  @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.assessmentService.findOne(id);
@@ -73,7 +73,7 @@ export class AssessmentController {
    * @returns
    */
   @Patch(':id')
-  @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   @ApiConflictResponse({
     description: 'Assessment with this name and type already exists',
@@ -91,7 +91,7 @@ export class AssessmentController {
    * @returns deleted Assessment object
    */
   @Delete(':id')
-  @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.assessmentService.delete(id);
@@ -103,7 +103,7 @@ export class AssessmentController {
    * @returns updated Assessment object
    */
   @Post(':id/complete')
-  @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   complete(@Param('id', ParseIntPipe) id: number) {
     return this.assessmentService.complete(id);
