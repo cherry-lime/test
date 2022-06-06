@@ -169,4 +169,29 @@ export class AssessmentService {
         }
       });
   }
+
+  /**
+   * Mark assessment as completed
+   * @param id assessment_id
+   * @returns updated assessment
+   * @throws Assessment not found
+   */
+  async complete(id: number) {
+    return await this.prisma.assessment
+      .update({
+        where: {
+          assessment_id: id,
+        },
+        data: {
+          completed_at: new Date(),
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Assessment not found');
+        } else {
+          throw new InternalServerErrorException();
+        }
+      });
+  }
 }

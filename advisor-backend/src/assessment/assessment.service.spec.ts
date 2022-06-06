@@ -190,4 +190,30 @@ describe('AssessmentService', () => {
       ).rejects.toThrowError(InternalServerErrorException);
     });
   });
+
+  describe('complete', () => {
+    it('Should return the completed assessment', async () => {
+      expect(
+        assessmentService.complete(aAssessment.assessment_id)
+      ).resolves.toBe(aAssessment);
+    });
+
+    it('Should throw NotFoundException if not found', async () => {
+      jest
+        .spyOn(prisma.assessment, 'update')
+        .mockRejectedValueOnce({ code: 'P2025' });
+      expect(
+        assessmentService.complete(aAssessment.template_id)
+      ).rejects.toThrowError(NotFoundException);
+    });
+
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.assessment, 'update')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      expect(
+        assessmentService.complete(aAssessment.template_id)
+      ).rejects.toThrowError(InternalServerErrorException);
+    });
+  });
 });

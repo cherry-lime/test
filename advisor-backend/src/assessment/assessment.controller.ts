@@ -96,4 +96,16 @@ export class AssessmentController {
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.assessmentService.delete(id);
   }
+
+  /**
+   * [POST] /assessment/:id/complete - mark assessment as complete
+   * @param id assessment_id
+   * @returns updated Assessment object
+   */
+  @Post(':id/complete')
+  @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
+  complete(@Param('id', ParseIntPipe) id: number) {
+    return this.assessmentService.complete(id);
+  }
 }
