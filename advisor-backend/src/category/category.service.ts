@@ -34,7 +34,7 @@ export class CategoryService {
           throw new ConflictException(
             'Template with this name and type already exists'
           );
-        } else if (error.code === 'P2025') {
+        } else if (error.code === 'P2003') {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
