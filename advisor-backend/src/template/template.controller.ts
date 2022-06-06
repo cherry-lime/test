@@ -169,6 +169,7 @@ export class TemplateController {
    * @returns Created maturity
    */
   @Post(':id/maturity')
+  @ApiTags('maturity')
   @ApiResponse({ description: 'Maturity', type: MaturityDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
   @ApiConflictResponse({
@@ -188,13 +189,14 @@ export class TemplateController {
    * @throws NotFoundException if template not found
    */
   @Get(':id/maturity')
+  @ApiTags('maturity')
   @ApiResponse({
     description: 'Found maturities',
     type: MaturityDto,
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
-  async findAllMaturity(
+  async findAllMaturities(
     @Param('id', ParseIntPipe) id: number
   ): Promise<MaturityDto[]> {
     return this.maturityService.findAll(id);
