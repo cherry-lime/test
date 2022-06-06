@@ -138,13 +138,15 @@ model Template {
 
 model Category {
   category_id   Int          @id @default(autoincrement())
-  category_name String       @unique
+  category_name String
   color         Int
   Template      Template     @relation(fields: [template_id], references: [template_id])
   template_id   Int
   Feedback      Feedback[]
   Checkpoint    Checkpoint[]
   SubArea       SubArea[]
+
+  @@unique([category_name, template_id])
 }
 
 model SubArea {
