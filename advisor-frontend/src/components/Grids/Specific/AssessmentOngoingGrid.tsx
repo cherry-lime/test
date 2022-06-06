@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { GridActionsCellItem, GridColumns, GridRowId } from '@mui/x-data-grid';
+import { GridColumns, GridRowId } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
 
 import { Button } from '@mui/material';

@@ -4,6 +4,7 @@ import ExampleGrid from './ExampleGrid';
 import TeamGrid from './TeamGrid';
 import MemberGrid from './MemberGrid';
 import AssessmentOngoingGrid from './AssessmentOngoingGrid';
+import AssessmentCompletedGrid from './AssessmentCompletedGrid';
 
 // Style color palette
 const theme = createTheme({
@@ -27,7 +28,7 @@ const theme = createTheme({
 
 export default function AllGrid() {
   const userId = 0;
-  const userRole = 'USER';
+  const userRole = 'ASSESSOR';
   const teamId = 0;
 
   return (
@@ -59,8 +60,23 @@ export default function AllGrid() {
         userRole={userRole}
         assessmentType='INDIVIDUAL'
       />
+      <strong>Completed Evaluations (Individual)</strong>
+      <AssessmentCompletedGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        assessmentType='INDIVIDUAL'
+      />
       <strong>Ongoing Evaluations (Team)</strong>
       <AssessmentOngoingGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        teamId={teamId}
+        assessmentType='TEAM'
+      />
+      <strong>Completed Evaluations (Team)</strong>
+      <AssessmentCompletedGrid
         theme={theme}
         userId={userId}
         userRole={userRole}
