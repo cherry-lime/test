@@ -112,12 +112,6 @@ export class AssessmentService {
    * @throws Assessment with this name and type already exists
    */
   async update(id: number, updateAssessmentDto: UpdateAssessmentDto) {
-    if (updateAssessmentDto.team_id !== undefined) {
-      throw new BadRequestException(
-        'Team id cannot be updated for team assessment'
-      );
-    }
-
     return await this.prisma.assessment
       .update({
         where: {

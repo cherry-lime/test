@@ -148,13 +148,6 @@ describe('AssessmentService', () => {
       ).rejects.toThrowError(ConflictException);
     });
 
-    it('Should throw BadRequestException if team_id specified', async () => {
-      jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(null);
-      expect(
-        assessmentService.update(aTeamAssessment.assessment_id, aTeamAssessment)
-      ).rejects.toThrowError(BadRequestException);
-    });
-
     it('Should reject with unknown error', async () => {
       jest
         .spyOn(prisma.assessment, 'update')
