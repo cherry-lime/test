@@ -113,17 +113,9 @@ export class AssessmentService {
    */
   async update(id: number, updateAssessmentDto: UpdateAssessmentDto) {
     if (updateAssessmentDto.team_id !== undefined) {
-      const team = await this.prisma.team.findUnique({
-        where: {
-          team_id: updateAssessmentDto.team_id,
-        },
-      });
-
-      if (!team) {
-        throw new NotFoundException(
-          `Team with id ${updateAssessmentDto.team_id} not found`
-        );
-      }
+      throw new BadRequestException(
+        'Team id cannot be updated for team assessment'
+      );
     }
 
     return await this.prisma.assessment
