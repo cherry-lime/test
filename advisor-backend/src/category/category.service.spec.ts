@@ -50,7 +50,7 @@ describe('CategoryService', () => {
     it('should throw NotFoundException on not existing template_id', async () => {
       jest
         .spyOn(prisma.category, 'create')
-        .mockRejectedValueOnce({ code: 'P2025' });
+        .mockRejectedValueOnce({ code: 'P2003' });
       expect(categoryService.create(0, aCategory)).rejects.toThrowError(
         NotFoundException
       );
