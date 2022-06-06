@@ -9,7 +9,7 @@ import { JwtStrategy } from '../src/auth/jwt.strategy';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
-  let authToken:JwtStrategy;
+  let authToken: JwtStrategy;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -27,7 +27,10 @@ describe('AuthController (e2e)', () => {
   });
 
   it('should return user not found', async () => {
-    const loginInfo: LoginDto = {username: 'user123', password_hash: 'abcdefg'};
+    const loginInfo: LoginDto = {
+      username: 'user123',
+      password_hash: 'abcdefg',
+    };
     const response = await request(app.getHttpServer())
       .post('/auth/login')
       .send(loginInfo);
@@ -35,19 +38,17 @@ describe('AuthController (e2e)', () => {
   });
 
   //it('should return a new token', async () => {
-    //const loginInfo: LoginDto = {
-      //  username: "discussion_believed_pleasant",
-      //  password_hash: "044498e8-6478-4184-b26f-d7b9be6a00d1"
-    //}; // TO BE CHANGED
-    //const response = await request(app.getHttpServer())
-    //.post('/auth/login')
-    //.send(loginInfo);
-    //expect(response.status).toBe(HttpStatus.CREATED);
-    //expect(response.body.user.username).toBe('discussion_believed_pleasant');
-    //expect(response.body.user.user_id).toBe(1);
-    //expect(response.body.user.roles).toStrictEqual(["ADMIN"]);
-    //authToken = response.body.token;
+  //const loginInfo: LoginDto = {
+  //  username: "discussion_believed_pleasant",
+  //  password_hash: "044498e8-6478-4184-b26f-d7b9be6a00d1"
+  //}; // TO BE CHANGED
+  //const response = await request(app.getHttpServer())
+  //.post('/auth/login')
+  //.send(loginInfo);
+  //expect(response.status).toBe(HttpStatus.CREATED);
+  //expect(response.body.user.username).toBe('discussion_believed_pleasant');
+  //expect(response.body.user.user_id).toBe(1);
+  //expect(response.body.user.roles).toStrictEqual(["ADMIN"]);
+  //authToken = response.body.token;
   //});
-
 });
-

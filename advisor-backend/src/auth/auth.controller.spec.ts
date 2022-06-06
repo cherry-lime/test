@@ -13,8 +13,8 @@ import { Role, User } from '@prisma/client';
 import { AuthResponse } from './dto/auth-response.dto';
 import { NotFoundException } from '@nestjs/common';
 // Random start and update date
-let myStartDate: any = new Date();
-let myEndDate: any = new Date();
+const myStartDate: any = new Date();
+const myEndDate: any = new Date();
 
 const mockUser = {
   username: 'hearing_refused_musical',
@@ -26,18 +26,18 @@ const registerDto = {
 };
 
 const userinfo = {
-    user_id: 1,
-    username: "discussion_believed_pleasant",
-    roles: [Role.ASSESSOR], //, {USER}, "ADMIN"
-    created_at: myStartDate,
-    updated_at: myEndDate,
-    password_hash: "044498e8-6478-4184-b26f-d7b9be6a00d1"
-}
+  user_id: 1,
+  username: 'discussion_believed_pleasant',
+  roles: [Role.ASSESSOR], //, {USER}, "ADMIN"
+  created_at: myStartDate,
+  updated_at: myEndDate,
+  password_hash: '044498e8-6478-4184-b26f-d7b9be6a00d1',
+};
 
 let userAuthenticationLog = new AuthResponse();
 userAuthenticationLog = {
-  token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV",
-  user : userinfo
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV',
+  user: userinfo,
 };
 
 const moduleMocker = new ModuleMocker(global);
@@ -81,7 +81,9 @@ describe('AuthController', () => {
 
   describe('register', () => {
     it('Should return the created user', async () => {
-      expect(authController.register(registerDto)).resolves.toBe(userAuthenticationLog);
+      expect(authController.register(registerDto)).resolves.toBe(
+        userAuthenticationLog
+      );
     });
   });
 
@@ -91,7 +93,9 @@ describe('AuthController', () => {
     //  .rejects.toThrowError(NotFoundException);
     //})
     it('should return token and user information', async () => {
-      expect(authController.login(mockUser)).resolves.toBe(userAuthenticationLog);
+      expect(authController.login(mockUser)).resolves.toBe(
+        userAuthenticationLog
+      );
     });
   });
 
