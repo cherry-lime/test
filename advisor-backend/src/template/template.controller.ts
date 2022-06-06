@@ -16,7 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
-import { TemplateResponse } from './responses/TemplateResponse';
+import { TemplateDto } from './dto/template.dto';
 import { TemplateService } from './template.service';
 
 @Controller('template')
@@ -31,10 +31,10 @@ export class TemplateController {
   @Get('')
   @ApiResponse({
     description: 'Found templates',
-    type: TemplateResponse,
+    type: TemplateDto,
     isArray: true,
   })
-  async findAll(): Promise<TemplateResponse[]> {
+  async findAll(): Promise<TemplateDto[]> {
     return this.templateService.findAll();
   }
 
@@ -44,13 +44,13 @@ export class TemplateController {
    * @returns Created template
    */
   @Post('')
-  @ApiResponse({ description: 'Created template', type: TemplateResponse })
+  @ApiResponse({ description: 'Created template', type: TemplateDto })
   @ApiConflictResponse({
     description: 'Template with this name and type already exists',
   })
   async create(
     @Body() { template_name, template_type }: CreateTemplateDto
-  ): Promise<TemplateResponse> {
+  ): Promise<TemplateDto> {
     return this.templateService.create(template_name, template_type);
   }
 
@@ -60,11 +60,9 @@ export class TemplateController {
    * @returns Template object
    */
   @Get(':id')
-  @ApiResponse({ description: 'Template', type: TemplateResponse })
+  @ApiResponse({ description: 'Template', type: TemplateDto })
   @ApiNotFoundResponse()
-  async findOne(
-    @Param('id', ParseIntPipe) id: number
-  ): Promise<TemplateResponse> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<TemplateDto> {
     return this.templateService.findOne(id);
   }
 
@@ -75,7 +73,7 @@ export class TemplateController {
    * @returns Updated template
    */
   @Patch(':id')
-  @ApiResponse({ description: 'Template', type: TemplateResponse })
+  @ApiResponse({ description: 'Template', type: TemplateDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
   @ApiConflictResponse({
     description: 'Template with this name and type already exists',
@@ -83,7 +81,7 @@ export class TemplateController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTemplateDto: UpdateTemplateDto
-  ): Promise<TemplateResponse> {
+  ): Promise<TemplateDto> {
     return this.templateService.update(id, updateTemplateDto);
   }
 
@@ -93,11 +91,9 @@ export class TemplateController {
    * @returns Deleted template
    */
   @Delete(':id')
-  @ApiResponse({ description: 'Deleted template', type: TemplateResponse })
+  @ApiResponse({ description: 'Deleted template', type: TemplateDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
-  async delete(
-    @Param('id', ParseIntPipe) id: number
-  ): Promise<TemplateResponse> {
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<TemplateDto> {
     return this.templateService.delete(id);
   }
 
@@ -107,11 +103,9 @@ export class TemplateController {
    * @returns Cloned template
    */
   @Post(':id/clone')
-  @ApiResponse({ description: 'Template', type: TemplateResponse })
+  @ApiResponse({ description: 'Template', type: TemplateDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
-  async clone(
-    @Param('id', ParseIntPipe) id: number
-  ): Promise<TemplateResponse> {
+  async clone(@Param('id', ParseIntPipe) id: number): Promise<TemplateDto> {
     return this.templateService.clone(id);
   }
 }

@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AssessmentType } from '@prisma/client';
-
 /**
  * Response with template information
  */
-export class TemplateResponse {
+export class TemplateDto {
   @ApiProperty()
   template_id: number;
 
