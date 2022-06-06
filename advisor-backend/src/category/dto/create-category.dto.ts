@@ -1,9 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { OmitType } from '@nestjs/swagger';
+import { CategoryDto } from './category.dto';
 
-export class CreateCategoryDto {
-  @ApiProperty()
-  category_name: string;
-
-  @ApiProperty()
-  color: number;
-}
+export class CreateCategoryDto extends OmitType(CategoryDto, [
+  'category_id',
+  'template_id',
+] as const) {}

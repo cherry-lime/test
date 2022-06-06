@@ -14,7 +14,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CategoryResponse } from '../category/responses/CategoryResponse';
+import { CategoryDto } from '../category/dto/category.dto';
 import { CategoryService } from '../category/category.service';
 import { CreateCategoryDto } from '../category/dto/create-category.dto';
 import { CreateTemplateDto } from './dto/create-template.dto';
@@ -132,7 +132,8 @@ export class TemplateController {
    * @returns Created category
    */
   @Post(':id/category')
-  @ApiResponse({ description: 'Category', type: CategoryResponse })
+  @ApiTags('category')
+  @ApiResponse({ description: 'Category', type: CategoryDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
   @ApiConflictResponse({
     description: 'Category with this already exists',
@@ -140,7 +141,7 @@ export class TemplateController {
   async createCategory(
     @Param('id', ParseIntPipe) id: number,
     @Body() createCategoryDto: CreateCategoryDto
-  ): Promise<CategoryResponse> {
+  ): Promise<CategoryDto> {
     return this.categoryService.create(id, createCategoryDto);
   }
 
@@ -150,15 +151,16 @@ export class TemplateController {
    * @returns CategoryResponse[] List of all categories
    */
   @Get(':id/category')
+  @ApiTags('category')
   @ApiResponse({
     description: 'Found categories',
-    type: CategoryResponse,
+    type: CategoryDto,
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
   async findAllCategories(
     @Param('id', ParseIntPipe) id: number
-  ): Promise<CategoryResponse[]> {
+  ): Promise<CategoryDto[]> {
     return this.categoryService.findAll(id);
   }
 

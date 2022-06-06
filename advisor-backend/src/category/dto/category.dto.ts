@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CategoryResponse {
+export class CategoryDto {
   @ApiProperty()
   category_id: number;
 
