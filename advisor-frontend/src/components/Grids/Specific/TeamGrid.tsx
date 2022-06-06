@@ -13,6 +13,8 @@ import RemoveIcon from '@mui/icons-material/HighlightOff';
 
 import GenericGrid from '../Generic/GenericGrid';
 
+import { UserRole } from '../../../types/UserRole';
+
 // Define type for the rows in the grid
 type Row = {
   id: number;
@@ -33,10 +35,11 @@ const generateId = () => Date.now();
 
 type TeamGridProps = {
   theme: Theme;
-  isAssessor: boolean; // Is the role assessor (true) or user (false)
+  userId: number;
+  userRole: UserRole;
 };
 
-export default function TeamGrid({ theme, isAssessor }: TeamGridProps) {
+export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
   // Fetch initial rows of the grid
@@ -104,7 +107,7 @@ export default function TeamGrid({ theme, isAssessor }: TeamGridProps) {
         headerName: 'Team Name',
         type: 'string',
         flex: 1,
-        editable: isAssessor,
+        editable: userRole === 'ASSESSOR',
       },
       {
         field: 'actions',
@@ -135,7 +138,9 @@ export default function TeamGrid({ theme, isAssessor }: TeamGridProps) {
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={
-        isAssessor ? { text: 'Create new team', handler: handleAdd } : undefined
+        userRole === 'ASSESSOR'
+          ? { text: 'Create new team', handler: handleAdd }
+          : undefined
       }
     />
   );

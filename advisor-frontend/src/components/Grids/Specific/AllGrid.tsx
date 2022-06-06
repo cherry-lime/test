@@ -3,6 +3,7 @@ import { createTheme } from '@mui/material/styles';
 import ExampleGrid from './ExampleGrid';
 import TeamGrid from './TeamGrid';
 import MemberGrid from './MemberGrid';
+import AssessmentOngoingGrid from './AssessmentOngoingGrid';
 
 // Style color palette
 const theme = createTheme({
@@ -25,18 +26,47 @@ const theme = createTheme({
 });
 
 export default function AllGrid() {
-  const isAssessor = true;
+  const userId = 0;
+  const userRole = 'USER';
+  const teamId = 0;
 
   return (
     <div style={{ width: '90%' }}>
       <strong>Example Grid</strong>
       <ExampleGrid theme={theme} />
       <strong>Team Grid</strong>
-      <TeamGrid theme={theme} isAssessor={isAssessor} />
+      <TeamGrid theme={theme} userId={userId} userRole={userRole} />
       <strong>Assessor Grid</strong>
-      <MemberGrid theme={theme} isAssessor={isAssessor} forAssessors />
+      <MemberGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        teamId={teamId}
+        forAssessors
+      />
       <strong>Member Grid</strong>
-      <MemberGrid theme={theme} isAssessor={isAssessor} forAssessors={false} />
+      <MemberGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        teamId={teamId}
+        forAssessors={false}
+      />
+      <strong>Ongoing Evaluations (Individual)</strong>
+      <AssessmentOngoingGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        assessmentType='INDIVIDUAL'
+      />
+      <strong>Ongoing Evaluations (Team)</strong>
+      <AssessmentOngoingGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        teamId={teamId}
+        assessmentType='TEAM'
+      />
     </div>
   );
 }

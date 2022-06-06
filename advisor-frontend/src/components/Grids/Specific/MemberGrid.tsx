@@ -12,6 +12,8 @@ import RemoveIcon from '@mui/icons-material/HighlightOff';
 
 import GenericGrid from '../Generic/GenericGrid';
 
+import { UserRole } from '../../../types/UserRole';
+
 // Define type for the rows in the grid
 type Row = {
   id: number;
@@ -32,13 +34,17 @@ const generateId = () => Date.now();
 
 type MemberGridProps = {
   theme: Theme;
-  isAssessor: boolean; // Is the role assessor (true) or user (false)
+  userId: number;
+  userRole: UserRole;
+  teamId: number;
   forAssessors: boolean; // Is the grid for assessors (true) or users (false)
 };
 
 export default function MemberGrid({
   theme,
-  isAssessor,
+  userId,
+  userRole,
+  teamId,
   forAssessors,
 }: MemberGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
@@ -99,9 +105,9 @@ export default function MemberGrid({
         headerName: forAssessors ? 'Assessor Name' : 'Member Name',
         type: 'string',
         flex: 1,
-        editable: isAssessor,
+        editable: userRole === 'ASSESSOR',
       },
-      ...(isAssessor
+      ...(userRole === 'ASSESSOR'
         ? [
             {
               field: 'actions',
@@ -129,7 +135,7 @@ export default function MemberGrid({
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={
-        isAssessor
+        userRole === 'ASSESSOR'
           ? {
               text: forAssessors ? 'Add Assessor' : 'Add Member',
               handler: handleAdd,
