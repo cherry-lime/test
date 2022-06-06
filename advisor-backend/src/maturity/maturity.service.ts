@@ -13,7 +13,7 @@ export class MaturityService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Create maturity in template
+   * Create maturity
    * @param template_id template id to which maturity belongs
    * @param createMaturityDto maturity data
    * @returns created maturity
@@ -21,7 +21,7 @@ export class MaturityService {
    * @throws Template with id does not exist
    */
   async create(template_id: number, createMaturityDto: CreateMaturityDto) {
-    return this.prisma.maturity
+    return await this.prisma.maturity
       .create({
         data: {
           ...createMaturityDto,
@@ -31,10 +31,8 @@ export class MaturityService {
       .catch((error) => {
         if (error.code === 'P2002') {
           // Throw error ïf name and type not unique
-          throw new ConflictException(
-            'Template with this name and type already exists'
-          );
-        } else if (error.code === 'P2025') {
+          throw new ConflictException('Maturity with this name already exists');
+        } else if (error.code === 'P2003') {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
@@ -59,16 +57,17 @@ export class MaturityService {
    * Get maturity by id
    * @param maturity_id maturity id
    * @returns maturity
-   * @throws Maturity with id does not exist
+   * @throws Maturity not found
    */
   async findOne(maturity_id: number) {
+    // Get template by id from prisma
     const maturity = await this.prisma.maturity.findUnique({
       where: {
         maturity_id,
       },
     });
 
-    // Throw error if maturity not found
+    // Throw NotFoundException if maturity not found
     if (!maturity) {
       throw new NotFoundException('Maturity not found');
     }
@@ -81,8 +80,6 @@ export class MaturityService {
    * @param maturity_id maturity id
    * @param updateMaturityDto maturity data
    * @returns updated maturity
-   * @throws Maturity with id does not exist
-   * @throws Maturity with this name already exists
    */
   async update(maturity_id: number, updateMaturityDto: UpdateMaturityDto) {
     return await this.prisma.maturity
@@ -94,10 +91,8 @@ export class MaturityService {
       })
       .catch((error) => {
         if (error.code === 'P2002') {
-          // Throw error if name and type not unique
-          throw new ConflictException(
-            'Template with this name and type already exists'
-          );
+          // Throw error ïf name not unique
+          throw new ConflictException('Maturity with this name already exists');
         } else if (error.code === 'P2025') {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
@@ -110,9 +105,9 @@ export class MaturityService {
    * Delete maturity
    * @param maturity_id maturity id
    * @returns deleted maturity
-   * @throws Maturity with id does not exist
+   * @throws Maturity not found
    */
-  async remove(maturity_id: number) {
+  async delete(maturity_id: number) {
     return await this.prisma.maturity
       .delete({
         where: {
@@ -122,7 +117,7 @@ export class MaturityService {
       .catch((error) => {
         // Throw error if template not found
         if (error.code === 'P2025') {
-          throw new NotFoundException('Template not found');
+          throw new NotFoundException('Maturity not found');
         }
         throw new InternalServerErrorException();
       });

@@ -1,24 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { PrismaService } from '../prisma/prisma.service';
-import { aCategory } from '../prisma/mock/mockCategory';
-import { CategoryService } from './category.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import {
   ConflictException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { MaturityService } from './maturity.service';
+import { aMaturity } from '../prisma/mock/mockMaturity';
 
 const moduleMocker = new ModuleMocker(global);
 
-describe('CategoryService', () => {
-  let categoryService: CategoryService;
+describe('MaturityService', () => {
+  let maturityService: MaturityService;
   let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CategoryService],
+      providers: [MaturityService],
     })
       .useMocker((token) => {
         if (token === PrismaService) {
@@ -34,24 +34,24 @@ describe('CategoryService', () => {
       })
       .compile();
 
-    categoryService = module.get<CategoryService>(CategoryService);
+    maturityService = module.get<MaturityService>(MaturityService);
     prisma = module.get<PrismaService>(PrismaService);
   });
 
   it('should be defined', () => {
-    expect(categoryService).toBeDefined();
+    expect(maturityService).toBeDefined();
   });
 
   describe('create', () => {
-    it('should return the created category', async () => {
-      expect(categoryService.create(1, aCategory)).resolves.toBe(aCategory);
+    it('should return the created maturity', async () => {
+      expect(maturityService.create(1, aMaturity)).resolves.toBe(aMaturity);
     });
 
     it('should throw NotFoundException on not existing template_id', async () => {
       jest
         .spyOn(prisma.maturity, 'create')
-        .mockRejectedValueOnce({ code: 'P2025' });
-      expect(categoryService.create(0, aCategory)).rejects.toThrowError(
+        .mockRejectedValueOnce({ code: 'P2003' });
+      expect(maturityService.create(0, aMaturity)).rejects.toThrowError(
         NotFoundException
       );
     });
@@ -60,7 +60,7 @@ describe('CategoryService', () => {
       jest
         .spyOn(prisma.maturity, 'create')
         .mockRejectedValueOnce({ code: 'P2002' });
-      expect(categoryService.create(1, aCategory)).rejects.toThrowError(
+      expect(maturityService.create(1, aMaturity)).rejects.toThrowError(
         ConflictException
       );
     });
@@ -69,7 +69,7 @@ describe('CategoryService', () => {
       jest
         .spyOn(prisma.maturity, 'create')
         .mockRejectedValueOnce({ code: 'TEST' });
-      expect(categoryService.create(1, aCategory)).rejects.toThrowError(
+      expect(maturityService.create(1, aMaturity)).rejects.toThrowError(
         InternalServerErrorException
       );
     });
@@ -77,33 +77,33 @@ describe('CategoryService', () => {
 
   describe('findAll', () => {
     it('should return all categories', async () => {
-      expect(categoryService.findAll(1)).resolves.toEqual([aCategory]);
+      expect(maturityService.findAll(1)).resolves.toEqual([aMaturity]);
     });
   });
 
   describe('findOne', () => {
-    it('should return the found category', async () => {
-      expect(categoryService.findOne(1)).resolves.toBe(aCategory);
+    it('should return the found maturity', async () => {
+      expect(maturityService.findOne(1)).resolves.toBe(aMaturity);
     });
 
-    it('should throw NotFoundException on not existing category_id', async () => {
+    it('should throw NotFoundException on not existing maturity_id', async () => {
       jest.spyOn(prisma.maturity, 'findUnique').mockResolvedValueOnce(null);
-      expect(categoryService.findOne(1)).rejects.toThrowError(
+      expect(maturityService.findOne(1)).rejects.toThrowError(
         NotFoundException
       );
     });
   });
 
   describe('update', () => {
-    it('should return the updated category', async () => {
-      expect(categoryService.update(1, aCategory)).resolves.toBe(aCategory);
+    it('should return the updated maturity', async () => {
+      expect(maturityService.update(1, aMaturity)).resolves.toBe(aMaturity);
     });
 
-    it('should throw NotFoundException on not existing category_id', async () => {
+    it('should throw NotFoundException on not existing maturity_id', async () => {
       jest
         .spyOn(prisma.maturity, 'update')
         .mockRejectedValueOnce({ code: 'P2025' });
-      expect(categoryService.update(0, aCategory)).rejects.toThrowError(
+      expect(maturityService.update(0, aMaturity)).rejects.toThrowError(
         NotFoundException
       );
     });
@@ -112,7 +112,7 @@ describe('CategoryService', () => {
       jest
         .spyOn(prisma.maturity, 'update')
         .mockRejectedValueOnce({ code: 'P2002' });
-      expect(categoryService.update(1, aCategory)).rejects.toThrowError(
+      expect(maturityService.update(1, aMaturity)).rejects.toThrowError(
         ConflictException
       );
     });
@@ -121,29 +121,29 @@ describe('CategoryService', () => {
       jest
         .spyOn(prisma.maturity, 'update')
         .mockRejectedValueOnce({ code: 'TEST' });
-      expect(categoryService.update(1, aCategory)).rejects.toThrowError(
+      expect(maturityService.update(1, aMaturity)).rejects.toThrowError(
         InternalServerErrorException
       );
     });
   });
 
   describe('delete', () => {
-    it('should return the deleted category', async () => {
-      expect(categoryService.delete(1)).resolves.toBe(aCategory);
+    it('should return the deleted maturity', async () => {
+      expect(maturityService.delete(1)).resolves.toBe(aMaturity);
     });
 
-    it('should throw NotFoundException on not existing category_id', async () => {
+    it('should throw NotFoundException on not existing maturity_id', async () => {
       jest
         .spyOn(prisma.maturity, 'delete')
         .mockRejectedValueOnce({ code: 'P2025' });
-      expect(categoryService.delete(0)).rejects.toThrowError(NotFoundException);
+      expect(maturityService.delete(0)).rejects.toThrowError(NotFoundException);
     });
 
     it('should reject with unknown error', async () => {
       jest
         .spyOn(prisma.maturity, 'delete')
         .mockRejectedValueOnce({ code: 'TEST' });
-      expect(categoryService.delete(1)).rejects.toThrowError(
+      expect(maturityService.delete(1)).rejects.toThrowError(
         InternalServerErrorException
       );
     });

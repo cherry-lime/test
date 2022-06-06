@@ -9,8 +9,10 @@ import {
 } from '@nestjs/common';
 import { MaturityService } from './maturity.service';
 import { UpdateMaturityDto } from './dto/update-maturity.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('maturity')
+@ApiTags('maturity')
 export class MaturityController {
   constructor(private readonly maturityService: MaturityService) {}
   @Get(':id')
@@ -27,7 +29,7 @@ export class MaturityController {
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.maturityService.remove(id);
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.maturityService.delete(id);
   }
 }

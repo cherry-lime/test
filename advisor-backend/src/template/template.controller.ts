@@ -14,7 +14,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CategoryDto } from '../category/dto/category.dto';
 import { CategoryService } from '../category/category.service';
 import { CreateCategoryDto } from '../category/dto/create-category.dto';
 import { CreateTemplateDto } from './dto/create-template.dto';
@@ -24,6 +23,7 @@ import { TemplateService } from './template.service';
 import { MaturityDto } from '../maturity/dto/maturity.dto';
 import { CreateMaturityDto } from '../maturity/dto/create-maturity.dto';
 import { MaturityService } from '../maturity/maturity.service';
+import { CategoryDto } from '../category/dto/category.dto';
 
 @Controller('template')
 @ApiTags('template')
@@ -171,6 +171,7 @@ export class TemplateController {
    * @returns Created maturity
    */
   @Post(':id/maturity')
+  @ApiTags('maturity')
   @ApiResponse({ description: 'Maturity', type: MaturityDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
   @ApiConflictResponse({
@@ -190,6 +191,7 @@ export class TemplateController {
    * @throws NotFoundException if template not found
    */
   @Get(':id/maturity')
+  @ApiTags('maturity')
   @ApiResponse({
     description: 'Found maturities',
     type: MaturityDto,
