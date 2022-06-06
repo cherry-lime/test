@@ -33,6 +33,9 @@ export class AssessmentController {
   @ApiConflictResponse({
     description: 'Assessment with this name and type already exists',
   })
+  @ApiNotFoundResponse({
+    description: 'Team not found',
+  })
   create(@Body() createAssessmentDto: CreateAssessmentDto) {
     return this.assessmentService.create(createAssessmentDto);
   }

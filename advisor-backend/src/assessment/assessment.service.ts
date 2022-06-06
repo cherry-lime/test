@@ -112,6 +112,20 @@ export class AssessmentService {
    * @throws Assessment with this name and type already exists
    */
   async update(id: number, updateAssessmentDto: UpdateAssessmentDto) {
+    if (updateAssessmentDto.team_id !== undefined) {
+      const team = await this.prisma.team.findUnique({
+        where: {
+          team_id: updateAssessmentDto.team_id,
+        },
+      });
+
+      if (!team) {
+        throw new NotFoundException(
+          `Team with id ${updateAssessmentDto.team_id} not found`
+        );
+      }
+    }
+
     return await this.prisma.assessment
       .update({
         where: {
