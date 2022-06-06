@@ -11,6 +11,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { aTeam } from '../prisma/mock/mockTeam';
+import { AssessmentType } from '@prisma/client';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -80,6 +81,16 @@ describe('AssessmentService', () => {
         ...aTeamAssessment,
       };
       delete aTeamAssessment2.team_id;
+      expect(assessmentService.create(aTeamAssessment2)).rejects.toThrowError(
+        BadRequestException
+      );
+    });
+
+    it('Should reject with BadRequestException if type individual but team_id', async () => {
+      const aTeamAssessment2 = {
+        ...aTeamAssessment,
+        assessment_type: AssessmentType.INDIVIDUAL,
+      };
       expect(assessmentService.create(aTeamAssessment2)).rejects.toThrowError(
         BadRequestException
       );

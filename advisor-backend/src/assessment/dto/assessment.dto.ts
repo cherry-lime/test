@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AssessmentType } from '@prisma/client';
 
 /**
  * Response with assessment information
  */
-export class AssessmentResponse {
+export class AssessmentDto {
   @ApiProperty()
   assessment_id: number;
 
@@ -29,6 +29,9 @@ export class AssessmentResponse {
   @ApiProperty()
   updated_at: Date;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   completed_at?: Date;
+
+  @ApiPropertyOptional()
+  team_id?: number;
 }

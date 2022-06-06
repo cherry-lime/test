@@ -21,9 +21,10 @@ export class AssessmentService {
    * @throws Assessment with this name and type already exists
    * @throws Team id is required for team assessment
    * @throws Team with id does not exist
+   * @throws team_id is not allowed for individual assessment
    */
   async create(createAssessmentDto: CreateAssessmentDto) {
-    let users = [{ user_id: (await this.prisma.user.findFirst()).user_id }];
+    let users = [];
     if (createAssessmentDto.assessment_type === AssessmentType.TEAM) {
       if (!createAssessmentDto.team_id) {
         throw new BadRequestException(
@@ -49,6 +50,12 @@ export class AssessmentService {
       users = team.UserInTeam.map((user) => ({
         user_id: user.user_id,
       }));
+    } else {
+      if (createAssessmentDto.team_id) {
+        throw new BadRequestException(
+          'Team id is not required for individual assessment'
+        );
+      }
     }
 
     return await this.prisma.assessment
@@ -97,7 +104,7 @@ export class AssessmentService {
 
     // throw NotFoundException if assessment not found
     if (!assessment) {
-      throw new NotFoundException();
+      throw new NotFoundException('Assessment not found');
     }
 
     return assessment;
@@ -141,7 +148,7 @@ export class AssessmentService {
    * @throws Assessment not found
    */
   async delete(id: number) {
-    return await this.prisma.assessment
+    const deleteAssessment = this.prisma.assessment
       .delete({
         where: {
           assessment_id: id,
@@ -154,6 +161,16 @@ export class AssessmentService {
           throw new InternalServerErrorException();
         }
       });
+
+    const deleteParticipants = this.prisma.assessmentParticipants.deleteMany({
+      where: {
+        assessment_id: id,
+      },
+    });
+
+    await Promise.all([deleteAssessment, deleteParticipants]);
+
+    return deleteAssessment;
   }
 
   /**

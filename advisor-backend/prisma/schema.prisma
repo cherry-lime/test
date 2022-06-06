@@ -106,7 +106,7 @@ model Assessment {
   AssessmentParticipants            AssessmentParticipants[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
-  @@unique([assessment_name, assessment_type])
+  @@unique([assessment_name, assessment_type, team_id])
 }
 
 model AssessmentParticipants {
