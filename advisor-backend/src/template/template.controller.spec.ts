@@ -133,8 +133,8 @@ describe('TemplateController', () => {
     });
   });
 
-  describe('getAllMaturity', () => {
-    it('Should return all maturity', async () => {
+  describe('getAllMaturities', () => {
+    it('Should return all maturities', async () => {
       expect(templateController.findAllMaturities(1)).resolves.toEqual([
         aMaturity,
       ]);

@@ -11,6 +11,7 @@ import { MaturityService } from './maturity.service';
 import { UpdateMaturityDto } from './dto/update-maturity.dto';
 import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('maturity')
 @Controller('maturity')
 @ApiTags('maturity')
 export class MaturityController {
