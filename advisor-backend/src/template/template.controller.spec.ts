@@ -6,6 +6,8 @@ import { TemplateService } from './template.service';
 import { updateTemplateDto } from './template.service.spec';
 import { CategoryService } from '../category/category.service';
 import { aCategory } from '../prisma/mock/mockCategory';
+import { aMaturity } from '../prisma/mock/mockMaturity';
+import { MaturityService } from '../maturity/maturity.service';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -34,6 +36,12 @@ describe('TemplateController', () => {
           return {
             create: jest.fn().mockResolvedValue(aCategory),
             findAll: jest.fn().mockResolvedValue([aCategory]),
+          };
+        }
+        if (token === MaturityService) {
+          return {
+            create: jest.fn().mockResolvedValue(aMaturity),
+            findAll: jest.fn().mockResolvedValue([aMaturity]),
           };
         }
         if (typeof token === 'function') {
@@ -113,6 +121,22 @@ describe('TemplateController', () => {
     it('Should return all categories', async () => {
       expect(templateController.findAllCategories(1)).resolves.toEqual([
         aCategory,
+      ]);
+    });
+  });
+
+  describe('createMaturity', () => {
+    it('Should return the created maturity', async () => {
+      expect(templateController.createMaturity(1, aMaturity)).resolves.toBe(
+        aMaturity
+      );
+    });
+  });
+
+  describe('getAllMaturity', () => {
+    it('Should return all maturity', async () => {
+      expect(templateController.findAllMaturities(1)).resolves.toEqual([
+        aMaturity,
       ]);
     });
   });

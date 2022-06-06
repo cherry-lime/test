@@ -192,7 +192,7 @@ export class TemplateController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
-  async findAllMaturity(
+  async findAllMaturities(
     @Param('id', ParseIntPipe) id: number
   ): Promise<MaturityDto[]> {
     return this.maturityService.findAll(id);
