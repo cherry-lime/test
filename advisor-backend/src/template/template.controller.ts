@@ -128,6 +128,7 @@ export class TemplateController {
    * @returns Created category
    */
   @Post(':id/category')
+  @ApiTags('category')
   @ApiResponse({ description: 'Category', type: CategoryDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
   @ApiConflictResponse({
@@ -146,6 +147,7 @@ export class TemplateController {
    * @returns CategoryResponse[] List of all categories
    */
   @Get(':id/category')
+  @ApiTags('category')
   @ApiResponse({
     description: 'Found categories',
     type: CategoryDto,
