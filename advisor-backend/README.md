@@ -91,15 +91,9 @@ OR, if port not specified
 http://localhost:5000/api
 ```
 
-## Support
+## Specification
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+An initial specification can be found in the specification.json file. To open this file go to [Swagger Editor](https://editor.swagger.io/), then click File -> Import File and then select the specification.json file.
 
 ## License
 

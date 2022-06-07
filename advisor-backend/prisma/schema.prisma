@@ -19,7 +19,6 @@ model User {
   updated_at             DateTime                 @updatedAt
   UserInTeam             UserInTeam[]
   AssessmentParticipants AssessmentParticipants[]
-  TeamInvite TeamInvite[]
   @@index([roles])
 }
 
@@ -30,8 +29,9 @@ model Checkpoint {
   weight                            Int
   Maturity                          Maturity                            @relation(fields: [maturity_id], references: [maturity_id])
   maturity_id                       Int
+  Category                          Category                            @relation(fields: [category_id], references: [category_id])
+  category_id                       Int
   CheckpointInTopic                 CheckpointInTopic[]
-  CheckpointInTemplateCategory      CheckpointInTemplateCategory[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 }
 
@@ -39,7 +39,8 @@ model PossibleAnswers {
   possible_answer_id                Int                                 @id @default(autoincrement())
   answer                            String
   answer_weight                     Float
-  disabled                          Boolean                             @default(false)
+  Template                          Template                            @relation(fields: [template_id], references: [template_id])
+  template_id                       Int
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 }
 
@@ -54,6 +55,8 @@ model Maturity {
 model Topic {
   topic_id          Int                 @id @default(autoincrement())
   topic_name        String
+  Template          Template            @relation(fields: [template_id], references: [template_id])
+  template_id       Int
   CheckpointInTopic CheckpointInTopic[]
   Feedback          Feedback[]
 }
@@ -67,19 +70,10 @@ model CheckpointInTopic {
 }
 
 model Team {
-  team_id    Int          @id @default(autoincrement())
-  team_name  String
-  UserInTeam UserInTeam[]
-  TeamInvite TeamInvite[]
-}
-
-model TeamInvite {
-  team_invite_id String   @id @default(uuid()) @db.Uuid()
-  Team           Team     @relation(fields: [team_id], references: [team_id])
-  team_id        Int
-  User           User     @relation(fields: [user_id], references: [user_id])
-  user_id        Int
-  created_at     DateTime @default(now())
+  team_id      Int          @id @default(autoincrement())
+  team_name    String
+  invite_token String       @db.Uuid
+  UserInTeam   UserInTeam[]
 }
 
 model UserInTeam {
@@ -101,7 +95,7 @@ model Assessment {
   updated_at                        DateTime                            @updatedAt
   completed_at                      DateTime
   assessment_type                   AssessmentType
-  template                          AssessmentTemplate                  @relation(fields: [template_id], references: [template_id])
+  template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
   AssessmentParticipants            AssessmentParticipants[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
@@ -117,56 +111,41 @@ model AssessmentParticipants {
   @@index([assessment_id, user_id])
 }
 
-model AssessmentTemplate {
-  template_id        Int                  @id @default(autoincrement())
-  template_name      String
-  template_type      AssessmentType
-  disabled           Boolean              @default(false)
-  Assessment         Assessment[]
-  CategoryInTemplate CategoryInTemplate[]
+model Template {
+  template_id       Int               @id @default(autoincrement())
+  template_name     String
+  template_type     AssessmentType
+  disabled          Boolean           @default(false)
+  weight_range_min  Int               @default(1)
+  weight_range_max  Int               @default(3)
+  score_formula     String            @default("sum(x)")
+  include_no_answer Boolean           @default(false)
+  Assessment        Assessment[]
+  PossibleAnswers   PossibleAnswers[]
+  Topic             Topic[]
+  Category          Category[]
+
+  @@map("AssessmentTemplate")
 }
 
 model Category {
-  category_id        Int                  @id @default(autoincrement())
-  category_name      String
-  color              Int
-  CategoryInTemplate CategoryInTemplate[]
-  Feedback           Feedback[]
-}
-
-model CategoryInTemplate {
-  template_category_id         Int                            @id @default(autoincrement())
-  category                     Category                       @relation(fields: [category_id], references: [category_id])
-  category_id                  Int
-  template                     AssessmentTemplate             @relation(fields: [template_id], references: [template_id])
-  template_id                  Int
-  CheckpointInTemplateCategory CheckpointInTemplateCategory[]
-  SubAreaInTemplateCategory SubAreaInTemplateCategory[]
-  @@index([template_id, category_id])
+  category_id   Int          @id @default(autoincrement())
+  category_name String
+  color         Int
+  Template      Template     @relation(fields: [template_id], references: [template_id])
+  template_id   Int
+  Feedback      Feedback[]
+  Checkpoint    Checkpoint[]
+  SubArea       SubArea[]
 }
 
 model SubArea {
-  subarea_id                Int                         @id @default(autoincrement())
-  subarea_name              String
-  subarea_summary           String
-  subarea_description       String
-  SubAreaInTemplateCategory SubAreaInTemplateCategory[]
-}
-
-model CheckpointInTemplateCategory {
-  CategoryInTemplate   CategoryInTemplate @relation(fields: [template_category_id], references: [template_category_id])
-  template_category_id Int
-  Checkpoint           Checkpoint         @relation(fields: [checkpoint_id], references: [checkpoint_id])
-  checkpoint_id        Int
-  @@id([template_category_id, checkpoint_id])
-}
-
-model SubAreaInTemplateCategory {
-  CategoryInTemplate   CategoryInTemplate @relation(fields: [template_category_id], references: [template_category_id])
-  template_category_id Int
-  subarea              SubArea            @relation(fields: [subarea_id], references: [subarea_id])
-  subarea_id           Int
-  @@id([template_category_id, subarea_id])
+  subarea_id          Int      @id @default(autoincrement())
+  subarea_name        String
+  subarea_summary     String
+  subarea_description String
+  Category            Category @relation(fields: [category_id], references: [category_id])
+  category_id         Int
 }
 
 model CheckpointAndAnswersInAssessments {
