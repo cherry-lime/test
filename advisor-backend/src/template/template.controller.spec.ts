@@ -49,7 +49,6 @@ describe('TemplateController', () => {
     it('Should return the created template', async () => {
       expect(
         templateController.create({
-          template_name: 'test',
           template_type: 'INDIVIDUAL',
         })
       ).resolves.toBe(aTemplate);
