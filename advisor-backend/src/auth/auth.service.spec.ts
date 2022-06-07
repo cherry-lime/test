@@ -1,10 +1,10 @@
-import { AuthService } from '../auth.service';
-import { UserService } from '../../user/user.service';
-import { PrismaService } from '../../prisma/prisma.service';
+import { AuthService } from './auth.service';
+import { UserService } from '../user/user.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDto } from '../dto/login-user.dto';
+import { LoginDto } from './dto/login-user.dto';
 
 describe('AuthService', () => {
   let authService: AuthService;

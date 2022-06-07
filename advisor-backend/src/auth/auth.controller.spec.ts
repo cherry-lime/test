@@ -1,17 +1,9 @@
 import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-//import { AuthGuard } from './auth.guard';
-//import { CanActivate, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
-//import { request } from 'http';
-//import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { Role, User } from '@prisma/client';
+import { Role} from '@prisma/client';
 import { AuthResponse } from './dto/auth-response.dto';
-import { NotFoundException } from '@nestjs/common';
 // Random start and update date
 const myStartDate: any = new Date();
 const myEndDate: any = new Date();

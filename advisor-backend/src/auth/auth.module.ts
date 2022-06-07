@@ -6,7 +6,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { UserModule } from '../user/user.module';
-//import { UserService } from 'src/user/user.service';
 
 @Module({
   imports: [
