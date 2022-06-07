@@ -19,6 +19,13 @@ export class AuthService {
     private readonly usersService: UserService
   ) {}
 
+  /**
+   * Log in
+   * @param loginDto username and password 
+   * @returns generated token and user information
+   * @throws user is not found
+   * @throws password is invalid
+   */
   async login(loginDto: LoginDto): Promise<AuthResponse> {
     const { username, password_hash } = loginDto;
 
@@ -52,7 +59,11 @@ export class AuthService {
       user,
     };
   }
-
+  /**
+   * Create a user
+   * @param createUserDto information for creating a user
+   * @returns a generated token and user information 
+   */
   async register(createUserDto: CreateUserDto): Promise<AuthResponse> {
     const user = await this.usersService.createUser(createUserDto);
     return {

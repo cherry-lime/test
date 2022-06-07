@@ -13,11 +13,11 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const req: Request = context.switchToHttp().getRequest();
     const token = req.headers['authorization'];
-
+    // if no token is present
     if (!token) {
       throw new UnauthorizedException('token not found');
     }
-
+    // if the token does not match 
     if (token !== 'MY_AUTH_TOKEN') {
       throw new UnauthorizedException('invalid token');
     }

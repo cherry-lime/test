@@ -11,16 +11,31 @@ import { CreateUserDto } from './dto/register-user.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /**
+   * [POST] /login
+   * @param loginDto login information
+   * @returns authentication response
+   */
   @Post('/login')
   login(@Body() loginDto: LoginDto): Promise<AuthResponse> {
     return this.authService.login(loginDto);
   }
 
+  /**
+   * [POST] /register
+   * @param createUserDto information for creating a user
+   * @returns registration response
+   */
   @Post('/register')
   register(@Body() createUserDto: CreateUserDto): Promise<AuthResponse> {
     return this.authService.register(createUserDto);
   }
 
+  /**
+   * [GET] /profile
+   * @param user 
+   * @returns user 
+   */
   @UseGuards(AuthGuard('jwt'))
   @Get('/profile')
   getLoggedUser(@AuthUser() user: User): User {
