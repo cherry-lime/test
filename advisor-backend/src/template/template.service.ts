@@ -28,14 +28,10 @@ export class TemplateService {
    * @param template_type Template type
    * @returns Created template
    */
-  async create(
-    template_name: string,
-    template_type: AssessmentType
-  ): Promise<TemplateDto> {
+  async create(template_type: AssessmentType): Promise<TemplateDto> {
     try {
       return await this.prisma.template.create({
         data: {
-          template_name,
           template_type,
         },
       });

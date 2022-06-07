@@ -92,9 +92,9 @@ model UserInTeam {
 
 model Assessment {
   assessment_id                     Int                                 @id @default(autoincrement())
-  assessment_name                   String
-  country_name                      String
-  department_name                   String
+  assessment_name                   String                              @default("New Assessment")
+  country_name                      String                              @default("")
+  department_name                   String                              @default("")
   created_at                        DateTime                            @default(now())
   updated_at                        DateTime                            @updatedAt
   completed_at                      DateTime?
@@ -121,7 +121,7 @@ model AssessmentParticipants {
 
 model Template {
   template_id       Int               @id @default(autoincrement())
-  template_name     String
+  template_name     String            @default("New Template")
   template_type     AssessmentType
   disabled          Boolean           @default(false)
   weight_range_min  Int               @default(1)
