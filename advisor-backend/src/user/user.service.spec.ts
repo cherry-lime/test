@@ -71,4 +71,10 @@ describe('UserService', () => {
       expect(userService.getUser(1)).resolves.toBe(aUser);
     });
   });
+
+  describe('CreateUsers', () => {
+    it('Should return the found users', async () => {
+      expect(userService.getUser(1)).resolves.toBe(aUser);
+    });
+  });
 });
