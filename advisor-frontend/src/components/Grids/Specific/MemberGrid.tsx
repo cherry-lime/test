@@ -137,7 +137,7 @@ export default function MemberGrid({
       add={
         userRole === 'ASSESSOR'
           ? {
-              text: forAssessors ? 'Add Assessor' : 'Add Member',
+              text: forAssessors ? 'ADD ASSESSOR' : 'ADD MEMBER',
               handler: handleAdd,
             }
           : undefined

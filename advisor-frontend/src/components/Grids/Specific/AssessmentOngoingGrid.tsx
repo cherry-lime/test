@@ -117,7 +117,7 @@ export default function AssessmentOngoingGrid({
         userRole === 'USER' && assessmentType === 'TEAM'
           ? undefined
           : {
-              text: 'Start New Evaluation',
+              text: 'START NEW EVALUATION',
               handler: handleAdd,
             }
       }

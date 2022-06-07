@@ -9,23 +9,26 @@ import {
 import { Theme } from '@mui/material/styles';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import RemoveIcon from '@mui/icons-material/HighlightOff';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import GenericGrid from '../Generic/GenericGrid';
 
-import { UserRole } from '../../../types/UserRole';
+import { AssessmentType } from '../../../types/AssessmentType';
 
 // Define type for the rows in the grid
 type Row = {
   id: number;
   name: string;
+  description: string;
 };
 
 // Get row object with default values
 const getDefaultRow = () => {
   const defaultRow = {
     id: Date.now(),
-    name: 'New Team',
+    name: 'Name...',
+    description: 'Description...',
   };
   return defaultRow;
 };
@@ -33,18 +36,21 @@ const getDefaultRow = () => {
 // Generate new id based on time
 const generateId = () => Date.now();
 
-type TeamGridProps = {
+type TemplateGridProps = {
   theme: Theme;
-  userId: number;
-  userRole: UserRole;
+  assessmentType: AssessmentType;
 };
 
-export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
+export default function TemplateGrid({
+  theme,
+  assessmentType,
+}: TemplateGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
   // Fetch initial rows of the grid
   React.useEffect(() => {
     // TODO Replace this by API fetch
+    setRows(() => []);
   }, []);
 
   // Called when a row is edited
@@ -72,8 +78,8 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
     []
   );
 
-  // Called when the "Remove" action is pressed
-  const handleRemove = React.useCallback(
+  // Called when the "Delete" action is pressed in the action menu
+  const handleDelete = React.useCallback(
     (rowId: GridRowId) => () => {
       // Use setTimeout to deal with delay
       setTimeout(() => {
@@ -82,6 +88,26 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
 
         // Delete row with rowId from database
         // TODO
+      });
+    },
+    []
+  );
+
+  // Called when the "Duplicate" action is pressed in the action menu
+  const handleDuplicate = React.useCallback(
+    (rowId: GridRowId) => () => {
+      setRows((prevRows) => {
+        // Get the row with rowId
+        const rowToDuplicate =
+          prevRows.find((row) => row.id === rowId) ?? getDefaultRow();
+
+        // Create new row with duplicated content and generated id
+        const newRow = { ...rowToDuplicate, id: generateId() };
+
+        // Create newRow in database
+        // TODO
+
+        return [...prevRows, newRow];
       });
     },
     []
@@ -104,10 +130,17 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
     () => [
       {
         field: 'name',
-        headerName: 'Team Name',
+        headerName: 'Name',
         type: 'string',
         flex: 1,
-        editable: userRole === 'ASSESSOR',
+        editable: true,
+      },
+      {
+        field: 'description',
+        headerName: 'Description',
+        type: 'string',
+        flex: 1,
+        editable: true,
       },
       {
         field: 'actions',
@@ -120,14 +153,21 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
             onClick={handleVisit(params.id)}
           />,
           <GridActionsCellItem
-            icon={<RemoveIcon />}
-            label='Remove'
-            onClick={handleRemove(params.id)}
+            icon={<FileCopyIcon />}
+            label='Duplicate'
+            onClick={handleDuplicate(params.id)}
+            showInMenu
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label='Delete'
+            onClick={handleDelete(params.id)}
+            showInMenu
           />,
         ],
       },
     ],
-    [handleVisit, handleRemove]
+    [handleVisit, handleDuplicate, handleDelete]
   );
 
   return (
@@ -137,11 +177,10 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
       columns={columns}
       processRowUpdate={processRowUpdate}
       hasToolbar
-      add={
-        userRole === 'ASSESSOR'
-          ? { text: 'CREATE NEW TEAM', handler: handleAdd }
-          : undefined
-      }
+      add={{
+        text: `CREATE NEW ${assessmentType} EVALUATION TEMPLATE`,
+        handler: handleAdd,
+      }}
     />
   );
 }
