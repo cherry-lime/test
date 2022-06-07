@@ -1,15 +1,15 @@
-import { AuthService } from '../auth.service';
-import { UserService } from '../../user/user.service';
-import { PrismaService } from '../../prisma/prisma.service';
+import { AuthService } from './auth.service';
+import { UserService } from '../user/user.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Test } from '@nestjs/testing';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { JwtModule } from '@nestjs/jwt';
-import { LoginDto } from '../dto/login-user.dto'
-import { AuthResponse } from '../dto/auth-response.dto';
+import { LoginDto } from './dto/login-user.dto'
+import { AuthResponse } from './dto/auth-response.dto';
 import { Role } from '@prisma/client';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from '../jwt.strategy';
-import { CreateUserDto } from '../dto/register-user.dto';
+import { JwtStrategy } from './jwt.strategy';
+import { CreateUserDto } from './dto/register-user.dto';
 
 const moduleMocker = new ModuleMocker(global);
 
