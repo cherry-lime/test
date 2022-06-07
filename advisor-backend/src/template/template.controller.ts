@@ -16,7 +16,6 @@ import {
 } from '@nestjs/swagger';
 import { CategoryDto } from '../category/dto/category.dto';
 import { CategoryService } from '../category/category.service';
-import { CreateCategoryDto } from '../category/dto/create-category.dto';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';

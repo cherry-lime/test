@@ -99,12 +99,7 @@ describe('TemplateController', () => {
 
   describe('createCategory', () => {
     it('Should return the created category', async () => {
-      expect(
-        templateController.createCategory(1, {
-          category_name: 'test',
-          color: 0,
-        })
-      ).resolves.toBe(aCategory);
+      expect(templateController.createCategory(1)).resolves.toBe(aCategory);
     });
   });
 
