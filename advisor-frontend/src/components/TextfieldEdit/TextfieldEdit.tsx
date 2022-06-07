@@ -14,7 +14,6 @@ const theme = createTheme({
 function TextfieldEdit({ bodytext }: Message) {
   const initialState = bodytext;
   const [value, setValue] = useState(initialState);
-
   const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
