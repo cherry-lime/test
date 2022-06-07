@@ -55,9 +55,9 @@ export class TemplateController {
     description: 'Template with this name and type already exists',
   })
   async create(
-    @Body() { template_name, template_type }: CreateTemplateDto
+    @Body() { template_type }: CreateTemplateDto
   ): Promise<TemplateDto> {
-    return this.templateService.create(template_name, template_type);
+    return this.templateService.create(template_type);
   }
 
   /**
