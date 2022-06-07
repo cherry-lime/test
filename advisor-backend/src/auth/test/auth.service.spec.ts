@@ -112,9 +112,6 @@ const mockPrisma = {
 
 
 describe('AuthService', () => {
-  process.env = {
-    DATABASE_URL: 'postgres://localhost:5432/test',
-  };
   let authService: AuthService;
 
   // ---------------- Working when using the local database (or azure) ----------------
@@ -147,6 +144,11 @@ describe('AuthService', () => {
   // ---------------- Working ----------------
 
   beforeEach(async () => {
+    process.env = {
+      DATABASE_URL: 'postgres://localhost:5432/test',
+      JWT_SECRET: "mycustomuselongsecret",
+      EXPIRESIN: "1h"
+    };
     const module = await Test.createTestingModule({
       imports: [
         PassportModule,

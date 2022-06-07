@@ -9,6 +9,11 @@ import { AuthService } from './auth.service';
 const moduleMocker = new ModuleMocker(global);
 
 describe('TemplateModule', () => {
+  process.env = {
+    DATABASE_URL: 'postgres://localhost:5432/test',
+    JWT_SECRET: "mycustomuselongsecret",
+    EXPIRESIN: "1h"
+  };
   it('should compile the module', async () => {
     const module = await Test.createTestingModule({
       imports: [AuthModule],
