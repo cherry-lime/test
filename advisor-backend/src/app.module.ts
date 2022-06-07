@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AssessmentModule } from './assessment/assessment.module';
 import { TemplateModule } from './template/template.module';
 import { CategoryModule } from './category/category.module';
+import { SubareaModule } from './subarea/subarea.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CategoryModule } from './category/category.module';
     TemplateModule,
     AssessmentModule,
     CategoryModule,
+    SubareaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
