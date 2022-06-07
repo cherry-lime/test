@@ -20,7 +20,6 @@ import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';
 import { TemplateService } from './template.service';
 import { MaturityDto } from '../maturity/dto/maturity.dto';
-import { CreateMaturityDto } from '../maturity/dto/create-maturity.dto';
 import { MaturityService } from '../maturity/maturity.service';
 import { CategoryDto } from '../category/dto/category.dto';
 
@@ -170,10 +169,9 @@ export class TemplateController {
     description: 'Maturity with this name already exists',
   })
   async createMaturity(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() maturityDto: CreateMaturityDto
+    @Param('id', ParseIntPipe) id: number
   ): Promise<MaturityDto> {
-    return this.maturityService.create(id, maturityDto);
+    return this.maturityService.create(id);
   }
 
   /**

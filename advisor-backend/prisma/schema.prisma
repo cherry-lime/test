@@ -47,7 +47,7 @@ model PossibleAnswers {
 
 model Maturity {
   maturity_id    Int          @id @default(autoincrement())
-  maturity_name  String
+  maturity_name  String       @default("New Maturity")
   maturity_order Int
   Template       Template     @relation(fields: [template_id], references: [template_id])
   template_id    Int

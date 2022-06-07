@@ -121,9 +121,7 @@ describe('TemplateController', () => {
 
   describe('createMaturity', () => {
     it('Should return the created maturity', async () => {
-      expect(templateController.createMaturity(1, aMaturity)).resolves.toBe(
-        aMaturity
-      );
+      expect(templateController.createMaturity(1)).resolves.toBe(aMaturity);
     });
   });
 

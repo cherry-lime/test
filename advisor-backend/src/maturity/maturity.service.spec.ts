@@ -44,32 +44,28 @@ describe('MaturityService', () => {
 
   describe('create', () => {
     it('should return the created maturity', async () => {
-      expect(maturityService.create(1, aMaturity)).resolves.toBe(aMaturity);
+      expect(maturityService.create(1)).resolves.toBe(aMaturity);
     });
 
     it('should throw NotFoundException on not existing template_id', async () => {
       jest
         .spyOn(prisma.maturity, 'create')
         .mockRejectedValueOnce({ code: 'P2003' });
-      expect(maturityService.create(0, aMaturity)).rejects.toThrowError(
-        NotFoundException
-      );
+      expect(maturityService.create(0)).rejects.toThrowError(NotFoundException);
     });
 
     it('should throw ConflictException on duplicate name', async () => {
       jest
         .spyOn(prisma.maturity, 'create')
         .mockRejectedValueOnce({ code: 'P2002' });
-      expect(maturityService.create(1, aMaturity)).rejects.toThrowError(
-        ConflictException
-      );
+      expect(maturityService.create(1)).rejects.toThrowError(ConflictException);
     });
 
     it('should reject with unknown error', async () => {
       jest
         .spyOn(prisma.maturity, 'create')
         .mockRejectedValueOnce({ code: 'TEST' });
-      expect(maturityService.create(1, aMaturity)).rejects.toThrowError(
+      expect(maturityService.create(1)).rejects.toThrowError(
         InternalServerErrorException
       );
     });
