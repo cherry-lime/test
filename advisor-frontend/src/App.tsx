@@ -1,4 +1,4 @@
-import {Stack} from '@mui/material';
+import { Stack } from "@mui/material";
 import logo from "./logo.svg";
 import "./App.css";
 import ButtonRegular from "./components/ButtonRegular/ButtonRegular";
@@ -8,21 +8,22 @@ import TextfieldEdit from "./components/TextfieldEdit/TextfieldEdit";
 import TextfieldRead from "./components/Textfield/Textfield";
 import PageCard from "./components/PageCard/PageCard";
 
-const longtextteststring = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+const longtextteststring =
+  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Stack spacing = {3}>
-          <ButtonRegular name = "Regular ING Bold"/>
-          <ButtonInverted name2 = "Inverted ING Bold"/>
-          <Checkpoint description = "Checkpoint Description"/>
-          <TextfieldEdit bodytext={longtextteststring}/>
-          <TextfieldRead bodytext2={longtextteststring}/>
-          <p/>
+        <Stack spacing={3}>
+          <ButtonRegular name="Regular ING Bold" />
+          <ButtonInverted name2="Inverted ING Bold" />
+          <Checkpoint description="Checkpoint Description" />
+          <TextfieldEdit bodytext={longtextteststring} />
+          <TextfieldRead bodytext2={longtextteststring} />
+          <p />
         </Stack>
-        <PageCard bodytext3={longtextteststring}/>
+        <PageCard bodytext3={longtextteststring} />
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
