@@ -34,9 +34,9 @@ const Drawer = styled(MuiDrawer, {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
-      width: theme.spacing(7),
+      width: theme.spacing(1),
       [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
+        width: theme.spacing(7),
       },
     }),
   },
@@ -65,10 +65,15 @@ function DashboardContent() {
             sx={{
               display: "flex",
               alignItems: "center",
-              px: [1.5],
             }}
           >
-            <IconButton onClick={toggleDrawer} data-testid="DrawerButton">
+            <IconButton
+              onClick={toggleDrawer}
+              data-testid="DrawerButton"
+              sx={{
+                padding: "16px",
+              }}
+            >
               <MenuIcon color="info" />
             </IconButton>
           </Toolbar>
@@ -76,8 +81,9 @@ function DashboardContent() {
           <List
             component="nav"
             sx={{
-              px: [0.5],
               alignItems: "center",
+              display: "flex",
+              flexWrap: "wrap",
             }}
           >
             {mainListItems}

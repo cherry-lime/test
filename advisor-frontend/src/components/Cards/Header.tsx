@@ -10,7 +10,7 @@ const defaultProps = {
 };
 
 /**
- * 
+ *
  * @description Header function, which will display a header, with a speific title.
  * @param name used to display the header title.
  * @param bgcolor used to give a specific background color.

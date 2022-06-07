@@ -15,14 +15,14 @@ function Copyright() {
 }
 
 /**
- * 
+ *
  * @description A function to render a footer at the bottom of the page.ƒ
  * @returns A footer component, which contains the ING logo
  */
 
 export default function Footer() {
   return (
-    <Paper 
+    <Paper
       sx={{
         borderTopLeftRadius: "20px",
         borderTopRightRadius: "20px",
