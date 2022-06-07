@@ -9,6 +9,14 @@ const defaultProps = {
   bgcolor: "secondary.main",
 };
 
+/**
+ * 
+ * @description Header function, which will display a header, with a speific title.
+ * @param name used to display the header title.
+ * @param bgcolor used to give a specific background color.
+ * @returns React header component.
+ */
+
 export default function Header({ name, bgcolor }: Message) {
   const [text] = useState(name);
   return (
@@ -20,6 +28,7 @@ export default function Header({ name, bgcolor }: Message) {
         borderTopRightRadius: "0px",
         backgroundColor: bgcolor,
       }}
+      data-testid="headerID"
     >
       <Box
         alignContent="center"
