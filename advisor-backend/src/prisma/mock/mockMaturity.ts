@@ -11,4 +11,5 @@ export const mockMaturity = {
   findUnique: jest.fn().mockResolvedValue(aMaturity),
   update: jest.fn().mockResolvedValue(aMaturity),
   delete: jest.fn().mockResolvedValue(aMaturity),
+  count: jest.fn().mockResolvedValue(1),
 };

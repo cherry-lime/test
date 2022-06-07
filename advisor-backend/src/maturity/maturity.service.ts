@@ -5,7 +5,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateMaturityDto } from './dto/create-maturity.dto';
 import { UpdateMaturityDto } from './dto/update-maturity.dto';
 
 @Injectable()
@@ -15,17 +14,22 @@ export class MaturityService {
   /**
    * Create maturity
    * @param template_id template id to which maturity belongs
-   * @param createMaturityDto maturity data
    * @returns created maturity
    * @throws Maturity with this name already exists
    * @throws Template with id does not exist
    */
-  async create(template_id: number, createMaturityDto: CreateMaturityDto) {
+  async create(template_id: number) {
+    const maturity_order = await this.prisma.maturity.count({
+      where: {
+        template_id,
+      },
+    });
+
     return await this.prisma.maturity
       .create({
         data: {
-          ...createMaturityDto,
           template_id,
+          maturity_order,
         },
       })
       .catch((error) => {

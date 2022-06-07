@@ -65,7 +65,6 @@ describe('TemplateController', () => {
     it('Should return the created template', async () => {
       expect(
         templateController.create({
-          template_name: 'test',
           template_type: 'INDIVIDUAL',
         })
       ).resolves.toBe(aTemplate);
@@ -108,12 +107,7 @@ describe('TemplateController', () => {
 
   describe('createCategory', () => {
     it('Should return the created category', async () => {
-      expect(
-        templateController.createCategory(1, {
-          category_name: 'test',
-          color: 0,
-        })
-      ).resolves.toBe(aCategory);
+      expect(templateController.createCategory(1)).resolves.toBe(aCategory);
     });
   });
 
@@ -127,9 +121,7 @@ describe('TemplateController', () => {
 
   describe('createMaturity', () => {
     it('Should return the created maturity', async () => {
-      expect(templateController.createMaturity(1, aMaturity)).resolves.toBe(
-        aMaturity
-      );
+      expect(templateController.createMaturity(1)).resolves.toBe(aMaturity);
     });
   });
 

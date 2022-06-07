@@ -15,13 +15,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CategoryService } from '../category/category.service';
-import { CreateCategoryDto } from '../category/dto/create-category.dto';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';
 import { TemplateService } from './template.service';
 import { MaturityDto } from '../maturity/dto/maturity.dto';
-import { CreateMaturityDto } from '../maturity/dto/create-maturity.dto';
 import { MaturityService } from '../maturity/maturity.service';
 import { CategoryDto } from '../category/dto/category.dto';
 
@@ -59,9 +57,9 @@ export class TemplateController {
     description: 'Template with this name and type already exists',
   })
   async create(
-    @Body() { template_name, template_type }: CreateTemplateDto
+    @Body() { template_type }: CreateTemplateDto
   ): Promise<TemplateDto> {
-    return this.templateService.create(template_name, template_type);
+    return this.templateService.create(template_type);
   }
 
   /**
@@ -133,10 +131,9 @@ export class TemplateController {
     description: 'Category with this already exists',
   })
   async createCategory(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() createCategoryDto: CreateCategoryDto
+    @Param('id', ParseIntPipe) id: number
   ): Promise<CategoryDto> {
-    return this.categoryService.create(id, createCategoryDto);
+    return this.categoryService.create(id);
   }
 
   /**
@@ -172,10 +169,9 @@ export class TemplateController {
     description: 'Maturity with this name already exists',
   })
   async createMaturity(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() maturityDto: CreateMaturityDto
+    @Param('id', ParseIntPipe) id: number
   ): Promise<MaturityDto> {
-    return this.maturityService.create(id, maturityDto);
+    return this.maturityService.create(id);
   }
 
   /**
