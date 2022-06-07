@@ -15,7 +15,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CategoryService } from '../category/category.service';
-import { CreateCategoryDto } from '../category/dto/create-category.dto';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';
@@ -59,9 +58,9 @@ export class TemplateController {
     description: 'Template with this name and type already exists',
   })
   async create(
-    @Body() { template_name, template_type }: CreateTemplateDto
+    @Body() { template_type }: CreateTemplateDto
   ): Promise<TemplateDto> {
-    return this.templateService.create(template_name, template_type);
+    return this.templateService.create(template_type);
   }
 
   /**
@@ -133,10 +132,9 @@ export class TemplateController {
     description: 'Category with this already exists',
   })
   async createCategory(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() createCategoryDto: CreateCategoryDto
+    @Param('id', ParseIntPipe) id: number
   ): Promise<CategoryDto> {
-    return this.categoryService.create(id, createCategoryDto);
+    return this.categoryService.create(id);
   }
 
   /**

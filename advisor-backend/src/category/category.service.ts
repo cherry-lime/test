@@ -5,7 +5,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
@@ -20,11 +19,10 @@ export class CategoryService {
    * @throws Category with this name already exists
    * @throws Template with id does not exist
    */
-  async create(template_id: number, createCategoryDto: CreateCategoryDto) {
+  async create(template_id: number) {
     return await this.prisma.category
       .create({
         data: {
-          ...createCategoryDto,
           template_id,
         },
       })
