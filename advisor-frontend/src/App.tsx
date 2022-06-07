@@ -8,6 +8,7 @@ import TextfieldEdit from "./components/TextfieldEdit/TextfieldEdit";
 import Textfield from "./components/Textfield/Textfield";
 import PageCard from "./components/PageCard/PageCard";
 
+//  this is a test string to be used for several components
 const longtextteststring =
   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.";
 
@@ -16,8 +17,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Stack spacing={3}>
-          <ButtonRegular name="Regular ING Bold" />
-          <ButtonInverted name2="Inverted ING Bold" />
+          {/* all components are listed once as an example with parameters if applicable */}
+          <ButtonRegular name="Regular Button" />
+          <ButtonInverted name2="Inverted Button" />
           <Checkpoint description="Checkpoint Description" />
           <TextfieldEdit bodytext={longtextteststring} />
           <Textfield bodytext2={longtextteststring} />
