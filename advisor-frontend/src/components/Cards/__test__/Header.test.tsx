@@ -1,4 +1,4 @@
-import { render, cleanup, screen, fireEvent } from "@testing-library/react";
+import { render, cleanup, screen } from "@testing-library/react";
 import Header from "../Header";
 
 afterEach(cleanup);
