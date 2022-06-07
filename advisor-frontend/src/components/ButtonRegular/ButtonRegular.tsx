@@ -19,7 +19,7 @@ function ButtonRegular({ name }: Message) {
           color="secondary"
           style={{ fontWeight: "600" }}
           onClick={() => {
-            alert("Clicked");
+            //  alert("Clicked") (action to be defined)
           }}
         >
           {name}
