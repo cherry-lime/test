@@ -4,8 +4,14 @@ type Message = { bodytext2: string };
 
 const theme = createTheme({
   palette: {
-    secondary: {
+    primary: {
       main: "#ff6200",
+    },
+    secondary: {
+      main: "#5a534f",
+    },
+    text: {
+      primary: "5a534f",
     },
   },
 });
@@ -19,11 +25,11 @@ function Textfield({ bodytext2 }: Message) {
           width: "50ch",
         }}
         variant="outlined"
-        color="secondary"
-        placeholder={bodytext2}
+        color="primary"
         multiline
         rows={5}
         InputProps={{ readOnly: true }}
+        value={bodytext2}
       />
     </ThemeProvider>
   );

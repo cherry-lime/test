@@ -2,7 +2,7 @@ import { createTheme, ThemeProvider, Button } from "@mui/material";
 
 const theme = createTheme({
   palette: {
-    secondary: {
+    primary: {
       main: "#ff6200",
     },
   },
@@ -19,7 +19,7 @@ function ButtonInverted({ name2 }: Message) {
             backgroundColor: "white",
           }}
           variant="outlined"
-          color="secondary"
+          color="primary"
           style={{ fontWeight: "600" }}
           onClick={() => {
             //  alert("Clicked"); action to be defined

@@ -9,15 +9,14 @@ import {
   RadioGroup,
   Radio,
 } from "@mui/material";
-import { grey } from "@mui/material/colors";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: grey[900],
+      main: "#ff6200",
     },
     secondary: {
-      main: "#ff6200",
+      main: "#5a534f",
     },
   },
 });
@@ -31,10 +30,10 @@ function Checkpoint({ description }: Message) {
   };
   return (
     <ThemeProvider theme={theme}>
-      <Box color="primary">
+      <Box>
         <FormControl>
-          <FormLabel id="checkpointnamelabel" color="primary">
-            <p>{description}</p>
+          <FormLabel id="checkpointnamelabel" color="secondary">
+            {description}
           </FormLabel>
           <RadioGroup
             name="checkpointname"
@@ -44,17 +43,17 @@ function Checkpoint({ description }: Message) {
             row
           >
             <FormControlLabel
-              control={<Radio color="secondary" />}
+              control={<Radio color="primary" />}
               label="Yes"
               value="Yes"
             />
             <FormControlLabel
-              control={<Radio color="secondary" />}
+              control={<Radio color="primary" />}
               label="No"
               value="No"
             />
             <FormControlLabel
-              control={<Radio color="secondary" />}
+              control={<Radio color="primary" />}
               label="N/A"
               value="N/A"
             />

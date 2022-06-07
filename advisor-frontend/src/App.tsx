@@ -5,7 +5,7 @@ import ButtonRegular from "./components/ButtonRegular/ButtonRegular";
 import ButtonInverted from "./components/ButtonInverted/ButtonInverted";
 import Checkpoint from "./components/Checkpoint/Checkpoint";
 import TextfieldEdit from "./components/TextfieldEdit/TextfieldEdit";
-import TextfieldRead from "./components/Textfield/Textfield";
+import Textfield from "./components/Textfield/Textfield";
 import PageCard from "./components/PageCard/PageCard";
 
 const longtextteststring =
@@ -20,7 +20,7 @@ function App() {
           <ButtonInverted name2="Inverted ING Bold" />
           <Checkpoint description="Checkpoint Description" />
           <TextfieldEdit bodytext={longtextteststring} />
-          <TextfieldRead bodytext2={longtextteststring} />
+          <Textfield bodytext2={longtextteststring} />
           <p />
         </Stack>
         <PageCard bodytext3={longtextteststring} />

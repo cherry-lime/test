@@ -4,8 +4,6 @@ import Textfield from "../Textfield";
 afterEach(cleanup);
 
 it("Rendering without crash and check placeholdertext", () => {
-  const { getByPlaceholderText } = render(
-    <Textfield bodytext2="lorem ipsum" />
-  );
-  expect(getByPlaceholderText("lorem ipsum")).toBeInTheDocument();
+  const { getByText } = render(<Textfield bodytext2="lorem ipsum" />);
+  expect(getByText("lorem ipsum")).toBeInTheDocument();
 });

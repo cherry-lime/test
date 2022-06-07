@@ -2,7 +2,7 @@ import { createTheme, ThemeProvider, Button } from "@mui/material";
 
 const theme = createTheme({
   palette: {
-    secondary: {
+    primary: {
       main: "#ff6200",
     },
   },
@@ -16,7 +16,7 @@ function ButtonRegular({ name }: Message) {
       <div>
         <Button
           variant="contained"
-          color="secondary"
+          color="primary"
           style={{ fontWeight: "600" }}
           onClick={() => {
             //  alert("Clicked") (action to be defined)
