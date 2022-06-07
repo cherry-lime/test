@@ -39,6 +39,11 @@ describe('AuthController', () => {
   //let app: INestApplication;
 
   beforeEach(async () => {
+    process.env = {
+      DATABASE_URL: 'postgres://localhost:5432/test',
+      JWT_SECRET: "mycustomuselongsecret",
+      EXPIRESIN: "1h"
+    };
     //const mock_AuthGuard: CanActivate = {canActivate: jest.fn(() => true)};
 
     const module: TestingModule = await Test.createTestingModule({

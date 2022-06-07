@@ -37,6 +37,11 @@ describe('UserService', () => {
   let userService: UserService;
 
   beforeEach(async () => {
+    process.env = {
+      DATABASE_URL: 'postgres://localhost:5432/test',
+      JWT_SECRET: "mycustomuselongsecret",
+      EXPIRESIN: "1h"
+    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [UserService],
     })
@@ -62,6 +67,12 @@ describe('UserService', () => {
   });
 
   describe('getUsers', () => {
+    it('Should return the found users', async () => {
+      expect(userService.getUser(1)).resolves.toBe(aUser);
+    });
+  });
+
+  describe('CreateUsers', () => {
     it('Should return the found users', async () => {
       expect(userService.getUser(1)).resolves.toBe(aUser);
     });
