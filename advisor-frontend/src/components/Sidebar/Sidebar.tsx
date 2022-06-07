@@ -42,7 +42,7 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-function DashboardContent() {
+export default function Sidebar() {
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen((isOpen) => !isOpen);
@@ -103,8 +103,4 @@ function DashboardContent() {
       </Grid>
     </ThemeProvider>
   );
-}
-
-export default function Sidebar() {
-  return <DashboardContent />;
 }
