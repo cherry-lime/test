@@ -15,6 +15,7 @@ function TextfieldEdit({ bodytext }: Message) {
   const initialState = bodytext;
   const [value, setValue] = useState(initialState);
   console.log({ value });
+
   const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
