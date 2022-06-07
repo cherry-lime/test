@@ -26,7 +26,6 @@ type Message = { description: string };
 
 function Checkpoint({ description }: Message) {
   const [value, setValue] = useState("");
-  console.log({ value });
   const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
