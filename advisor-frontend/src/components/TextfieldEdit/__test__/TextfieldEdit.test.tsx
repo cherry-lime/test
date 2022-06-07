@@ -3,8 +3,14 @@ import TextfieldEdit from "../TextfieldEdit";
 
 afterEach(cleanup);
 
-it("Rendering without crash and check editable text and click", () => {
+it("Rendering without crash", () => {
   const { getByText } = render(<TextfieldEdit bodytext="lorem ipsum" />);
   expect(getByText("lorem ipsum")).toBeInTheDocument();
-  fireEvent.click(getByText("lorem ipsum"));
+});
+
+it("Check input change", () => {
+  const { getByText } = render(<TextfieldEdit bodytext="lorem ipsum" />);
+  const inputElement = getByText("lorem ipsum") as HTMLInputElement;
+  fireEvent.change(inputElement, { target: { value: "lorem ipsum changed" } });
+  expect(getByText("lorem ipsum changed")).toBeInTheDocument();
 });
