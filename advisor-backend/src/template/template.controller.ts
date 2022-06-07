@@ -129,10 +129,9 @@ export class TemplateController {
     description: 'Category with this already exists',
   })
   async createCategory(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() createCategoryDto: CreateCategoryDto
+    @Param('id', ParseIntPipe) id: number
   ): Promise<CategoryDto> {
-    return this.categoryService.create(id, createCategoryDto);
+    return this.categoryService.create(id);
   }
 
   /**

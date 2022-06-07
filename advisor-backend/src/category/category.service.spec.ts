@@ -44,32 +44,28 @@ describe('CategoryService', () => {
 
   describe('create', () => {
     it('should return the created category', async () => {
-      expect(categoryService.create(1, aCategory)).resolves.toBe(aCategory);
+      expect(categoryService.create(1)).resolves.toBe(aCategory);
     });
 
     it('should throw NotFoundException on not existing template_id', async () => {
       jest
         .spyOn(prisma.category, 'create')
         .mockRejectedValueOnce({ code: 'P2003' });
-      expect(categoryService.create(0, aCategory)).rejects.toThrowError(
-        NotFoundException
-      );
+      expect(categoryService.create(0)).rejects.toThrowError(NotFoundException);
     });
 
     it('should throw ConflictException on duplicate name', async () => {
       jest
         .spyOn(prisma.category, 'create')
         .mockRejectedValueOnce({ code: 'P2002' });
-      expect(categoryService.create(1, aCategory)).rejects.toThrowError(
-        ConflictException
-      );
+      expect(categoryService.create(1)).rejects.toThrowError(ConflictException);
     });
 
     it('should reject with unknown error', async () => {
       jest
         .spyOn(prisma.category, 'create')
         .mockRejectedValueOnce({ code: 'TEST' });
-      expect(categoryService.create(1, aCategory)).rejects.toThrowError(
+      expect(categoryService.create(1)).rejects.toThrowError(
         InternalServerErrorException
       );
     });
