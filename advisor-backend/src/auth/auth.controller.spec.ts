@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { Role} from '@prisma/client';
 import { AuthResponse } from './dto/auth-response.dto';
+import { AuthGuard } from './auth.guard';
 // Random start and update date
 const myStartDate: any = new Date();
 const myEndDate: any = new Date();

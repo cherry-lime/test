@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 
 const moduleMocker = new ModuleMocker(global);
 
-describe('TemplateModule', () => {
+describe('AuthModule', () => {
   process.env = {
     DATABASE_URL: 'postgres://localhost:5432/test',
     JWT_SECRET: "mycustomuselongsecret",
