@@ -8,7 +8,7 @@ export const aSubarea = {
 
 export const mockSubarea = {
   findUnique: jest.fn().mockResolvedValue(aSubarea),
-  findAll: jest.fn().mockResolvedValue([aSubarea]),
+  findMany: jest.fn().mockResolvedValue([aSubarea]),
   create: jest.fn().mockResolvedValue(aSubarea),
   update: jest.fn().mockResolvedValue(aSubarea),
   delete: jest.fn().mockResolvedValue(aSubarea),

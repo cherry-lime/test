@@ -72,7 +72,7 @@ describe('CategoryController', () => {
 
   describe('createSubarea', () => {
     it('Should return the created subarea', async () => {
-      expect(controller.createSubarea(1, aSubarea)).resolves.toEqual(aSubarea);
+      expect(controller.createSubarea(1)).resolves.toEqual(aSubarea);
     });
   });
 });

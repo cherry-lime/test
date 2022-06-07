@@ -4,6 +4,6 @@ import { SubareaController } from './subarea.controller';
 
 @Module({
   controllers: [SubareaController],
-  providers: [SubareaService]
+  providers: [SubareaService],
 })
 export class SubareaModule {}

@@ -1,6 +1,6 @@
 import { OmitType, PartialType } from '@nestjs/swagger';
-import { CreateSubareaDto } from './create-subarea.dto';
+import { SubareaDto } from './subarea.dto';
 
 export class UpdateSubareaDto extends PartialType(
-  OmitType(CreateSubareaDto, ['category_id'])
+  OmitType(SubareaDto, ['category_id', 'subarea_id'])
 ) {}

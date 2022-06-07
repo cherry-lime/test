@@ -15,5 +15,5 @@ export const mockPrisma = {
   category: mockCategory,
   assessmentParticipants: mockAssessmentParticipants,
   maturity: mockMaturity,
-  subarea: mockSubarea,
+  subArea: mockSubarea,
 };

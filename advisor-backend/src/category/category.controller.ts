@@ -75,10 +75,7 @@ export class CategoryController {
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
   @ApiConflictResponse({ description: 'Subarea with this name already exists' })
-  createSubarea(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() subareaDto: SubareaDto
-  ) {
-    return this.subareaService.create(id, subareaDto);
+  createSubarea(@Param('id', ParseIntPipe) id: number) {
+    return this.subareaService.create(id);
   }
 }

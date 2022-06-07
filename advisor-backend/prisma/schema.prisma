@@ -156,11 +156,13 @@ model Category {
 
 model SubArea {
   subarea_id          Int      @id @default(autoincrement())
-  subarea_name        String
-  subarea_summary     String
-  subarea_description String
+  subarea_name        String   @default("New Subarea")
+  subarea_summary     String   @default("")
+  subarea_description String   @default("")
   Category            Category @relation(fields: [category_id], references: [category_id])
   category_id         Int
+
+  @@unique([subarea_name, category_id])
 }
 
 model CheckpointAndAnswersInAssessments {
