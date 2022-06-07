@@ -56,9 +56,9 @@ describe('TemplateService', () => {
 
   describe('create', () => {
     it('Should return the created template', async () => {
-      expect(
-        templateService.create('test', AssessmentType.INDIVIDUAL)
-      ).resolves.toBe(aTemplate);
+      expect(templateService.create(AssessmentType.INDIVIDUAL)).resolves.toBe(
+        aTemplate
+      );
     });
 
     it('Should reject if template name and type already exists', async () => {
@@ -66,7 +66,7 @@ describe('TemplateService', () => {
         .spyOn(prisma.template, 'create')
         .mockRejectedValueOnce({ code: 'P2002' });
       await expect(
-        templateService.create('test', AssessmentType.INDIVIDUAL)
+        templateService.create(AssessmentType.INDIVIDUAL)
       ).rejects.toThrowError(ConflictException);
     });
 
@@ -75,7 +75,7 @@ describe('TemplateService', () => {
         .spyOn(prisma.template, 'create')
         .mockRejectedValueOnce({ code: 'TEST' });
       expect(
-        templateService.create('test', AssessmentType.INDIVIDUAL)
+        templateService.create(AssessmentType.INDIVIDUAL)
       ).rejects.toThrowError(InternalServerErrorException);
     });
   });
