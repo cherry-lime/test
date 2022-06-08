@@ -416,6 +416,44 @@
         ]
       }
     },
+    "/teams/{team_id}/assessments": {
+      "get": {
+        "tags": [
+          "team"
+        ],
+        "summary": "Get assessments of team with team_id",
+        "description": "",
+        "operationId": "getTeamAssessments",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "path",
+            "description": "The team id to get assessments for",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Assessment"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
+    },
     "/teams/{team_id}/members": {
       "get": {
         "tags": [
@@ -610,7 +648,7 @@
           }
         ]
       },
-      "put": {
+      "patch": {
         "tags": [
           "checkpoint"
         ],
@@ -634,7 +672,7 @@
             "description": "checkpoint information to update",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Checkpoint"
+              "$ref": "#/definitions/CheckpointDTO"
             }
           }
         ],
@@ -656,36 +694,26 @@
         ]
       }
     },
-    "/assessment/my": {
+    "/assessment": {
       "get": {
         "tags": [
           "assessment"
         ],
-        "summary": "Get a list of my assessments",
-        "description": "",
-        "operationId": "getMyAssessments",
+        "summary": "Get all assessments",
+        "description": "Only allowed by admins",
+        "operationId": "getAllAssessments",
         "produces": [
           "application/json"
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Assessment"
-              }
+              "$ref": "#/definitions/Assessment"
             }
           }
-        },
-        "security": [
-          {
-            "testingadvisor_auth": []
-          }
-        ]
-      }
-    },
-    "/assessment/new": {
+        }
+      },
       "post": {
         "tags": [
           "assessment"
@@ -700,7 +728,7 @@
             "description": "Settings for new assessment",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/NewAssessmentDTO"
+              "$ref": "#/definitions/AssessmentDto"
             }
           }
         ],
@@ -725,23 +753,118 @@
         ]
       }
     },
-    "/assessment/{team_id}": {
+    "/assessment/{assessment_id}": {
       "get": {
         "tags": [
           "assessment"
         ],
-        "summary": "Get assessments of team with team_id",
-        "description": "",
-        "operationId": "getTeamAssessments",
+        "summary": "Get assessment by id",
+        "description": "Only allowed by users within the assessment or admins",
+        "operationId": "getAssessment",
         "parameters": [
           {
-            "name": "team_id",
             "in": "path",
-            "description": "The team id to get assessments for",
+            "name": "assessment_id",
+            "description": "Assessment id to fetch",
             "required": true,
             "type": "integer"
           }
         ],
+        "produces": [
+          "application.json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Assessment"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Update assessment by id",
+        "description": "Only allowed by assessors within the assessment or admins",
+        "operationId": "updateAssessment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "description": "Assessment id to update",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Assessment data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AssessmentDto"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Assessment"
+            }
+          },
+          "404": {
+            "description": "Assessment not found"
+          },
+          "409": {
+            "description": "Assessment with this name and type already exists"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "delete assessment by id",
+        "description": "Only allowed by assessors within the assessment or admins",
+        "operationId": "deleteAssessment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "description": "assessment id to delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Assessment"
+            }
+          },
+          "404": {
+            "description": "Assessment not found"
+          }
+        }
+      }
+    },
+    "/assessment/my": {
+      "get": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Get a list of my assessments",
+        "description": "",
+        "operationId": "getMyAssessments",
         "produces": [
           "application/json"
         ],
@@ -839,7 +962,7 @@
       }
     },
     "/assessment/{assessment_id}/checkpoint": {
-      "put": {
+      "post": {
         "tags": [
           "assessment"
         ],
@@ -1069,7 +1192,7 @@
           }
         ]
       },
-      "put": {
+      "patch": {
         "tags": [
           "maturity"
         ],
@@ -1090,7 +1213,7 @@
             "description": "maturity data to update",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Maturity"
+              "$ref": "#/definitions/MaturityDTO"
             }
           }
         ],
@@ -1221,7 +1344,7 @@
           }
         ]
       },
-      "put": {
+      "patch": {
         "tags": [
           "subarea"
         ],
@@ -1242,7 +1365,7 @@
             "description": "Subarea data to update",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Subarea"
+              "$ref": "#/definitions/SubareaDTO"
             }
           }
         ],
@@ -1376,7 +1499,7 @@
           }
         ]
       },
-      "put": {
+      "patch": {
         "tags": [
           "category"
         ],
@@ -1397,7 +1520,7 @@
             "description": "Category data to update",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Category"
+              "$ref": "#/definitions/CategoryDTO"
             }
           }
         ],
@@ -1423,6 +1546,28 @@
       }
     },
     "/template": {
+      "get": {
+        "tags": [
+          "template"
+        ],
+        "summary": "Get all templates",
+        "description": "",
+        "operationId": "getAllTemplates",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Template"
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "template"
@@ -1430,6 +1575,17 @@
         "summary": "Create new template",
         "description": "Only allowed by admins",
         "operationId": "createTemplate",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Template name and type",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateTemplateDTO"
+            }
+          }
+        ],
         "produces": [
           "application/json"
         ],
@@ -1439,6 +1595,15 @@
             "schema": {
               "$ref": "#/definitions/Template"
             }
+          },
+          "400": {
+            "description": "Bad body"
+          },
+          "404": {
+            "description": "Template not found"
+          },
+          "409": {
+            "description": "Template with this name and type already exists"
           }
         },
         "security": [
@@ -1474,6 +1639,9 @@
             "schema": {
               "$ref": "#/definitions/Template"
             }
+          },
+          "404": {
+            "description": "Template not found"
           }
         },
         "security": [
@@ -1482,7 +1650,7 @@
           }
         ]
       },
-      "put": {
+      "patch": {
         "tags": [
           "template"
         ],
@@ -1505,8 +1673,17 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Template"
+              "$ref": "#/definitions/TemplateUpdateDto"
             }
+          },
+          "400": {
+            "description": "Bad body"
+          },
+          "404": {
+            "description": "Template not found"
+          },
+          "409": {
+            "description": "Template with this name and type already exists"
           }
         },
         "security": [
@@ -1514,6 +1691,66 @@
             "testingadvisor_auth": []
           }
         ]
+      },
+      "delete": {
+        "tags": [
+          "template"
+        ],
+        "summary": "Delete template from id",
+        "description": "Only allowed by admins",
+        "operationId": "deleteTemplate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "description": "template id to delete",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Template"
+            }
+          },
+          "404": {
+            "description": "Template not found"
+          }
+        }
+      }
+    },
+    "/template/{template_id}/clone": {
+      "get": {
+        "tags": [
+          "template"
+        ],
+        "summary": "clone template from id",
+        "description": "Only allowed by admins",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "template_id",
+            "description": "template id to copy",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Template not found"
+          }
+        }
       }
     },
     "/template/{template_id}/answers": {
@@ -1778,6 +2015,9 @@
     "Assessment": {
       "type": "object",
       "properties": {
+        "assessment_id": {
+          "type": "integer"
+        },
         "assessment_name": {
           "type": "string"
         },
@@ -1807,27 +2047,34 @@
         }
       }
     },
-    "NewAssessmentDTO": {
+    "AssessmentDto": {
       "type": "object",
       "properties": {
+        "assessment_name": {
+          "type": "string"
+        },
+        "assessment_description": {
+          "type": "string"
+        },
+        "country_name": {
+          "type": "string"
+        },
+        "department_name": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "completed_at": {
+          "type": "string"
+        },
         "assessment_type": {
           "type": "string"
         },
         "template_id": {
-          "type": "integer"
-        }
-      }
-    },
-    "UpdateAssessmentDTO": {
-      "type": "object",
-      "properties": {
-        "assessment_id": {
-          "type": "integer"
-        },
-        "checkpoint_id": {
-          "type": "integer"
-        },
-        "answer_id": {
           "type": "integer"
         }
       }
@@ -1917,6 +2164,43 @@
         },
         "include_no_answer": {
           "type": "boolean"
+        }
+      }
+    },
+    "TemplateUpdateDto": {
+      "type": "object",
+      "properties": {
+        "template_name": {
+          "type": "string"
+        },
+        "template_type": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "weight_range_min": {
+          "type": "integer"
+        },
+        "weight_range_max": {
+          "type": "integer"
+        },
+        "score_formula": {
+          "type": "string"
+        },
+        "include_no_answer": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CreateTemplateDTO": {
+      "type": "object",
+      "properties": {
+        "template_name": {
+          "type": "string"
+        },
+        "template_type": {
+          "type": "string"
         }
       }
     },
