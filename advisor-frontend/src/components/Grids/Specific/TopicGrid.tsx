@@ -18,6 +18,7 @@ import GenericGrid from '../Generic/GenericGrid';
 type Row = {
   id: number;
   name: string;
+  enabled: boolean;
 };
 
 // Get row object with default values
@@ -25,6 +26,7 @@ const getDefaultRow = () => {
   const defaultRow = {
     id: Date.now(),
     name: 'Name...',
+    enabled: true,
   };
   return defaultRow;
 };
@@ -125,6 +127,13 @@ export default function TopicGrid({ theme, templateId }: TemplateGridProps) {
         headerName: 'Name',
         type: 'string',
         flex: 1,
+        editable: true,
+      },
+      {
+        field: 'enabled',
+        headerName: 'Enabled',
+        type: 'boolean',
+        width: 75,
         editable: true,
       },
       {

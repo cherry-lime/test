@@ -4,7 +4,6 @@ import {
   GridActionsCellItem,
   GridColumns,
   GridPreProcessEditCellProps,
-  GridRenderCellParams,
   GridRowId,
   GridRowModel,
 } from '@mui/x-data-grid';
@@ -32,7 +31,7 @@ const generateId = () => Date.now();
 // Get row object with default values
 const getDefaultRow = (prevRows: Row[]) => {
   const defaultRow = {
-    id: prevRows.length,
+    id: generateId(),
     order: prevRows.length,
     name: 'Name...',
     enabled: true,
