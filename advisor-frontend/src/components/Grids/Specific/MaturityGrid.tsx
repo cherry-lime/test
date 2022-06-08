@@ -78,11 +78,10 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     []
   );
 
-  // Swap order of row with newOrder
-  const swapOrder = (row: Row, newOrder: number) => {
+  // Change order of rows: row with oldOrder (index) will go to newOrder (index)
+  const changeOrder = (oldOrder: number, newOrder: number) => {
+    // Reorder rows state
     setRows((prevRows) => {
-      const oldOrder = row.order;
-
       if (
         newOrder === oldOrder ||
         newOrder < 0 ||
@@ -91,46 +90,31 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         return prevRows;
       }
 
-      let newRows: Row[] = [];
+      // Copy prevRows into oldRows (prevRows is read-only)
+      const oldRows = [...prevRows];
 
-      if (newOrder < oldOrder) {
-        newRows = prevRows.map((prevRow) => {
-          const prevOrder = prevRow.order;
+      // Get the row with the old order
+      const row = oldRows.splice(oldOrder, 1)[0];
 
-          if (newOrder <= prevOrder && prevOrder < oldOrder) {
-            return { ...prevRow, order: prevOrder + 1 };
-          }
+      // Insert row at new order
+      oldRows.splice(newOrder, 0, row);
 
-          if (prevOrder === oldOrder) {
-            return { ...prevRow, order: newOrder };
-          }
+      // Update 'Order' column accordingly
+      const newRows = oldRows.map((prevRow, index) => ({
+        ...prevRow,
+        order: index,
+      }));
 
-          return prevRow;
-        });
-      } else {
-        newRows = prevRows.map((prevRow) => {
-          const prevOrder = prevRow.order;
-
-          if (oldOrder < prevOrder && prevOrder <= newOrder) {
-            return { ...prevRow, order: prevOrder - 1 };
-          }
-
-          if (prevOrder === oldOrder) {
-            return { ...prevRow, order: newOrder };
-          }
-
-          return prevRow;
-        });
-      }
-
-      return newRows.sort((x, y) => (x.order > y.order ? 1 : -1));
+      return newRows;
     });
   };
 
   // Called when the "Upward" action is pressed
   const handleUpward = React.useCallback(
     (row: Row) => () => {
-      swapOrder(row, row.order - 1);
+      // swapOrder(row, row.order - 1);
+      const { order } = row;
+      changeOrder(order, order - 1);
     },
     []
   );
@@ -138,7 +122,9 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownward = React.useCallback(
     (row: Row) => () => {
-      swapOrder(row, row.order + 1);
+      // swapOrder(row, row.order + 1);
+      const { order } = row;
+      changeOrder(order, order + 1);
     },
     []
   );
