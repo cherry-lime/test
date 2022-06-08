@@ -1,10 +1,8 @@
-import { Test, TestingModule } from '../node_modules/@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AuthModule } from './../src/auth/auth.module';
-import { User } from '@prisma/client';
-import { UserModule } from '../src/user/user.module';
-import { LoginDto } from 'src/auth/dto/login-user.dto';
+import { LoginDto } from '../src/auth/dto/login-user.dto';
 import { JwtStrategy } from '../src/auth/jwt.strategy';
 
 describe('AuthController (e2e)', () => {
@@ -12,11 +10,11 @@ describe('AuthController (e2e)', () => {
   let authToken: JwtStrategy;
 
   beforeEach(async () => {
-    process.env = {
-      DATABASE_URL: 'postgres://localhost:5432/test',
-      JWT_SECRET: "mycustomuselongsecret",
-      EXPIRESIN: "1h"
-    };
+    //process.env = {
+    //  DATABASE_URL: 'postgres://localhost:5432/test',
+    //  JWT_SECRET: "mycustomuselongsecret",
+    //  EXPIRESIN: "1h"
+    //};
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AuthModule],
     }).compile();
