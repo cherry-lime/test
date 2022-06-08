@@ -9,8 +9,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Grid } from "@mui/material";
-import AllPages from "../../pages/PageManager";
-import { mainListItems } from "./listItems";
+import  mainListItems  from "./listItems";
 
 import INGTheme from "../../Theme";
 
@@ -42,7 +41,15 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-export default function Sidebar() {
+type SidebarProps = {
+  children?: React.ReactNode;
+};
+
+const defaultProps = {
+  children: null,
+}
+
+export default function Sidebar({children}: SidebarProps) {
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen((isOpen) => !isOpen);
@@ -98,9 +105,10 @@ export default function Sidebar() {
             overflow: "auto",
           }}
         >
-          <AllPages />
+          {children}
         </Box>
       </Grid>
     </ThemeProvider>
   );
 }
+Sidebar.defaultProps = defaultProps;
