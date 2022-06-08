@@ -1,10 +1,10 @@
 import "./App.css";
-import Sidebar from "./components/Sidebar/Sidebar";
+import AllPages from "./pages/AllPages";
 
 function App() {
   return (
     <div className="App">
-      <Sidebar />
+      <AllPages />
     </div>
   );
 }
