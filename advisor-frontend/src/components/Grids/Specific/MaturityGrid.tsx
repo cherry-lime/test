@@ -34,7 +34,7 @@ const getDefaultRow = (prevRows: Row[]) => {
     id: generateId(),
     order: prevRows.length,
     name: 'Name...',
-    enabled: true,
+    enabled: false,
   };
   return defaultRow;
 };

@@ -7,9 +7,7 @@ import {
   GridRowModel,
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
-import { Tooltip } from '@mui/material';
 
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -19,6 +17,8 @@ import GenericGrid from '../Generic/GenericGrid';
 type Row = {
   id: number;
   name: string;
+  summary: string;
+  description: string;
   enabled: boolean;
 };
 
@@ -27,6 +27,8 @@ const getDefaultRow = () => {
   const defaultRow = {
     id: Date.now(),
     name: 'Name...',
+    summary: 'Summary...',
+    description: 'Description...',
     enabled: false,
   };
   return defaultRow;
@@ -35,12 +37,17 @@ const getDefaultRow = () => {
 // Generate new id based on time
 const generateId = () => Date.now();
 
-type TopicGridProps = {
+type SubareaGridProps = {
   theme: Theme;
   templateId: number;
+  categoryId: number;
 };
 
-export default function TopicGrid({ theme, templateId }: TopicGridProps) {
+export default function SubareaGrid({
+  theme,
+  templateId,
+  categoryId,
+}: SubareaGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
   // Fetch initial rows of the grid
@@ -64,15 +71,6 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
       );
 
       return newRow;
-    },
-    []
-  );
-
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
     },
     []
   );
@@ -127,6 +125,20 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
         field: 'name',
         headerName: 'Name',
         type: 'string',
+        width: 200,
+        editable: true,
+      },
+      {
+        field: 'summary',
+        headerName: 'Summary',
+        type: 'string',
+        flex: 1,
+        editable: true,
+      },
+      {
+        field: 'description',
+        headerName: 'Description',
+        type: 'string',
         flex: 1,
         editable: true,
       },
@@ -140,17 +152,8 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
       {
         field: 'actions',
         type: 'actions',
-        width: 100,
+        width: 75,
         getActions: (params: { id: GridRowId; row: Row }) => [
-          <GridActionsCellItem
-            icon={
-              <Tooltip title='Visit'>
-                <ArrowForwardIcon />
-              </Tooltip>
-            }
-            label='Visit'
-            onClick={handleVisit(params.id)}
-          />,
           <GridActionsCellItem
             icon={<FileCopyIcon />}
             label='Duplicate'
@@ -166,7 +169,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
         ],
       },
     ],
-    [handleVisit, handleDuplicate, handleDelete]
+    [handleDuplicate, handleDelete]
   );
 
   return (
@@ -177,7 +180,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={{
-        text: 'CREATE NEW TOPIC',
+        text: 'CREATE NEW SUBAREA',
         handler: handleAdd,
       }}
     />
