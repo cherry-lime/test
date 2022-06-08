@@ -197,6 +197,21 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         width: 75,
         editable: true,
         preProcessEditCellProps: preProcessEditOrder,
+        renderCell: (params: { row: Row }) => (
+          <div className='parent'>
+            <div className='child'>
+              <IconButton onClick={handleUpward(params.row)}>
+                <UpwardIcon />
+              </IconButton>
+            </div>
+            <strong>{params.row.order}</strong>
+            <div className='child'>
+              <IconButton onClick={handleDownward(params.row)}>
+                <DownwardIcon />
+              </IconButton>
+            </div>
+          </div>
+        ),
       },
       {
         field: 'name',
@@ -209,24 +224,14 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         field: 'enabled',
         headerName: 'Enabled',
         type: 'boolean',
-        width: 100,
+        width: 75,
         editable: true,
       },
       {
         field: 'actions',
         type: 'actions',
-        width: 150,
+        width: 75,
         getActions: (params: { id: GridRowId; row: Row }) => [
-          <GridActionsCellItem
-            icon={<UpwardIcon />}
-            label='Upward'
-            onClick={handleUpward(params.row)}
-          />,
-          <GridActionsCellItem
-            icon={<DownwardIcon />}
-            label='Downward'
-            onClick={handleDownward(params.row)}
-          />,
           <GridActionsCellItem
             icon={<FileCopyIcon />}
             label='Duplicate'
@@ -244,10 +249,10 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     ],
     [
       preProcessEditOrder,
-      handleDuplicate,
-      handleDelete,
       handleUpward,
       handleDownward,
+      handleDuplicate,
+      handleDelete,
     ]
   );
 
