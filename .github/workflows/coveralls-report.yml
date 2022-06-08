@@ -12,17 +12,17 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: "16.x"
-    - name: Frontend - npm install and coverage
+    - name: Frontend - npm install and coveralls
       working-directory: advisor-frontend
       run: |
           npm install
-          npm run coverage
+          npm run coveralls
           
-    - name: Backend - npm install and test:cov
+    - name: Backend - npm install and coveralls
       working-directory: advisor-backend
       run: |
           npm install
-          npm run test:cov
+          npm run coveralls
     
     - name: Frontend - Upload coverage reports to Codecov
       uses: coverallsapp/github-action@master
