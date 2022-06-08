@@ -53,7 +53,7 @@ export class UserService {
       },
     });
 
-    delete user.password_hash;
+    //delete user.password_hash;
     return user;
   }
 }
