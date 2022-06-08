@@ -10,6 +10,11 @@ describe('AuthController (e2e)', () => {
   let authToken: JwtStrategy;
 
   beforeEach(async () => {
+    process.env = {
+      DATABASE_URL: 'postgres://localhost:5432/test',
+      JWT_SECRET: "mycustomuselongsecret",
+      EXPIRESIN: "1h"
+    };
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AuthModule],
     }).compile();
@@ -27,7 +32,7 @@ describe('AuthController (e2e)', () => {
   it('should return user not found', async () => {
     const loginInfo: LoginDto = {
       username: 'user123',
-      password_hash: 'abcdefg',
+      password: 'abcdefg',
     };
     const response = await request(app.getHttpServer())
       .post('/auth/login')

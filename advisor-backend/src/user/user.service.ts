@@ -22,7 +22,7 @@ export class UserService {
       throw new NotFoundException();
     }
 
-    delete user.password_hash;
+    delete user.password;
     return user;
   }
 
@@ -48,7 +48,7 @@ export class UserService {
     const user = await this.prismaService.user.create({
       data: {
         ...data,
-        password_hash: hashedPassword,
+        password: hashedPassword,
         username: new_username,
       },
     });

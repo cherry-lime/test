@@ -11,7 +11,7 @@ const myEndDate: any = new Date();
 
 const mockUser = {
   username: 'hearing_refused_musical',
-  password_hash: 'f894a202-2f5b-4a69-89f7-f7f8f28a9368',
+  password: 'f894a202-2f5b-4a69-89f7-f7f8f28a9368',
 };
 
 const registerDto = {
@@ -24,7 +24,7 @@ const userinfo = {
   role: [Role.ASSESSOR], //, {USER}, "ADMIN"
   created_at: myStartDate,
   updated_at: myEndDate,
-  password_hash: '044498e8-6478-4184-b26f-d7b9be6a00d1',
+  password: '044498e8-6478-4184-b26f-d7b9be6a00d1',
 };
 
 let userAuthenticationLog = new AuthResponse();

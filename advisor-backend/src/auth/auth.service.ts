@@ -27,7 +27,7 @@ export class AuthService {
    * @throws password is invalid
    */
   async login(loginDto: LoginDto): Promise<AuthResponse> {
-    const { username, password_hash } = loginDto;
+    const { username, password } = loginDto;
 
     const user = await this.prismaService.user.findUnique({
       where: { username },
@@ -37,10 +37,10 @@ export class AuthService {
       throw new NotFoundException('user not found');
     }
 
-    const new_hashed_password = await bcrypt.hash(user.password_hash, 10);
+    const new_hashed_password = await bcrypt.hash(user.password, 10);
 
     const validatePassword = await bcrypt.compare(
-      password_hash,
+      password,
       new_hashed_password
     );
 

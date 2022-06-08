@@ -7,5 +7,5 @@ export class LoginDto {
 
   @IsUUID()
   @ApiProperty()
-  password_hash: string;
+  password: string;
 }
