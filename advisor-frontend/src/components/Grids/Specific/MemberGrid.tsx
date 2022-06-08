@@ -7,6 +7,7 @@ import {
   GridRowModel,
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
+import { Tooltip } from '@mui/material';
 
 import RemoveIcon from '@mui/icons-material/HighlightOff';
 
@@ -118,7 +119,11 @@ export default function MemberGrid({
               width: 100,
               getActions: (params: { id: GridRowId }) => [
                 <GridActionsCellItem
-                  icon={<RemoveIcon />}
+                  icon={
+                    <Tooltip title='Remove'>
+                      <RemoveIcon />
+                    </Tooltip>
+                  }
                   label='Remove'
                   onClick={handleRemove(params.id)}
                 />,

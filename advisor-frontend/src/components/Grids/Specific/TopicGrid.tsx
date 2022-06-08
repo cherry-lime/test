@@ -7,6 +7,7 @@ import {
   GridRowModel,
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
+import { Tooltip } from '@mui/material';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
@@ -142,7 +143,11 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
         width: 100,
         getActions: (params: { id: GridRowId; row: Row }) => [
           <GridActionsCellItem
-            icon={<ArrowForwardIcon />}
+            icon={
+              <Tooltip title='Visit'>
+                <ArrowForwardIcon />
+              </Tooltip>
+            }
             label='Visit'
             onClick={handleVisit(params.id)}
           />,

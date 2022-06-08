@@ -9,6 +9,7 @@ import {
   GridValueFormatterParams,
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
+import { Tooltip } from '@mui/material';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -147,7 +148,11 @@ export default function AnswerTypeGrid({
         width: 100,
         getActions: (params: { id: GridRowId; row: Row }) => [
           <GridActionsCellItem
-            icon={<DeleteIcon />}
+            icon={
+              <Tooltip title='Delete'>
+                <DeleteIcon />
+              </Tooltip>
+            }
             label='Delete'
             onClick={handleDelete(params.id)}
           />,

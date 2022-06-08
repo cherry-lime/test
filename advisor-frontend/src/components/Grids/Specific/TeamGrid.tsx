@@ -7,6 +7,7 @@ import {
   GridRowModel,
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
+import { Tooltip } from '@mui/material';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RemoveIcon from '@mui/icons-material/HighlightOff';
@@ -118,12 +119,20 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
         width: 100,
         getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
-            icon={<ArrowForwardIcon />}
+            icon={
+              <Tooltip title='Visit'>
+                <ArrowForwardIcon />
+              </Tooltip>
+            }
             label='Visit'
             onClick={handleVisit(params.id)}
           />,
           <GridActionsCellItem
-            icon={<RemoveIcon />}
+            icon={
+              <Tooltip title='Leave'>
+                <RemoveIcon />
+              </Tooltip>
+            }
             label='Remove'
             onClick={handleRemove(params.id)}
           />,
