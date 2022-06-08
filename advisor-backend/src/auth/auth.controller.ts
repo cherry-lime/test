@@ -6,8 +6,17 @@ import AuthUser from '../common/decorators/auth-user.decorator';
 import { User } from '.prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './dto/register-user.dto';
+import {
+  ApiBearerAuth,
+  ApiProperty,
+  //ApiConflictResponse,
+  //ApiNotFoundResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -17,6 +26,10 @@ export class AuthController {
    * @returns authentication response
    */
   @Post('/login')
+  @ApiResponse({
+    description: 'Logged in',
+    type: LoginDto,
+  })
   login(@Body() loginDto: LoginDto): Promise<AuthResponse> {
     return this.authService.login(loginDto);
   }
@@ -27,6 +40,10 @@ export class AuthController {
    * @returns registration response
    */
   @Post('/register')
+  @ApiResponse({
+    description: 'Registered',
+    type: CreateUserDto,
+  })
   register(@Body() createUserDto: CreateUserDto): Promise<AuthResponse> {
     return this.authService.register(createUserDto);
   }
@@ -38,6 +55,9 @@ export class AuthController {
    */
   @UseGuards(AuthGuard('jwt'))
   @Get('/profile')
+  @ApiResponse({
+    description: 'Found user',
+  })
   getLoggedUser(@AuthUser() user: User): User {
     return user;
   }
