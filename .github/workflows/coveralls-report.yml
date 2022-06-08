@@ -7,35 +7,35 @@ jobs:
     runs-on: ubuntu-latest
     name: Generate and upload coverage report
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Node.js version
-      uses: actions/setup-node@v1
-      with:
-        node-version: "16.x"
-    - name: Frontend - npm install and coveralls
-      working-directory: advisor-frontend
-      run: |
+      - uses: actions/checkout@v2
+      - name: Set up Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - name: Frontend - npm install and coveralls
+        working-directory: advisor-frontend
+        run: |
           npm install
-          mkdir -p ./coveralls
-          npm run coveralls
-          
-    - name: Backend - npm install and coveralls
-      working-directory: advisor-backend
-      run: |
+          npm run coverage
+
+      - name: Backend - npm install and coveralls
+        working-directory: advisor-backend
+        run: |
           npm install
-          mkdir -p ./coveralls
-          npm run coveralls
-    
-    - name: Frontend - Upload coverage reports to Codecov
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.COVERALLS_TOKEN }}
-        flag-name: backend
-        base-path: advisor-frontend
-        
-    - name: Backend - Upload coverage reports to Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.COVERALLS_TOKEN }}
-        flag-name: backend
-        base-path: advisor-backend
+          npm run test:cov
+
+      - name: Frontend - Upload coverage reports to Codecov
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.COVERALLS_TOKEN }}
+          flag-name: backend
+          base-path: advisor-frontend
+          path-to-lcov: ./coverage/lcov.info
+
+      - name: Backend - Upload coverage reports to Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.COVERALLS_TOKEN }}
+          flag-name: backend
+          base-path: advisor-backend
+          path-to-lcov: ./coverage/lcov.info

@@ -25,8 +25,7 @@
     "coverage": "vitest run --coverage",
     "lint": "npx eslint \"./src/**/*.{ts,tsx,js,jsx}\"",
     "prettier-write": "npx prettier --write \"./src/**/*.{ts,tsx,js,jsx}\"",
-    "prettier-check": "npx prettier --check \"./src/**/*.{ts,tsx,js,jsx}\"",
-	"coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
+    "prettier-check": "npx prettier --check \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "eslintConfig": {
     "extends": [
