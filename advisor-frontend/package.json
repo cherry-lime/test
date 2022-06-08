@@ -26,7 +26,7 @@
     "lint": "npx eslint \"./src/**/*.{ts,tsx,js,jsx}\"",
     "prettier-write": "npx prettier --write \"./src/**/*.{ts,tsx,js,jsx}\"",
     "prettier-check": "npx prettier --check \"./src/**/*.{ts,tsx,js,jsx}\"",
-	"coveralls": "cat ./coverage/lcov.info | npx coveralls"
+	"coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
   },
   "eslintConfig": {
     "extends": [
