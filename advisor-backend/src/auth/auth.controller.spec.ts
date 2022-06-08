@@ -37,7 +37,6 @@ const moduleMocker = new ModuleMocker(global);
 
 describe('AuthController', () => {
   let authController: AuthController;
-  //let app: INestApplication;
 
   beforeEach(async () => {
     process.env = {
