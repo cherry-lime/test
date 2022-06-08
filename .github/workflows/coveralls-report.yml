@@ -16,14 +16,14 @@ jobs:
       working-directory: advisor-frontend
       run: |
           npm install
-          mkdir -p coveralls
+          mkdir -p ./coveralls
           npm run coveralls
           
     - name: Backend - npm install and coveralls
       working-directory: advisor-backend
       run: |
           npm install
-          mkdir -p coveralls
+          mkdir -p ./coveralls
           npm run coveralls
     
     - name: Frontend - Upload coverage reports to Codecov
