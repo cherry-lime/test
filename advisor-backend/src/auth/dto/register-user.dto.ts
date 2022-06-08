@@ -3,5 +3,5 @@ import { IsIn } from 'class-validator';
 
 export class CreateUserDto {
   @IsIn([Role.USER, Role.ASSESSOR])
-  roles: Role;
+  role: Role;
 }

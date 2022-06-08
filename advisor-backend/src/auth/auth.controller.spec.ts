@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { Role} from '@prisma/client';
 import { AuthResponse } from './dto/auth-response.dto';
-import { AuthGuard } from './auth.guard';
+// import { AuthGuard } from './auth.guard';
 // Random start and update date
 const myStartDate: any = new Date();
 const myEndDate: any = new Date();
@@ -15,13 +15,13 @@ const mockUser = {
 };
 
 const registerDto = {
-  roles: Role.ASSESSOR,
+  role: Role.ASSESSOR,
 };
 
 const userinfo = {
   user_id: 1,
   username: 'discussion_believed_pleasant',
-  roles: [Role.ASSESSOR], //, {USER}, "ADMIN"
+  role: [Role.ASSESSOR], //, {USER}, "ADMIN"
   created_at: myStartDate,
   updated_at: myEndDate,
   password_hash: '044498e8-6478-4184-b26f-d7b9be6a00d1',
@@ -66,8 +66,6 @@ describe('AuthController', () => {
       })
       //.overrideGuard(AuthGuard).useValue(mock_AuthGuard)
       .compile();
-    //app = auth.createNestApplication();
-    //await app.init();
 
     authController = module.get<AuthController>(AuthController);
   });

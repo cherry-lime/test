@@ -14,12 +14,12 @@ model User {
   user_id                Int                      @id @default(autoincrement())
   username               String                   @unique
   password_hash          String                   // @default(uuid())
-  roles                   Role[]                    // @default(USER)
+  role                   Role[]                    // @default(USER)
   created_at             DateTime                 @default(now())
   updated_at             DateTime                 @updatedAt
   UserInTeam             UserInTeam[]
   AssessmentParticipants AssessmentParticipants[]
-  @@index([roles])
+  @@index([role])
 }
 
 model Checkpoint {

@@ -23,7 +23,7 @@ const userArray = [
     username: "zipper_parent_instea",
     password_hash: "$2b$10$W0IgZUpL5y/Bomuw35U/8.YSkeduG1OCXG5xSYZQ6x8qNwoYYwxxG",
     user_id: 1,
-    roles: [Role.USER],
+    role: [Role.USER],
     created_at: myStartDate,
     updated_at: myEndDate
   },
@@ -31,7 +31,7 @@ const userArray = [
     username: "Jeremy",
     password_hash: "hashbrown",
     user_id: 2,
-    roles: [Role.USER],
+    role: [Role.USER],
     created_at: myStartDate,
     updated_at: myEndDate
   }
@@ -43,14 +43,14 @@ const aUser = userArray[0];
 // Mock a User dto when logging in
 let userDto = new LoginDto();
 userDto = {
-  username : "zipper_parent_instea",
-  password_hash : "$2b$10$W0IgZUpL5y/Bomuw35U/8.YSkeduG1OCXG5xSYZQ6x8qNwoYYwxxG"
+  username: "zipper_parent_instea",
+  password_hash: "$2b$10$W0IgZUpL5y/Bomuw35U/8.YSkeduG1OCXG5xSYZQ6x8qNwoYYwxxG"
 };
 
 // Mock a User registration dto
 let registerDto = new CreateUserDto();
 registerDto = {
-  roles : Role.USER
+  role: Role.USER
 };
 
 // Mock individual user 1
@@ -58,7 +58,7 @@ const aFullUser1 = {
   username: "zipper_parent_instea",
   password_hash: "$2b$10$W0IgZUpL5y/Bomuw35U/8.YSkeduG1OCXG5xSYZQ6x8qNwoYYwxxG",
   user_id: 1,
-  roles: [Role.USER],
+  role: [Role.USER],
   created_at: myStartDate,
   updated_at: myEndDate
 };
@@ -68,7 +68,7 @@ const aFullUser2 = {
   username: "Foofi",
   password_hash: "examplehashedpassword",
   user_id: 2,
-  roles: [Role.USER],
+  role: [Role.USER],
   created_at: myStartDate,
   updated_at: myEndDate
 };
@@ -77,7 +77,7 @@ const aFullUser2 = {
 const UserWithoutPassword = {
   username: "Foofi",
   user_id: 2,
-  roles: [Role.USER],
+  role: [Role.USER],
   created_at: myStartDate,
   updated_at: myEndDate
 };
