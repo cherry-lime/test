@@ -3,12 +3,14 @@ import * as React from 'react';
 import {
   GridActionsCellItem,
   GridColumns,
+  GridPreProcessEditCellProps,
+  GridRenderCellParams,
   GridRowId,
   GridRowModel,
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
+import { IconButton } from '@mui/material';
 
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import UpwardIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
@@ -21,6 +23,7 @@ type Row = {
   id: number;
   order: number;
   name: string;
+  enabled: boolean;
 };
 
 // Generate new id based on time
@@ -32,6 +35,7 @@ const getDefaultRow = (prevRows: Row[]) => {
     id: prevRows.length,
     order: prevRows.length,
     name: 'Name...',
+    enabled: true,
   };
   return defaultRow;
 };
@@ -50,11 +54,61 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     setRows(() => []);
   }, []);
 
+  // Move row to index
+  const moveRow = React.useCallback((row: Row, index: number) => {
+    // Reorder rows state
+    setRows((prevRows) => {
+      if (index < 0 || index >= prevRows.length) {
+        return prevRows;
+      }
+
+      // Remove row from previous rows
+      const newRows = prevRows.filter((prevRow) => prevRow.id !== row.id);
+
+      // Insert row at index
+      newRows.splice(index, 0, row);
+
+      return newRows;
+    });
+  }, []);
+
+  // Update 'Order' column based on index
+  const updateOrder = React.useCallback(() => {
+    setRows((prevRows) => {
+      const newRows = prevRows.map((prevRow, index) => ({
+        ...prevRow,
+        order: index,
+      }));
+
+      return newRows;
+    });
+  }, []);
+
+  // Called when the 'Order' column is edited
+  const preProcessEditOrder = React.useCallback(
+    (params: GridPreProcessEditCellProps) => {
+      const { value } = params.props;
+
+      // If 'Order' value is below 0 or above row length, reject
+      const hasError = value < 0 || value >= rows.length || value === null;
+
+      return { ...params.props, error: hasError };
+    },
+    [rows]
+  );
+
   // Called when a row is edited
   const processRowUpdate = React.useCallback(
     (newRow: GridRowModel, oldRow: GridRowModel) => {
+      // If row has not changed, return old row
       if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
         return oldRow;
+      }
+
+      // If the 'Order' value has changed, move row and update order
+      if (newRow.order !== oldRow.order) {
+        moveRow(newRow, newRow.order);
+        updateOrder();
       }
 
       // Update the database with row changes, ask for validation
@@ -69,57 +123,11 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     []
   );
 
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
-    },
-    []
-  );
-
-  // Change order of rows: row with oldOrder (index) will go to newOrder (index)
-  const changeOrder = (oldOrder: number, newOrder: number) => {
-    // Reorder rows state
-    setRows((prevRows) => {
-      if (
-        newOrder === oldOrder ||
-        newOrder < 0 ||
-        newOrder >= prevRows.length
-      ) {
-        return prevRows;
-      }
-
-      // Copy prevRows into oldRows (prevRows is read-only)
-      const oldRows = [...prevRows];
-
-      // Get the row with the old order
-      const row = oldRows.splice(oldOrder, 1)[0];
-
-      // Insert row at new order
-      oldRows.splice(newOrder, 0, row);
-
-      return oldRows;
-    });
-  };
-
-  // Update 'Order' column based on index
-  const updateOrder = () => {
-    setRows((prevRows) => {
-      const newRows = prevRows.map((prevRow, index) => ({
-        ...prevRow,
-        order: index,
-      }));
-
-      return newRows;
-    });
-  };
-
   // Called when the "Upward" action is pressed
   const handleUpward = React.useCallback(
     (row: Row) => () => {
       const { order } = row;
-      changeOrder(order, order - 1);
+      moveRow(row, order - 1);
       updateOrder();
     },
     []
@@ -129,7 +137,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   const handleDownward = React.useCallback(
     (row: Row) => () => {
       const { order } = row;
-      changeOrder(order, order + 1);
+      moveRow(row, order + 1);
       updateOrder();
     },
     []
@@ -188,6 +196,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         type: 'number',
         width: 75,
         editable: true,
+        preProcessEditCellProps: preProcessEditOrder,
       },
       {
         field: 'name',
@@ -197,14 +206,26 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         editable: true,
       },
       {
+        field: 'enabled',
+        headerName: 'Enabled',
+        type: 'boolean',
+        width: 100,
+        editable: true,
+      },
+      {
         field: 'actions',
         type: 'actions',
         width: 150,
         getActions: (params: { id: GridRowId; row: Row }) => [
           <GridActionsCellItem
-            icon={<ArrowForwardIcon />}
-            label='Visit'
-            onClick={handleVisit(params.id)}
+            icon={<UpwardIcon />}
+            label='Upward'
+            onClick={handleUpward(params.row)}
+          />,
+          <GridActionsCellItem
+            icon={<DownwardIcon />}
+            label='Downward'
+            onClick={handleDownward(params.row)}
           />,
           <GridActionsCellItem
             icon={<FileCopyIcon />}
@@ -218,22 +239,16 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
             onClick={handleDelete(params.id)}
             showInMenu
           />,
-          <div>
-            <GridActionsCellItem
-              icon={<UpwardIcon />}
-              label='Upward'
-              onClick={handleUpward(params.row)}
-            />
-            <GridActionsCellItem
-              icon={<DownwardIcon />}
-              label='Downward'
-              onClick={handleDownward(params.row)}
-            />
-          </div>,
         ],
       },
     ],
-    [handleVisit, handleDuplicate, handleDelete]
+    [
+      preProcessEditOrder,
+      handleDuplicate,
+      handleDelete,
+      handleUpward,
+      handleDownward,
+    ]
   );
 
   return (
