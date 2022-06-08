@@ -99,8 +99,14 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       // Insert row at new order
       oldRows.splice(newOrder, 0, row);
 
-      // Update 'Order' column accordingly
-      const newRows = oldRows.map((prevRow, index) => ({
+      return oldRows;
+    });
+  };
+
+  // Update 'Order' column based on index
+  const updateOrder = () => {
+    setRows((prevRows) => {
+      const newRows = prevRows.map((prevRow, index) => ({
         ...prevRow,
         order: index,
       }));
@@ -114,6 +120,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     (row: Row) => () => {
       const { order } = row;
       changeOrder(order, order - 1);
+      updateOrder();
     },
     []
   );
@@ -123,6 +130,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     (row: Row) => () => {
       const { order } = row;
       changeOrder(order, order + 1);
+      updateOrder();
     },
     []
   );
@@ -134,6 +142,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       setTimeout(() => {
         // Filter row with rowId from state
         setRows((prevRows) => prevRows.filter((row) => row.id !== rowId));
+        updateOrder();
 
         // Delete row with rowId from database
         // TODO
