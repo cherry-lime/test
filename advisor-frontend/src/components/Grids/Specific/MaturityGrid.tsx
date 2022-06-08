@@ -112,7 +112,6 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the "Upward" action is pressed
   const handleUpward = React.useCallback(
     (row: Row) => () => {
-      // swapOrder(row, row.order - 1);
       const { order } = row;
       changeOrder(order, order - 1);
     },
@@ -122,7 +121,6 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownward = React.useCallback(
     (row: Row) => () => {
-      // swapOrder(row, row.order + 1);
       const { order } = row;
       changeOrder(order, order + 1);
     },
@@ -146,14 +144,10 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
 
   // Called when the "Duplicate" action is pressed in the action menu
   const handleDuplicate = React.useCallback(
-    (rowId: GridRowId) => () => {
+    (row: Row) => () => {
       setRows((prevRows) => {
-        // Get the row with rowId
-        const rowToDuplicate =
-          prevRows.find((row) => row.id === rowId) ?? getDefaultRow(prevRows);
-
         // Create new row with duplicated content and generated id
-        const newRow = { ...rowToDuplicate, id: generateId() };
+        const newRow = { ...row, id: generateId(), order: prevRows.length };
 
         // Create newRow in database
         // TODO
@@ -206,7 +200,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
           <GridActionsCellItem
             icon={<FileCopyIcon />}
             label='Duplicate'
-            onClick={handleDuplicate(params.id)}
+            onClick={handleDuplicate(params.row)}
             showInMenu
           />,
           <GridActionsCellItem

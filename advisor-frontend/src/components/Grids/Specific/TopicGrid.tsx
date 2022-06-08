@@ -91,14 +91,10 @@ export default function TopicGrid({ theme, templateId }: TemplateGridProps) {
 
   // Called when the "Duplicate" action is pressed in the action menu
   const handleDuplicate = React.useCallback(
-    (rowId: GridRowId) => () => {
+    (row: Row) => () => {
       setRows((prevRows) => {
-        // Get the row with rowId
-        const rowToDuplicate =
-          prevRows.find((row) => row.id === rowId) ?? getDefaultRow();
-
         // Create new row with duplicated content and generated id
-        const newRow = { ...rowToDuplicate, id: generateId() };
+        const newRow = { ...row, id: generateId() };
 
         // Create newRow in database
         // TODO
@@ -135,7 +131,7 @@ export default function TopicGrid({ theme, templateId }: TemplateGridProps) {
         field: 'actions',
         type: 'actions',
         width: 100,
-        getActions: (params: { id: GridRowId }) => [
+        getActions: (params: { id: GridRowId; row: Row }) => [
           <GridActionsCellItem
             icon={<ArrowForwardIcon />}
             label='Visit'
@@ -144,7 +140,7 @@ export default function TopicGrid({ theme, templateId }: TemplateGridProps) {
           <GridActionsCellItem
             icon={<FileCopyIcon />}
             label='Duplicate'
-            onClick={handleDuplicate(params.id)}
+            onClick={handleDuplicate(params.row)}
             showInMenu
           />,
           <GridActionsCellItem
