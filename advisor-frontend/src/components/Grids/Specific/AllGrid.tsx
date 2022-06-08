@@ -7,6 +7,7 @@ import AssessmentOngoingGrid from './AssessmentOngoingGrid';
 import AssessmentCompletedGrid from './AssessmentCompletedGrid';
 import TemplateGrid from './TemplateGrid';
 import TopicGrid from './TopicGrid';
+import MaturityGrid from './MaturityGrid';
 
 // Style color palette
 const theme = createTheme({
@@ -91,7 +92,9 @@ export default function AllGrid() {
       <strong>Team Assessment Templates</strong>
       <TemplateGrid theme={theme} assessmentType='TEAM' />
       <strong>Topics</strong>
-      <TopicGrid theme={theme} assessmentType='TEAM' templateId={templateId} />
+      <TopicGrid theme={theme} templateId={templateId} />
+      <strong>Maturity Levels</strong>
+      <MaturityGrid theme={theme} templateId={templateId} />
     </div>
   );
 }

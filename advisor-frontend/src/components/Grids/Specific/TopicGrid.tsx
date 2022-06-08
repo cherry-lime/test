@@ -14,8 +14,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import GenericGrid from '../Generic/GenericGrid';
 
-import { AssessmentType } from '../../../types/AssessmentType';
-
 // Define type for the rows in the grid
 type Row = {
   id: number;
@@ -36,15 +34,10 @@ const generateId = () => Date.now();
 
 type TemplateGridProps = {
   theme: Theme;
-  assessmentType: AssessmentType;
   templateId: number;
 };
 
-export default function TopicGrid({
-  theme,
-  assessmentType,
-  templateId,
-}: TemplateGridProps) {
+export default function TopicGrid({ theme, templateId }: TemplateGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
   // Fetch initial rows of the grid
@@ -55,17 +48,20 @@ export default function TopicGrid({
 
   // Called when a row is edited
   const processRowUpdate = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) =>
-      new Promise<GridRowModel>((resolve) => {
-        if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
-          resolve(oldRow);
-        } else {
-          // Update the database with row changes
-          // TODO
+    (newRow: GridRowModel, oldRow: GridRowModel) => {
+      if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
+        return oldRow;
+      }
 
-          resolve(newRow);
-        }
-      }),
+      // Update the database with row changes, ask for validation
+      // TODO
+
+      setRows((prevRows) =>
+        prevRows.map((prevRow) => (prevRow.id === newRow.id ? newRow : prevRow))
+      );
+
+      return newRow;
+    },
     []
   );
 
@@ -171,7 +167,7 @@ export default function TopicGrid({
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={{
-        text: `CREATE NEW TOPIC`,
+        text: 'CREATE NEW TOPIC',
         handler: handleAdd,
       }}
     />

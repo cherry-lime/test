@@ -67,7 +67,7 @@ type GenericGridProps = {
   processRowUpdate?: (
     newRow: GridRowModel,
     oldRow: GridRowModel
-  ) => Promise<GridRowModel>;
+  ) => GridRowModel;
   // eslint-disable-next-line react/require-default-props
   hasToolbar?: boolean;
   // eslint-disable-next-line react/require-default-props

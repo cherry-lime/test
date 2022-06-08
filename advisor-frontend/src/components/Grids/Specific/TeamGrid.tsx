@@ -49,17 +49,20 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
 
   // Called when a row is edited
   const processRowUpdate = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) =>
-      new Promise<GridRowModel>((resolve) => {
-        if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
-          resolve(oldRow);
-        } else {
-          // Update the database with row changes
-          // TODO
+    (newRow: GridRowModel, oldRow: GridRowModel) => {
+      if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
+        return oldRow;
+      }
 
-          resolve(newRow);
-        }
-      }),
+      // Update the database with row changes, ask for validation
+      // TODO
+
+      setRows((prevRows) =>
+        prevRows.map((prevRow) => (prevRow.id === newRow.id ? newRow : prevRow))
+      );
+
+      return newRow;
+    },
     []
   );
 

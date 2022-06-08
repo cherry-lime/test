@@ -11,40 +11,37 @@ import { Theme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
+import UpwardIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import DownwardIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 
 import GenericGrid from '../Generic/GenericGrid';
-
-import { AssessmentType } from '../../../types/AssessmentType';
 
 // Define type for the rows in the grid
 type Row = {
   id: number;
+  order: number;
   name: string;
-  description: string;
-};
-
-// Get row object with default values
-const getDefaultRow = () => {
-  const defaultRow = {
-    id: Date.now(),
-    name: 'Name...',
-    description: 'Description...',
-  };
-  return defaultRow;
 };
 
 // Generate new id based on time
 const generateId = () => Date.now();
 
-type TemplateGridProps = {
-  theme: Theme;
-  assessmentType: AssessmentType;
+// Get row object with default values
+const getDefaultRow = (prevRows: Row[]) => {
+  const defaultRow = {
+    id: prevRows.length,
+    order: prevRows.length,
+    name: 'Name...',
+  };
+  return defaultRow;
 };
 
-export default function TemplateGrid({
-  theme,
-  assessmentType,
-}: TemplateGridProps) {
+type MaturityGridProps = {
+  theme: Theme;
+  templateId: number;
+};
+
+export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
   // Fetch initial rows of the grid
@@ -81,6 +78,71 @@ export default function TemplateGrid({
     []
   );
 
+  // Swap order of row with newOrder
+  const swapOrder = (row: Row, newOrder: number) => {
+    setRows((prevRows) => {
+      const oldOrder = row.order;
+
+      if (
+        newOrder === oldOrder ||
+        newOrder < 0 ||
+        newOrder >= prevRows.length
+      ) {
+        return prevRows;
+      }
+
+      let newRows: Row[] = [];
+
+      if (newOrder < oldOrder) {
+        newRows = prevRows.map((prevRow) => {
+          const prevOrder = prevRow.order;
+
+          if (newOrder <= prevOrder && prevOrder < oldOrder) {
+            return { ...prevRow, order: prevOrder + 1 };
+          }
+
+          if (prevOrder === oldOrder) {
+            return { ...prevRow, order: newOrder };
+          }
+
+          return prevRow;
+        });
+      } else {
+        newRows = prevRows.map((prevRow) => {
+          const prevOrder = prevRow.order;
+
+          if (oldOrder < prevOrder && prevOrder <= newOrder) {
+            return { ...prevRow, order: prevOrder - 1 };
+          }
+
+          if (prevOrder === oldOrder) {
+            return { ...prevRow, order: newOrder };
+          }
+
+          return prevRow;
+        });
+      }
+
+      return newRows.sort((x, y) => (x.order > y.order ? 1 : -1));
+    });
+  };
+
+  // Called when the "Upward" action is pressed
+  const handleUpward = React.useCallback(
+    (row: Row) => () => {
+      swapOrder(row, row.order - 1);
+    },
+    []
+  );
+
+  // Called when the "Downward" action is pressed
+  const handleDownward = React.useCallback(
+    (row: Row) => () => {
+      swapOrder(row, row.order + 1);
+    },
+    []
+  );
+
   // Called when the "Delete" action is pressed in the action menu
   const handleDelete = React.useCallback(
     (rowId: GridRowId) => () => {
@@ -102,7 +164,7 @@ export default function TemplateGrid({
       setRows((prevRows) => {
         // Get the row with rowId
         const rowToDuplicate =
-          prevRows.find((row) => row.id === rowId) ?? getDefaultRow();
+          prevRows.find((row) => row.id === rowId) ?? getDefaultRow(prevRows);
 
         // Create new row with duplicated content and generated id
         const newRow = { ...rowToDuplicate, id: generateId() };
@@ -120,17 +182,24 @@ export default function TemplateGrid({
   const handleAdd = React.useCallback(() => {
     setRows((prevRows) => {
       // Create new row with default content and generated id
-      const newRow = { ...getDefaultRow(), id: generateId() };
+      const newRow = { ...getDefaultRow(prevRows), id: generateId() };
 
       // Create newRow in database
       // TODO
 
-      return [...prevRows, newRow];
+      return [...prevRows, newRow].sort((x, y) => (x.order > y.order ? 1 : -1));
     });
   }, []);
 
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
+      {
+        field: 'order',
+        headerName: 'Order',
+        type: 'number',
+        width: 75,
+        editable: true,
+      },
       {
         field: 'name',
         headerName: 'Name',
@@ -139,17 +208,10 @@ export default function TemplateGrid({
         editable: true,
       },
       {
-        field: 'description',
-        headerName: 'Description',
-        type: 'string',
-        flex: 1,
-        editable: true,
-      },
-      {
         field: 'actions',
         type: 'actions',
-        width: 100,
-        getActions: (params: { id: GridRowId }) => [
+        width: 150,
+        getActions: (params: { id: GridRowId; row: Row }) => [
           <GridActionsCellItem
             icon={<ArrowForwardIcon />}
             label='Visit'
@@ -167,6 +229,18 @@ export default function TemplateGrid({
             onClick={handleDelete(params.id)}
             showInMenu
           />,
+          <div>
+            <GridActionsCellItem
+              icon={<UpwardIcon />}
+              label='Upward'
+              onClick={handleUpward(params.row)}
+            />
+            <GridActionsCellItem
+              icon={<DownwardIcon />}
+              label='Downward'
+              onClick={handleDownward(params.row)}
+            />
+          </div>,
         ],
       },
     ],
@@ -181,7 +255,7 @@ export default function TemplateGrid({
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={{
-        text: `CREATE NEW ${assessmentType} EVALUATION TEMPLATE`,
+        text: 'CREATE NEW MATURITY LEVEL',
         handler: handleAdd,
       }}
     />
