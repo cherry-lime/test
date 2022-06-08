@@ -1,9 +1,7 @@
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import AssignmentIcon from "@mui/icons-material/Assignment";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HomeIcon from "@mui/icons-material/Home";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -25,7 +23,7 @@ const iconTheme = createTheme({
   },
 });
 
-export const mainListItems = (
+const mainListItems = (
   <ThemeProvider theme={iconTheme}>
     <ListItemButton>
       <ListItemIcon>
@@ -60,28 +58,4 @@ export const mainListItems = (
   </ThemeProvider>
 );
 
-export const secondaryListItems = (
-  <>
-    <ListSubheader component="div" inset>
-      Saved reports
-    </ListSubheader>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItemButton>
-  </>
-);
+export default mainListItems;
