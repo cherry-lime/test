@@ -13,7 +13,7 @@ import { UpdateTeamDto } from './dto/update-team.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Team } from './entities/team.entity';
 import { TeamMembers } from './entities/team.members.entity';
-import { AssessmentResponse } from 'src/assessment/responses/AssessmentResponse';
+import { AssessmentResponse } from '../../src/assessment/responses/AssessmentResponse';
 
 @ApiTags('teams')
 @Controller('teams')
@@ -30,41 +30,41 @@ export class TeamsController {
     description: 'Create team with given team name',
     type: Team,
   })
-  create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
-    return this.teamsService.create(createTeamDto);
+  create(@Body() name: string): Promise<Team> {
+    return this.teamsService.create(name);
   }
 
   /**
-   * [GET] /team/:name - Get team by team name
-   * @param name team_name
+   * [GET] /team/:id - Get team by team id
+   * @param id team_id
    * @returns Team object
    */
-  @Get(':name')
+  @Get(':id')
   @ApiResponse({
-    description: 'Find team by team name',
+    description: 'Find team by team id',
     type: Team,
   })
-  findOne(@Param('name') name: string): Promise<Team> {
-    return this.teamsService.findOne(name);
+  findOne(@Param('id') id: number): Promise<Team> {
+    return this.teamsService.findOne(id);
   }
 
   /**
-   * [GET] /team/:name/members - Get members of a team given a team name
-   * @param name team_name
+   * [GET] /team/:id/members - Get members of a team given a team id
+   * @param id team_id
    * @returns Team members object
    */
-  @Get(':name/members')
+  @Get(':id/members')
   @ApiResponse({
-    description: 'Get members of a team given a team name',
+    description: 'Get members of a team given a team id',
     type: TeamMembers,
   })
-  findTeamMembers(@Param('name') name: string): Promise<TeamMembers> {
-    return this.teamsService.findTeamMembers(name);
+  findTeamMembers(@Param('id') id: number): Promise<TeamMembers> {
+    return this.teamsService.findTeamMembers(id);
   }
 
   /**
    * [PATCH] /team/join/:invite_token - Join team via invite_token
-   * @param name invitie_token
+   * @param invite_token invite_token
    * @returns Udated team members object
    */
   @Patch('join/:invite_token')
@@ -79,33 +79,34 @@ export class TeamsController {
   }
 
   /**
-   * [GET] /team/:name/invite - Get invite token for a team
-   * @param name team_name
+   * [GET] /team/:id/invite - Get invite token for a team
+   * @param id team_id
    * @returns invite_token
    * @throws Team not found
    */
-  @Get(':name/invite')
+  @Get(':id/invite')
   @ApiResponse({
-    description: 'Get invite token for a team',
+    description: 'Get invite token of a team',
     type: String,
   })
-  getInviteToken(@Param('name') name: string): Promise<string> {
-    return this.teamsService.getInviteToken(name);
+  getInviteToken(@Param('id') id: number): Promise<string> {
+    return this.teamsService.getInviteToken(id);
   }
 
   /**
-   * [GET] /team/:name/assessments - Get assessments of a team given a team name
-   * @param name team_name
+   * [GET] /team/:id/assessments - Get assessments of a team given a team id
+   * @param id team_id
    * @returns assessments
    * @throws Team not found
    */
-  @Get(':name/assessments')
+  @Get(':id/assessments')
   @ApiResponse({
-    description: 'Get assessments of a team given a team name',
-    type: AssessmentResponse[],
+    description: 'Get assessments of a team given a team id',
+    type: AssessmentResponse,
+    isArray: true,
   })
-  getTeamAssessments(@Param('name') name: string): Promise<AssessmentResponse[]> {
-    return this.teamsService.getTeamAssessments(name);
+  getTeamAssessments(@Param('id') id: number): Promise<AssessmentResponse[]> {
+    return this.teamsService.getAssessments(id);
   }
 
   // @Patch(':id')

@@ -1,20 +1,83 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TeamsController } from './teams.controller';
 import { TeamsService } from './teams.service';
+import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
+import { aTeam } from '../prisma/mock/mockTeam';
+import { aTeamMembers } from '../prisma/mock/mockTeamMembers';
+import { aAssessment } from '../prisma/mock/mockAssessment';
+
+const moduleMocker = new ModuleMocker(global);
 
 describe('TeamsController', () => {
-  let controller: TeamsController;
+  let teamController: TeamsController;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const moduleRef = await Test.createTestingModule({
       controllers: [TeamsController],
-      providers: [TeamsService],
-    }).compile();
+    })
+      .useMocker((token) => {
+        if (token === TeamsService) {
+          return {
+            create: jest.fn().mockResolvedValue(aTeam),
+            findOne: jest.fn().mockResolvedValue(aTeam),
+            findTeamMembers: jest.fn().mockResolvedValue(aTeamMembers),
+            addTeamMember: jest.fn().mockResolvedValue(aTeamMembers),
+            getInviteToken: jest.fn().mockResolvedValue('test_invite_token'),
+            getAssessments: jest.fn().mockResolvedValue([aAssessment]),
+          };
+        }
+        if (typeof token === 'function') {
+          const mockMetadata = moduleMocker.getMetadata(
+            token
+          ) as MockFunctionMetadata<any, any>;
+          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
+          return new Mock();
+        }
+      })
+      .compile();
 
-    controller = module.get<TeamsController>(TeamsController);
+    teamController = moduleRef.get(TeamsController);
   });
 
-  // it('should be defined', () => {
-  //   expect(controller).toBeDefined();
-  // });
+  it('should be defined', () => {
+    expect(teamController).toBeDefined();
+  });
+
+  describe('createTeam', () => {
+    it('Should return the created team', async () => {
+      expect(teamController.create('test')).resolves.toBe(aTeam);
+    });
+  });
+
+  describe('getTeam', () => {
+    it('Should return the team', async () => {
+      expect(teamController.findOne(1)).resolves.toBe(aTeam);
+    });
+  });
+
+  describe('getTeamMembers', () => {
+    it('Should return the team members', async () => {
+      expect(teamController.findTeamMembers(1)).resolves.toBe(aTeamMembers);
+    });
+  });
+
+  describe('addTeamMember', () => {
+    it('Should return the team members', async () => {
+      expect(teamController.addTeamMember('test')).resolves.toBe(aTeamMembers);
+    });
+  });
+
+  describe('getInviteToken', () => {
+    it('Should return the invite token', async () => {
+      expect(teamController.getInviteToken(1)).resolves.toBe(
+        'test_invite_token'
+      );
+    });
+  });
+
+  describe('getAssessments', () => {
+    it('Should return the assessments', async () => {
+      expect(teamController.getTeamAssessments(1)).resolves.toBe([aAssessment]);
+    });
+  });
 });

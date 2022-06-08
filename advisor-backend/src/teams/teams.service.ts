@@ -9,21 +9,24 @@ import { UpdateTeamDto } from './dto/update-team.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Team } from './entities/team.entity';
 import { TeamMembers } from './entities/team.members.entity';
-import { AssessmentResponse } from 'src/assessment/responses/AssessmentResponse';
+import { AssessmentResponse } from '../../src/assessment/responses/AssessmentResponse';
 
 @Injectable()
 export class TeamsService {
   constructor(private prisma: PrismaService) {}
 
   /**
-   * Create team object using given team name
-   * @param name name of team
+   * Create team object given a team name
+   * @param name
    * @returns created team
+   * @throws Team name already exists
    */
-  async create(createTeamDto: CreateTeamDto): Promise<Team> {
+  async create(name: string): Promise<Team> {
     return await this.prisma.team
       .create({
-        data: createTeamDto,
+        data: {
+          team_name: name,
+        },
       })
       .catch((error) => {
         if (error.code === 'P2002') {
@@ -36,17 +39,17 @@ export class TeamsService {
   }
 
   /**
-   * Get team object by name
-   * @param name name of team
-   * @returns team object corresponding to team_name, null if not found
+   * Get team object by team_id
+   * @param id team_id
+   * @returns team object corresponding to team_id
    * @throws Team not found
    */
-  async findOne(name: string): Promise<Team> {
-    // Get team by team_name from prisma
+  async findOne(id: number): Promise<Team> {
+    // Get team by team_id from prisma
     const team = await this.prisma.team
       .findUnique({
         where: {
-          team_name: name,
+          team_id: id,
         },
       })
       .catch(() => {
@@ -54,8 +57,8 @@ export class TeamsService {
       });
 
     if (!team) {
-      // Throw error if team with given team name not found
-      throw new NotFoundException('Team with given team name not found');
+      // Throw error if team with given team id not found
+      throw new NotFoundException('Team with given team id not found');
     }
 
     // Return team
@@ -63,24 +66,24 @@ export class TeamsService {
   }
 
   /**
-   * Get team members object given a team name
-   * @param name name of team
-   * @returns team members object corresponding to team_name, null if not found
+   * Get team members object given a team id
+   * @param id id of team
+   * @returns team members object corresponding to team_id
    * @throws Team not found
    */
-  async findTeamMembers(name: string): Promise<TeamMembers> {
+  async findTeamMembers(id: number): Promise<TeamMembers> {
     // Response stored in teamMembers
     const teamMembers = new TeamMembers();
-    teamMembers.team_name = name;
+    teamMembers.team_id = id;
 
-    // Get team id and associated user ids from team with team_name from prisma
+    // Get team name and associated user ids from team with team_id from prisma
     const temp = await this.prisma.team
       .findUnique({
         where: {
-          team_name: name,
+          team_id: id,
         },
         select: {
-          team_id: true,
+          team_name: true,
           UserInTeam: {
             select: {
               user_id: true,
@@ -93,14 +96,14 @@ export class TeamsService {
       });
 
     if (!temp) {
-      // Throw error if team with given team name not found
-      throw new NotFoundException('Team with given team name not found');
+      // Throw error if team with given team id not found
+      throw new NotFoundException('Team with given team id not found');
     }
 
-    teamMembers.team_id = temp.team_id;
+    teamMembers.team_name = temp.team_name;
     teamMembers.team_member_ids = temp.UserInTeam.map((a) => a.user_id);
 
-    // Get team member usernames from team with team_name from prisma
+    // Get team member usernames from team with team_member_ids from prisma
     const teamMemberUsernames = await this.prisma.user
       .findMany({
         where: {
@@ -128,16 +131,16 @@ export class TeamsService {
   }
 
   /**
-   * Add team member to team
-   * @param name name of team
-   * @returns team members object corresponding to team_name, null if not found
+   * Add team member to team with invite_token
+   * @param invite_token invite token
+   * @returns team members object corresponding, given invite_token
    * @throws Team not found
    */
   async addTeamMember(invite_token: string): Promise<TeamMembers> {
     // Response stored in teamMembers
     const teamMembers = new TeamMembers();
 
-    // Get team id, team name and associated user ids from team with team_name from prisma
+    // Get team id, team name and associated user ids from team with invite_token from prisma
     const temp = await this.prisma.team
       .findUnique({
         where: {
@@ -158,8 +161,8 @@ export class TeamsService {
       });
 
     if (!temp) {
-      // Throw error if team with given team name not found
-      throw new NotFoundException('Team with given team name not found');
+      // Throw error if team with given invite token not found
+      throw new NotFoundException('Team with given invite_token not found');
     }
 
     teamMembers.team_id = temp.team_id;
@@ -171,7 +174,7 @@ export class TeamsService {
     teamMemberIds.sort((a, b) => a - b); // Sort ascending order
     teamMembers.team_member_ids = teamMemberIds;
 
-    // Get team member usernames from team with team_name from prisma
+    // Get team member usernames from team with team_member_ids from prisma
     const teamMemberUsernames = await this.prisma.user
       .findMany({
         where: {
@@ -210,17 +213,17 @@ export class TeamsService {
   }
 
   /**
-   * Get invite_token of team given a team name
-   * @param name name of team
-   * @returns team members object corresponding to team_name, null if not found
+   * Get invite_token of team given a team id
+   * @param id id of team
+   * @returns team members object corresponding to team_id
    * @throws Team not found
    */
-  async getInviteToken(name: string): Promise<string> {
-    // Get team id and associated user ids from team with team_name from prisma
+  async getInviteToken(id: number): Promise<string> {
+    // Get team id and associated user ids from team with team_id from prisma
     const invite_token = await this.prisma.team
       .findUnique({
         where: {
-          team_name: name,
+          team_id: id,
         },
         select: {
           invite_token: true,
@@ -231,24 +234,24 @@ export class TeamsService {
       });
 
     if (!invite_token) {
-      // Throw error if team with given team name not found
-      throw new NotFoundException('Team with given team name not found');
+      // Throw error if team with given team id not found
+      throw new NotFoundException('Team with given team id not found');
     }
 
     return invite_token.invite_token;
   }
 
   /**
-   * Get assessments of a team given a team name
-   * @param name name of team
-   * @returns assessment objects corresponding to team_name
+   * Get assessments of a team given a team id
+   * @param id id of team
+   * @returns assessment objects corresponding to team_id
    * @throws Team not found
    */
-  async getAssessments(name: string): Promise<AssessmentResponse[]> {
-    let assessments = await this.prisma.team
+  async getAssessments(id: number): Promise<AssessmentResponse[]> {
+    const assessments = await this.prisma.team
       .findUnique({
         where: {
-          team_name: name,
+          team_id: id,
         },
         select: {
           Assessment: true,
@@ -259,24 +262,11 @@ export class TeamsService {
       });
 
     if (!assessments) {
-      // Throw error if team with given team name not found
-      throw new NotFoundException('Team with given team name not found');
+      // Throw error if team with given team id not found
+      throw new NotFoundException('Team with given team id not found');
     }
 
-    assessments = assessments.Assessment.map((a) => {return new AssessmentResponse().from(a)});
-      // assessment_id: a.assessment_id,
-      // assessment_name: a.assessment_name,
-      // assessment_type: a.assessment_type,
-      // country_name: a.country_name,
-      // department_name: a.department_name,
-      // template_id: a.template_id,
-      // created_at: a.created_at,
-      // updated_at: a.updated_at,
-      // completed_at: a.completed_at,
-    };
-  }
-
-    return assessments;
+    return assessments.Assessment;
   }
 
   // TODO get team assessments

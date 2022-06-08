@@ -2,6 +2,7 @@
 export const userArray = [
   {
     user_id: 1,
+    user_name: 'test_user_name',
     password_hash: 'fdsfdsfds',
   },
   {
