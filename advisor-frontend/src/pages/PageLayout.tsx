@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import Header from "../components/Cards/Header";
 import Footer from "../components/Cards/Footer";
+import Sidebar from "../components/Sidebar/Sidebar";
 
 type PageProps = {
   footer?: boolean;
@@ -28,17 +29,19 @@ export default function PageLayout({
   headerColor,
 }: PageProps) {
   return (
-    <div className="main_container">
-      <Header name={title} bgcolor={headerColor} />
-      {footer ? (
-        <>
-          <Box className="body_footer"> {children} </Box>
-          <Footer />
-        </>
-      ) : (
-        <Box className="body"> {children} </Box>
-      )}
-    </div>
+    <Sidebar>
+      <div className="main_container">
+        <Header name={title} bgcolor={headerColor} />
+        {footer ? (
+          <>
+            <Box className="body_footer"> {children} </Box>
+            <Footer />
+          </>
+        ) : (
+          <Box className="body"> {children} </Box>
+        )}
+      </div>
+    </Sidebar>
   );
 }
 PageLayout.defaultProps = defaultProps;
