@@ -28,12 +28,12 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.COVERALLS_TOKEN }}
-          flag-name: backend
-          base-path: advisor-frontend
+          flag-name: frontend
+          path-to-lcov: ${{ github.workspace }}/advisor-frontend/coverage/lcov.info
 
       - name: Backend - Upload coverage reports to Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.COVERALLS_TOKEN }}
           flag-name: backend
-          base-path: advisor-backend
+          path-to-lcov: ${{ github.workspace }}/advisor-backend/coverage/lcov.info
