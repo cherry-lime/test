@@ -88,7 +88,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     (params: GridPreProcessEditCellProps) => {
       const { value } = params.props;
 
-      // If 'Order' value is below 0 or above row length, reject
+      // If order is below 0, above row length, or null: reject
       const hasError = value < 0 || value >= rows.length || value === null;
 
       return { ...params.props, error: hasError };
