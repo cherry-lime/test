@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { BlockPicker, ColorResult } from 'react-color';
 
 import {
   GridActionsCellItem,
@@ -9,8 +8,13 @@ import {
   GridRowModel,
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
-import { IconButton, Tooltip } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import {
+  FormControl,
+  IconButton,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import UpwardIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
@@ -22,8 +26,11 @@ import GenericGrid from '../Generic/GenericGrid';
 type Row = {
   id: number;
   order: number;
-  name: string;
-  color: string;
+  description: string;
+  additionalInfo: string;
+  topic: string[];
+  maturityLevel: string;
+  weight: number;
   enabled: boolean;
 };
 
@@ -35,20 +42,38 @@ const getDefaultRow = (prevRows: Row[]) => {
   const defaultRow = {
     id: generateId(),
     order: prevRows.length,
-    name: 'Name...',
-    color: '#fff',
+    description: 'Description...',
+    additionalInfo: 'Additional Information...',
+    topic: [],
+    maturityLevel: '',
+    weight: 0,
     enabled: false,
   };
   return defaultRow;
 };
 
-type CategoryGridProps = {
+type CheckpointGridProps = {
   theme: Theme;
   templateId: number;
+  categoryId: number;
 };
 
-export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
+export default function CheckpointGrid({
+  theme,
+  templateId,
+  categoryId,
+}: CheckpointGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
+
+  // TODO Remove this and fetch topics from database
+  const topics = ['Topic 1', 'Topic 2', 'Topic 3'];
+
+  // TODO Remove this and fetch topics from database
+  const maturityLevels = [
+    'Maturity Level 1',
+    'Maturity Level 2',
+    'Maturity Level 3',
+  ];
 
   // Fetch initial rows of the grid
   React.useEffect(() => {
@@ -145,16 +170,19 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when color picker registers a complete change
-  const handleColorChange = React.useCallback(
-    (color: ColorResult, row: Row) => {
+  // Called when topic changes
+  const handleTopicChange = React.useCallback(
+    (row: Row, event: SelectChangeEvent<string[]>) => {
       setRows((prevRows) => {
-        // Change color of this row
+        const { value } = event.target;
+        const topic = typeof value === 'string' ? value.split(',') : value;
+
+        // Change topic of this row
         const newRows = prevRows.map((prevRow) =>
-          prevRow.id === row.id ? { ...prevRow, color: color.hex } : prevRow
+          prevRow.id === row.id ? { ...prevRow, topic } : prevRow
         );
 
-        // Update row in database with color
+        // Update row in database with topic
         // TODO
 
         return newRows;
@@ -163,11 +191,22 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
+  // Called when maturity level changes
+  const handleMaturityLevelChange = React.useCallback(
+    (row: Row, event: SelectChangeEvent<string>) => {
+      setRows((prevRows) => {
+        const maturityLevel = event.target.value;
+
+        // Change topic of this row
+        const newRows = prevRows.map((prevRow) =>
+          prevRow.id === row.id ? { ...prevRow, maturityLevel } : prevRow
+        );
+
+        // Update row in database with topic
+        // TODO
+
+        return newRows;
+      });
     },
     []
   );
@@ -245,45 +284,62 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         ),
       },
       {
-        field: 'name',
-        headerName: 'Name',
+        field: 'description',
+        headerName: 'Description',
         type: 'string',
-        flex: 1,
+        flex: 1.5,
         editable: true,
       },
       {
-        field: 'color',
-        headerName: 'Color Theme',
+        field: 'additionalInfo',
+        headerName: 'Additional Information',
+        type: 'string',
+        flex: 1.5,
+        editable: true,
+      },
+      {
+        field: 'topic',
+        headerName: 'Topic',
+        type: 'string',
         flex: 1,
-        editable: false,
         renderCell: (params: { row: Row }) => (
-          <BlockPicker
-            width='250px'
-            colors={[]}
-            triangle='hide'
-            color={params.row.color}
-            onChangeComplete={(color: ColorResult) =>
-              handleColorChange(color, params.row)
-            }
-            styles={{
-              default: {
-                head: {
-                  height: '50px',
-                  borderStyle: 'solid',
-                  borderColor:
-                    params.row.order % 2 === 0
-                      ? theme.palette.secondary.light
-                      : 'white',
-                },
-                body: {
-                  backgroundColor:
-                    params.row.order % 2 === 0
-                      ? theme.palette.secondary.light
-                      : 'white',
-                },
-              },
-            }}
-          />
+          <FormControl sx={{ m: 1, width: 200 }}>
+            <Select
+              multiple
+              value={params.row.topic}
+              onChange={(event: SelectChangeEvent<string[]>) =>
+                handleTopicChange(params.row, event)
+              }
+            >
+              {topics.map((topic) => (
+                <MenuItem key={topic} value={topic}>
+                  {topic}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        ),
+      },
+      {
+        field: 'maturityLevel',
+        headerName: 'Maturity Level',
+        type: 'string',
+        flex: 1,
+        renderCell: (params: { row: Row }) => (
+          <FormControl sx={{ m: 1, width: 200 }}>
+            <Select
+              value={params.row.maturityLevel}
+              onChange={(event: SelectChangeEvent<string>) =>
+                handleMaturityLevelChange(params.row, event)
+              }
+            >
+              {maturityLevels.map((maturityLevel) => (
+                <MenuItem key={maturityLevel} value={maturityLevel}>
+                  {maturityLevel}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         ),
       },
       {
@@ -296,17 +352,8 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       {
         field: 'actions',
         type: 'actions',
-        width: 125,
+        width: 75,
         getActions: (params: { id: GridRowId; row: Row }) => [
-          <GridActionsCellItem
-            icon={
-              <Tooltip title='Visit'>
-                <ArrowForwardIcon />
-              </Tooltip>
-            }
-            label='Visit'
-            onClick={handleVisit(params.id)}
-          />,
           <GridActionsCellItem
             icon={<FileCopyIcon />}
             label='Duplicate'
@@ -326,8 +373,6 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       preProcessEditOrder,
       handleUpward,
       handleDownward,
-      handleColorChange,
-      handleVisit,
       handleDuplicate,
       handleDelete,
     ]
@@ -341,7 +386,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={{
-        text: 'CREATE NEW AREA',
+        text: 'CREATE CHECKPOINT',
         handler: handleAdd,
       }}
     />

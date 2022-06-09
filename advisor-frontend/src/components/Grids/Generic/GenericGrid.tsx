@@ -10,7 +10,6 @@ import {
   GridRowModel,
 } from '@mui/x-data-grid';
 import { styled, Theme, ThemeProvider } from '@mui/material/styles';
-
 import Button from '@mui/material/Button';
 
 import './GenericGrid.css';

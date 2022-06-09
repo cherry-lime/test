@@ -7,7 +7,6 @@ import {
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
 import { IconButton } from '@mui/material';
-
 import UpwardIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import DownwardIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 

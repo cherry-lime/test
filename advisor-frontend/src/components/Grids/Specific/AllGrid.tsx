@@ -12,6 +12,7 @@ import TopicGrid from './TopicGrid';
 import MaturityGrid from './MaturityGrid';
 import AnswerTypeGrid from './AnswerTypeGrid';
 import SubareaGrid from './SubareaGrid';
+import CheckpointGrid from './CheckpointGrid';
 
 // Style color palette
 const theme = createTheme({
@@ -115,6 +116,12 @@ export default function AllGrid() {
       <AnswerTypeGrid theme={theme} templateId={templateId} />
       <strong>Subareas</strong>
       <SubareaGrid
+        theme={theme}
+        templateId={templateId}
+        categoryId={categoryId}
+      />
+      <strong>Checkpoints</strong>
+      <CheckpointGrid
         theme={theme}
         templateId={templateId}
         categoryId={categoryId}

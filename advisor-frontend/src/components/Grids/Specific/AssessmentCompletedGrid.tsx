@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { GridColumns, GridRowId } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
-
 import { Button } from '@mui/material';
 
 import GenericGrid from '../Generic/GenericGrid';

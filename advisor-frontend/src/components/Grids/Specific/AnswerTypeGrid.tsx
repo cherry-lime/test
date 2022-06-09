@@ -10,7 +10,6 @@ import {
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
 import { Tooltip } from '@mui/material';
-
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import GenericGrid from '../Generic/GenericGrid';
