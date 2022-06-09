@@ -5,27 +5,29 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateTeamDto } from './dto/create-team.dto';
-import { UpdateTeamDto } from './dto/update-team.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Team } from './entities/team.entity';
-import { TeamMembers } from './entities/team.members.entity';
+import { Team } from './dto/team.dto';
+import { TeamMembers } from './dto/team-member.dto';
 import { AssessmentResponse } from '../../src/assessment/responses/AssessmentResponse';
+import { InviteTokenDto } from './dto/invite-token.dto';
 
 @Injectable()
 export class TeamsService {
   constructor(private prisma: PrismaService) {}
 
   /**
-   * Create team object given a team name
-   * @param name
+   * Create team object given a createTeamDto
+   * @param createTeamDto CreateTeamDto
    * @returns created team
    * @throws Team name already exists
    */
-  async create(name: string): Promise<Team> {
+  async create(createTeamDto: CreateTeamDto): Promise<Team> {
     return await this.prisma.team
       .create({
         data: {
-          team_name: name,
+          team_name: createTeamDto.team_name,
+          team_country: createTeamDto.team_country,
+          team_department: createTeamDto.team_department,
         },
       })
       .catch((error) => {
@@ -74,7 +76,6 @@ export class TeamsService {
   async findTeamMembers(id: number): Promise<TeamMembers> {
     // Response stored in teamMembers
     const teamMembers = new TeamMembers();
-    teamMembers.team_id = id;
 
     // Get team name and associated user ids from team with team_id from prisma
     const temp = await this.prisma.team
@@ -101,18 +102,19 @@ export class TeamsService {
     }
 
     teamMembers.team_name = temp.team_name;
-    teamMembers.team_member_ids = temp.UserInTeam.map((a) => a.user_id);
+    const teamMemberIds = temp.UserInTeam.map((a) => a.user_id);
 
     // Get team member usernames from team with team_member_ids from prisma
     const teamMemberUsernames = await this.prisma.user
       .findMany({
         where: {
           user_id: {
-            in: teamMembers.team_member_ids,
+            in: teamMemberIds,
           },
         },
         select: {
           username: true,
+          role: true,
         },
       })
       .catch(() => {
@@ -124,7 +126,7 @@ export class TeamsService {
       throw new NotFoundException('No members are associated to the team');
     }
 
-    teamMembers.team_members = teamMemberUsernames.map((a) => a.username);
+    teamMembers.team_members = teamMemberUsernames;
 
     // Return team
     return teamMembers;
@@ -165,25 +167,24 @@ export class TeamsService {
       throw new NotFoundException('Team with given invite_token not found');
     }
 
-    teamMembers.team_id = temp.team_id;
     teamMembers.team_name = temp.team_name;
     let teamMemberIds = temp.UserInTeam.map((a) => a.user_id);
     //get user/assessor being added to team and add to teamMemberIds
     const user_id = 1; // TODO
     teamMemberIds = [...teamMemberIds, user_id];
     teamMemberIds.sort((a, b) => a - b); // Sort ascending order
-    teamMembers.team_member_ids = teamMemberIds;
 
     // Get team member usernames from team with team_member_ids from prisma
     const teamMemberUsernames = await this.prisma.user
       .findMany({
         where: {
           user_id: {
-            in: teamMembers.team_member_ids,
+            in: teamMemberIds,
           },
         },
         select: {
           username: true,
+          role: true,
         },
       })
       .catch(() => {
@@ -195,19 +196,22 @@ export class TeamsService {
       throw new NotFoundException('No members are associated to the team');
     }
 
-    let teamMemberUsernames2 = teamMemberUsernames.map((a) => a.username);
+    teamMembers.team_members = teamMemberUsernames;
     //get user/assessor being added to team and add to teamMemberUsernames2
     const username = 'username'; // TODO
-    teamMemberUsernames2 = [...teamMemberUsernames2, username];
-    teamMemberUsernames2.sort(); // Sort ascending order
-    teamMembers.team_members = teamMemberUsernames2;
+    const role = 'user'; // TODO
+    teamMembers.team_members.push({ username: username, role: role });
 
-    await this.prisma.userInTeam.create({
-      data: {
-        user_id: user_id,
-        team_id: teamMembers.team_id,
-      },
-    });
+    await this.prisma.userInTeam
+      .create({
+        data: {
+          user_id: user_id,
+          team_id: temp.team_id,
+        },
+      })
+      .catch(() => {
+        throw new InternalServerErrorException();
+      });
 
     return teamMembers;
   }
@@ -218,7 +222,7 @@ export class TeamsService {
    * @returns team members object corresponding to team_id
    * @throws Team not found
    */
-  async getInviteToken(id: number): Promise<string> {
+  async getInviteToken(id: number): Promise<InviteTokenDto> {
     // Get team id and associated user ids from team with team_id from prisma
     const invite_token = await this.prisma.team
       .findUnique({
@@ -238,7 +242,7 @@ export class TeamsService {
       throw new NotFoundException('Team with given team id not found');
     }
 
-    return invite_token.invite_token;
+    return new InviteTokenDto(invite_token.invite_token);
   }
 
   /**

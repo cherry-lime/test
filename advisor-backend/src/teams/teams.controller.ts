@@ -5,15 +5,16 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  ParseIntPipe,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
-import { UpdateTeamDto } from './dto/update-team.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Team } from './entities/team.entity';
-import { TeamMembers } from './entities/team.members.entity';
-import { AssessmentResponse } from '../../src/assessment/responses/AssessmentResponse';
+import { Team } from './dto/team.dto';
+import { TeamMembers } from './dto/team-member.dto';
+import { AssessmentResponse } from '../assessment/responses/AssessmentResponse';
+import { InviteTokenDto } from './dto/invite-token.dto';
 
 @ApiTags('teams')
 @Controller('teams')
@@ -21,8 +22,8 @@ export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
   /**
-   * [POST] /team/create - Get team by team name
-   * @param name team_name
+   * [POST] /team/create - Create team given a createTeamDto
+   * @param createTeamDto CreateTeamDto
    * @returns Team object
    */
   @Post('create')
@@ -30,8 +31,8 @@ export class TeamsController {
     description: 'Create team with given team name',
     type: Team,
   })
-  create(@Body() name: string): Promise<Team> {
-    return this.teamsService.create(name);
+  create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
+    return this.teamsService.create(createTeamDto);
   }
 
   /**
@@ -44,7 +45,7 @@ export class TeamsController {
     description: 'Find team by team id',
     type: Team,
   })
-  findOne(@Param('id') id: number): Promise<Team> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Team> {
     return this.teamsService.findOne(id);
   }
 
@@ -58,7 +59,7 @@ export class TeamsController {
     description: 'Get members of a team given a team id',
     type: TeamMembers,
   })
-  findTeamMembers(@Param('id') id: number): Promise<TeamMembers> {
+  findTeamMembers(@Param('id', ParseIntPipe) id: number): Promise<TeamMembers> {
     return this.teamsService.findTeamMembers(id);
   }
 
@@ -73,7 +74,7 @@ export class TeamsController {
     type: TeamMembers,
   })
   addTeamMember(
-    @Param('invite_token') invite_token: string
+    @Param('invite_token', ParseUUIDPipe) invite_token: string
   ): Promise<TeamMembers> {
     return this.teamsService.addTeamMember(invite_token);
   }
@@ -89,7 +90,9 @@ export class TeamsController {
     description: 'Get invite token of a team',
     type: String,
   })
-  getInviteToken(@Param('id') id: number): Promise<string> {
+  getInviteToken(
+    @Param('id', ParseIntPipe) id: number
+  ): Promise<InviteTokenDto> {
     return this.teamsService.getInviteToken(id);
   }
 
@@ -105,7 +108,9 @@ export class TeamsController {
     type: AssessmentResponse,
     isArray: true,
   })
-  getTeamAssessments(@Param('id') id: number): Promise<AssessmentResponse[]> {
+  getTeamAssessments(
+    @Param('id', ParseIntPipe) id: number
+  ): Promise<AssessmentResponse[]> {
     return this.teamsService.getAssessments(id);
   }
 

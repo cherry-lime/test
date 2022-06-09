@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class TeamMembers {
+export class Team {
   @ApiProperty()
   team_id: number;
 
@@ -8,8 +8,12 @@ export class TeamMembers {
   team_name: string;
 
   @ApiProperty()
-  team_member_ids: number[];
+  // UUID
+  invite_token: string;
 
   @ApiProperty()
-  team_members: string[];
+  team_country: string;
+
+  @ApiProperty()
+  team_department: string;
 }

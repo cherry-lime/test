@@ -1,8 +1,6 @@
 export const aTeamMembers = {
-  team_id: 1,
   team_name: 'test_team_name',
-  team_member_ids: [1],
-  team_members: ['test_user_name'],
+  team_members: [{ username: 'test_username', role: 'USER' }],
 };
 
 export const mockTeamMembers = {

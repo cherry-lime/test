@@ -1,10 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { TeamsController } from './teams.controller';
 import { TeamsService } from './teams.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { aTeam } from '../prisma/mock/mockTeam';
+import { aTeam, mockCreateTeamBody } from '../prisma/mock/mockTeam';
 import { aTeamMembers } from '../prisma/mock/mockTeamMembers';
 import { aAssessment } from '../prisma/mock/mockAssessment';
+import { InviteTokenDto } from './dto/invite-token.dto';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -20,9 +21,12 @@ describe('TeamsController', () => {
           return {
             create: jest.fn().mockResolvedValue(aTeam),
             findOne: jest.fn().mockResolvedValue(aTeam),
+            findUnique: jest.fn().mockResolvedValue(aTeam),
             findTeamMembers: jest.fn().mockResolvedValue(aTeamMembers),
             addTeamMember: jest.fn().mockResolvedValue(aTeamMembers),
-            getInviteToken: jest.fn().mockResolvedValue('test_invite_token'),
+            getInviteToken: jest
+              .fn()
+              .mockResolvedValue(new InviteTokenDto('test_invite_token')),
             getAssessments: jest.fn().mockResolvedValue([aAssessment]),
           };
         }
@@ -36,7 +40,8 @@ describe('TeamsController', () => {
       })
       .compile();
 
-    teamController = moduleRef.get(TeamsController);
+    //teamController = moduleRef.get(TeamsController);
+    teamController = moduleRef.get<TeamsController>(TeamsController);
   });
 
   it('should be defined', () => {
@@ -45,7 +50,7 @@ describe('TeamsController', () => {
 
   describe('createTeam', () => {
     it('Should return the created team', async () => {
-      expect(teamController.create('test')).resolves.toBe(aTeam);
+      expect(teamController.create(mockCreateTeamBody)).resolves.toBe(aTeam);
     });
   });
 
@@ -69,15 +74,17 @@ describe('TeamsController', () => {
 
   describe('getInviteToken', () => {
     it('Should return the invite token', async () => {
-      expect(teamController.getInviteToken(1)).resolves.toBe(
-        'test_invite_token'
+      expect(teamController.getInviteToken(1)).resolves.toStrictEqual(
+        new InviteTokenDto('test_invite_token')
       );
     });
   });
 
   describe('getAssessments', () => {
     it('Should return the assessments', async () => {
-      expect(teamController.getTeamAssessments(1)).resolves.toBe([aAssessment]);
+      expect(teamController.getTeamAssessments(1)).resolves.toEqual([
+        aAssessment,
+      ]);
     });
   });
 });

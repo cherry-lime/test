@@ -72,11 +72,13 @@ model CheckpointInTopic {
 }
 
 model Team {
-  team_id      Int          @id @default(autoincrement())
-  team_name    String       @unique
-  invite_token String       @unique @default(uuid()) @db.Uuid
-  UserInTeam   UserInTeam[]
-  Assessment   Assessment[]
+  team_id         Int          @id @default(autoincrement())
+  team_name       String       @unique
+  invite_token    String       @unique @default(uuid()) @db.Uuid
+  team_country    String
+  team_department String
+  UserInTeam      UserInTeam[]
+  Assessment      Assessment[]
 }
 
 model UserInTeam {
