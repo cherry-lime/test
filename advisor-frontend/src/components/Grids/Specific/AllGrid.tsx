@@ -1,6 +1,5 @@
 import { createTheme } from '@mui/material/styles';
 
-import ExampleGrid from './ExampleGrid';
 import TeamGrid from './TeamGrid';
 import MemberGrid from './MemberGrid';
 import AssessmentOngoingGrid from './AssessmentOngoingGrid';
@@ -44,8 +43,6 @@ export default function AllGrid() {
 
   return (
     <div style={{ width: '90%' }}>
-      <strong>Example Grid</strong>
-      <ExampleGrid theme={theme} />
       <strong>Team Grid</strong>
       <TeamGrid theme={theme} userId={userId} userRole={userRole} />
       <strong>Assessor Grid</strong>
