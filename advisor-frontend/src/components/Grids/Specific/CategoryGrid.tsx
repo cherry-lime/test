@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BlockPicker, Color, ColorResult } from 'react-color';
+import { BlockPicker, ColorResult } from 'react-color';
 
 import {
   GridActionsCellItem,
@@ -24,7 +24,7 @@ type Row = {
   id: number;
   order: number;
   name: string;
-  color: Color;
+  color: string;
   enabled: boolean;
 };
 
