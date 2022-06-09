@@ -9,7 +9,8 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Grid } from "@mui/material";
-import  mainListItems  from "./listItems";
+// import  mainListItems  from "./listItems";
+import SidebarList from "./listItems";
 
 import INGTheme from "../../Theme";
 
@@ -43,13 +44,14 @@ const Drawer = styled(MuiDrawer, {
 
 type SidebarProps = {
   children?: React.ReactNode;
+  sidebarType: Map<string, boolean>;
 };
 
 const defaultProps = {
   children: null,
-}
+};
 
-export default function Sidebar({children}: SidebarProps) {
+export default function Sidebar({ children, sidebarType }: SidebarProps) {
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen((isOpen) => !isOpen);
@@ -93,7 +95,7 @@ export default function Sidebar({children}: SidebarProps) {
               flexWrap: "wrap",
             }}
           >
-            {mainListItems}
+            <SidebarList userType={sidebarType} />
             <Divider sx={{ my: 1 }} />
             {}
           </List>

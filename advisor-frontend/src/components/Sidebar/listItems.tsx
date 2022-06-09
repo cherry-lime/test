@@ -6,6 +6,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import HomeIcon from "@mui/icons-material/Home";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SettingsIcon from "@mui/icons-material/Settings";
+import EditIcon from "@mui/icons-material/Edit";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { red } from "@mui/material/colors";
 
@@ -23,39 +24,61 @@ const iconTheme = createTheme({
   },
 });
 
-const mainListItems = (
-  <ThemeProvider theme={iconTheme}>
-    <ListItemButton>
-      <ListItemIcon>
-        <HomeIcon color="secondary" />
-      </ListItemIcon>
-      <ListItemText primary="Home" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <BarChartIcon color="secondary" />
-      </ListItemIcon>
-      <ListItemText primary="Evaluations" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <GroupsIcon color="secondary" />
-      </ListItemIcon>
-      <ListItemText primary="Teams" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <SettingsIcon color="secondary" />
-      </ListItemIcon>
-      <ListItemText primary="Settings" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <LogoutIcon color="secondary" />
-      </ListItemIcon>
-      <ListItemText primary="Sign Out" />
-    </ListItemButton>
-  </ThemeProvider>
-);
+type SidebarListProps = {
+  userType: Map<string, boolean>;
+};
 
-export default mainListItems;
+export default function SidebarList({ userType }: SidebarListProps) {
+  return (
+    <ThemeProvider theme={iconTheme}>
+      {userType.get("home") && (
+        <ListItemButton>
+          <ListItemIcon>
+            <HomeIcon color="secondary" />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItemButton>
+      )}
+      {userType.get("evaluation") && (
+        <ListItemButton>
+          <ListItemIcon>
+            <BarChartIcon color="secondary" />
+          </ListItemIcon>
+          <ListItemText primary="Evaluations" />
+        </ListItemButton>
+      )}
+      {userType.get("teams") && (
+        <ListItemButton>
+          <ListItemIcon>
+            <GroupsIcon color="secondary" />
+          </ListItemIcon>
+          <ListItemText primary="Teams" />
+        </ListItemButton>
+      )}
+      {userType.get("template") && (
+        <ListItemButton>
+          <ListItemIcon>
+            <EditIcon color="secondary" />
+          </ListItemIcon>
+          <ListItemText primary="Templates" />
+        </ListItemButton>
+      )}
+      {userType.get("settings") && (
+        <ListItemButton>
+          <ListItemIcon>
+            <SettingsIcon color="secondary" />
+          </ListItemIcon>
+          <ListItemText primary="Settings" />
+        </ListItemButton>
+      )}
+      {userType.get("signout") && (
+        <ListItemButton>
+          <ListItemIcon>
+            <LogoutIcon color="secondary" />
+          </ListItemIcon>
+          <ListItemText primary="Sign Out" />
+        </ListItemButton>
+      )}
+    </ThemeProvider>
+  );
+}

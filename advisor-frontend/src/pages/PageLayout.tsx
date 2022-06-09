@@ -8,6 +8,7 @@ type PageProps = {
   title: string;
   children: React.ReactNode;
   headerColor?: string;
+  sidebarType: Map<string, boolean>;
 };
 const defaultProps = {
   footer: false,
@@ -27,9 +28,10 @@ export default function PageLayout({
   footer,
   title,
   headerColor,
+  sidebarType
 }: PageProps) {
   return (
-    <Sidebar>
+    <Sidebar sidebarType={sidebarType}>
       <div className="main_container">
         <Header name={title} bgcolor={headerColor} />
         {footer ? (
