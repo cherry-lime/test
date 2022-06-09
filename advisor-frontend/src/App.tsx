@@ -5,7 +5,6 @@ import Greetings from './components/SampleText/SampleText';
 import Button from './components/Button/Button';
 
 import AllGrid from './components/Grids/Specific/AllGrid';
-import ExampleGrid from './components/Grids/Specific/ExampleGrid';
 
 function App() {
   return (
