@@ -60,7 +60,9 @@ type CheckpointGridProps = {
 
 export default function CheckpointGrid({
   theme,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   categoryId,
 }: CheckpointGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);

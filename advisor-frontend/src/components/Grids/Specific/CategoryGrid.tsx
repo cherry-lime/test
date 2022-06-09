@@ -47,6 +47,7 @@ type CategoryGridProps = {
   templateId: number;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 

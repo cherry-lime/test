@@ -43,6 +43,7 @@ type AnswerTypeGridProps = {
 
 export default function AnswerTypeGrid({
   theme,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateId,
 }: AnswerTypeGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);

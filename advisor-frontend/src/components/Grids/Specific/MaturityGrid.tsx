@@ -43,6 +43,7 @@ type MaturityGridProps = {
   templateId: number;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 

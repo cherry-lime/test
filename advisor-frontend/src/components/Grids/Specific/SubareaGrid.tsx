@@ -44,7 +44,9 @@ type SubareaGridProps = {
 
 export default function SubareaGrid({
   theme,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   categoryId,
 }: SubareaGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);

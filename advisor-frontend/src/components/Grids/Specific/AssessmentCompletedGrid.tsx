@@ -27,18 +27,23 @@ type MemberGridProps = {
 
 export default function AssessmentCompletedGrid({
   theme,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   userId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   userRole,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   teamId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentType,
 }: MemberGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([
-    { id: 0, createdDate: new Date(), completedDate: new Date() },
-  ]);
+  const [rows, setRows] = React.useState<Row[]>([]);
 
   // Fetch initial rows of the grid
   React.useEffect(() => {
     // TODO Replace this by API fetch
+    setRows(() => [
+      { id: 0, createdDate: new Date(), completedDate: new Date() },
+    ]);
   }, []);
 
   // Called when the "Visit" action is pressed

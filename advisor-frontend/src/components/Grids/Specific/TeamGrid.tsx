@@ -39,6 +39,7 @@ type TeamGridProps = {
   userRole: UserRole;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 

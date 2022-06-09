@@ -33,8 +33,10 @@ type RecommendationGridProps = {
 
 export default function RecommendationGrid({
   theme,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentId,
   assessmentType,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   userId,
   userRole,
 }: RecommendationGridProps) {
@@ -42,10 +44,15 @@ export default function RecommendationGrid({
     {
       id: 0,
       order: 0,
-      description: 'Description '.repeat(25),
-      additionalInfo: 'a',
+      description: 'Description A',
+      additionalInfo: 'Additional information A',
     },
-    { id: 1, order: 1, description: 'b', additionalInfo: 'b' },
+    {
+      id: 1,
+      order: 1,
+      description: 'Description B',
+      additionalInfo: 'Additional information B',
+    },
   ]);
 
   // Fetch initial rows of the grid

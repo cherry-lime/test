@@ -40,8 +40,10 @@ type MemberGridProps = {
 
 export default function AssessmentOngoingGrid({
   theme,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   userId,
   userRole,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   teamId,
   assessmentType,
 }: MemberGridProps) {

@@ -104,7 +104,7 @@ export default function AllGrid() {
       />
       <strong>Individual Evaluation Templates</strong>
       <TemplateGrid theme={theme} assessmentType='INDIVIDUAL' />
-      <strong>Team Assessment Templates</strong>
+      <strong>Team Evaluation Templates</strong>
       <TemplateGrid theme={theme} assessmentType='TEAM' />
       <strong>Areas</strong>
       <CategoryGrid theme={theme} templateId={templateId} />

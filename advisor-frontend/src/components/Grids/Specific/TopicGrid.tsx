@@ -39,6 +39,7 @@ type TopicGridProps = {
   templateId: number;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
