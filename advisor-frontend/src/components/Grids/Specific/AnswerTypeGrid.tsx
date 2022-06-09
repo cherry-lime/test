@@ -127,10 +127,10 @@ export default function AnswerTypeGrid({
         field: 'value',
         headerName: 'Value',
         headerAlign: 'left',
+        align: 'left',
         type: 'number',
         flex: 1,
         editable: true,
-        align: 'left',
         preProcessEditCellProps: preProcessEditValue,
         valueFormatter: (params: GridValueFormatterParams<number>) =>
           `${params.value} %`,

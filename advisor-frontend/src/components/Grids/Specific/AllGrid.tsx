@@ -10,6 +10,7 @@ import TopicGrid from './TopicGrid';
 import MaturityGrid from './MaturityGrid';
 import AnswerTypeGrid from './AnswerTypeGrid';
 import SubareaGrid from './SubareaGrid';
+import RecommendationGrid from './RecommendationGrid';
 
 // Style color palette
 const theme = createTheme({
@@ -37,6 +38,7 @@ export default function AllGrid() {
   const teamId = 0;
   const templateId = 0;
   const categoryId = 0;
+  const assessmentId = 0;
 
   return (
     <div style={{ width: '90%' }}>
@@ -105,6 +107,14 @@ export default function AllGrid() {
         theme={theme}
         templateId={templateId}
         categoryId={categoryId}
+      />
+      <strong>Recommendations</strong>
+      <RecommendationGrid
+        theme={theme}
+        assessmentId={assessmentId}
+        assessmentType='TEAM'
+        userId={userId}
+        userRole={userRole}
       />
     </div>
   );

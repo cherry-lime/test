@@ -1,56 +1,58 @@
 import * as React from 'react';
 
 import {
-  GridActionsCellItem,
   GridColumns,
   GridPreProcessEditCellProps,
-  GridRowId,
   GridRowModel,
 } from '@mui/x-data-grid';
 import { Theme } from '@mui/material/styles';
 import { IconButton } from '@mui/material';
 
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import DeleteIcon from '@mui/icons-material/Delete';
 import UpwardIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import DownwardIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 
 import GenericGrid from '../Generic/GenericGrid';
 
+import { UserRole } from '../../../types/UserRole';
+import { AssessmentType } from '../../../types/AssessmentType';
+
 // Define type for the rows in the grid
 type Row = {
   id: number;
   order: number;
-  name: string;
-  enabled: boolean;
+  description: string;
+  additionalInfo: string;
 };
 
-// Generate new id based on time
-const generateId = () => Date.now();
-
-// Get row object with default values
-const getDefaultRow = (prevRows: Row[]) => {
-  const defaultRow = {
-    id: generateId(),
-    order: prevRows.length,
-    name: 'Name...',
-    enabled: false,
-  };
-  return defaultRow;
-};
-
-type MaturityGridProps = {
+type RecommendationGridProps = {
   theme: Theme;
-  templateId: number;
+  assessmentId: number;
+  assessmentType: AssessmentType;
+  userId: number;
+  userRole: UserRole;
 };
 
-export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+export default function RecommendationGrid({
+  theme,
+  assessmentId,
+  assessmentType,
+  userId,
+  userRole,
+}: RecommendationGridProps) {
+  const [rows, setRows] = React.useState<Row[]>([
+    {
+      id: 0,
+      order: 0,
+      description: 'Description '.repeat(25),
+      additionalInfo: 'a',
+    },
+    { id: 1, order: 1, description: 'b', additionalInfo: 'b' },
+  ]);
 
   // Fetch initial rows of the grid
   React.useEffect(() => {
     // TODO Replace this by API fetch
-    setRows(() => []);
+    // setRows(() => []);
   }, []);
 
   // Move row to index
@@ -142,51 +144,6 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     []
   );
 
-  // Called when the "Delete" action is pressed in the action menu
-  const handleDelete = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // Use setTimeout to deal with delay
-      setTimeout(() => {
-        // Filter row with rowId from state
-        setRows((prevRows) => prevRows.filter((row) => row.id !== rowId));
-        updateOrder();
-
-        // Delete row with rowId from database
-        // TODO
-      });
-    },
-    []
-  );
-
-  // Called when the "Duplicate" action is pressed in the action menu
-  const handleDuplicate = React.useCallback(
-    (row: Row) => () => {
-      setRows((prevRows) => {
-        // Create new row with duplicated content and generated id
-        const newRow = { ...row, id: generateId(), order: prevRows.length };
-
-        // Create newRow in database
-        // TODO
-
-        return [...prevRows, newRow];
-      });
-    },
-    []
-  );
-
-  // Called when "Add" button is pressed below the grid
-  const handleAdd = React.useCallback(() => {
-    setRows((prevRows) => {
-      // Create new row with default content and generated id
-      const newRow = { ...getDefaultRow(prevRows), id: generateId() };
-
-      // Create newRow in database
-      // TODO
-
-      return [...prevRows, newRow].sort((x, y) => (x.order > y.order ? 1 : -1));
-    });
-  }, []);
-
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
@@ -196,65 +153,43 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         align: 'center',
         type: 'number',
         width: 75,
-        editable: true,
+        editable: userRole === 'ASSESSOR' && assessmentType === 'TEAM',
         preProcessEditCellProps: preProcessEditOrder,
-        renderCell: (params: { row: Row }) => (
-          <div className='parent'>
-            <div className='child'>
-              <IconButton onClick={handleUpward(params.row)}>
-                <UpwardIcon />
-              </IconButton>
+        renderCell: (params: { row: Row }) =>
+          userRole === 'ASSESSOR' && assessmentType === 'TEAM' ? (
+            <div className='parent'>
+              <div className='child'>
+                <IconButton onClick={handleUpward(params.row)}>
+                  <UpwardIcon />
+                </IconButton>
+              </div>
+              <strong>{params.row.order}</strong>
+              <div className='child'>
+                <IconButton onClick={handleDownward(params.row)}>
+                  <DownwardIcon />
+                </IconButton>
+              </div>
             </div>
+          ) : (
             <strong>{params.row.order}</strong>
-            <div className='child'>
-              <IconButton onClick={handleDownward(params.row)}>
-                <DownwardIcon />
-              </IconButton>
-            </div>
-          </div>
-        ),
+          ),
       },
       {
-        field: 'name',
-        headerName: 'Name',
+        field: 'description',
+        headerName: 'Description',
         type: 'string',
         flex: 1,
-        editable: true,
+        editable: userRole === 'ASSESSOR' && assessmentType === 'TEAM',
       },
       {
-        field: 'enabled',
-        headerName: 'Enabled',
-        type: 'boolean',
-        width: 75,
-        editable: true,
-      },
-      {
-        field: 'actions',
-        type: 'actions',
-        width: 75,
-        getActions: (params: { id: GridRowId; row: Row }) => [
-          <GridActionsCellItem
-            icon={<FileCopyIcon />}
-            label='Duplicate'
-            onClick={handleDuplicate(params.row)}
-            showInMenu
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label='Delete'
-            onClick={handleDelete(params.id)}
-            showInMenu
-          />,
-        ],
+        field: 'additionalInfo',
+        headerName: 'Additional Information',
+        type: 'string',
+        flex: 1,
+        editable: userRole === 'ASSESSOR' && assessmentType === 'TEAM',
       },
     ],
-    [
-      preProcessEditOrder,
-      handleUpward,
-      handleDownward,
-      handleDuplicate,
-      handleDelete,
-    ]
+    [preProcessEditOrder, handleUpward, handleDownward]
   );
 
   return (
@@ -264,10 +199,6 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       columns={columns}
       processRowUpdate={processRowUpdate}
       hasToolbar
-      add={{
-        text: 'CREATE NEW MATURITY LEVEL',
-        handler: handleAdd,
-      }}
     />
   );
 }
