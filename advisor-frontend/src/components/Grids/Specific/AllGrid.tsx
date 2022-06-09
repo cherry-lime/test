@@ -5,12 +5,13 @@ import TeamGrid from './TeamGrid';
 import MemberGrid from './MemberGrid';
 import AssessmentOngoingGrid from './AssessmentOngoingGrid';
 import AssessmentCompletedGrid from './AssessmentCompletedGrid';
+import RecommendationGrid from './RecommendationGrid';
 import TemplateGrid from './TemplateGrid';
+import CategoryGrid from './CategoryGrid';
 import TopicGrid from './TopicGrid';
 import MaturityGrid from './MaturityGrid';
 import AnswerTypeGrid from './AnswerTypeGrid';
 import SubareaGrid from './SubareaGrid';
-import RecommendationGrid from './RecommendationGrid';
 
 // Style color palette
 const theme = createTheme({
@@ -92,10 +93,20 @@ export default function AllGrid() {
         teamId={teamId}
         assessmentType='TEAM'
       />
+      <strong>Recommendations</strong>
+      <RecommendationGrid
+        theme={theme}
+        assessmentId={assessmentId}
+        assessmentType='TEAM'
+        userId={userId}
+        userRole={userRole}
+      />
       <strong>Individual Evaluation Templates</strong>
       <TemplateGrid theme={theme} assessmentType='INDIVIDUAL' />
       <strong>Team Assessment Templates</strong>
       <TemplateGrid theme={theme} assessmentType='TEAM' />
+      <strong>Areas</strong>
+      <CategoryGrid theme={theme} templateId={templateId} />
       <strong>Topics</strong>
       <TopicGrid theme={theme} templateId={templateId} />
       <strong>Maturity Levels</strong>
@@ -107,14 +118,6 @@ export default function AllGrid() {
         theme={theme}
         templateId={templateId}
         categoryId={categoryId}
-      />
-      <strong>Recommendations</strong>
-      <RecommendationGrid
-        theme={theme}
-        assessmentId={assessmentId}
-        assessmentType='TEAM'
-        userId={userId}
-        userRole={userRole}
       />
     </div>
   );
