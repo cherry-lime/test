@@ -1,4 +1,7 @@
 import { Role } from '@prisma/client';
+/*
+  For auth.controller
+*/
 
 // Random start and update date
 const myStartDate: any = new Date();
@@ -26,3 +29,4 @@ export const userAuthenticationLog = {
   token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV',
   user: userinfo,
 };
+
