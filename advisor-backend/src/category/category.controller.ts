@@ -15,21 +15,21 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  @Get(':category_id')
+  findOne(@Param('category_id', ParseIntPipe) id: number) {
     return this.categoryService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch(':category_id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('category_id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto
   ) {
     return this.categoryService.update(id, updateCategoryDto);
   }
 
-  @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  @Delete(':category_id')
+  delete(@Param('category_id', ParseIntPipe) id: number) {
     return this.categoryService.delete(id);
   }
 }
