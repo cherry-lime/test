@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import Room from "./newpage";
+import Example from "./ExamplePage";
 
 /**
  * Used to setup routing of all the pages and give an overview of all the different pages in the webpage.
@@ -12,7 +12,7 @@ import Room from "./newpage";
 export default function AllPages() {
   return (
     <Box>
-      <Room />
+      <Example />
     </Box>
   );
 }
