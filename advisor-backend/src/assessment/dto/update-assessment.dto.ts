@@ -1,6 +1,10 @@
-import { OmitType, PartialType } from '@nestjs/swagger';
-import { CreateAssessmentDto } from './create-assessment.dto';
+import { PartialType, PickType } from '@nestjs/swagger';
+import { AssessmentDto } from './assessment.dto';
 
 export class UpdateAssessmentDto extends PartialType(
-  OmitType(CreateAssessmentDto, ['team_id', 'assessment_type', 'template_id'])
+  PickType(AssessmentDto, [
+    'country_name',
+    'assessment_name',
+    'department_name',
+  ])
 ) {}
