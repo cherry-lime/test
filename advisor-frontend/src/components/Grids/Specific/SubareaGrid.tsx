@@ -1,16 +1,16 @@
-import * as React from 'react';
+import * as React from "react";
 
 import {
   GridActionsCellItem,
   GridColumns,
   GridRowId,
   GridRowModel,
-} from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import DeleteIcon from '@mui/icons-material/Delete';
+} from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-import GenericGrid from '../Generic/GenericGrid';
+import GenericGrid from "../Generic/GenericGrid";
 
 // Define type for the rows in the grid
 type Row = {
@@ -25,9 +25,9 @@ type Row = {
 const getDefaultRow = () => {
   const defaultRow = {
     id: Date.now(),
-    name: 'Name...',
-    summary: 'Summary...',
-    description: 'Description...',
+    name: "Name...",
+    summary: "Summary...",
+    description: "Description...",
     enabled: false,
   };
   return defaultRow;
@@ -123,47 +123,47 @@ export default function SubareaGrid({
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: 'name',
-        headerName: 'Name',
-        type: 'string',
+        field: "name",
+        headerName: "Name",
+        type: "string",
         width: 200,
         editable: true,
       },
       {
-        field: 'summary',
-        headerName: 'Summary',
-        type: 'string',
+        field: "summary",
+        headerName: "Summary",
+        type: "string",
         flex: 1,
         editable: true,
       },
       {
-        field: 'description',
-        headerName: 'Description',
-        type: 'string',
+        field: "description",
+        headerName: "Description",
+        type: "string",
         flex: 1,
         editable: true,
       },
       {
-        field: 'enabled',
-        headerName: 'Enabled',
-        type: 'boolean',
+        field: "enabled",
+        headerName: "Enabled",
+        type: "boolean",
         width: 75,
         editable: true,
       },
       {
-        field: 'actions',
-        type: 'actions',
+        field: "actions",
+        type: "actions",
         width: 75,
         getActions: (params: { id: GridRowId; row: Row }) => [
           <GridActionsCellItem
             icon={<FileCopyIcon />}
-            label='Duplicate'
+            label="Duplicate"
             onClick={handleDuplicate(params.row)}
             showInMenu
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
-            label='Delete'
+            label="Delete"
             onClick={handleDelete(params.id)}
             showInMenu
           />,
@@ -181,7 +181,7 @@ export default function SubareaGrid({
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={{
-        text: 'CREATE NEW SUBAREA',
+        text: "CREATE NEW SUBAREA",
         handler: handleAdd,
       }}
     />

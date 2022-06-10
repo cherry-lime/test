@@ -1,19 +1,19 @@
-import * as React from 'react';
+import * as React from "react";
 
 import {
   GridColumns,
   GridPreProcessEditCellProps,
   GridRowModel,
-} from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
-import { IconButton } from '@mui/material';
-import UpwardIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
-import DownwardIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+} from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
+import { IconButton } from "@mui/material";
+import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
+import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
-import GenericGrid from '../Generic/GenericGrid';
+import GenericGrid from "../Generic/GenericGrid";
 
-import { UserRole } from '../../../types/UserRole';
-import { AssessmentType } from '../../../types/AssessmentType';
+import { UserRole } from "../../../types/UserRole";
+import { AssessmentType } from "../../../types/AssessmentType";
 
 // Define type for the rows in the grid
 type Row = {
@@ -44,14 +44,14 @@ export default function RecommendationGrid({
     {
       id: 0,
       order: 0,
-      description: 'Description A',
-      additionalInfo: 'Additional information A',
+      description: "Description A",
+      additionalInfo: "Additional information A",
     },
     {
       id: 1,
       order: 1,
-      description: 'Description B',
-      additionalInfo: 'Additional information B',
+      description: "Description B",
+      additionalInfo: "Additional information B",
     },
   ]);
 
@@ -153,24 +153,24 @@ export default function RecommendationGrid({
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: 'order',
-        headerName: 'Order',
-        headerAlign: 'center',
-        align: 'center',
-        type: 'number',
+        field: "order",
+        headerName: "Order",
+        headerAlign: "center",
+        align: "center",
+        type: "number",
         width: 75,
-        editable: userRole === 'ASSESSOR' && assessmentType === 'TEAM',
+        editable: userRole === "ASSESSOR" && assessmentType === "TEAM",
         preProcessEditCellProps: preProcessEditOrder,
         renderCell: (params: { row: Row }) =>
-          userRole === 'ASSESSOR' && assessmentType === 'TEAM' ? (
-            <div className='parent'>
-              <div className='child'>
+          userRole === "ASSESSOR" && assessmentType === "TEAM" ? (
+            <div className="parent">
+              <div className="child">
                 <IconButton onClick={handleUpward(params.row)}>
                   <UpwardIcon />
                 </IconButton>
               </div>
               <strong>{params.row.order}</strong>
-              <div className='child'>
+              <div className="child">
                 <IconButton onClick={handleDownward(params.row)}>
                   <DownwardIcon />
                 </IconButton>
@@ -181,18 +181,18 @@ export default function RecommendationGrid({
           ),
       },
       {
-        field: 'description',
-        headerName: 'Description',
-        type: 'string',
+        field: "description",
+        headerName: "Description",
+        type: "string",
         flex: 1,
-        editable: userRole === 'ASSESSOR' && assessmentType === 'TEAM',
+        editable: userRole === "ASSESSOR" && assessmentType === "TEAM",
       },
       {
-        field: 'additionalInfo',
-        headerName: 'Additional Information',
-        type: 'string',
+        field: "additionalInfo",
+        headerName: "Additional Information",
+        type: "string",
         flex: 1,
-        editable: userRole === 'ASSESSOR' && assessmentType === 'TEAM',
+        editable: userRole === "ASSESSOR" && assessmentType === "TEAM",
       },
     ],
     [preProcessEditOrder, handleUpward, handleDownward]

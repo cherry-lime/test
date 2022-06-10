@@ -1,18 +1,18 @@
-import * as React from 'react';
+import * as React from "react";
 
 import {
   GridActionsCellItem,
   GridColumns,
   GridRowId,
   GridRowModel,
-} from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
-import { Tooltip } from '@mui/material';
-import RemoveIcon from '@mui/icons-material/HighlightOff';
+} from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
+import { Tooltip } from "@mui/material";
+import RemoveIcon from "@mui/icons-material/HighlightOff";
 
-import GenericGrid from '../Generic/GenericGrid';
+import GenericGrid from "../Generic/GenericGrid";
 
-import { UserRole } from '../../../types/UserRole';
+import { UserRole } from "../../../types/UserRole";
 
 // Define type for the rows in the grid
 type Row = {
@@ -24,7 +24,7 @@ type Row = {
 const getDefaultRow = () => {
   const defaultRow = {
     id: Date.now(),
-    name: '',
+    name: "",
   };
   return defaultRow;
 };
@@ -106,26 +106,26 @@ export default function MemberGrid({
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: 'name',
-        headerName: forAssessors ? 'Assessor Name' : 'Member Name',
-        type: 'string',
+        field: "name",
+        headerName: forAssessors ? "Assessor Name" : "Member Name",
+        type: "string",
         flex: 1,
-        editable: userRole === 'ASSESSOR',
+        editable: userRole === "ASSESSOR",
       },
-      ...(userRole === 'ASSESSOR'
+      ...(userRole === "ASSESSOR"
         ? [
             {
-              field: 'actions',
-              type: 'actions',
+              field: "actions",
+              type: "actions",
               width: 100,
               getActions: (params: { id: GridRowId }) => [
                 <GridActionsCellItem
                   icon={
-                    <Tooltip title='Remove'>
+                    <Tooltip title="Remove">
                       <RemoveIcon />
                     </Tooltip>
                   }
-                  label='Remove'
+                  label="Remove"
                   onClick={handleRemove(params.id)}
                 />,
               ],
@@ -144,9 +144,9 @@ export default function MemberGrid({
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={
-        userRole === 'ASSESSOR'
+        userRole === "ASSESSOR"
           ? {
-              text: forAssessors ? 'ADD ASSESSOR' : 'ADD MEMBER',
+              text: forAssessors ? "ADD ASSESSOR" : "ADD MEMBER",
               handler: handleAdd,
             }
           : undefined

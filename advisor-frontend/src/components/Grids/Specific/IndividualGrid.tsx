@@ -1,17 +1,17 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { GridActionsCellItem, GridColumns, GridRowId } from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
+import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
 import {
   FormControl,
   MenuItem,
   Select,
   SelectChangeEvent,
   Tooltip,
-} from '@mui/material';
-import RemoveIcon from '@mui/icons-material/HighlightOff';
+} from "@mui/material";
+import RemoveIcon from "@mui/icons-material/HighlightOff";
 
-import GenericGrid from '../Generic/GenericGrid';
+import GenericGrid from "../Generic/GenericGrid";
 
 // Define type for the rows in the grid
 type Row = {
@@ -27,9 +27,9 @@ type IndividualGridProps = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function IndividualGrid({ theme }: IndividualGridProps) {
   const [rows, setRows] = React.useState<Row[]>([
-    { id: 0, name: 'Alice', role: 'ADMIN' },
+    { id: 0, name: "Alice", role: "ADMIN" },
   ]);
-  const roles = ['USER', 'ASSESSOR', 'ADMIN'];
+  const roles = ["USER", "ASSESSOR", "ADMIN"];
 
   // Fetch initial rows of the grid
   React.useEffect(() => {
@@ -74,15 +74,15 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: 'name',
-        headerName: 'Name',
-        type: 'string',
+        field: "name",
+        headerName: "Name",
+        type: "string",
         flex: 1,
       },
       {
-        field: 'role',
-        headerName: 'Role',
-        type: 'string',
+        field: "role",
+        headerName: "Role",
+        type: "string",
         flex: 1,
         renderCell: (params: { row: Row }) => (
           <FormControl sx={{ m: 1, width: 200 }}>
@@ -102,17 +102,17 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         ),
       },
       {
-        field: 'actions',
-        type: 'actions',
+        field: "actions",
+        type: "actions",
         width: 100,
         getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
             icon={
-              <Tooltip title='Remove'>
+              <Tooltip title="Remove">
                 <RemoveIcon />
               </Tooltip>
             }
-            label='Remove'
+            label="Remove"
             onClick={handleRemove(params.id)}
           />,
         ],

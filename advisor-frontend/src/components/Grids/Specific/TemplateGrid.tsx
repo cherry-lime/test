@@ -1,20 +1,20 @@
-import * as React from 'react';
+import * as React from "react";
 
 import {
   GridActionsCellItem,
   GridColumns,
   GridRowId,
   GridRowModel,
-} from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
-import { Tooltip } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import DeleteIcon from '@mui/icons-material/Delete';
+} from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
+import { Tooltip } from "@mui/material";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-import GenericGrid from '../Generic/GenericGrid';
+import GenericGrid from "../Generic/GenericGrid";
 
-import { AssessmentType } from '../../../types/AssessmentType';
+import { AssessmentType } from "../../../types/AssessmentType";
 
 // Define type for the rows in the grid
 type Row = {
@@ -27,8 +27,8 @@ type Row = {
 const getDefaultRow = () => {
   const defaultRow = {
     id: Date.now(),
-    name: 'Name...',
-    description: 'Description...',
+    name: "Name...",
+    description: "Description...",
   };
   return defaultRow;
 };
@@ -128,42 +128,42 @@ export default function TemplateGrid({
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: 'name',
-        headerName: 'Name',
-        type: 'string',
+        field: "name",
+        headerName: "Name",
+        type: "string",
         flex: 1,
         editable: true,
       },
       {
-        field: 'description',
-        headerName: 'Description',
-        type: 'string',
+        field: "description",
+        headerName: "Description",
+        type: "string",
         flex: 1,
         editable: true,
       },
       {
-        field: 'actions',
-        type: 'actions',
+        field: "actions",
+        type: "actions",
         width: 100,
         getActions: (params: { id: GridRowId; row: Row }) => [
           <GridActionsCellItem
             icon={
-              <Tooltip title='Visit'>
+              <Tooltip title="Visit">
                 <ArrowForwardIcon />
               </Tooltip>
             }
-            label='Visit'
+            label="Visit"
             onClick={handleVisit(params.id)}
           />,
           <GridActionsCellItem
             icon={<FileCopyIcon />}
-            label='Duplicate'
+            label="Duplicate"
             onClick={handleDuplicate(params.row)}
             showInMenu
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
-            label='Delete'
+            label="Delete"
             onClick={handleDelete(params.id)}
             showInMenu
           />,

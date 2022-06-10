@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 import {
   GridActionsCellItem,
@@ -6,15 +6,15 @@ import {
   GridPreProcessEditCellProps,
   GridRowId,
   GridRowModel,
-} from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
-import { IconButton } from '@mui/material';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import DeleteIcon from '@mui/icons-material/Delete';
-import UpwardIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
-import DownwardIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+} from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
+import { IconButton } from "@mui/material";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import DeleteIcon from "@mui/icons-material/Delete";
+import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
+import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
-import GenericGrid from '../Generic/GenericGrid';
+import GenericGrid from "../Generic/GenericGrid";
 
 // Define type for the rows in the grid
 type Row = {
@@ -32,7 +32,7 @@ const getDefaultRow = (prevRows: Row[]) => {
   const defaultRow = {
     id: generateId(),
     order: prevRows.length,
-    name: 'Name...',
+    name: "Name...",
     enabled: false,
   };
   return defaultRow;
@@ -190,23 +190,23 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: 'order',
-        headerName: 'Order',
-        headerAlign: 'center',
-        align: 'center',
-        type: 'number',
+        field: "order",
+        headerName: "Order",
+        headerAlign: "center",
+        align: "center",
+        type: "number",
         width: 75,
         editable: true,
         preProcessEditCellProps: preProcessEditOrder,
         renderCell: (params: { row: Row }) => (
-          <div className='parent'>
-            <div className='child'>
+          <div className="parent">
+            <div className="child">
               <IconButton onClick={handleUpward(params.row)}>
                 <UpwardIcon />
               </IconButton>
             </div>
             <strong>{params.row.order}</strong>
-            <div className='child'>
+            <div className="child">
               <IconButton onClick={handleDownward(params.row)}>
                 <DownwardIcon />
               </IconButton>
@@ -215,33 +215,33 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         ),
       },
       {
-        field: 'name',
-        headerName: 'Name',
-        type: 'string',
+        field: "name",
+        headerName: "Name",
+        type: "string",
         flex: 1,
         editable: true,
       },
       {
-        field: 'enabled',
-        headerName: 'Enabled',
-        type: 'boolean',
+        field: "enabled",
+        headerName: "Enabled",
+        type: "boolean",
         width: 75,
         editable: true,
       },
       {
-        field: 'actions',
-        type: 'actions',
+        field: "actions",
+        type: "actions",
         width: 75,
         getActions: (params: { id: GridRowId; row: Row }) => [
           <GridActionsCellItem
             icon={<FileCopyIcon />}
-            label='Duplicate'
+            label="Duplicate"
             onClick={handleDuplicate(params.row)}
             showInMenu
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
-            label='Delete'
+            label="Delete"
             onClick={handleDelete(params.id)}
             showInMenu
           />,
@@ -265,7 +265,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={{
-        text: 'CREATE NEW MATURITY LEVEL',
+        text: "CREATE NEW MATURITY LEVEL",
         handler: handleAdd,
       }}
     />

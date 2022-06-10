@@ -1,13 +1,13 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { GridColumns, GridRowId } from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
-import { Button } from '@mui/material';
+import { GridColumns, GridRowId } from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
+import { Button } from "@mui/material";
 
-import GenericGrid from '../Generic/GenericGrid';
+import GenericGrid from "../Generic/GenericGrid";
 
-import { UserRole } from '../../../types/UserRole';
-import { AssessmentType } from '../../../types/AssessmentType';
+import { UserRole } from "../../../types/UserRole";
+import { AssessmentType } from "../../../types/AssessmentType";
 
 // Define type for the rows in the grid
 type Row = {
@@ -58,23 +58,23 @@ export default function AssessmentCompletedGrid({
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: 'createdDate',
-        headerName: 'Created',
-        type: 'dateTime',
+        field: "createdDate",
+        headerName: "Created",
+        type: "dateTime",
         flex: 1,
       },
       {
-        field: 'completedDate',
-        headerName: 'Completed',
-        type: 'dateTime',
+        field: "completedDate",
+        headerName: "Completed",
+        type: "dateTime",
         flex: 1,
       },
       {
-        field: 'actions',
-        type: 'actions',
+        field: "actions",
+        type: "actions",
         width: 125,
         getActions: (params: { id: GridRowId }) => [
-          <Button variant='outlined' onClick={handleVisit(params.id)}>
+          <Button variant="outlined" onClick={handleVisit(params.id)}>
             <strong>Review</strong>
           </Button>,
         ],

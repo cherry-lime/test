@@ -1,19 +1,19 @@
-import * as React from 'react';
+import * as React from "react";
 
 import {
   GridActionsCellItem,
   GridColumns,
   GridRowId,
   GridRowModel,
-} from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
-import { Tooltip } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import RemoveIcon from '@mui/icons-material/HighlightOff';
+} from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
+import { Tooltip } from "@mui/material";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import RemoveIcon from "@mui/icons-material/HighlightOff";
 
-import GenericGrid from '../Generic/GenericGrid';
+import GenericGrid from "../Generic/GenericGrid";
 
-import { UserRole } from '../../../types/UserRole';
+import { UserRole } from "../../../types/UserRole";
 
 // Define type for the rows in the grid
 type Row = {
@@ -25,7 +25,7 @@ type Row = {
 const getDefaultRow = () => {
   const defaultRow = {
     id: Date.now(),
-    name: 'New Team',
+    name: "New Team",
   };
   return defaultRow;
 };
@@ -107,33 +107,33 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: 'name',
-        headerName: 'Team Name',
-        type: 'string',
+        field: "name",
+        headerName: "Team Name",
+        type: "string",
         flex: 1,
-        editable: userRole === 'ASSESSOR',
+        editable: userRole === "ASSESSOR",
       },
       {
-        field: 'actions',
-        type: 'actions',
+        field: "actions",
+        type: "actions",
         width: 100,
         getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
             icon={
-              <Tooltip title='Visit'>
+              <Tooltip title="Visit">
                 <ArrowForwardIcon />
               </Tooltip>
             }
-            label='Visit'
+            label="Visit"
             onClick={handleVisit(params.id)}
           />,
           <GridActionsCellItem
             icon={
-              <Tooltip title='Leave'>
+              <Tooltip title="Leave">
                 <RemoveIcon />
               </Tooltip>
             }
-            label='Remove'
+            label="Remove"
             onClick={handleRemove(params.id)}
           />,
         ],
@@ -150,8 +150,8 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={
-        userRole === 'ASSESSOR'
-          ? { text: 'CREATE NEW TEAM', handler: handleAdd }
+        userRole === "ASSESSOR"
+          ? { text: "CREATE NEW TEAM", handler: handleAdd }
           : undefined
       }
     />

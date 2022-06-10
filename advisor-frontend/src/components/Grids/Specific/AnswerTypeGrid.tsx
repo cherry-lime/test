@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 import {
   GridActionsCellItem,
@@ -7,12 +7,12 @@ import {
   GridRowId,
   GridRowModel,
   GridValueFormatterParams,
-} from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
-import { Tooltip } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+} from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
+import { Tooltip } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-import GenericGrid from '../Generic/GenericGrid';
+import GenericGrid from "../Generic/GenericGrid";
 
 // Define type for the rows in the grid
 type Row = {
@@ -26,7 +26,7 @@ type Row = {
 const getDefaultRow = () => {
   const defaultRow = {
     id: Date.now(),
-    label: 'Label...',
+    label: "Label...",
     value: 0,
     enabled: false,
   };
@@ -117,18 +117,18 @@ export default function AnswerTypeGrid({
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: 'label',
-        headerName: 'Label',
-        type: 'string',
+        field: "label",
+        headerName: "Label",
+        type: "string",
         flex: 1,
         editable: true,
       },
       {
-        field: 'value',
-        headerName: 'Value',
-        headerAlign: 'left',
-        align: 'left',
-        type: 'number',
+        field: "value",
+        headerName: "Value",
+        headerAlign: "left",
+        align: "left",
+        type: "number",
         flex: 1,
         editable: true,
         preProcessEditCellProps: preProcessEditValue,
@@ -136,24 +136,24 @@ export default function AnswerTypeGrid({
           `${params.value} %`,
       },
       {
-        field: 'enabled',
-        headerName: 'Enabled',
-        type: 'boolean',
+        field: "enabled",
+        headerName: "Enabled",
+        type: "boolean",
         width: 75,
         editable: true,
       },
       {
-        field: 'actions',
-        type: 'actions',
+        field: "actions",
+        type: "actions",
         width: 100,
         getActions: (params: { id: GridRowId; row: Row }) => [
           <GridActionsCellItem
             icon={
-              <Tooltip title='Delete'>
+              <Tooltip title="Delete">
                 <DeleteIcon />
               </Tooltip>
             }
-            label='Delete'
+            label="Delete"
             onClick={handleDelete(params.id)}
           />,
         ],
@@ -170,7 +170,7 @@ export default function AnswerTypeGrid({
       processRowUpdate={processRowUpdate}
       hasToolbar
       add={{
-        text: 'ADD ANSWER OPTION',
+        text: "ADD ANSWER OPTION",
         handler: handleAdd,
       }}
     />

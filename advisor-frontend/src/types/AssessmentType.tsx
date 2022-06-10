@@ -1,1 +1,1 @@
-export type AssessmentType = 'INDIVIDUAL' | 'TEAM';
+export type AssessmentType = "INDIVIDUAL" | "TEAM";

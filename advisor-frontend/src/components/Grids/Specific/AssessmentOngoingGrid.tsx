@@ -1,13 +1,13 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { GridColumns, GridRowId } from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
-import { Button } from '@mui/material';
+import { GridColumns, GridRowId } from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
+import { Button } from "@mui/material";
 
-import GenericGrid from '../Generic/GenericGrid';
+import GenericGrid from "../Generic/GenericGrid";
 
-import { UserRole } from '../../../types/UserRole';
-import { AssessmentType } from '../../../types/AssessmentType';
+import { UserRole } from "../../../types/UserRole";
+import { AssessmentType } from "../../../types/AssessmentType";
 
 // Define type for the rows in the grid
 type Row = {
@@ -79,26 +79,26 @@ export default function AssessmentOngoingGrid({
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
-        field: 'createdDate',
-        headerName: 'Created',
-        type: 'dateTime',
+        field: "createdDate",
+        headerName: "Created",
+        type: "dateTime",
         flex: 1,
       },
       {
-        field: 'updatedDate',
-        headerName: 'Updated',
-        type: 'dateTime',
+        field: "updatedDate",
+        headerName: "Updated",
+        type: "dateTime",
         flex: 1,
       },
-      ...(userRole === 'USER' && assessmentType === 'TEAM'
+      ...(userRole === "USER" && assessmentType === "TEAM"
         ? []
         : [
             {
-              field: 'actions',
-              type: 'actions',
+              field: "actions",
+              type: "actions",
               width: 150,
               getActions: (params: { id: GridRowId }) => [
-                <Button variant='contained' onClick={handleVisit(params.id)}>
+                <Button variant="contained" onClick={handleVisit(params.id)}>
                   <strong>Continue</strong>
                 </Button>,
               ],
@@ -115,10 +115,10 @@ export default function AssessmentOngoingGrid({
       columns={columns}
       hasToolbar
       add={
-        userRole === 'USER' && assessmentType === 'TEAM'
+        userRole === "USER" && assessmentType === "TEAM"
           ? undefined
           : {
-              text: 'START NEW EVALUATION',
+              text: "START NEW EVALUATION",
               handler: handleAdd,
             }
       }

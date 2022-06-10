@@ -1,16 +1,16 @@
-import * as React from 'react';
+import * as React from "react";
 
 import {
   GridColumns,
   GridPreProcessEditCellProps,
   GridRowModel,
-} from '@mui/x-data-grid';
-import { Theme } from '@mui/material/styles';
-import { IconButton } from '@mui/material';
-import UpwardIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
-import DownwardIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+} from "@mui/x-data-grid";
+import { Theme } from "@mui/material/styles";
+import { IconButton } from "@mui/material";
+import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
+import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
-import GenericGrid from './GenericGrid';
+import GenericGrid from "./GenericGrid";
 
 type OrderedGridProps = {
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>;
@@ -98,23 +98,23 @@ export default function OrderedGrid({
   const wrappedColumns = React.useMemo<GridColumns<GridRowModel>>(
     () => [
       {
-        field: 'order',
-        headerName: 'Order',
-        headerAlign: 'center',
-        align: 'center',
-        type: 'number',
+        field: "order",
+        headerName: "Order",
+        headerAlign: "center",
+        align: "center",
+        type: "number",
         width: 75,
         editable: true,
         preProcessEditCellProps: preProcessEditOrder,
         renderCell: (params: { row: GridRowModel }) => (
-          <div className='parent'>
-            <div className='child'>
+          <div className="parent">
+            <div className="child">
               <IconButton onClick={handleUpward(params.row)}>
                 <UpwardIcon />
               </IconButton>
             </div>
             <strong>{params.row.order}</strong>
-            <div className='child'>
+            <div className="child">
               <IconButton onClick={handleDownward(params.row)}>
                 <DownwardIcon />
               </IconButton>
