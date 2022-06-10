@@ -2,36 +2,7 @@ import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { Role} from '@prisma/client';
-import { AuthResponse } from './dto/auth-response.dto';
-// import { AuthGuard } from './auth.guard';
-// Random start and update date
-const myStartDate: any = new Date();
-const myEndDate: any = new Date();
-
-const mockUser = {
-  username: 'hearing_refused_musical',
-  password: 'f894a202-2f5b-4a69-89f7-f7f8f28a9368',
-};
-
-const registerDto = {
-  role: Role.ASSESSOR,
-};
-
-const userinfo = {
-  user_id: 1,
-  username: 'discussion_believed_pleasant',
-  role: [Role.ASSESSOR], //, {USER}, "ADMIN"
-  created_at: myStartDate,
-  updated_at: myEndDate,
-  password: '044498e8-6478-4184-b26f-d7b9be6a00d1',
-};
-
-let userAuthenticationLog = new AuthResponse();
-userAuthenticationLog = {
-  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV',
-  user: userinfo,
-};
+import { mockUser, registerDto, userAuthenticationLog } from '../prisma/mock/mockAuth';
 
 const moduleMocker = new ModuleMocker(global);
 
