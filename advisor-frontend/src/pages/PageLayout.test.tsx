@@ -1,4 +1,4 @@
-import { render, cleanup, screen, fireEvent } from "@testing-library/react";
+import { render, cleanup, screen } from "@testing-library/react";
 import PageLayout from "./PageLayout";
 import { user } from "../components/Sidebar/listUsersTypes";
 
