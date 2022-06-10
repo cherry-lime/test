@@ -9,12 +9,12 @@ function UserInterface() {
     <div>
       <h2> User Interface Here </h2>
 
-      <Link to="/user/self_evaluations" state={data}>
+      <Link to="/user/self_evaluations" state={data} data-testid="user-evals">
         {" "}
         Individual Evaluations{" "}
       </Link>
       <br />
-      <Link to="/teams" state={data}>
+      <Link to="/teams" state={data} data-testid="user-teams">
         {" "}
         Teams{" "}
       </Link>

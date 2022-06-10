@@ -21,6 +21,7 @@ function ListOfTemplates() {
           <Link
             to={`/admin/templates/template?templateid=${templateId}`}
             state={data}
+            data-testid={`template-${templateId}`}
           >
             {" "}
             Template with id {templateId}{" "}

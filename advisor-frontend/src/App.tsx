@@ -17,16 +17,19 @@ import UserInterface from "./user/UserInterface";
 function App() {
   return (
     <div className="App">
-      <Link to="/"> Home </Link>
-      <Link to="/user" state="user">
+      <Link data-testid="home" to="/">
+        {" "}
+        Home{" "}
+      </Link>
+      <Link to="/user" state="user" data-testid="user">
         {" "}
         User{" "}
       </Link>
-      <Link to="/assessor" state="assessor">
+      <Link to="/assessor" state="assessor" data-testid="assessor">
         {" "}
         Assessor{" "}
       </Link>
-      <Link to="/admin" state="admin">
+      <Link to="/admin" state="admin" data-testid="admin">
         {" "}
         Admin{" "}
       </Link>

@@ -7,14 +7,14 @@ function AdminInterface() {
   return (
     <div>
       <h2> Admin Interface </h2>
-      <Link to="/admin/individuals" state={data}>
+      <Link to="/admin/individuals" state={data} data-testid="individuals">
         {" "}
         Individuals{" "}
       </Link>
 
       <br />
 
-      <Link to="/admin/templates" state={data}>
+      <Link to="/admin/templates" state={data} data-testid="templates">
         {" "}
         Templates{" "}
       </Link>

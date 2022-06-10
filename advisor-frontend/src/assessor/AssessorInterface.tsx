@@ -8,7 +8,7 @@ function AssessorInterface() {
   return (
     <div>
       <h2> Assessor Interface Here </h2>
-      <Link to="/teams" state={data}>
+      <Link to="/teams" state={data} data-testid="assessor-teams">
         {" "}
         Teams{" "}
       </Link>

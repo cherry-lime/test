@@ -1,6 +1,8 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import { createMemoryHistory } from "history";
+import userEvent from "@testing-library/user-event";
 import App from "./App";
 
 test("renders learn react link", () => {
@@ -11,6 +13,40 @@ test("renders learn react link", () => {
   );
   const linkElement = screen.getByText(/learn react/i);
   expect(linkElement).toBeInTheDocument();
+});
+
+test("app rendering/navigating to user interface", async () => {
+  render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+
+  const button = screen.getByTestId("user");
+  fireEvent.click(button);
+  expect(screen.getByText(/User Interface Here/i)).toBeInTheDocument();
+});
+
+test("app rendering/navigating to admin interface", async () => {
+  render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+  const button = screen.getByTestId("admin");
+  fireEvent.click(button);
+  expect(screen.getByText(/Admin Interface/i)).toBeInTheDocument();
+});
+
+test("app rendering/navigating to assessor interface", async () => {
+  render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+  const button = screen.getByTestId("assessor");
+  fireEvent.click(button);
+  expect(screen.getByText(/assessor Interface here/i)).toBeInTheDocument();
 });
 
 // describe block = test suite

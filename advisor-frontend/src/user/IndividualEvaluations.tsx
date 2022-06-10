@@ -23,6 +23,7 @@ function IndividualEvaluations() {
           <Link
             to={`/user/self_evaluations/evaluation?assessmentid=${assessmentId}`}
             state={data}
+            data-testid={`user-eval-${assessmentId}`}
           >
             {" "}
             Evaluation with id {assessmentId}{" "}
@@ -36,6 +37,7 @@ function IndividualEvaluations() {
           <Link
             to={`/user/self_evaluations/feedback?assessmentid=${feedbackId}`}
             state={data}
+            data-testid={`user-feedback-${feedbackId}`}
           >
             {" "}
             Completed Evaluation with id {feedbackId}{" "}

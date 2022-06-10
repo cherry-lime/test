@@ -20,7 +20,7 @@ function Team() {
         Go Back to List of Teams{" "}
       </Link>
 
-      <h2> A Specific Team with id {teamId} </h2>
+      <h2 data-testid="team-id"> A Specific Team with id {teamId} </h2>
       {data === "assessor" && <p> Editable team info </p>}
 
       {data === "user" && <p> Non-editable team info </p>}
@@ -39,8 +39,9 @@ function Team() {
         <div>
           {/* later to get teamid can use api in evaluation page instead of passing it */}
           <Link
-            to={`/teams/team/evaluation?teamid=${teamId}&${assessmentId}`}
+            to={`/teams/team/evaluation?teamid=${teamId}&assessmentid=${assessmentId}`}
             state={data}
+            data-testid={`team-eval-${assessmentId}`}
           >
             {" "}
             Team Evaluation with id {assessmentId}{" "}
@@ -56,6 +57,7 @@ function Team() {
           <Link
             to={`/teams/team/feedback?teamid=${teamId}&assessmentid=${feedbackId}`}
             state={data}
+            data-testid={`team-feedback-${feedbackId}`}
           >
             {" "}
             Team Feedback with id {feedbackId}{" "}
