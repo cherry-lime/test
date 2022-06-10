@@ -120,7 +120,7 @@ export class TemplateController {
    * @param body Category data
    * @returns Created category
    */
-  @Post(':id/category')
+  @Post(':template_id/category')
   @ApiTags('category')
   @ApiResponse({ description: 'Category', type: CategoryDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
@@ -128,7 +128,7 @@ export class TemplateController {
     description: 'Category with this already exists',
   })
   async createCategory(
-    @Param('id', ParseIntPipe) id: number
+    @Param('template_id', ParseIntPipe) id: number
   ): Promise<CategoryDto> {
     return this.categoryService.create(id);
   }
@@ -138,7 +138,7 @@ export class TemplateController {
    * @param id template_id
    * @returns CategoryResponse[] List of all categories
    */
-  @Get(':id/category')
+  @Get(':template_id/category')
   @ApiTags('category')
   @ApiResponse({
     description: 'Found categories',
@@ -147,7 +147,7 @@ export class TemplateController {
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
   async findAllCategories(
-    @Param('id', ParseIntPipe) id: number
+    @Param('template_id', ParseIntPipe) id: number
   ): Promise<CategoryDto[]> {
     return this.categoryService.findAll(id);
   }
