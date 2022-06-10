@@ -3,11 +3,13 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AuthModule } from './../src/auth/auth.module';
 import { LoginDto } from '../src/auth/dto/login-user.dto';
-import { JwtStrategy } from '../src/auth/jwt.strategy';
+import { LocalStrategy } from '../src/auth/local_strategy';
+// import { JwtStrategy } from '../src/auth/jwt.strategy';
+
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
-  let authToken: JwtStrategy;
+  let authToken: LocalStrategy;
 
   beforeEach(async () => {
     process.env = {

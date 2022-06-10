@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-user.dto';
 import { AuthResponse } from './dto/auth-response.dto';
@@ -14,6 +14,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
+import { Response } from 'express-respond';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -25,13 +26,27 @@ export class AuthController {
    * @param loginDto login information
    * @returns authentication response
    */
+  // @Post('/login')
+  // @ApiResponse({
+  //   description: 'Logged in',
+  //   type: LoginDto,
+  // })
+  // login(@Body() loginDto: LoginDto): Promise<AuthResponse> {
+  //   return this.authService.login(loginDto);
+  // }
+
   @Post('/login')
-  @ApiResponse({
-    description: 'Logged in',
-    type: LoginDto,
-  })
-  login(@Body() loginDto: LoginDto): Promise<AuthResponse> {
-    return this.authService.login(loginDto);
+  // @UseGuards(AuthGuard('local'))
+  async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) : Promise<AuthResponse> {
+    const token = (await this.authService.login(loginDto)).token; //getJwtToken(req.user as User);
+
+    const secretData = {
+      token,
+      refreshToken: '',
+    };
+ 
+    res.cookie('auth-cookie', secretData,{httpOnly:true,});
+    return this.authService.login(loginDto); //{"msg" : "well done"};
   }
 
   /**

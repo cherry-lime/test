@@ -5,7 +5,7 @@ export class LoginDto {
   @ApiProperty()
   username: string;
 
-  @IsUUID()
+  // @IsUUID()
   @ApiProperty()
   password: string;
 }
