@@ -3,6 +3,9 @@ import Header from "../components/Cards/Header";
 import Footer from "../components/Cards/Footer";
 import Sidebar from "../components/Sidebar/Sidebar";
 
+/**
+ * PageProps type is used to pass through components that will dynamically alter the pageLayout.
+ */
 type PageProps = {
   footer?: boolean;
   title: string;
@@ -20,7 +23,8 @@ const defaultProps = {
  * @param children Placing content between <PageLayout> </PageLayout> will be passed as children.
  * @param footer A boolean value that determines if the footer will be rendered in the page layout. Default is false
  * @param title A string value that gives the header a title
- * @param headerColor: A string value that gives the header a specific background. Default is defined in the global theme file.
+ * @param headerColor: An optional string value that gives the header a specific background. Default is defined in the global theme file.
+ * @param sidebarType A Map<string, boolean> type that defines the sidebar items. These are defined under listUserTypes.tsx
  * @returns A body that is styled that fits the webpage design.
  */
 export default function PageLayout({

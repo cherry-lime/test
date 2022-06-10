@@ -3,21 +3,21 @@ import { Box, Paper } from "@mui/material";
 import { useState } from "react";
 import headerImg from "./header_img.svg";
 
-type Message = { name: string; bgcolor?: string };
+// headerProps defines the parameters background color and title used in Header().
+type headerProps = { name: string; bgcolor?: string };
 
 const defaultProps = {
   bgcolor: "secondary.main",
 };
 
 /**
- *
- * @description Header function, which will display a header, with a speific title.
- * @param name used to display the header title.
- * @param bgcolor used to give a specific background color.
+ * Header function, which will display a header, with a speific title and a background color.
+ * @param name String used to display the header title.
+ * @param bgcolor Optional string used to give a specific background color.
  * @returns React header component.
  */
 
-export default function Header({ name, bgcolor }: Message) {
+export default function Header({ name, bgcolor }: headerProps) {
   const [text] = useState(name);
   return (
     <Paper

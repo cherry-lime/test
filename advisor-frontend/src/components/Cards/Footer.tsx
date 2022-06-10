@@ -2,6 +2,10 @@ import Paper from "@mui/material/Paper";
 import { Box, Typography, Link } from "@mui/material";
 import footerImg from "./footer_img.svg";
 
+/**
+ * Copyright function that will render the name, year and a link to the authors.
+ * @returns A line at the bottom of the page that includes the Copyright informations
+ */
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary">
@@ -15,8 +19,7 @@ function Copyright() {
 }
 
 /**
- *
- * @description A function to render a footer at the bottom of the page.ƒ
+ * A function to render a footer at the bottom of the page.ƒ
  * @returns A footer component, which contains the ING logo
  */
 

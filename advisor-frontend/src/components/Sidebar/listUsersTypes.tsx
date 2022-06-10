@@ -1,3 +1,7 @@
+/**
+ * Defines the viewable content of each user type, in the form of Map<string, boolean>
+ */
+
 const user = new Map<string, boolean>([
   ["home", true],
   ["evaluation", true],

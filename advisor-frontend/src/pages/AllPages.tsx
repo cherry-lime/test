@@ -2,14 +2,12 @@ import { Box } from "@mui/material";
 import Room from "./newpage";
 
 /**
- *
- * @description Used to setup routing of all the pages and give an overview of all the different pages in the webpage.
- *
+ * Used to setup routing of all the pages and give an overview of all the different pages in the webpage.
  * @returns All pages that are called within AllPages()
- * @example <Box>
+ * @example {<Box>
  * <page1/>
  * <page2/>
- * </Box>
+ * </Box>}
  */
 export default function AllPages() {
   return (

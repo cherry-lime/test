@@ -14,8 +14,12 @@ import SidebarList from "./listItems";
 
 import INGTheme from "../../Theme";
 
+// Used to define the maximum width of the sidebar.
 const drawerWidth = 220;
 
+/**
+ * Drawer defines the two different styles of the sidebar, when opened and closed.
+ */
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -42,15 +46,24 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
+/**
+ * Defines the props type used in Sidebar that takes in React.ReactNode children and a Map that defines the user-viewability
+ */
 type SidebarProps = {
   children?: React.ReactNode;
   sidebarType: Map<string, boolean>;
 };
-
 const defaultProps = {
   children: null,
 };
 
+/**
+ * Sidebar function that will render the sidebar on the left side, with a flexbox container on the right, where children
+ * can be passed through.
+ * @param children Any children components passed through will be rendered on the right side of the sidebar.
+ * @param sidebarType Uses a Map<string, boolean> format to decide what components of sidebar are rendered.
+ * @returns A sidebar with an empty box on the right, to be filled in with children components.
+ */
 export default function Sidebar({ children, sidebarType }: SidebarProps) {
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
