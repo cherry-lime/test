@@ -32,7 +32,6 @@ class userResponse {
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
   /**
    * [GET] /user/:id
    * @param id user_id

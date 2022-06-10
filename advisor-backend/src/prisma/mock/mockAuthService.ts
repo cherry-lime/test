@@ -8,7 +8,7 @@ let myEndDate: any = new Date();
 export const userArray = [
   {
     username: "zipper_parent_instea",
-    password: "$2b$10$W0IgZUpL5y/Bomuw35U/8.YSkeduG1OCXG5xSYZQ6x8qNwoYYwxxG",
+    password: "d33a741a-e6c6-4757-bb92-11769b13c480",
     user_id: 1,
     role: [Role.USER],
     created_at: myStartDate,
@@ -30,7 +30,7 @@ export const aUser = userArray[0];
 // Mock a User dto when logging in
 export const userDto = {
   username: "zipper_parent_instea",
-  password: "$2b$10$W0IgZUpL5y/Bomuw35U/8.YSkeduG1OCXG5xSYZQ6x8qNwoYYwxxG"
+  password: "d33a741a-e6c6-4757-bb92-11769b13c480"
 };
 
 // Mock a User registration dto
@@ -41,7 +41,7 @@ export const registerDto = {
 // Mock individual user 1
 export const aFullUser1 = {
   username: "zipper_parent_instea",
-  password: "$2b$10$W0IgZUpL5y/Bomuw35U/8.YSkeduG1OCXG5xSYZQ6x8qNwoYYwxxG",
+  password: "d33a741a-e6c6-4757-bb92-11769b13c480",
   user_id: 1,
   role: [Role.USER],
   created_at: myStartDate,
