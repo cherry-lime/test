@@ -29,6 +29,7 @@ const admin = new Map<string, boolean>([
   ["template", true],
 ]);
 
+// Enum object where the different userTypes can be called through. Example: "userType.ADMIN"
 const userTypes = {
   ADMIN: admin,
   USER: user,
