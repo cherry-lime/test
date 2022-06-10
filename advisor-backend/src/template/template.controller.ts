@@ -123,7 +123,7 @@ export class TemplateController {
    * @param body Category data
    * @returns Created category
    */
-  @Post(':id/category')
+  @Post(':template_id/category')
   @ApiTags('category')
   @ApiResponse({ description: 'Category', type: CategoryDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
@@ -131,7 +131,7 @@ export class TemplateController {
     description: 'Category with this already exists',
   })
   async createCategory(
-    @Param('id', ParseIntPipe) id: number
+    @Param('template_id', ParseIntPipe) id: number
   ): Promise<CategoryDto> {
     return this.categoryService.create(id);
   }
@@ -141,7 +141,7 @@ export class TemplateController {
    * @param id template_id
    * @returns CategoryResponse[] List of all categories
    */
-  @Get(':id/category')
+  @Get(':template_id/category')
   @ApiTags('category')
   @ApiResponse({
     description: 'Found categories',
@@ -150,18 +150,18 @@ export class TemplateController {
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
   async findAllCategories(
-    @Param('id', ParseIntPipe) id: number
+    @Param('template_id', ParseIntPipe) id: number
   ): Promise<CategoryDto[]> {
     return this.categoryService.findAll(id);
   }
 
   /**
-   * [POST] /template/:id/maturity - Create new maturity for template
+   * [POST] /template/:template_id/maturity - Create new maturity for template
    * @param id template_id
    * @param body Maturity data
    * @returns Created maturity
    */
-  @Post(':id/maturity')
+  @Post(':template_id/maturity')
   @ApiTags('maturity')
   @ApiResponse({ description: 'Maturity', type: MaturityDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
@@ -169,18 +169,18 @@ export class TemplateController {
     description: 'Maturity with this name already exists',
   })
   async createMaturity(
-    @Param('id', ParseIntPipe) id: number
+    @Param('template_id', ParseIntPipe) id: number
   ): Promise<MaturityDto> {
     return this.maturityService.create(id);
   }
 
   /**
-   * [GET] /template/:id/maturity - Get all maturity for template
+   * [GET] /template/:template_id/maturity - Get all maturity for template
    * @param id template_id
    * @returns MaturityDto[] List of all maturity
    * @throws NotFoundException if template not found
    */
-  @Get(':id/maturity')
+  @Get(':template_id/maturity')
   @ApiTags('maturity')
   @ApiResponse({
     description: 'Found maturities',
@@ -189,7 +189,7 @@ export class TemplateController {
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
   async findAllMaturities(
-    @Param('id', ParseIntPipe) id: number
+    @Param('template_id', ParseIntPipe) id: number
   ): Promise<MaturityDto[]> {
     return this.maturityService.findAll(id);
   }

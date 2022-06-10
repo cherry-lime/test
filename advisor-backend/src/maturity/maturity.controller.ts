@@ -16,21 +16,21 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('maturity')
 export class MaturityController {
   constructor(private readonly maturityService: MaturityService) {}
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  @Get(':maturity_id')
+  findOne(@Param('maturity_id', ParseIntPipe) id: number) {
     return this.maturityService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch(':maturity_id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('maturity_id', ParseIntPipe) id: number,
     @Body() updateMaturityDto: UpdateMaturityDto
   ) {
     return this.maturityService.update(id, updateMaturityDto);
   }
 
-  @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  @Delete(':maturity_id')
+  delete(@Param('maturity_id', ParseIntPipe) id: number) {
     return this.maturityService.delete(id);
   }
 }

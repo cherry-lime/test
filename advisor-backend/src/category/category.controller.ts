@@ -26,30 +26,30 @@ export class CategoryController {
     private readonly categoryService: CategoryService,
     private readonly subareaService: SubareaService
   ) {}
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  @Get(':category_id')
+  findOne(@Param('category_id', ParseIntPipe) id: number) {
     return this.categoryService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch(':category_id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('category_id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto
   ) {
     return this.categoryService.update(id, updateCategoryDto);
   }
 
-  @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  @Delete(':category_id')
+  delete(@Param('category_id', ParseIntPipe) id: number) {
     return this.categoryService.delete(id);
   }
 
   /**
-   * [GET] /category/:id/subarea - Get all subareas
+   * [GET] /category/:subarea_id/subarea - Get all subareas
    * @param id category id
    * @returns subareas
    */
-  @Get(':id/subarea')
+  @Get(':subarea_id/subarea')
   @ApiTags('subarea')
   @ApiResponse({
     description: 'The found subareas',
@@ -57,17 +57,17 @@ export class CategoryController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
-  findAllSubareas(@Param('id', ParseIntPipe) id: number) {
+  findAllSubareas(@Param('subarea_id', ParseIntPipe) id: number) {
     return this.subareaService.findAll(id);
   }
 
   /**
-   * [POST] /category/:id/subarea - Create new subarea
+   * [POST] /category/:subarea_id/subarea - Create new subarea
    * @param id category id
    * @param subareaDto subarea data
    * @returns created subarea
    */
-  @Post(':id/subarea')
+  @Post(':subarea_id/subarea')
   @ApiTags('subarea')
   @ApiResponse({
     description: 'The created subarea',
@@ -75,7 +75,7 @@ export class CategoryController {
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
   @ApiConflictResponse({ description: 'Subarea with this name already exists' })
-  createSubarea(@Param('id', ParseIntPipe) id: number) {
+  createSubarea(@Param('subarea_id', ParseIntPipe) id: number) {
     return this.subareaService.create(id);
   }
 }
