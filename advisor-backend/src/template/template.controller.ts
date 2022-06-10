@@ -59,10 +59,12 @@ export class TemplateController {
    * @param id template_id
    * @returns Template object
    */
-  @Get(':id')
+  @Get(':template_id')
   @ApiResponse({ description: 'Template', type: TemplateDto })
   @ApiNotFoundResponse()
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<TemplateDto> {
+  async findOne(
+    @Param('template_id', ParseIntPipe) id: number
+  ): Promise<TemplateDto> {
     return this.templateService.findOne(id);
   }
 
@@ -72,14 +74,14 @@ export class TemplateController {
    * @param updateTemplateDto Template data
    * @returns Updated template
    */
-  @Patch(':id')
+  @Patch(':template_id')
   @ApiResponse({ description: 'Template', type: TemplateDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
   @ApiConflictResponse({
     description: 'Template with this name and type already exists',
   })
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('template_id', ParseIntPipe) id: number,
     @Body() updateTemplateDto: UpdateTemplateDto
   ): Promise<TemplateDto> {
     return this.templateService.update(id, updateTemplateDto);
@@ -90,10 +92,12 @@ export class TemplateController {
    * @param id template_id
    * @returns Deleted template
    */
-  @Delete(':id')
+  @Delete(':template_id')
   @ApiResponse({ description: 'Deleted template', type: TemplateDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
-  async delete(@Param('id', ParseIntPipe) id: number): Promise<TemplateDto> {
+  async delete(
+    @Param('template_id', ParseIntPipe) id: number
+  ): Promise<TemplateDto> {
     return this.templateService.delete(id);
   }
 
@@ -102,10 +106,12 @@ export class TemplateController {
    * @param id template_id
    * @returns Cloned template
    */
-  @Post(':id/clone')
+  @Post(':template_id/clone')
   @ApiResponse({ description: 'Template', type: TemplateDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
-  async clone(@Param('id', ParseIntPipe) id: number): Promise<TemplateDto> {
+  async clone(
+    @Param('template_id', ParseIntPipe) id: number
+  ): Promise<TemplateDto> {
     return this.templateService.clone(id);
   }
 }
