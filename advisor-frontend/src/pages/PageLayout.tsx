@@ -28,7 +28,7 @@ export default function PageLayout({
   footer,
   title,
   headerColor,
-  sidebarType
+  sidebarType,
 }: PageProps) {
   return (
     <Sidebar sidebarType={sidebarType}>
