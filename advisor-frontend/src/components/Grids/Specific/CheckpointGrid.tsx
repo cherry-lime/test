@@ -199,12 +199,12 @@ export default function CheckpointGrid({
       setRows((prevRows) => {
         const maturityLevel = event.target.value;
 
-        // Change topic of this row
+        // Change maturity level of this row
         const newRows = prevRows.map((prevRow) =>
           prevRow.id === row.id ? { ...prevRow, maturityLevel } : prevRow
         );
 
-        // Update row in database with topic
+        // Update row in database with maturity level
         // TODO
 
         return newRows;

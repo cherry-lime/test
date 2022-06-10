@@ -5,6 +5,7 @@ import MemberGrid from './MemberGrid';
 import AssessmentOngoingGrid from './AssessmentOngoingGrid';
 import AssessmentCompletedGrid from './AssessmentCompletedGrid';
 import RecommendationGrid from './RecommendationGrid';
+import IndividualGrid from './IndividualGrid';
 import TemplateGrid from './TemplateGrid';
 import CategoryGrid from './CategoryGrid';
 import TopicGrid from './TopicGrid';
@@ -99,6 +100,8 @@ export default function AllGrid() {
         userId={userId}
         userRole={userRole}
       />
+      <strong>Individuals</strong>
+      <IndividualGrid theme={theme} />
       <strong>Individual Evaluation Templates</strong>
       <TemplateGrid theme={theme} assessmentType='INDIVIDUAL' />
       <strong>Team Evaluation Templates</strong>
