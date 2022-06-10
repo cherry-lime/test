@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 function TeamFeedback() {

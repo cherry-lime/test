@@ -1,8 +1,5 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import { createMemoryHistory } from "history";
-import userEvent from "@testing-library/user-event";
 import App from "./App";
 
 test("renders learn react link", () => {
