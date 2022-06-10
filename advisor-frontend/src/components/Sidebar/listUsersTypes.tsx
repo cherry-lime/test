@@ -4,7 +4,7 @@ const user = new Map<string, boolean>([
   ["teams", true],
   ["signout", true],
   ["settings", true],
-  ["template", false]
+  ["template", false],
 ]);
 
 const assessor = new Map<string, boolean>([
@@ -13,7 +13,7 @@ const assessor = new Map<string, boolean>([
   ["teams", true],
   ["signout", true],
   ["settings", true],
-  ["template", false]
+  ["template", false],
 ]);
 
 const admin = new Map<string, boolean>([
@@ -22,8 +22,7 @@ const admin = new Map<string, boolean>([
   ["teams", true],
   ["signout", true],
   ["settings", true],
-  ["template", true]
+  ["template", true],
 ]);
 
 export { user, assessor, admin };
-

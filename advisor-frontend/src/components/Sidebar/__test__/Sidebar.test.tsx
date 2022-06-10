@@ -1,19 +1,37 @@
 import { render, cleanup, screen, fireEvent } from "@testing-library/react";
 import Sidebar from "../Sidebar";
+import { user, assessor, admin } from "../listUsersTypes";
 
 afterEach(cleanup);
 
-it("rendering without crash", () => {
-  render(<Sidebar />);
+it("user sidebar rendering without crash", () => {
+  render(<Sidebar sidebarType={user} />);
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Evaluations");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Teams");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Settings");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Sign Out"); // the correct one
+  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Sign Out"); 
+  expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Templates");
   fireEvent.click(screen.getByTestId("DrawerButton"));
+});
+it("assessor sidebar rendering without crash", () => {
+  render(<Sidebar sidebarType={assessor} />);
+  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
+  expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Evaluations");
+  expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Templates");
+  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Teams");
+  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Settings");
+  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Sign Out"); 
+  fireEvent.click(screen.getByTestId("DrawerButton"));
+});
 
-  // expect(container.classList.contains('MuiDrawer-root MuiDrawer-docked css-6d2i2j-MuiDrawer-docked"')).toBe(true)
-
-  // expect(screen.getByTestId("DrawerButton")).toHaveClass("MuiDrawer-root MuiDrawer-docked css-6d2i2j-MuiDrawer-docked");
-  // expect(screen.getByTestId('Sidebar')).toHaveTextContent("ClickButton2") // on purpose created an error
+it("admin sidebar rendering without crash", () => {
+  render(<Sidebar sidebarType={admin} />);
+  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
+  expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Evaluations");
+  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Templates");
+  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Teams");
+  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Settings");
+  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Sign Out"); 
+  fireEvent.click(screen.getByTestId("DrawerButton"));
 });
