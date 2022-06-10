@@ -12,7 +12,7 @@ export default defineConfig({
   plugins: [reactRefresh(), react()],
   test: {
     coverage: {
-      reporter: ["json", "html"]
+      reporter: ["json", "html", "text"]
     },
     
     globals: true,
