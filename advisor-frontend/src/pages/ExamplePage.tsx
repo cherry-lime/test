@@ -6,7 +6,12 @@ import userType from "../components/Sidebar/listUsersTypes";
 // This is a template
 export default function Example() {
   return (
-    <PageLayout title="Home" footer headerColor="#9f9dc4" sidebarType={userType.USER}>
+    <PageLayout
+      title="Home"
+      footer
+      headerColor="#9f9dc4"
+      sidebarType={userType.USER}
+    >
       text
       <img src={footerImage} alt="text" />
       <img src={footerImage} alt="text" />

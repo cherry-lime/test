@@ -2,7 +2,6 @@
  * Defines the viewable content of each user type, in the form of Map<string, boolean>
  */
 
-
 const user = new Map<string, boolean>([
   ["home", true],
   ["evaluation", true],
@@ -33,7 +32,7 @@ const admin = new Map<string, boolean>([
 const userTypes = {
   ADMIN: admin,
   USER: user,
-  ASSESSOR: assessor
-}
+  ASSESSOR: assessor,
+};
 
 export default userTypes;
