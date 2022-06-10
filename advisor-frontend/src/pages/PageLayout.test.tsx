@@ -1,12 +1,12 @@
 import { render, cleanup, screen } from "@testing-library/react";
 import PageLayout from "./PageLayout";
-import { user } from "../components/Sidebar/listUsersTypes";
+import userTypes from "../components/Sidebar/listUsersTypes";
 
 afterEach(cleanup);
 
 it("PageLayout rendering without crash", () => {
   render(
-    <PageLayout title="test" sidebarType={user}>
+    <PageLayout title="test" sidebarType={userTypes.ADMIN}>
       text
     </PageLayout>
   );
