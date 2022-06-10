@@ -93,7 +93,7 @@ export class AssessmentController {
   @Delete(':assessment_id')
   @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('assessment_id', ParseIntPipe) id: number) {
     return this.assessmentService.delete(id);
   }
 
@@ -105,7 +105,7 @@ export class AssessmentController {
   @Post(':assessment_id/complete')
   @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
-  complete(@Param('id', ParseIntPipe) id: number) {
+  complete(@Param('assessment_id', ParseIntPipe) id: number) {
     return this.assessmentService.complete(id);
   }
 }
