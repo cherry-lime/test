@@ -1,10 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { PickType } from '@nestjs/swagger';
+import { Team } from './team.dto';
 
-export class InviteTokenDto {
-  constructor(token: string) {
-    this.invite_token = token;
-  }
-
-  @ApiProperty()
-  invite_token: string;
-}
+/**
+ * DTO for creating a new team
+ */
+export class InviteTokenDto extends PickType(Team, ['invite_token'] as const) {}

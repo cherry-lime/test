@@ -2,8 +2,10 @@ import { Test } from '@nestjs/testing';
 import { TeamsService } from './teams.service';
 import {
   aTeam,
+  aTeamNoMembers,
   aTeamWithAssessment,
   mockCreateTeamBody,
+  aUpdateTeam,
 } from '../prisma/mock/mockTeam';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { PrismaService } from '../prisma/prisma.service';
@@ -14,7 +16,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { aUser1 } from '../prisma/mock/mockUser1';
+import { aUser1 } from '../prisma/mock/mockUser';
 import { InviteTokenDto } from './dto/invite-token.dto';
 
 const moduleMocker = new ModuleMocker(global);
@@ -115,9 +117,27 @@ describe('TeamsService', () => {
       );
     });
 
+    it('Should reject if no members are associated with the team', async () => {
+      jest
+        .spyOn(prisma.team, 'findUnique')
+        .mockResolvedValueOnce(aTeamNoMembers);
+      expect(teamsService.findTeamMembers(1)).rejects.toThrow(
+        NotFoundException
+      );
+    });
+
     it('Should reject with unknown error', async () => {
       jest
         .spyOn(prisma.team, 'findUnique')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      await expect(teamsService.findTeamMembers(1)).rejects.toThrow(
+        InternalServerErrorException
+      );
+    });
+
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.user, 'findMany')
         .mockRejectedValueOnce({ code: 'TEST' });
       await expect(teamsService.findTeamMembers(1)).rejects.toThrow(
         InternalServerErrorException
@@ -147,9 +167,34 @@ describe('TeamsService', () => {
       );
     });
 
+    it('Should reject if team not found', async () => {
+      jest.spyOn(prisma.user, 'findMany').mockResolvedValueOnce([]);
+      expect(teamsService.addTeamMember('invalid_token')).rejects.toThrow(
+        NotFoundException
+      );
+    });
+
     it('Should reject with unknown error', async () => {
       jest
         .spyOn(prisma.team, 'findUnique')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      await expect(teamsService.addTeamMember('test')).rejects.toThrow(
+        InternalServerErrorException
+      );
+    });
+
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.user, 'findMany')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      await expect(teamsService.addTeamMember('test')).rejects.toThrow(
+        InternalServerErrorException
+      );
+    });
+
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.userInTeam, 'create')
         .mockRejectedValueOnce({ code: 'TEST' });
       await expect(teamsService.addTeamMember('test')).rejects.toThrow(
         InternalServerErrorException
@@ -159,9 +204,9 @@ describe('TeamsService', () => {
 
   describe('getInviteToken', () => {
     it('Should return the invite token', async () => {
-      expect(teamsService.getInviteToken(1)).resolves.toStrictEqual(
-        new InviteTokenDto('test_invite_token')
-      );
+      expect(teamsService.getInviteToken(1)).resolves.toStrictEqual({
+        invite_token: 'test_invite_token',
+      } as InviteTokenDto);
     });
 
     it('Should reject if team not found', async () => {
@@ -199,6 +244,38 @@ describe('TeamsService', () => {
         .spyOn(prisma.team, 'findUnique')
         .mockRejectedValueOnce({ code: 'TEST' });
       await expect(teamsService.getAssessments(1)).rejects.toThrow(
+        InternalServerErrorException
+      );
+    });
+  });
+
+  describe('updateTeam', () => {
+    it('Should return the team', async () => {
+      jest.spyOn(prisma.team, 'update').mockResolvedValueOnce(aTeam);
+      expect(teamsService.updateTeam(1, aUpdateTeam)).resolves.toBe(aTeam);
+    });
+
+    it('Should reject if team not found', async () => {
+      jest
+        .spyOn(prisma.team, 'update')
+        .mockRejectedValueOnce({ code: 'P2025' });
+      expect(teamsService.updateTeam(2, aUpdateTeam)).rejects.toThrow(
+        NotFoundException
+      );
+    });
+
+    it('Should reject if team name exists', async () => {
+      jest
+        .spyOn(prisma.team, 'update')
+        .mockRejectedValueOnce({ code: 'P2002' });
+      expect(teamsService.updateTeam(1, aUpdateTeam)).rejects.toThrow(
+        ConflictException
+      );
+    });
+
+    it('Should reject with unknown error', async () => {
+      jest.spyOn(prisma.team, 'update').mockRejectedValueOnce({ code: 'TEST' });
+      await expect(teamsService.updateTeam(1, aUpdateTeam)).rejects.toThrow(
         InternalServerErrorException
       );
     });

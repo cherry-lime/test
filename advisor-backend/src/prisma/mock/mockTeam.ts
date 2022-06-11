@@ -14,6 +14,15 @@ export const aTeam = {
   ],
 };
 
+export const aTeamNoMembers = {
+  team_id: 1,
+  team_name: 'test_team_name',
+  invite_token: 'test_invite_token',
+  team_country: 'test_team_country',
+  team_department: 'test_team_department',
+  UserInTeam: [],
+};
+
 export const mockCreateTeamBody = {
   team_name: 'test_team_name',
   team_country: 'test_team_country',
@@ -33,9 +42,16 @@ export const aTeamWithAssessment = {
   Assessment: [aAssessment],
 };
 
+export const aUpdateTeam = {
+  team_name: 'test_team_name',
+  team_country: 'test_team_country',
+  team_department: 'test_team_department',
+};
+
 export const mockTeam = {
   create: jest.fn().mockResolvedValue(aTeam),
   findUnique: jest.fn().mockResolvedValue(aTeam),
   findOne: jest.fn().mockResolvedValue(aTeam),
   getAssessments: jest.fn().mockResolvedValue([aAssessment]),
+  update: jest.fn().mockResolvedValue(aTeam),
 };

@@ -2,7 +2,11 @@ import { Test } from '@nestjs/testing';
 import { TeamsController } from './teams.controller';
 import { TeamsService } from './teams.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { aTeam, mockCreateTeamBody } from '../prisma/mock/mockTeam';
+import {
+  aTeam,
+  mockCreateTeamBody,
+  aUpdateTeam,
+} from '../prisma/mock/mockTeam';
 import { aTeamMembers } from '../prisma/mock/mockTeamMembers';
 import { aAssessment } from '../prisma/mock/mockAssessment';
 import { InviteTokenDto } from './dto/invite-token.dto';
@@ -24,10 +28,11 @@ describe('TeamsController', () => {
             findUnique: jest.fn().mockResolvedValue(aTeam),
             findTeamMembers: jest.fn().mockResolvedValue(aTeamMembers),
             addTeamMember: jest.fn().mockResolvedValue(aTeamMembers),
-            getInviteToken: jest
-              .fn()
-              .mockResolvedValue(new InviteTokenDto('test_invite_token')),
+            getInviteToken: jest.fn().mockResolvedValue({
+              invite_token: 'test_invite_token',
+            } as InviteTokenDto),
             getAssessments: jest.fn().mockResolvedValue([aAssessment]),
+            updateTeam: jest.fn().mockResolvedValue(aTeam),
           };
         }
         if (typeof token === 'function') {
@@ -74,9 +79,9 @@ describe('TeamsController', () => {
 
   describe('getInviteToken', () => {
     it('Should return the invite token', async () => {
-      expect(teamController.getInviteToken(1)).resolves.toStrictEqual(
-        new InviteTokenDto('test_invite_token')
-      );
+      expect(teamController.getInviteToken(1)).resolves.toStrictEqual({
+        invite_token: 'test_invite_token',
+      } as InviteTokenDto);
     });
   });
 
@@ -85,6 +90,12 @@ describe('TeamsController', () => {
       expect(teamController.getTeamAssessments(1)).resolves.toEqual([
         aAssessment,
       ]);
+    });
+  });
+
+  describe('updateTeam', () => {
+    it('Should return the updateTeamDto', async () => {
+      expect(teamController.updateTeam(1, aUpdateTeam)).resolves.toBe(aTeam);
     });
   });
 });
