@@ -43,12 +43,10 @@ export class UserService {
 
     const myuuid = uuidv4();
 
-    const hashedPassword = await bcrypt.hash(myuuid, 10);
-
     const user = await this.prismaService.user.create({
       data: {
         ...data,
-        password: myuuid,//hashedPassword,
+        password: myuuid,
         username: new_username,
       },
     });

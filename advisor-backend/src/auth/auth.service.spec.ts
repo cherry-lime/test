@@ -10,6 +10,7 @@ import { registerDto, userDto, UserWithoutPassword, userAuthenticationLog, userA
 // import { JwtStrategy } from './jwt.strategy';
 import { CreateUserDto } from './dto/register-user.dto';
 import { LocalStrategy } from './local_strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -63,8 +64,8 @@ describe('AuthService', () => {
       ],
       providers: [
         // UserService,
-        // JwtStrategy,
-        LocalStrategy,
+        JwtStrategy,
+        // LocalStrategy,
         AuthService,
         {
           provide: PrismaService,

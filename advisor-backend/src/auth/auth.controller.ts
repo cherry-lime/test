@@ -15,6 +15,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { Response } from 'express-respond';
+import { JwtStrategy } from './jwt.strategy';
+import { LocalStrategy } from './local_strategy';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -24,20 +26,11 @@ export class AuthController {
   /**
    * [POST] /login
    * @param loginDto login information
-   * @returns authentication response
+   * @returns string message
    */
-  // @Post('/login')
-  // @ApiResponse({
-  //   description: 'Logged in',
-  //   type: LoginDto,
-  // })
-  // login(@Body() loginDto: LoginDto): Promise<AuthResponse> {
-  //   return this.authService.login(loginDto);
-  // }
-
   @Post('/login')
-  // @UseGuards(AuthGuard('local'))
-  async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) : Promise<AuthResponse> {
+  @UseGuards(AuthGuard('local'))
+  async login(@Body() loginDto: LoginDto, @Req() req, @Res({ passthrough: true }) res: Response) { // : Promise<AuthResponse> 
     const token = (await this.authService.login(loginDto)).token; //getJwtToken(req.user as User);
 
     const secretData = {
@@ -46,7 +39,7 @@ export class AuthController {
     };
  
     res.cookie('auth-cookie', secretData,{httpOnly:true,});
-    return this.authService.login(loginDto); //{"msg" : "well done"};
+    return {"msg" : "login successful"}; // this.authService.login(loginDto); 
   }
 
   /**
