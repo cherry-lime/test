@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UseGuards, Req, Res } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-user.dto';
 import { AuthResponse } from './dto/auth-response.dto';
@@ -30,7 +30,7 @@ export class AuthController {
    */
   @Post('/login')
   @UseGuards(AuthGuard('local'))
-  async login(@Body() loginDto: LoginDto, @Req() req, @Res({ passthrough: true }) res: Response) { // : Promise<AuthResponse> 
+  async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response) { // : Promise<AuthResponse> 
     const token = (await this.authService.login(loginDto)).token; //getJwtToken(req.user as User);
 
     const secretData = {

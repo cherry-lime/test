@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './../auth/dto/register-user.dto';
@@ -31,16 +32,6 @@ export class UserService {
     const randomWords = require('random-words');
     const new_username = randomWords({ min: 2, max: 3, join: '_' });
 
-    const existing = await this.prismaService.user.findUnique({
-      where: {
-        username: new_username,
-      },
-    });
-
-    if (existing) {
-      throw new ConflictException('username already exists');
-    }
-
     const myuuid = uuidv4();
     const hashedPassword = await bcrypt.hash(myuuid,10);
 
@@ -50,7 +41,14 @@ export class UserService {
         password: hashedPassword,
         username: new_username,
       },
-    });
+    }).catch((error) => {
+      if (error.code === 'P2002') {
+        // Throw error if team name already exsits
+        throw new ConflictException('Team name already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    });;
 
     var userinfos : User = {...user}
     userinfos.password = myuuid;

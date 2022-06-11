@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  InternalServerErrorException
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login-user.dto';
@@ -31,7 +32,10 @@ export class AuthService {
 
     const user = await this.prismaService.user.findUnique({
       where: { username },
-    });
+    })
+    .catch(() => {
+      throw new InternalServerErrorException();
+    });;
 
     if (!user) {
       throw new NotFoundException('user not found');

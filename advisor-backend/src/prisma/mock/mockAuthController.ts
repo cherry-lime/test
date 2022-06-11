@@ -1,4 +1,5 @@
 import { Role } from '@prisma/client';
+import { Res } from '@nestjs/common';
 /*
   For auth.controller
 */
