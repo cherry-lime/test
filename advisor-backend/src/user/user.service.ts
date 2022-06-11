@@ -8,6 +8,7 @@ import { CreateUserDto } from './../auth/dto/register-user.dto';
 import { User } from '../../node_modules/.prisma/client';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { LoginDto } from 'src/auth/dto/login-user.dto';
 
 @Injectable()
 export class UserService {
@@ -48,12 +49,16 @@ export class UserService {
     const user = await this.prismaService.user.create({
       data: {
         ...data,
-        password: myuuid,//hashedPassword,
+        password: hashedPassword,
         username: new_username,
       },
     });
 
+    var userinfos : User = {...user}
+    userinfos.password = myuuid;
+
+
     //delete user.password_hash;
-    return user;
+    return userinfos;
   }
 }

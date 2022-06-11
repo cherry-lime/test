@@ -35,21 +35,15 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException('user not found');
     }
-    const salt = 10;
-    const hash = await bcrypt.hash(password, salt);
 
     const validatePassword = await bcrypt.compare(
+      password,
       user.password,
-      hash
     );
 
     if (!validatePassword) {
       throw new UnauthorizedException('invalid password');
     }
-
-    // if (password_hash != user.password_hash) {
-    //   throw new UnauthorizedException('invalid password');
-    // }
 
     return {
       token: this.jwtService.sign({
