@@ -5,8 +5,12 @@ import { Test } from '@nestjs/testing';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
+// import { JwtStrategy } from './jwt.strategy';
 import { registerDto, userDto, UserWithoutPassword, userAuthenticationLog, userAuthenticationReg, mockPrisma} from '../prisma/mock/mockAuthService'
+// import { JwtStrategy } from './jwt.strategy';
+import { CreateUserDto } from './dto/register-user.dto';
+import { LocalStrategy } from './local_strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -61,6 +65,7 @@ describe('AuthService', () => {
       providers: [
         // UserService,
         JwtStrategy,
+        // LocalStrategy,
         AuthService,
         {
           provide: PrismaService,

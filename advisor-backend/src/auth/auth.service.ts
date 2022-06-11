@@ -10,6 +10,7 @@ import { AuthResponse } from './dto/auth-response.dto';
 import { CreateUserDto } from './dto/register-user.dto';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -46,12 +47,33 @@ export class AuthService {
     }
 
     return {
-      token: this.jwtService.sign({
+      // token,
+      token: await this.jwtService.signAsync({
         username,
       }),
       user,
     };
   }
+  
+  // /**
+  //  * Generate the jwt token with some user's data as payload to it.
+  //  * @param createUserDto information for creating a user
+  //  * @returns a generated token and user information 
+  //  */
+  // public async getJwtToken(user: User): Promise<AuthResponse>{
+  //   const payload = {
+  //    ...user
+  //   }
+  //   return {
+  //     // token,
+  //     token: this.jwtService.sign({
+  //       username,
+  //     }),
+  //     user,
+  //   };;
+  // }
+
+
   /**
    * Create a user
    * @param createUserDto information for creating a user
