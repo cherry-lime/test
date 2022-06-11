@@ -5,18 +5,17 @@ import { Test } from '@nestjs/testing';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-// import { JwtStrategy } from './jwt.strategy';
 import { registerDto, userDto, UserWithoutPassword, userAuthenticationLog, userAuthenticationReg, mockPrisma} from '../prisma/mock/mockAuthService'
-// import { JwtStrategy } from './jwt.strategy';
-import { CreateUserDto } from './dto/register-user.dto';
-import { LocalStrategy } from './local_strategy';
 import { JwtStrategy } from './jwt.strategy';
+import {
+  NotFoundException,
+} from '@nestjs/common';
 
 const moduleMocker = new ModuleMocker(global);
 
 describe('AuthService', () => {
   let authService: AuthService;
-
+  let prisma: PrismaService;
   // ---------------- Working when using the local database (or azure) ----------------
   // beforeEach(async () => {
   //   authService = new AuthService(
@@ -89,6 +88,7 @@ describe('AuthService', () => {
     })    
     .compile();
     authService = module.get<AuthService>(AuthService);
+    prisma = module.get<PrismaService>(PrismaService);
   });
 
   it('Authentication should be defined', () => {
@@ -109,8 +109,8 @@ describe('AuthService', () => {
         typeof authService.register(registerDto)
       )
       .toEqual(typeof userAuthenticationReg);
-    })
-  })
+    });
+  });
 
   
   describe('When logging in', () => {
@@ -119,6 +119,11 @@ describe('AuthService', () => {
       expect(
         typeof authService.login(userDto)
       ).toEqual(typeof userAuthenticationLog)
+    });
+    
+    it('should reject if username is not found', async() => {
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
+      expect(authService.login(userDto)).rejects.toThrowError(NotFoundException);
     })
     // it('should return an AuthResponse type', () => {
     //   // const userId = 1;

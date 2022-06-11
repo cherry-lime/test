@@ -43,8 +43,8 @@ export class UserService {
       },
     }).catch((error) => {
       if (error.code === 'P2002') {
-        // Throw error if team name already exsits
-        throw new ConflictException('Team name already exists');
+        // Throw error if username already exsits
+        throw new ConflictException('Username already exists');
       } else {
         throw new InternalServerErrorException();
       }

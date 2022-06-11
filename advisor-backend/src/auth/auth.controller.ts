@@ -15,8 +15,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { Response } from 'express-respond';
-import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './local_strategy';
 
 @Controller('auth')
 @ApiTags('auth')
