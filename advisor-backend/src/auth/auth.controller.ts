@@ -36,7 +36,7 @@ export class AuthController {
       refreshToken: '',
     };
  
-    res.cookie('auth-cookie', secretData,{httpOnly:true,});
+    res.cookie('loginAuth-cookie', secretData,{httpOnly:true,});
     return {"msg" : "login successful"}; // this.authService.login(loginDto); 
   }
 
@@ -50,8 +50,19 @@ export class AuthController {
     description: 'Registered',
     type: CreateUserDto,
   })
-  register(@Body() createUserDto: CreateUserDto): Promise<AuthResponse> {
-    return this.authService.register(createUserDto);
+  async register(@Body() createUserDto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+    let register = (await this.authService.register(createUserDto)); //getJwtToken(req.user as User);
+
+    const token = register.token;
+    const user = register.user;
+
+    const secretData = {
+      token,
+      refreshToken: '',
+    };
+ 
+    res.cookie('registration-cookie', secretData,{httpOnly:true,});
+    return {"username": user.username, "password": user.password};
   }
 
   /**

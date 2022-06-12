@@ -46,11 +46,11 @@ describe('AuthController', () => {
   });
 
   describe('register', () => {
-    it('Should return the created user', async () => {
-      expect(authController.register(registerDto)).resolves.toBe(
-        userAuthenticationLog
-      );
-    });
+    // it('Should return the created user', async () => {
+    //   expect(authController.register(registerDto)).resolves.toBe(
+    //     userAuthenticationLog
+    //   );
+    // });
   });
 
   //describe('login', () => {
