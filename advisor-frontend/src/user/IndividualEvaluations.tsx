@@ -18,11 +18,10 @@ function IndividualEvaluations() {
       <h3>List of evaluations</h3>
 
       {assessmentIds.map((assessmentId) => (
-        <div>
+        <div key={`se-${assessmentId}`}>
           <Link
             to={`/user/self_evaluations/${assessmentId}`}
             state={data}
-            key={`se-${assessmentId}`}
             data-testid={`user-eval-${assessmentId}`}
           >
             {" "}
@@ -33,11 +32,10 @@ function IndividualEvaluations() {
       ))}
 
       {feedbackIds.map((feedbackId) => (
-        <div>
+        <div key={`f-${feedbackId}`}>
           <Link
             to={`/user/self_evaluations/feedback/${feedbackId}`}
             state={data}
-            key={`f-${feedbackId}`}
             data-testid={`user-feedback-${feedbackId}`}
           >
             {" "}

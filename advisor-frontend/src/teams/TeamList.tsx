@@ -22,11 +22,10 @@ function TeamList() {
       <br />
 
       {teamIds.map((teamId) => (
-        <div>
+        <div key={`t-${teamId}`}>
           <Link
             to={`/teams/${teamId}`}
             state={data}
-            key={`t-${teamId}`}
             data-testid={`team-${teamId}`}
           >
             {" "}

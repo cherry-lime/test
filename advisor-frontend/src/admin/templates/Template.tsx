@@ -1,10 +1,9 @@
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 function Template() {
   const location = useLocation();
   const data = location.state;
-  const [searchParams, setSearchParams] = useSearchParams();
-  const templateId = searchParams.get("templateid");
+  const { templateId } = useParams();
 
   return (
     <div>

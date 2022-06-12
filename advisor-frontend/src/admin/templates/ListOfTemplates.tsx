@@ -16,9 +16,9 @@ function ListOfTemplates() {
       <h2> List of Templates</h2>
 
       {templateIds.map((templateId) => (
-        <div>
+        <div key={`templ-${templateId}`}>
           <Link
-            to={`/admin/templates/template?templateid=${templateId}`}
+            to={`/admin/templates/${templateId}`}
             state={data}
             data-testid={`template-${templateId}`}
           >

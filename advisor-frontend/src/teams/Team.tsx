@@ -34,12 +34,10 @@ function Team() {
       <h3>Evaluations in progress</h3>
 
       {assessmentIds.map((assessmentId) => (
-        <div>
-          {/* later to get teamid can use api in evaluation page instead of passing it */}
+        <div key={`t-${teamId}-a-${assessmentId}`}>
           <Link
             to={`/teams/${teamId}/${assessmentId}`}
             state={data}
-            key={`t-${teamId}-a-${assessmentId}`}
             data-testid={`team-eval-${assessmentId}`}
           >
             {" "}
@@ -52,11 +50,10 @@ function Team() {
       <h3>Completed evaluations</h3>
 
       {feedbackIds.map((feedbackId) => (
-        <div>
+        <div key={`t-${teamId}-f-${feedbackId}`}>
           <Link
             to={`/teams/${teamId}/feedback/${feedbackId}`}
             state={data}
-            key={`t-${teamId}-f-${feedbackId}`}
             data-testid={`team-feedback-${feedbackId}`}
           >
             {" "}
