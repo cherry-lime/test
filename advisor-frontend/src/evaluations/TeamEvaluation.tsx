@@ -1,16 +1,19 @@
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 
 function TeamEvaluation() {
   const location = useLocation();
   const data = location.state;
-  const [searchParams, setSearchParams] = useSearchParams();
-  const assessmentId = searchParams.get("assessmentid");
-  const teamId = searchParams.get("teamid");
+  const { assessmentId, teamId } = useParams();
 
   return (
     <div>
       <p> {data} view </p>
-      <Link to={`/teams/team?teamid=${teamId}`} state={data}>
+      <Link to={`/teams/${teamId}`} state={data}>
         {" "}
         Go Back to Team{" "}
       </Link>

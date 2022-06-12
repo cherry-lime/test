@@ -20,8 +20,9 @@ function IndividualEvaluations() {
       {assessmentIds.map((assessmentId) => (
         <div>
           <Link
-            to={`/user/self_evaluations/evaluation?assessmentid=${assessmentId}`}
+            to={`/user/self_evaluations/${assessmentId}`}
             state={data}
+            key={`se-${assessmentId}`}
             data-testid={`user-eval-${assessmentId}`}
           >
             {" "}
@@ -34,8 +35,9 @@ function IndividualEvaluations() {
       {feedbackIds.map((feedbackId) => (
         <div>
           <Link
-            to={`/user/self_evaluations/feedback?assessmentid=${feedbackId}`}
+            to={`/user/self_evaluations/feedback/${feedbackId}`}
             state={data}
+            key={`f-${feedbackId}`}
             data-testid={`user-feedback-${feedbackId}`}
           >
             {" "}

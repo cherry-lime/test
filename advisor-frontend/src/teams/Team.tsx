@@ -1,12 +1,11 @@
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import Button from "../components/Button/Button";
 
 function Team() {
   const location = useLocation();
   const data = location.state;
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const teamId = searchParams.get("teamid");
+  const { teamId } = useParams();
 
   const assessmentIds = [234, 56, 76];
   const feedbackIds = [123, 555, 23];
@@ -38,8 +37,9 @@ function Team() {
         <div>
           {/* later to get teamid can use api in evaluation page instead of passing it */}
           <Link
-            to={`/teams/team/evaluation?teamid=${teamId}&assessmentid=${assessmentId}`}
+            to={`/teams/${teamId}/${assessmentId}`}
             state={data}
+            key={`t-${teamId}-a-${assessmentId}`}
             data-testid={`team-eval-${assessmentId}`}
           >
             {" "}
@@ -54,8 +54,9 @@ function Team() {
       {feedbackIds.map((feedbackId) => (
         <div>
           <Link
-            to={`/teams/team/feedback?teamid=${teamId}&assessmentid=${feedbackId}`}
+            to={`/teams/${teamId}/feedback/${feedbackId}`}
             state={data}
+            key={`t-${teamId}-f-${feedbackId}`}
             data-testid={`team-feedback-${feedbackId}`}
           >
             {" "}

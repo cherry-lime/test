@@ -24,8 +24,9 @@ function TeamList() {
       {teamIds.map((teamId) => (
         <div>
           <Link
-            to={`/teams/team?teamid=${teamId}`}
+            to={`/teams/${teamId}`}
             state={data}
+            key={`t-${teamId}`}
             data-testid={`team-${teamId}`}
           >
             {" "}
