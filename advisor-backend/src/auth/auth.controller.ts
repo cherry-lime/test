@@ -1,7 +1,6 @@
 import { Controller, Post, Body, Get, UseGuards, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login-user.dto';
-import { AuthResponse } from './dto/auth-response.dto';
 import AuthUser from '../common/decorators/auth-user.decorator';
 import { User } from '.prisma/client';
 import { AuthGuard } from '@nestjs/passport';
@@ -14,7 +13,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
-import { Response } from 'express-respond';
+import { Response } from 'express';
 
 @Controller('auth')
 @ApiTags('auth')

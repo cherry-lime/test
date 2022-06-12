@@ -7,7 +7,7 @@ import { JwtStrategy } from '../src/auth/jwt.strategy';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
-  let authToken: JwtStrategy;
+  // let authToken: JwtStrategy;
 
   beforeEach(async () => {
     process.env = {
