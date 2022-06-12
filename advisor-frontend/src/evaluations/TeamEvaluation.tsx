@@ -1,9 +1,4 @@
-import {
-  Link,
-  useLocation,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 function TeamEvaluation() {
   const location = useLocation();
