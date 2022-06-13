@@ -17,6 +17,16 @@ import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
 import GenericGrid from "../Generic/GenericGrid";
+import {
+  handleAddDecorator,
+  handleColorDecorator,
+  handleDeleteDecorator,
+  handleDuplicateDecorator,
+  handleMoveRows,
+  preProcessEditOrderDecorator,
+  processRowUpdateDecorator,
+  updateOrderRows,
+} from "../decorators";
 
 // Define type for the rows in the grid
 type Row = {
@@ -31,10 +41,10 @@ type Row = {
 const generateId = () => Date.now();
 
 // Get row object with default values
-const getDefaultRow = (prevRows: Row[]) => {
+const getDefaultRow = (rows: Row[]) => {
   const defaultRow = {
     id: generateId(),
-    order: prevRows.length,
+    order: rows.length,
     name: "Name...",
     color: "#fff",
     enabled: false,
@@ -57,71 +67,28 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     setRows(() => []);
   }, []);
 
-  // Move row to index
-  const moveRow = React.useCallback((row: Row, index: number) => {
-    // Reorder rows state
-    setRows((prevRows) => {
-      if (index < 0 || index >= prevRows.length) {
-        return prevRows;
-      }
-
-      // Remove row from previous rows
-      const newRows = prevRows.filter((prevRow) => prevRow.id !== row.id);
-
-      // Insert row at index
-      newRows.splice(index, 0, row);
-
-      return newRows;
-    });
-  }, []);
-
-  // Update 'Order' column based on index
-  const updateOrder = React.useCallback(() => {
-    setRows((prevRows) => {
-      const newRows = prevRows.map((prevRow, index) => ({
-        ...prevRow,
-        order: index,
-      }));
-
-      return newRows;
-    });
-  }, []);
-
   // Called when the 'Order' column is edited
   const preProcessEditOrder = React.useCallback(
-    (params: GridPreProcessEditCellProps) => {
-      const { value } = params.props;
-
-      // If order is below 0, above row length, or null: reject
-      const hasError = value < 0 || value >= rows.length || value === null;
-
-      return { ...params.props, error: hasError };
-    },
+    (params: GridPreProcessEditCellProps) =>
+      preProcessEditOrderDecorator(rows, params),
     [rows]
   );
 
   // Called when a row is edited
   const processRowUpdate = React.useCallback(
     (newRow: GridRowModel, oldRow: GridRowModel) => {
-      // If row has not changed, return old row
-      if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
-        return oldRow;
-      }
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleRowAPI = () => {};
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleOrderAPI = () => {};
 
-      // If the 'Order' value has changed, move row and update order
-      if (newRow.order !== oldRow.order) {
-        moveRow(newRow, newRow.order);
-        updateOrder();
-      }
-
-      // Update the database with row changes, ask for validation
-      // TODO
-
-      setRows((prevRows) =>
-        prevRows.map((prevRow) => (prevRow.id === newRow.id ? newRow : prevRow))
+      return processRowUpdateDecorator(
+        handleRowAPI,
+        setRows,
+        newRow,
+        oldRow,
+        handleOrderAPI
       );
-
-      return newRow;
     },
     []
   );
@@ -129,9 +96,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Upward" action is pressed
   const handleUpward = React.useCallback(
     (row: Row) => () => {
-      const { order } = row;
-      moveRow(row, order - 1);
-      updateOrder();
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleAPI = () => {};
+
+      handleMoveRows(handleAPI, setRows, row, row.order - 1);
     },
     []
   );
@@ -139,87 +107,82 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownward = React.useCallback(
     (row: Row) => () => {
-      const { order } = row;
-      moveRow(row, order + 1);
-      updateOrder();
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleAPI = () => {};
+
+      handleMoveRows(handleAPI, setRows, row, row.order + 1);
     },
     []
   );
 
   // Called when color picker registers a complete change
-  const handleColorChange = React.useCallback(
-    (color: ColorResult, row: Row) => {
-      setRows((prevRows) => {
-        // Change color of this row
-        const newRows = prevRows.map((prevRow) =>
-          prevRow.id === row.id ? { ...prevRow, color: color.hex } : prevRow
-        );
+  const handleColor = React.useCallback((color: ColorResult, row: Row) => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const handleAPI = () => {};
 
-        // Update row in database with color
-        // TODO
-
-        return newRows;
-      });
-    },
-    []
-  );
+    handleColorDecorator(handleAPI, setRows, row, color);
+  }, []);
 
   // Called when the "Visit" action is pressed
   const handleVisit = React.useCallback(
     (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
+      // TODO Replace this by routing
       window.location.href = `http://google.com/search?q=${rowId}`;
     },
     []
   );
 
-  // Called when the "Delete" action is pressed in the action menu
+  // Called when the "Delete" action is pressed in the menu
   const handleDelete = React.useCallback(
     (rowId: GridRowId) => () => {
-      // Use setTimeout to deal with delay
-      setTimeout(() => {
-        // Filter row with rowId from state
-        setRows((prevRows) => prevRows.filter((row) => row.id !== rowId));
-        updateOrder();
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleAPI = () => {};
 
-        // Delete row with rowId from database
-        // TODO
-      });
+      handleDeleteDecorator(handleAPI, setRows, rowId);
+      updateOrderRows(setRows);
     },
     []
   );
 
-  // Called when the "Duplicate" action is pressed in the action menu
+  // Called when the "Duplicate" action is pressed in the menu
   const handleDuplicate = React.useCallback(
-    (row: Row) => () => {
-      setRows((prevRows) => {
-        // Create new row with duplicated content and generated id
-        const newRow = { ...row, id: generateId(), order: prevRows.length };
+    (row: GridRowModel) => () => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleAPI = () => {};
 
-        // Create newRow in database
-        // TODO
-
-        return [...prevRows, newRow];
-      });
+      handleDuplicateDecorator(handleAPI, setRows, row);
     },
     []
   );
 
-  // Called when "Add" button is pressed below the grid
+  // Called when the "Add" button is pressed below the grid
   const handleAdd = React.useCallback(() => {
-    setRows((prevRows) => {
-      // Create new row with default content and generated id
-      const newRow = { ...getDefaultRow(prevRows), id: generateId() };
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const handleAPI = () => {};
 
-      // Create newRow in database
-      // TODO
-
-      return [...prevRows, newRow].sort((x, y) => (x.order > y.order ? 1 : -1));
-    });
-  }, []);
+    handleAddDecorator(handleAPI, setRows, getDefaultRow(rows));
+  }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
+      {
+        field: "",
+        width: 50,
+        renderCell: (params: { row: Row }) => (
+          <div className="parent">
+            <div className="child">
+              <IconButton onClick={handleUpward(params.row)}>
+                <UpwardIcon />
+              </IconButton>
+            </div>
+            <div className="child">
+              <IconButton onClick={handleDownward(params.row)}>
+                <DownwardIcon />
+              </IconButton>
+            </div>
+          </div>
+        ),
+      },
       {
         field: "order",
         headerName: "Order",
@@ -229,21 +192,6 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         width: 75,
         editable: true,
         preProcessEditCellProps: preProcessEditOrder,
-        renderCell: (params: { row: Row }) => (
-          <div className="parent">
-            <div className="child">
-              <IconButton onClick={handleUpward(params.row)}>
-                <UpwardIcon />
-              </IconButton>
-            </div>
-            <strong>{params.row.order}</strong>
-            <div className="child">
-              <IconButton onClick={handleDownward(params.row)}>
-                <DownwardIcon />
-              </IconButton>
-            </div>
-          </div>
-        ),
       },
       {
         field: "name",
@@ -264,7 +212,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
             triangle="hide"
             color={params.row.color}
             onChangeComplete={(color: ColorResult) =>
-              handleColorChange(color, params.row)
+              handleColor(color, params.row)
             }
             styles={{
               default: {
@@ -327,7 +275,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       preProcessEditOrder,
       handleUpward,
       handleDownward,
-      handleColorChange,
+      handleColor,
       handleVisit,
       handleDuplicate,
       handleDelete,
