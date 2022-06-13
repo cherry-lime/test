@@ -48,7 +48,11 @@ test("app rendering/navigating to assessor interface", async () => {
 
 describe("test suite of test cases", () => {
   test("testcase1", () => {
-    render(<App />);
+    render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
     // expect(to be tested function or component).toBe(expected result of the component);
     // example:
     // test('1 represents a true value', () => {
