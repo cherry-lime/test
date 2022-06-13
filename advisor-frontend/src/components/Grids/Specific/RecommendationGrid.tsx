@@ -17,6 +17,11 @@ import GenericGrid from "../Generic/GenericGrid";
 
 import { UserRole } from "../../../types/UserRole";
 import { AssessmentType } from "../../../types/AssessmentType";
+import {
+  handleMoveRows,
+  preProcessEditOrderDecorator,
+  processRowUpdateDecorator,
+} from "../decorators";
 
 // Define type for the rows in the grid
 type Row = {
@@ -64,71 +69,28 @@ export default function RecommendationGrid({
     // setRows(() => []);
   }, []);
 
-  // Move row to index
-  const moveRow = React.useCallback((row: Row, index: number) => {
-    // Reorder rows state
-    setRows((prevRows) => {
-      if (index < 0 || index >= prevRows.length) {
-        return prevRows;
-      }
-
-      // Remove row from previous rows
-      const newRows = prevRows.filter((prevRow) => prevRow.id !== row.id);
-
-      // Insert row at index
-      newRows.splice(index, 0, row);
-
-      return newRows;
-    });
-  }, []);
-
-  // Update 'Order' column based on index
-  const updateOrder = React.useCallback(() => {
-    setRows((prevRows) => {
-      const newRows = prevRows.map((prevRow, index) => ({
-        ...prevRow,
-        order: index,
-      }));
-
-      return newRows;
-    });
-  }, []);
-
   // Called when the 'Order' column is edited
   const preProcessEditOrder = React.useCallback(
-    (params: GridPreProcessEditCellProps) => {
-      const { value } = params.props;
-
-      // If order is below 0, above row length, or null: reject
-      const hasError = value < 0 || value >= rows.length || value === null;
-
-      return { ...params.props, error: hasError };
-    },
+    (params: GridPreProcessEditCellProps) =>
+      preProcessEditOrderDecorator(rows, params),
     [rows]
   );
 
   // Called when a row is edited
   const processRowUpdate = React.useCallback(
     (newRow: GridRowModel, oldRow: GridRowModel) => {
-      // If row has not changed, return old row
-      if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
-        return oldRow;
-      }
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleRowAPI = () => {};
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleOrderAPI = () => {};
 
-      // If the 'Order' value has changed, move row and update order
-      if (newRow.order !== oldRow.order) {
-        moveRow(newRow, newRow.order);
-        updateOrder();
-      }
-
-      // Update the database with row changes, ask for validation
-      // TODO
-
-      setRows((prevRows) =>
-        prevRows.map((prevRow) => (prevRow.id === newRow.id ? newRow : prevRow))
+      return processRowUpdateDecorator(
+        handleRowAPI,
+        setRows,
+        newRow,
+        oldRow,
+        handleOrderAPI
       );
-
-      return newRow;
     },
     []
   );
@@ -136,9 +98,10 @@ export default function RecommendationGrid({
   // Called when the "Upward" action is pressed
   const handleUpward = React.useCallback(
     (row: Row) => () => {
-      const { order } = row;
-      moveRow(row, order - 1);
-      updateOrder();
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleAPI = () => {};
+
+      handleMoveRows(handleAPI, setRows, row, row.order - 1);
     },
     []
   );
@@ -146,15 +109,17 @@ export default function RecommendationGrid({
   // Called when the "Downward" action is pressed
   const handleDownward = React.useCallback(
     (row: Row) => () => {
-      const { order } = row;
-      moveRow(row, order + 1);
-      updateOrder();
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleAPI = () => {};
+
+      handleMoveRows(handleAPI, setRows, row, row.order + 1);
     },
     []
   );
 
   // Called when "Revert To Default" action is pressed
   const handleRevertToDefault = React.useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (id: GridRowId) => () => {
       setRows(
         (prevRows) =>
@@ -169,6 +134,31 @@ export default function RecommendationGrid({
 
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
+      ...(userRole === "ASSESSOR" && assessmentType === "TEAM"
+        ? [
+            {
+              field: "",
+              width: 50,
+              renderCell: (params: { row: Row }) =>
+                userRole === "ASSESSOR" && assessmentType === "TEAM" ? (
+                  <div className="parent">
+                    <div className="child">
+                      <IconButton onClick={handleUpward(params.row)}>
+                        <UpwardIcon />
+                      </IconButton>
+                    </div>
+                    <div className="child">
+                      <IconButton onClick={handleDownward(params.row)}>
+                        <DownwardIcon />
+                      </IconButton>
+                    </div>
+                  </div>
+                ) : (
+                  <strong>{params.row.order}</strong>
+                ),
+            },
+          ]
+        : []),
       {
         field: "order",
         headerName: "Priority",
@@ -178,24 +168,6 @@ export default function RecommendationGrid({
         width: 75,
         editable: userRole === "ASSESSOR" && assessmentType === "TEAM",
         preProcessEditCellProps: preProcessEditOrder,
-        renderCell: (params: { row: Row }) =>
-          userRole === "ASSESSOR" && assessmentType === "TEAM" ? (
-            <div className="parent">
-              <div className="child">
-                <IconButton onClick={handleUpward(params.row)}>
-                  <UpwardIcon />
-                </IconButton>
-              </div>
-              <strong>{params.row.order}</strong>
-              <div className="child">
-                <IconButton onClick={handleDownward(params.row)}>
-                  <DownwardIcon />
-                </IconButton>
-              </div>
-            </div>
-          ) : (
-            <strong>{params.row.order}</strong>
-          ),
       },
       {
         field: "description",
@@ -232,7 +204,7 @@ export default function RecommendationGrid({
           ]
         : []),
     ],
-    [preProcessEditOrder, handleUpward, handleDownward]
+    [preProcessEditOrder, handleUpward, handleDownward, handleRevertToDefault]
   );
 
   return (
