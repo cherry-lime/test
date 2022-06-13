@@ -12,4 +12,5 @@ export const mockMaturity = {
   update: jest.fn().mockResolvedValue(aMaturity),
   delete: jest.fn().mockResolvedValue(aMaturity),
   count: jest.fn().mockResolvedValue(1),
+  updateMany: jest.fn().mockResolvedValue([aMaturity]),
 };
