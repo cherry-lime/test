@@ -3,16 +3,10 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import AssessmentIcon from "@mui/icons-material/Assessment";
+
 import Divider from "@mui/material/Divider";
 import { createTheme } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
-import logo from "./ING3.png";
-
-//  passing parameter of the bodytext of the home page card
-//  body text might be empty string
-//  card title is set to "Individual Evaluation" which can be adjusted
-type Message = { bodytext3: string };
 
 //  a card consist of:
 //  title with a small logo
@@ -47,7 +41,20 @@ const theme = createTheme({
 //  font of title is bold (weight is 600)
 //  title of the card is set to "Individual Evaluation"
 //  title might be changed
-export default function PageCard({ bodytext3 }: Message) {
+type PageCardProps = {
+  headerText: string;
+  bodyText: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  icon: any;
+  image: string;
+};
+export default function PageCard({
+  bodyText,
+  headerText,
+  icon,
+  image,
+}: PageCardProps) {
   return (
     <ThemeProvider theme={theme}>
       <Card sx={{ display: "flex", verticalAlign: "middle" }}>
@@ -55,8 +62,8 @@ export default function PageCard({ bodytext3 }: Message) {
         <CardMedia
           component="img"
           sx={{ width: 120 }}
-          image={logo}
-          alt="ING logo"
+          image={image}
+          alt="ING image"
         />
         {/* set the width of the card */}
         <Box width="1000px">
@@ -71,8 +78,8 @@ export default function PageCard({ bodytext3 }: Message) {
             >
               {/* Here should be the title of the card
                */}
-              Individual Evaluation{" "}
-              <AssessmentIcon color="primary" fontSize="small" />
+              {headerText}
+              {icon}
             </Typography>
             {/* Use textAlign="left" if alignment of title, divider and body text is left and JPG/PNG image is on the right, reverse if otherwise
              */}
@@ -85,7 +92,7 @@ export default function PageCard({ bodytext3 }: Message) {
               color="text.primary"
               component="div"
             >
-              {bodytext3}
+              {bodyText}
             </Typography>
           </CardContent>
           <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }} />
@@ -94,8 +101,8 @@ export default function PageCard({ bodytext3 }: Message) {
         <CardMedia
           component="img"
           sx={{ width: 120 }}
-          image={logo}
-          alt="ING logo"
+          image={image}
+          alt="ING image"
         />
       </Card>
     </ThemeProvider>
