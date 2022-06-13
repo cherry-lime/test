@@ -10,15 +10,11 @@ const theme = createTheme({
   },
 });
 
-//  passing parameter of the inverted button text
-//  button text = name2
-type Message = { name2: string };
-
 //  function that returns component button in inverted color scheme
-//  name2 = button text
+//  text = button text
 //  size of the button is depending on the length of the button text string
 
-function ButtonInverted({ name2 }: Message) {
+function ButtonInverted({ text }: { text: string }) {
   return (
     <ThemeProvider theme={theme}>
       <div>
@@ -37,7 +33,7 @@ function ButtonInverted({ name2 }: Message) {
             //  action when clicking the button
           }}
         >
-          {name2}{" "}
+          {text}{" "}
         </Button>
       </div>
     </ThemeProvider>
