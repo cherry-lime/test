@@ -8,6 +8,7 @@ import GenericGrid from "../Generic/GenericGrid";
 
 import { UserRole } from "../../../types/UserRole";
 import { AssessmentType } from "../../../types/AssessmentType";
+import { handleAddDecorator } from "../decorators";
 
 // Define type for the rows in the grid
 type Row = {
@@ -25,9 +26,6 @@ const getDefaultRow = () => {
   };
   return defaultRow;
 };
-
-// Generate new id based on time
-const generateId = () => Date.now();
 
 type MemberGridProps = {
   theme: Theme;
@@ -63,18 +61,13 @@ export default function AssessmentOngoingGrid({
     []
   );
 
-  // Called when "Add" button is pressed below the grid
+  // Called when the "Add" button is pressed below the grid
   const handleAdd = React.useCallback(() => {
-    setRows((prevRows) => {
-      // Create new row with default content and generated id
-      const newRow = { ...getDefaultRow(), id: generateId() };
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const handleAPI = () => {};
 
-      // Create newRow in database
-      // TODO
-
-      return [...prevRows, newRow];
-    });
-  }, []);
+    handleAddDecorator(handleAPI, setRows, getDefaultRow());
+  }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
