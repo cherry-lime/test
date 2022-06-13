@@ -1,5 +1,5 @@
 import { Link, useLocation, useParams } from "react-router-dom";
-import Button from "../../../components/Button/Button";
+import ExampleButton from "../../../components/ExampleButton/ExampleButton";
 
 /**
  * Page providing team details
@@ -30,11 +30,11 @@ function Team() {
 
       <h3>List of assessors</h3>
 
-      {data === "assessor" && <Button name="Add New Assessor" />}
+      {data === "assessor" && <ExampleButton name="Add New Assessor" />}
 
       <h3>List of members</h3>
 
-      {data === "assessor" && <Button name="Add New Member" />}
+      {data === "assessor" && <ExampleButton name="Add New Member" />}
 
       <h3>Evaluations in progress</h3>
 
