@@ -8,7 +8,6 @@ const INGTheme = createTheme({
       dark: "#AA3909", // Dark Orange
     },
     secondary: {
-      // Lightest Grey: #FAF6F3
       light: "#EDE6E2", // Light Grey
       main: "#8B817C", // Grey
       dark: "#5A534F", // Dark Grey
@@ -17,6 +16,7 @@ const INGTheme = createTheme({
       primary: "#5A534F", // Dark Grey
     },
     info: {
+      light: "#FAF6F3", // Lightest Grey
       main: "#ffffff", // White color for icons.
     }
   },
