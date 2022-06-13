@@ -1,5 +1,5 @@
 import { Link, useLocation, useParams } from "react-router-dom";
-import Button from "../components/Button/Button";
+import Button from "../../components/Button/Button";
 
 function Team() {
   const location = useLocation();

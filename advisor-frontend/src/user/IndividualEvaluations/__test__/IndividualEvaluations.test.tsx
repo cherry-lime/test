@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import App from "../App";
+import App from "../../../App";
 
 test("app rendering/navigating from user interface to self-evals", async () => {
   render(

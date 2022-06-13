@@ -1,18 +1,19 @@
 import { Routes, Route, Link } from "react-router-dom";
-import AdminInterface from "./admin/AdminInterface";
-import ListOfIndividuals from "./admin/ListOfIndividuals";
-import ListOfTemplates from "./admin/templates/ListOfTemplates";
-import Template from "./admin/templates/Template";
-import AssessorInterface from "./assessor/AssessorInterface";
+import AdminInterface from "./admin/AdminInterface/AdminInterface";
+import ListOfIndividuals from "./admin/ListOfIndividuals/ListOfIndividuals";
+import Area from "./admin/templates/Area/Area";
+import ListOfTemplates from "./admin/templates/ListOfTemplates/ListOfTemplates";
+import Template from "./admin/templates/Template/Template";
+import AssessorInterface from "./assessor/AssessorInterface/AssessorInterface";
 import IndividualEvaluation from "./evaluations/IndividualEvaluation";
 import IndividualFeedback from "./evaluations/IndividualFeedback";
 import TeamEvaluation from "./evaluations/TeamEvaluation";
 import TeamFeedback from "./evaluations/TeamFeedback";
 import Home from "./Home";
-import Team from "./teams/Team";
-import TeamList from "./teams/TeamList";
-import IndividualEvaluations from "./user/IndividualEvaluations";
-import UserInterface from "./user/UserInterface";
+import Team from "./teams/Team/Team";
+import TeamList from "./teams/TeamList/TeamList";
+import IndividualEvaluations from "./user/IndividualEvaluations/IndividualEvaluations";
+import UserInterface from "./user/UserInterface/UserInterface";
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
         <Route path="/admin/individuals" element={<ListOfIndividuals />} />
         <Route path="/admin/templates" element={<ListOfTemplates />} />
         <Route path="/admin/templates/:templateId" element={<Template />} />
+        <Route path="/admin/templates/:templateId/:areaId" element={<Area />} />
       </Routes>
     </div>
   );

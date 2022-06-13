@@ -4,6 +4,7 @@ function Template() {
   const location = useLocation();
   const data = location.state;
   const { templateId } = useParams();
+  const areaIds = [99, 88, 15];
 
   return (
     <div>
@@ -14,6 +15,20 @@ function Template() {
       </Link>
 
       <h2> Template options for template id {templateId} </h2>
+
+      {areaIds.map((areaId) => (
+        <div key={`templ-${areaId}`}>
+          <Link
+            to={`/admin/templates/${templateId}/${areaId}`}
+            state={data}
+            data-testid={`template-${templateId}-a-${areaId}`}
+          >
+            {" "}
+            Area with id {areaId}{" "}
+          </Link>
+          <br />
+        </div>
+      ))}
     </div>
   );
 }
