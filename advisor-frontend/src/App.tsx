@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import AssessmentIcon from "@mui/icons-material/Assessment";
-import INGlogo from "./components/PageCard/ING3.png";
+import testimageFigma from "./components/PageCard/testimageFigma.png";
 import logo from "./logo.svg";
 import "./App.css";
 import ButtonRegular from "./components/ButtonRegular/ButtonRegular";
@@ -26,8 +26,11 @@ function App() {
         <PageCard
           bodyText="This is a description for the home page card"
           headerText="Title"
+          cardHeight={125}
           icon={<AssessmentIcon color="primary" fontSize="small" />}
-          image={INGlogo}
+          image={testimageFigma}
+          isImageLeft
+          isImageRight
         />
         <img src={logo} className="App-logo" alt="logo" />
         <p>

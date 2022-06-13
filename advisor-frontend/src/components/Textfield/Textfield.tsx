@@ -32,7 +32,7 @@ function Textfield({ text }: { text: string }) {
           width: "50ch",
         }}
         variant="outlined"
-        color="primary"
+        color="secondary"
         multiline
         rows={5}
         InputProps={{ readOnly: true }}

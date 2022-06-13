@@ -23,6 +23,9 @@ import { ThemeProvider } from "@emotion/react";
 //  there might be an image on the left or on the right or both
 const theme = createTheme({
   palette: {
+    background: {
+      paper: "#ff6404",
+    },
     primary: {
       main: "#ff6200",
     },
@@ -44,29 +47,49 @@ const theme = createTheme({
 type PageCardProps = {
   headerText: string;
   bodyText: string;
+  cardHeight: number;
   // eslint-disable-next-line @typescript-eslint/ban-types
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   image: string;
+  isImageLeft: boolean;
+  isImageRight: boolean;
 };
 export default function PageCard({
   bodyText,
   headerText,
+  cardHeight,
   icon,
   image,
+  isImageLeft,
+  isImageRight,
 }: PageCardProps) {
   return (
     <ThemeProvider theme={theme}>
-      <Card sx={{ display: "flex", verticalAlign: "middle", width: "vw" }}>
+      <Card
+        sx={{
+          display: "flex",
+          verticalAlign: "middle",
+          width: "vw",
+          borderRadius: "20px",
+        }}
+      >
         {/* remove cardmedia section if no image is needed on the left side */}
-        <CardMedia
-          component="img"
-          sx={{ width: 120 }}
-          image={image}
-          alt="ING image"
-        />
+        {isImageLeft && (
+          <CardMedia
+            component="img"
+            sx={{
+              minWidth: "33vw",
+              width: "33vw",
+              height: cardHeight,
+              opacity: 0.4,
+            }}
+            image={image}
+            alt="ING image"
+          />
+        )}
         {/* set the width of the card */}
-        <Box width="100vw">
+        <Box width="100vw" height={cardHeight} bgcolor="white">
           <CardContent>
             {/* Use align="left" if alignment of title, divider and body text is left and JPG/PNG image is on the right, reverse if otherwise
              */}
@@ -97,13 +120,19 @@ export default function PageCard({
           </CardContent>
           <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }} />
         </Box>
-        {/* remove cardmedia section if no image is needed on the right side */}
-        <CardMedia
-          component="img"
-          sx={{ width: 120 }}
-          image={image}
-          alt="ING image"
-        />
+        {isImageRight && (
+          <CardMedia
+            component="img"
+            sx={{
+              minWidth: "33vw",
+              width: "33vw",
+              height: cardHeight,
+              opacity: 0.4,
+            }}
+            image={image}
+            alt="ING image"
+          />
+        )}
       </Card>
     </ThemeProvider>
   );
