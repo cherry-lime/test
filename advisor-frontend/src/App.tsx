@@ -1,4 +1,6 @@
 import { Stack } from "@mui/material";
+import AssessmentIcon from "@mui/icons-material/Assessment";
+import INGlogo from "./components/PageCard/ING3.png";
 import logo from "./logo.svg";
 import "./App.css";
 import ButtonRegular from "./components/ButtonRegular/ButtonRegular";
@@ -8,24 +10,25 @@ import TextfieldEdit from "./components/TextfieldEdit/TextfieldEdit";
 import Textfield from "./components/Textfield/Textfield";
 import PageCard from "./components/PageCard/PageCard";
 
-//  this is a test string to be used for several components
-const longtextteststring =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.";
-
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <Stack spacing={3}>
           {/* all components are listed once as an example with parameters if applicable */}
-          <ButtonRegular name="Regular Button" />
-          <ButtonInverted name2="Inverted Button" />
+          <ButtonRegular text="Regular Button" />
+          <ButtonInverted text="Inverted Button" />
           <Checkpoint description="Checkpoint Description" />
-          <TextfieldEdit bodytext={longtextteststring} />
-          <Textfield bodytext2={longtextteststring} />
+          <TextfieldEdit text="Here is some text that can be edited" />
+          <Textfield text="Here is some text that can not be edited" />
           <p />
         </Stack>
-        <PageCard bodytext3={longtextteststring} />
+        <PageCard
+          bodyText="This is a description for the home page card"
+          headerText="Title"
+          icon={<AssessmentIcon color="primary" fontSize="small" />}
+          image={INGlogo}
+        />
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
