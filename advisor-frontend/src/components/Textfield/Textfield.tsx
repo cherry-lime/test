@@ -1,9 +1,5 @@
 import { TextField, createTheme, ThemeProvider } from "@mui/material";
 
-//  passing parameter of the bodytext of the textfield (noneditable)
-//  body text might be empty string
-type Message = { bodytext2: string };
-
 //  coloring theme aligned with UI design
 //  ING orange is ff6200
 //  darkgray is 5a534f
@@ -27,7 +23,7 @@ const theme = createTheme({
 //  default set to five
 //  the background color of the text is white
 //  text can not be edited, but can be selected
-function Textfield({ bodytext2 }: Message) {
+function Textfield({ text }: { text: string }) {
   return (
     <ThemeProvider theme={theme}>
       <TextField
@@ -40,7 +36,7 @@ function Textfield({ bodytext2 }: Message) {
         multiline
         rows={5}
         InputProps={{ readOnly: true }}
-        value={bodytext2}
+        value={text}
       />
     </ThemeProvider>
   );
