@@ -1,8 +1,9 @@
 export const aCategory = {
   category_id: 1,
   category_name: 'Category 1',
-  color: 1,
+  color: '#FF0000',
   template_id: 1,
+  order: 1,
 };
 
 export const mockCategory = {
@@ -11,4 +12,6 @@ export const mockCategory = {
   delete: jest.fn().mockResolvedValue(aCategory),
   findUnique: jest.fn().mockResolvedValue(aCategory),
   findMany: jest.fn().mockResolvedValue([aCategory]),
+  count: jest.fn().mockResolvedValue(1),
+  updateMany: jest.fn().mockResolvedValue([aCategory]),
 };
