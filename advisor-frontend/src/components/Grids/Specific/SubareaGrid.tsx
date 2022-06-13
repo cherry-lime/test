@@ -11,6 +11,13 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import GenericGrid from "../Generic/GenericGrid";
+import {
+  handleAddDecorator,
+  handleDeleteDecorator,
+  handleDuplicateDecorator,
+  processRowUpdateDecorator,
+  updateOrderRows,
+} from "../decorators";
 
 // Define type for the rows in the grid
 type Row = {
@@ -32,9 +39,6 @@ const getDefaultRow = () => {
   };
   return defaultRow;
 };
-
-// Generate new id based on time
-const generateId = () => Date.now();
 
 type SubareaGridProps = {
   theme: Theme;
@@ -60,65 +64,44 @@ export default function SubareaGrid({
   // Called when a row is edited
   const processRowUpdate = React.useCallback(
     (newRow: GridRowModel, oldRow: GridRowModel) => {
-      if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
-        return oldRow;
-      }
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleRowAPI = () => {};
 
-      // Update the database with row changes, ask for validation
-      // TODO
-
-      setRows((prevRows) =>
-        prevRows.map((prevRow) => (prevRow.id === newRow.id ? newRow : prevRow))
-      );
-
-      return newRow;
+      return processRowUpdateDecorator(handleRowAPI, setRows, newRow, oldRow);
     },
     []
   );
 
-  // Called when the "Delete" action is pressed in the action menu
+  // Called when the "Delete" action is pressed in the menu
   const handleDelete = React.useCallback(
     (rowId: GridRowId) => () => {
-      // Use setTimeout to deal with delay
-      setTimeout(() => {
-        // Filter row with rowId from state
-        setRows((prevRows) => prevRows.filter((row) => row.id !== rowId));
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleAPI = () => {};
 
-        // Delete row with rowId from database
-        // TODO
-      });
+      handleDeleteDecorator(handleAPI, setRows, rowId);
+      updateOrderRows(setRows);
     },
     []
   );
 
-  // Called when the "Duplicate" action is pressed in the action menu
+  // Called when the "Duplicate" action is pressed in the menu
   const handleDuplicate = React.useCallback(
-    (row: Row) => () => {
-      setRows((prevRows) => {
-        // Create new row with duplicated content and generated id
-        const newRow = { ...row, id: generateId() };
+    (row: GridRowModel) => () => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      const handleAPI = () => {};
 
-        // Create newRow in database
-        // TODO
-
-        return [...prevRows, newRow];
-      });
+      handleDuplicateDecorator(handleAPI, setRows, row);
     },
     []
   );
 
-  // Called when "Add" button is pressed below the grid
+  // Called when the "Add" button is pressed below the grid
   const handleAdd = React.useCallback(() => {
-    setRows((prevRows) => {
-      // Create new row with default content and generated id
-      const newRow = { ...getDefaultRow(), id: generateId() };
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const handleAPI = () => {};
 
-      // Create newRow in database
-      // TODO
-
-      return [...prevRows, newRow];
-    });
-  }, []);
+    handleAddDecorator(handleAPI, setRows, getDefaultRow());
+  }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
