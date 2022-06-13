@@ -1,3 +1,4 @@
+// Imports
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -19,7 +20,7 @@ const theme = createTheme();
 export default function DetailGen() {
   return (
     <ThemeProvider theme={theme}>
-      <div
+      <div // ING background image 
         style={{
           backgroundImage: "url(/backpic.png)",
           backgroundRepeat: "no-repeat",
@@ -29,6 +30,7 @@ export default function DetailGen() {
           width: "100vw",
         }}
       >
+        {/* Help circle on the left */}
         <IconButton size="medium" sx={{ color: "white", mr: 250, mt: 1 }}>
           <HelpOutlineOutlinedIcon />
         </IconButton>
@@ -43,6 +45,7 @@ export default function DetailGen() {
         >
           TestING Advisor
         </Typography>
+        {/* Container is where all functionality exists */}
         <Container
           component="main"
           maxWidth="xs"
@@ -78,6 +81,7 @@ export default function DetailGen() {
             >
               Your username and password were generated for you
             </Typography>
+            {/* Uneditable text field */}
             <FormControl variant="standard">
               <InputLabel htmlFor="Username">Username</InputLabel>
               <OutlinedInput

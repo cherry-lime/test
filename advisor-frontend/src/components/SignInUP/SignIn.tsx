@@ -1,3 +1,4 @@
+// Imports
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -14,6 +15,7 @@ import IconButton from "@mui/material/IconButton";
 
 const theme = createTheme();
 
+// Sign in functionality to be used later
 export default function SignIn() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,6 +29,7 @@ export default function SignIn() {
   return (
     <ThemeProvider theme={theme}>
       <div
+      // ING colored image for background 
         style={{
           backgroundImage: "url(/backpic.png)",
           backgroundRepeat: "no-repeat",
@@ -35,8 +38,8 @@ export default function SignIn() {
           minHeight: "100vh",
           width: "100vw",
         }}
-      >
-        <IconButton size="medium" sx={{ color: "white", mt: 1 }}>
+        > {/* Help button placed on the left */}
+        <IconButton size="medium" sx={{ color: "white", mt: 1}}>
           <HelpOutlineOutlinedIcon />
         </IconButton>
         <Typography
@@ -50,6 +53,7 @@ export default function SignIn() {
         >
           TestING Advisor
         </Typography>
+        {/* Container is where all functionality exists */}
         <Container
           component="main"
           maxWidth="xs"
@@ -71,6 +75,7 @@ export default function SignIn() {
               bgcolor: "white",
             }}
           >
+            {/* Contact icon on top of username */}
             <Avatar sx={{ m: 1, bgcolor: "orange" }}>
               <AccountCircleRoundedIcon />
             </Avatar>
@@ -80,6 +85,7 @@ export default function SignIn() {
               noValidate
               sx={{ p: 4, pt: 2 }}
             >
+              {/* Textfield for username and password */}
               <TextField
                 margin="normal"
                 fullWidth
@@ -99,6 +105,7 @@ export default function SignIn() {
                 autoComplete="current-password"
                 sx={{ pt: 0 }}
               />
+              {/* Buttons that log in and a button that goes to the sign up page */}
               <Grid container columns={2} spacing={0}>
                 <Grid>
                   <Button

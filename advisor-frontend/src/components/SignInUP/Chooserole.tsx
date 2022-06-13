@@ -1,3 +1,4 @@
+// Imports
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -18,6 +19,7 @@ export default function Chooserole() {
   return (
     <ThemeProvider theme={theme}>
       <div
+        // ING colored image for background 
         style={{
           backgroundImage: "url(/backpic.png)",
           backgroundRepeat: "no-repeat",
@@ -26,7 +28,7 @@ export default function Chooserole() {
           minHeight: "100vh",
           width: "100vw",
         }}
-      >
+      > {/* Help button placed on the left */}
         <IconButton size="medium" sx={{ color: "white", mr: 250, mt: 1 }}>
           <HelpOutlineOutlinedIcon />
         </IconButton>
@@ -41,6 +43,7 @@ export default function Chooserole() {
         >
           TestING Advisor
         </Typography>
+        {/* Container is where all functionality exists */}
         <Container
           component="main"
           maxWidth="xs"
@@ -62,6 +65,7 @@ export default function Chooserole() {
               bgcolor: "white",
             }}
           >
+            {/* Conact rounded circle */}
             <Avatar sx={{ m: 1, bgcolor: "orange" }}>
               <AccountCircleRoundedIcon />
             </Avatar>
@@ -85,6 +89,7 @@ export default function Chooserole() {
             >
               Role
             </Typography>
+            {/* The form for the drop down menu to pick a role */}
             <FormControl fullWidth>
               <Select
                 variant="filled"
