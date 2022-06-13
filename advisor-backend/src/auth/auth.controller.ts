@@ -35,7 +35,7 @@ export class AuthController {
       refreshToken: '',
     };
  
-    res.cookie('loginAuth-cookie', secretData,{httpOnly:true,});
+    res.cookie('token', secretData,{httpOnly:true,});
     return {"msg" : "login successful"}; // this.authService.login(loginDto); 
   }
 
@@ -60,7 +60,7 @@ export class AuthController {
       refreshToken: '',
     };
  
-    res.cookie('registration-cookie', secretData,{httpOnly:true,});
+    res.cookie('token', secretData,{httpOnly:true,});
     return {"username": user.username, "password": user.password};
   }
 
