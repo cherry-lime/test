@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 
-function IndividualEvaluations() {
+function ListOfSelfEvals() {
   const location = useLocation();
   const data = location.state;
   const assessmentIds = [43, 67, 40];
@@ -48,4 +48,4 @@ function IndividualEvaluations() {
   );
 }
 
-export default IndividualEvaluations;
+export default ListOfSelfEvals;
