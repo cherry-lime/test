@@ -2,33 +2,23 @@
 [![Code Quality](https://deepscan.io/api/teams/17760/projects/21098/branches/596791/badge/grade.svg?token=a1fa0980263b30233c0ddf1e9c3ed778290db2ee)](https://deepscan.io/dashboard#view=project&tid=17760&pid=21098&bid=596791)
 [![Coverage](https://codecov.io/gh/PaulVlas/testadvisor/branch/master/graph/badge.svg?token=HIEJAV3H76)](https://codecov.io/gh/PaulVlas/testadvisor)
 
-Before running, make sure a database URL is included in the .env file.
+## Running frontend
+Information required to run the frontend is available in `testadvisor/advisor-frontend/README.md`
 
-### Install Prisma and generate Prisma client:
-```
-$ npx prisma generate
-```
+## Running backend
+Information required to run the backend is available in `testadvisor/advisor-backend/README.md`
 
-### Install the node modules:
-```
-$ npm install
-```
+## CI/CD (Continuos Integration and Continuos Development)
 
-### Run the web app:
-```bash
-# development
-$ npm run start
+### Repository wide
+* Static analysis for JavaScript (DeepScan)
+* Automatic dependency updating (Renovate)
+* Code coverage of code base (Codecov, GitHub Actions)
 
-# watch mode
-$ npm run start:dev
+### Master branch
+* Master branch is protected and kept at production level
+* Changes to the master branch are automatically deployed to Microsoft Azure (GitHub Actions)
+* Automatic frontend, backend code quality/correctness testing (Jest (backend), Vitest (frontend), ESLint, GitHub Actions)
 
-# production mode
-$ npm run start:prod
-```
-
-### View the generated API Documentation
-```
-http://localhost:{process.env.PORT}/api
-OR, if port not specified
-http://localhost:5000/api
-```
+### Pull request / push
+* Automatic frontend, backend code quality/correctness/style testing on pull request / push (Jest (backend), Vitest (frontend), ESLint, Prettier, GitHub Actions)

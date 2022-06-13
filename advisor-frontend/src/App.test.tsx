@@ -1,11 +1,13 @@
-import { render, screen } from "@testing-library/react";
+// import React from "react";
+// import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import App from "./App";
 
-test("renders learn react link", () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+// test('renders learn react link', () => {
+//   render(<App />);
+//   const linkElement = screen.getByText(/learn react/i);
+//   expect(linkElement).toBeInTheDocument();
+// });
 
 // describe block = test suite
 // test block = test case
@@ -13,6 +15,7 @@ test("renders learn react link", () => {
 
 describe("test suite of test cases", () => {
   test("testcase1", () => {
+    render(<App />);
     // expect(to be tested function or component).toBe(expected result of the component);
     // example:
     // test('1 represents a true value', () => {

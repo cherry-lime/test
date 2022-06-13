@@ -19,7 +19,7 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",
-    "vitest": "^0.13.0"
+    "vitest": "^0.14.0"
   },
   "scripts": {
     "start": "vite",
@@ -27,7 +27,6 @@
     "serve": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "prepare": "cd .. && husky install advisor-frontend/.husky",
     "lint": "npx eslint \"./src/**/*.{ts,tsx,js,jsx}\"",
     "prettier-write": "npx prettier --write \"./src/**/*.{ts,tsx,js,jsx}\"",
     "prettier-check": "npx prettier --check \"./src/**/*.{ts,tsx,js,jsx}\""
