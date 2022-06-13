@@ -1,20 +1,24 @@
 import { createTheme } from "@mui/material";
-import { grey, orange } from "@mui/material/colors";
 
 const INGTheme = createTheme({
   palette: {
     primary: {
-      main: grey[500],
+      light: "#FFD6B1", // Light Orange
+      main: "#FF6200", // Orange
+      dark: "#AA3909", // Dark Orange
     },
     secondary: {
-      main: orange[500],
+      // Lightest Grey: #FAF6F3
+      light: "#EDE6E2", // Light Grey
+      main: "#8B817C", // Grey
+      dark: "#5A534F", // Dark Grey
+    },
+    text: {
+      primary: "#5A534F", // Dark Grey
     },
     info: {
-      light: "#ff7961",
-      main: "#ffffff",
-      dark: "#ba000d",
-      contrastText: "#000",
-    },
+      main: "#ffffff", // White color for icons.
+    }
   },
 });
 export default INGTheme;
