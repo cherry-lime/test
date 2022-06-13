@@ -1,19 +1,21 @@
 import { Routes, Route, Link } from "react-router-dom";
-import AdminInterface from "./admin/AdminInterface/AdminInterface";
-import ListOfIndividuals from "./admin/ListOfIndividuals/ListOfIndividuals";
-import Area from "./admin/templates/Area/Area";
-import ListOfTemplates from "./admin/templates/ListOfTemplates/ListOfTemplates";
-import Template from "./admin/templates/Template/Template";
-import AssessorInterface from "./assessor/AssessorInterface/AssessorInterface";
-import IndividualEvaluation from "./evaluations/IndividualEvaluation";
-import IndividualFeedback from "./evaluations/IndividualFeedback";
-import TeamEvaluation from "./evaluations/TeamEvaluation";
-import TeamFeedback from "./evaluations/TeamFeedback";
+import AdminInterface from "./pages/admin/AdminInterface/AdminInterface";
+import ListOfIndividuals from "./pages/admin/ListOfIndividuals/ListOfIndividuals";
+import Area from "./pages/admin/templates/Area/Area";
+import ListOfTemplates from "./pages/admin/templates/ListOfTemplates/ListOfTemplates";
+import Template from "./pages/admin/templates/Template/Template";
+import AssessorInterface from "./pages/assessor/AssessorInterface";
+import IndividualEvaluation from "./pages/evaluations/IndividualEvaluation";
+import IndividualFeedback from "./pages/evaluations/IndividualFeedback";
+import TeamEvaluation from "./pages/evaluations/TeamEvaluation";
+import TeamFeedback from "./pages/evaluations/TeamFeedback";
 import Home from "./Home";
-import Team from "./teams/Team/Team";
-import TeamList from "./teams/TeamList/TeamList";
-import IndividualEvaluations from "./user/IndividualEvaluations/IndividualEvaluations";
-import UserInterface from "./user/UserInterface/UserInterface";
+import Team from "./pages/teams/Team/Team";
+import TeamList from "./pages/teams/TeamList/TeamList";
+import UserInterface from "./pages/user/UserInterface/UserInterface";
+import "./App.css";
+import AllPages from "./pages/AllPages";
+import ListOfSelfEvals from "./pages/user/ListOfSelfEvals/ListOfSelfEvals";
 
 function App() {
   return (
@@ -39,10 +41,7 @@ function App() {
         <Route path="/" element={<Home />} />
 
         <Route path="/user" element={<UserInterface />} />
-        <Route
-          path="/user/self_evaluations"
-          element={<IndividualEvaluations />}
-        />
+        <Route path="/user/self_evaluations" element={<ListOfSelfEvals />} />
         <Route
           path="/user/self_evaluations/:assessmentId"
           element={<IndividualEvaluation />}
@@ -71,6 +70,7 @@ function App() {
         <Route path="/admin/templates/:templateId" element={<Template />} />
         <Route path="/admin/templates/:templateId/:areaId" element={<Area />} />
       </Routes>
+      <AllPages />
     </div>
   );
 }

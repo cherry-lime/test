@@ -2,15 +2,11 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 
-test("renders learn react link", () => {
-  render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  );
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+// test('renders learn react link', () => {
+//   render(<App />);
+//   const linkElement = screen.getByText(/learn react/i);
+//   expect(linkElement).toBeInTheDocument();
+// });
 
 test("app rendering/navigating to user interface", async () => {
   render(
@@ -52,6 +48,7 @@ test("app rendering/navigating to assessor interface", async () => {
 
 describe("test suite of test cases", () => {
   test("testcase1", () => {
+    render(<App />);
     // expect(to be tested function or component).toBe(expected result of the component);
     // example:
     // test('1 represents a true value', () => {
