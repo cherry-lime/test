@@ -6,7 +6,7 @@ afterEach(cleanup);
 
 //  test rendering of the regular button and clicking
 it("Rendering without crash and click", () => {
-  const { getByText } = render(<ButtonRegular name="ClickButton" />);
+  const { getByText } = render(<ButtonRegular text="ClickButton" />);
   expect(getByText("ClickButton")).toBeInTheDocument();
   fireEvent.click(getByText("ClickButton"));
 });
