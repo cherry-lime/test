@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -29,7 +30,7 @@ export class MaturityService {
       .create({
         data: {
           template_id,
-          maturity_order,
+          maturity_order: maturity_order + 1,
         },
       })
       .catch((error) => {
@@ -86,6 +87,68 @@ export class MaturityService {
    * @returns updated maturity
    */
   async update(maturity_id: number, updateMaturityDto: UpdateMaturityDto) {
+    if (updateMaturityDto.maturity_order) {
+      const maturity = await this.prisma.maturity.findUnique({
+        where: {
+          maturity_id,
+        },
+      });
+
+      // If maturity is not found throw NotFoundException
+      if (!maturity) {
+        throw new NotFoundException('Maturity not found');
+      }
+
+      // Check if order is valid (not more than number of maturity in template)
+      const maturity_order = await this.prisma.maturity.count({
+        where: {
+          template_id: maturity.template_id,
+        },
+      });
+
+      // If order is not valid throw BadRequestException
+      if (updateMaturityDto.maturity_order > maturity_order) {
+        throw new BadRequestException(
+          'Maturity order must be less than number of maturities in template'
+        );
+      }
+
+      // If new order is smaller than old order, increase order of all maturities with between new and old order
+      if (updateMaturityDto.maturity_order < maturity.maturity_order) {
+        await this.prisma.maturity.updateMany({
+          where: {
+            template_id: maturity.template_id,
+            maturity_order: {
+              gte: updateMaturityDto.maturity_order,
+              lte: maturity.maturity_order,
+            },
+          },
+          data: {
+            maturity_order: {
+              increment: 1,
+            },
+          },
+        });
+      } else if (updateMaturityDto.maturity_order > maturity.maturity_order) {
+        // If new order is bigger than old order, decrease order of all maturities with between old and new order
+        await this.prisma.maturity.updateMany({
+          where: {
+            template_id: maturity.template_id,
+            maturity_order: {
+              gte: maturity.maturity_order,
+              lte: updateMaturityDto.maturity_order,
+            },
+          },
+          data: {
+            maturity_order: {
+              decrement: 1,
+            },
+          },
+        });
+      }
+    }
+
+    // Update maturity
     return await this.prisma.maturity
       .update({
         where: {
@@ -112,6 +175,34 @@ export class MaturityService {
    * @throws Maturity not found
    */
   async delete(maturity_id: number) {
+    // Get maturity by id from prisma
+    const maturity = await this.prisma.maturity.findUnique({
+      where: {
+        maturity_id,
+      },
+    });
+
+    // Throw NotFoundException if maturity not found
+    if (!maturity) {
+      throw new NotFoundException('Maturity not found');
+    }
+
+    // Decrement order of all maturities with order bigger than deleted maturity
+    await this.prisma.maturity.updateMany({
+      where: {
+        template_id: maturity.template_id,
+        maturity_order: {
+          gte: maturity.maturity_order,
+        },
+      },
+      data: {
+        maturity_order: {
+          decrement: 1,
+        },
+      },
+    });
+
+    // Delete maturity
     return await this.prisma.maturity
       .delete({
         where: {

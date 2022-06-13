@@ -8,6 +8,7 @@ import { AssessmentModule } from './assessment/assessment.module';
 import { TemplateModule } from './template/template.module';
 import { CategoryModule } from './category/category.module';
 import { SubareaModule } from './subarea/subarea.module';
+import { MaturityModule } from './maturity/maturity.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SubareaModule } from './subarea/subarea.module';
     AssessmentModule,
     CategoryModule,
     SubareaModule,
+    MaturityModule,
   ],
   controllers: [AppController],
   providers: [AppService],

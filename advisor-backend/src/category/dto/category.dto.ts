@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Min } from 'class-validator';
 
 export class CategoryDto {
   @ApiProperty()
@@ -9,6 +10,10 @@ export class CategoryDto {
 
   @ApiProperty()
   color: number;
+
+  @ApiProperty()
+  @Min(1)
+  order: number;
 
   @ApiProperty()
   template_id: number;
