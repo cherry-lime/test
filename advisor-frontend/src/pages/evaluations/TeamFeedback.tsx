@@ -1,5 +1,9 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 
+/**
+ * Page with the feedback regarding a team
+ * This should only be accessible to the users and assessors in the team
+ */
 function TeamFeedback() {
   const location = useLocation();
   const data = location.state;

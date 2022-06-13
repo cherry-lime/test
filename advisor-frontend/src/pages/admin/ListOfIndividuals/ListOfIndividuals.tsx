@@ -1,5 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 
+/**
+ * Page listing all users registered in the tool
+ * This page should only be accessible to admins
+ */
 function ListOfIndividuals() {
   const location = useLocation();
   const data = location.state;

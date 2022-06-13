@@ -1,6 +1,11 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import Button from "../../../components/Button/Button";
 
+/**
+ * Page providing team details
+ * This should only be accessible to the users and assessors in the team
+ * Assessors can modify team details
+ */
 function Team() {
   const location = useLocation();
   const data = location.state;

@@ -1,6 +1,10 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 
-function Template() {
+/**
+ * Page with details regarding an area beloging to a certain template
+ * This should only be accessible to admins
+ */
+function Area() {
   const location = useLocation();
   const data = location.state;
   const { templateId } = useParams();
@@ -19,4 +23,4 @@ function Template() {
   );
 }
 
-export default Template;
+export default Area;

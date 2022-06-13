@@ -1,5 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 
+/**
+ * Page with the list of self evaluations that belog to the user
+ */
 function ListOfSelfEvals() {
   const location = useLocation();
   const data = location.state;

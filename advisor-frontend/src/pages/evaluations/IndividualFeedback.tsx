@@ -1,5 +1,9 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 
+/**
+ * Page with the feedback related to a self assessment
+ * This should only be accessible to the user whose assement this belongs to
+ */
 function IndividualFeedback() {
   const location = useLocation();
   const data = location.state;

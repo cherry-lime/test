@@ -1,5 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 
+/**
+ * Home page for anyone with the assessor role
+ */
 function AssessorInterface() {
   const location = useLocation();
   const data = location.state;

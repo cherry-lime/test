@@ -1,5 +1,9 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 
+/**
+ * Page with a self evaluation that can be filled in
+ * This should only be accessible to the user whose assement this belongs to
+ */
 function IndividualEvaluation() {
   const location = useLocation();
   const data = location.state;

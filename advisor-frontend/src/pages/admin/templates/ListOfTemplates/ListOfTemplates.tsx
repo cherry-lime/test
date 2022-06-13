@@ -1,5 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 
+/**
+ * Page containing the list of all existing templates
+ * This should only be accessible to admins
+ */
 function ListOfTemplates() {
   const location = useLocation();
   const data = location.state;

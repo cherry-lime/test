@@ -1,5 +1,9 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 
+/**
+ * Page with details regarding a certain template
+ * This should only be accessible to admins
+ */
 function Template() {
   const location = useLocation();
   const data = location.state;

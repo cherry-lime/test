@@ -1,5 +1,10 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 
+/**
+ * Page with a team evaluation that can be filled in
+ * This should only be accessible to the users belonging to the team
+ * Only the assessor(s) can fill this in
+ */
 function TeamEvaluation() {
   const location = useLocation();
   const data = location.state;

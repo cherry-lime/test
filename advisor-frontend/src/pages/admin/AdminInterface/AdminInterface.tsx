@@ -1,5 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 
+/**
+ * Home page visible to anyone with the admin role
+ */
 function AdminInterface() {
   const location = useLocation();
   const data = location.state;

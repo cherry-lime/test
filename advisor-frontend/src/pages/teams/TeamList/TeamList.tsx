@@ -1,6 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import Button from "../../../components/Button/Button";
 
+/**
+ * Page with the list of teams that the user or assessor is part of
+ */
 function TeamList() {
   const location = useLocation();
   const data = location.state;
