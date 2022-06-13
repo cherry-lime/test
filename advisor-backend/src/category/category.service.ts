@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -20,10 +21,17 @@ export class CategoryService {
    * @throws Template with id does not exist
    */
   async create(template_id: number) {
+    const order = await this.prisma.category.count({
+      where: {
+        template_id,
+      },
+    });
+
     return await this.prisma.category
       .create({
         data: {
           template_id,
+          order: order + 1,
         },
       })
       .catch((error) => {
@@ -82,6 +90,68 @@ export class CategoryService {
    * @returns updated category
    */
   async update(category_id: number, updateCategoryDto: UpdateCategoryDto) {
+    // Get category by id from prisma
+    const category = await this.prisma.category.findUnique({
+      where: {
+        category_id,
+      },
+    });
+
+    // Throw NotFoundException if category not found
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+
+    // Update orders if order changed
+    if (updateCategoryDto.order) {
+      // Check if order is valid (not more than number of categories in template)
+      const order = await this.prisma.category.count({
+        where: {
+          template_id: category.template_id,
+        },
+      });
+
+      if (updateCategoryDto.order > order) {
+        throw new BadRequestException(
+          'Order must be less than number of categories in template'
+        );
+      }
+      // If new order is smaller than old order, increase order of all categories with between new and old order
+      if (updateCategoryDto.order < category.order) {
+        await this.prisma.category.updateMany({
+          where: {
+            template_id: category.template_id,
+            order: {
+              gte: updateCategoryDto.order,
+              lte: category.order,
+            },
+          },
+          data: {
+            order: {
+              increment: 1,
+            },
+          },
+        });
+      } else if (updateCategoryDto.order > category.order) {
+        // If new order is bigger than old order, decrease order of all categories with between old and new order
+        await this.prisma.category.updateMany({
+          where: {
+            template_id: category.template_id,
+            order: {
+              gte: category.order,
+              lte: updateCategoryDto.order,
+            },
+          },
+          data: {
+            order: {
+              decrement: 1,
+            },
+          },
+        });
+      }
+    }
+
+    // Update category
     return await this.prisma.category
       .update({
         where: {
@@ -108,6 +178,34 @@ export class CategoryService {
    * @throws Category not found
    */
   async delete(category_id: number) {
+    // Get category by id from prisma
+    const category = await this.prisma.category.findUnique({
+      where: {
+        category_id,
+      },
+    });
+
+    // Throw NotFoundException if category not found
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+
+    // Decrement order of all categories with order bigger than deleted category
+    await this.prisma.category.updateMany({
+      where: {
+        template_id: category.template_id,
+        order: {
+          gte: category.order,
+        },
+      },
+      data: {
+        order: {
+          decrement: 1,
+        },
+      },
+    });
+
+    // Delete category
     return await this.prisma.category
       .delete({
         where: {
