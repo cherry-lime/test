@@ -10,8 +10,11 @@ it("Rendering without crash and check title and text on card", () => {
     <PageCard
       headerText="This is a description for the home page card"
       bodyText="Title"
+      cardHeight={120}
       icon={undefined}
       image="image"
+      isImageLeft
+      isImageRight
     />
   );
   expect(
