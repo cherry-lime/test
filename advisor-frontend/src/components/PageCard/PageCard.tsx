@@ -55,6 +55,23 @@ type PageCardProps = {
   isImageLeft: boolean;
   isImageRight: boolean;
 };
+
+function CardImage(ch: number, img: string) {
+  return (
+    <CardMedia
+      component="img"
+      sx={{
+        minWidth: "33vw",
+        width: "33vw",
+        height: ch,
+        opacity: 0.4,
+      }}
+      image={img}
+      alt="ING image"
+    />
+  );
+}
+
 export default function PageCard({
   bodyText,
   headerText,
@@ -74,20 +91,8 @@ export default function PageCard({
           borderRadius: "20px",
         }}
       >
-        {/* remove cardmedia section if no image is needed on the left side */}
-        {isImageLeft && (
-          <CardMedia
-            component="img"
-            sx={{
-              minWidth: "33vw",
-              width: "33vw",
-              height: cardHeight,
-              opacity: 0.4,
-            }}
-            image={image}
-            alt="ING image"
-          />
-        )}
+        {/* if Cardmedia,add image to the left side */}
+        {isImageLeft && CardImage(cardHeight, image)}
         {/* set the width of the card */}
         <Box width="100vw" height={cardHeight} bgcolor="white">
           <CardContent>
@@ -120,19 +125,8 @@ export default function PageCard({
           </CardContent>
           <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }} />
         </Box>
-        {isImageRight && (
-          <CardMedia
-            component="img"
-            sx={{
-              minWidth: "33vw",
-              width: "33vw",
-              height: cardHeight,
-              opacity: 0.4,
-            }}
-            image={image}
-            alt="ING image"
-          />
-        )}
+        {/* if Cardmedia,add image to the right side */}
+        {isImageRight && CardImage(cardHeight, image)}
       </Card>
     </ThemeProvider>
   );
