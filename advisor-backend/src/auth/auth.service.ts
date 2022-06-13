@@ -56,25 +56,6 @@ export class AuthService {
       user,
     };
   }
-  
-  // /**
-  //  * Generate the jwt token with some user's data as payload to it.
-  //  * @param createUserDto information for creating a user
-  //  * @returns a generated token and user information 
-  //  */
-  // public async getJwtToken(user: User): Promise<AuthResponse>{
-  //   const payload = {
-  //    ...user
-  //   }
-  //   return {
-  //     // token,
-  //     token: this.jwtService.sign({
-  //       username,
-  //     }),
-  //     user,
-  //   };;
-  // }
-
 
   /**
    * Create a user
