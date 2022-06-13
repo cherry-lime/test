@@ -6,10 +6,6 @@ import { User } from '.prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './dto/register-user.dto';
 import {
-  //ApiBearerAuth,
-  //ApiProperty,
-  //ApiConflictResponse,
-  //ApiNotFoundResponse,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'

@@ -5,7 +5,6 @@ import { JwtModule } from '../../node_modules/@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { UserModule } from '../user/user.module';
 import { PrismaService } from '../prisma/prisma.service';
-// import { LocalStrategy } from './local_strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local_strategy';
 

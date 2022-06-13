@@ -3,7 +3,6 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { userAuthenticationLog } from '../prisma/mock/mockAuthController';
-//import { Response } from 'express-respond';
 const moduleMocker = new ModuleMocker(global);
 
 describe('AuthController', () => {
