@@ -50,7 +50,7 @@ export default function AllGrid() {
       <MemberGrid
         theme={theme}
         userId={userId}
-        userRole={userRole}
+        userRole="USER"
         teamId={teamId}
         forAssessors
       />
@@ -58,7 +58,7 @@ export default function AllGrid() {
       <MemberGrid
         theme={theme}
         userId={userId}
-        userRole={userRole}
+        userRole="USER"
         teamId={teamId}
         forAssessors={false}
       />

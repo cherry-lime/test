@@ -49,7 +49,10 @@ export default function MemberGrid({
   teamId,
   forAssessors,
 }: MemberGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+  const [rows, setRows] = React.useState<Row[]>([
+    { id: 0, name: "Alice" },
+    { id: 1, name: "Bob" },
+  ]);
 
   // Fetch initial rows of the grid
   React.useEffect(() => {

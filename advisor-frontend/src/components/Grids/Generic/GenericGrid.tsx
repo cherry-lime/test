@@ -12,8 +12,6 @@ import {
 import { styled, Theme, ThemeProvider } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 
-import "./GenericGrid.css";
-
 const StyledGrid = styled(DataGrid)(({ theme }) => ({
   // Style even rows
   [`& .${gridClasses.row}.even`]: {
@@ -87,8 +85,12 @@ export default function GenericGrid({
   return (
     <ThemeProvider theme={theme}>
       <div
-        className="GenericGrid"
         style={{
+          height: "650px",
+          width: "100%",
+          marginTop: "25px",
+          marginBottom: "100px",
+          borderRadius: "5px",
           backgroundColor: theme.palette.secondary.dark,
         }}
       >

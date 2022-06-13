@@ -1,14 +1,17 @@
 import * as React from "react";
 
 import {
+  GridActionsCellItem,
   GridColumns,
   GridPreProcessEditCellProps,
+  GridRowId,
   GridRowModel,
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
+import RevertIcon from "@mui/icons-material/Cached";
 
 import GenericGrid from "../Generic/GenericGrid";
 
@@ -150,11 +153,25 @@ export default function RecommendationGrid({
     []
   );
 
+  // Called when "Revert To Default" action is pressed
+  const handleRevertToDefault = React.useCallback(
+    (id: GridRowId) => () => {
+      setRows(
+        (prevRows) =>
+          // Fetch default additional information
+          // TODO
+
+          prevRows
+      );
+    },
+    []
+  );
+
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
         field: "order",
-        headerName: "Order",
+        headerName: "Priority",
         headerAlign: "center",
         align: "center",
         type: "number",
@@ -194,6 +211,26 @@ export default function RecommendationGrid({
         flex: 1,
         editable: userRole === "ASSESSOR" && assessmentType === "TEAM",
       },
+      ...(userRole === "ASSESSOR"
+        ? [
+            {
+              field: "actions",
+              type: "actions",
+              width: 75,
+              getActions: (params: { id: GridRowId }) => [
+                <GridActionsCellItem
+                  icon={
+                    <Tooltip title="Revert To Default">
+                      <RevertIcon />
+                    </Tooltip>
+                  }
+                  label="Remove"
+                  onClick={handleRevertToDefault(params.id)}
+                />,
+              ],
+            },
+          ]
+        : []),
     ],
     [preProcessEditOrder, handleUpward, handleDownward]
   );
