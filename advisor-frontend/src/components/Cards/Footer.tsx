@@ -29,7 +29,7 @@ export default function Footer() {
       sx={{
         borderTopLeftRadius: "20px",
         borderTopRightRadius: "20px",
-        backgroundColor: "secondary.main",
+        backgroundColor: "primary.main",
         width: "100%",
       }}
     >
