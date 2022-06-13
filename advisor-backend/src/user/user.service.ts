@@ -12,15 +12,23 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async getUser(user_id: number): Promise<User> {
-    const user = await this.prismaService.user.findUnique({
-      where: { user_id },
+  /**
+   * Get user object by id
+   * @param id id of user
+   * @returns user object corresponding to user_id, null if not found
+   * @throws NotFoundException if user not found
+   */
+  async getUser(id: number): Promise<any> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        user_id: id,
+      },
     });
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException('User not found');
     }
 
     delete user.password;
@@ -35,7 +43,7 @@ export class UserService {
     const myuuid = uuidv4();
     const hashedPassword = await bcrypt.hash(myuuid,10);
 
-    const user = await this.prismaService.user.create({
+    const user = await this.prisma.user.create({
       data: {
         ...data,
         password: hashedPassword,

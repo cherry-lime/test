@@ -73,6 +73,7 @@ model Team {
   team_name    String
   invite_token String       @db.Uuid
   UserInTeam   UserInTeam[]
+  Assessment   Assessment[]
 }
 
 model UserInTeam {
@@ -88,17 +89,26 @@ model UserInTeam {
 
 model Assessment {
   assessment_id                     Int                                 @id @default(autoincrement())
-  assessment_name                   String
-  country_name                      String
-  department_name                   String
+  assessment_name                   String                              @default("New Assessment")
+  country_name                      String                              @default("")
+  department_name                   String                              @default("")
   created_at                        DateTime                            @default(now())
   updated_at                        DateTime                            @updatedAt
-  completed_at                      DateTime
+  completed_at                      DateTime?
   assessment_type                   AssessmentType
+<<<<<<< HEAD
   template_id                       Int
   template                          Template                            @relation(fields: [template_id], references: [template_id])
+=======
+  Template                          Template                            @relation(fields: [template_id], references: [template_id])
+  template_id                       Int
+  Team                              Team?                               @relation(fields: [team_id], references: [team_id])
+  team_id                           Int?
+>>>>>>> 8c9ae34b0efdd2945889d7bc22834e9332218e50
   AssessmentParticipants            AssessmentParticipants[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+
+  @@unique([assessment_name, assessment_type, team_id])
 }
 
 model AssessmentParticipants {
@@ -114,7 +124,7 @@ model AssessmentParticipants {
 
 model Template {
   template_id       Int               @id @default(autoincrement())
-  template_name     String
+  template_name     String            @default("New Template")
   template_type     AssessmentType
   disabled          Boolean           @default(false)
   include_no_answer Boolean           @default(false)
@@ -126,7 +136,7 @@ model Template {
   PossibleAnswers   PossibleAnswers[]
   Topic             Topic[]
 
-  @@map("AssessmentTemplate")
+  @@unique([template_name, template_type])
 }
 
 model Category {

@@ -2,13 +2,9 @@ import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
+import { aUser } from '../prisma/mock/mockUser';
 
 const moduleMocker = new ModuleMocker(global);
-
-const mockUser = {
-  user_id: 1,
-  password_hash: 'fdsfdsfds',
-};
 
 /**
  * Test user controller
@@ -28,7 +24,7 @@ describe('UserController', () => {
       .useMocker((token) => {
         if (token === UserService) {
           return {
-            getUser: jest.fn().mockResolvedValue(mockUser),
+            getUser: jest.fn().mockResolvedValue(aUser),
           };
         }
         if (typeof token === 'function') {
@@ -50,7 +46,7 @@ describe('UserController', () => {
 
   describe('getUser', () => {
     it('Should return the found user', async () => {
-      expect(userController.getUser(1)).resolves.toBe(mockUser);
+      expect(userController.getUser(1)).resolves.toBe(aUser);
     });
   });
 });
