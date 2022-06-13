@@ -139,7 +139,7 @@ model Template {
 model Category {
   category_id   Int          @id @default(autoincrement())
   category_name String       @default("New Category")
-  color         Int          @default(0)
+  color         String       @default("#FF0000")
   order         Int
   Template      Template     @relation(fields: [template_id], references: [template_id])
   template_id   Int

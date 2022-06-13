@@ -9,7 +9,7 @@ export class CategoryDto {
   category_name: string;
 
   @ApiProperty()
-  color: number;
+  color: string;
 
   @ApiProperty()
   @Min(1)
