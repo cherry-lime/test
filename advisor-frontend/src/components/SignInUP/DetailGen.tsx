@@ -20,7 +20,7 @@ const theme = createTheme();
 export default function DetailGen() {
   return (
     <ThemeProvider theme={theme}>
-      <div // ING background image 
+      <div // ING background image
         style={{
           backgroundImage: "url(/backpic.png)",
           backgroundRepeat: "no-repeat",

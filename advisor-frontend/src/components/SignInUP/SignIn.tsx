@@ -29,7 +29,7 @@ export default function SignIn() {
   return (
     <ThemeProvider theme={theme}>
       <div
-      // ING colored image for background 
+        // ING colored image for background
         style={{
           backgroundImage: "url(/backpic.png)",
           backgroundRepeat: "no-repeat",
@@ -38,8 +38,10 @@ export default function SignIn() {
           minHeight: "100vh",
           width: "100vw",
         }}
-        > {/* Help button placed on the left */}
-        <IconButton size="medium" sx={{ color: "white", mt: 1}}>
+      >
+        {" "}
+        {/* Help button placed on the left */}
+        <IconButton size="medium" sx={{ color: "white", mt: 1 }}>
           <HelpOutlineOutlinedIcon />
         </IconButton>
         <Typography

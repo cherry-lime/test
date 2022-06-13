@@ -19,7 +19,7 @@ export default function Chooserole() {
   return (
     <ThemeProvider theme={theme}>
       <div
-        // ING colored image for background 
+        // ING colored image for background
         style={{
           backgroundImage: "url(/backpic.png)",
           backgroundRepeat: "no-repeat",
@@ -28,7 +28,9 @@ export default function Chooserole() {
           minHeight: "100vh",
           width: "100vw",
         }}
-      > {/* Help button placed on the left */}
+      >
+        {" "}
+        {/* Help button placed on the left */}
         <IconButton size="medium" sx={{ color: "white", mr: 250, mt: 1 }}>
           <HelpOutlineOutlinedIcon />
         </IconButton>
