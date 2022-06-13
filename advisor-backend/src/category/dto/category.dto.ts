@@ -2,10 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Min } from 'class-validator';
 
 export class CategoryDto {
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
   category_id: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'New Category' })
   category_name: string;
 
   @ApiProperty()
@@ -15,6 +15,6 @@ export class CategoryDto {
   @Min(1)
   order: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
   template_id: number;
 }
