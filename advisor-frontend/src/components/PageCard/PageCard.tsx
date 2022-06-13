@@ -57,7 +57,7 @@ export default function PageCard({
 }: PageCardProps) {
   return (
     <ThemeProvider theme={theme}>
-      <Card sx={{ display: "flex", verticalAlign: "middle" }}>
+      <Card sx={{ display: "flex", verticalAlign: "middle", width: "vw" }}>
         {/* remove cardmedia section if no image is needed on the left side */}
         <CardMedia
           component="img"
@@ -66,7 +66,7 @@ export default function PageCard({
           alt="ING image"
         />
         {/* set the width of the card */}
-        <Box width="1000px">
+        <Box width="100vw">
           <CardContent>
             {/* Use align="left" if alignment of title, divider and body text is left and JPG/PNG image is on the right, reverse if otherwise
              */}
