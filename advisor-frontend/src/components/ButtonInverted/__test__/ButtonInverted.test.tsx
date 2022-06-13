@@ -6,7 +6,7 @@ afterEach(cleanup);
 
 // test rendering of the inverted button and clicking
 it("Rendering without crash and click", () => {
-  const { getByText } = render(<ButtonInverted name2="ClickButton" />);
+  const { getByText } = render(<ButtonInverted text="ClickButton" />);
   expect(getByText("ClickButton")).toBeInTheDocument();
   fireEvent.click(getByText("ClickButton"));
 });
