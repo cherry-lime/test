@@ -69,6 +69,8 @@ CREATE TABLE "Team" (
     "team_id" SERIAL NOT NULL,
     "team_name" TEXT NOT NULL,
     "invite_token" UUID NOT NULL,
+    "team_country" TEXT NOT NULL,
+    "team_department" TEXT NOT NULL,
 
     CONSTRAINT "Team_pkey" PRIMARY KEY ("team_id")
 );
@@ -85,9 +87,9 @@ CREATE TABLE "UserInTeam" (
 -- CreateTable
 CREATE TABLE "Assessment" (
     "assessment_id" SERIAL NOT NULL,
-    "assessment_name" TEXT NOT NULL,
-    "country_name" TEXT NOT NULL,
-    "department_name" TEXT NOT NULL,
+    "assessment_name" TEXT NOT NULL DEFAULT E'New Assessment',
+    "country_name" TEXT NOT NULL DEFAULT E'',
+    "department_name" TEXT NOT NULL DEFAULT E'',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "completed_at" TIMESTAMP(3),
@@ -109,7 +111,7 @@ CREATE TABLE "AssessmentParticipants" (
 -- CreateTable
 CREATE TABLE "Template" (
     "template_id" SERIAL NOT NULL,
-    "template_name" TEXT NOT NULL,
+    "template_name" TEXT NOT NULL DEFAULT E'New Template',
     "template_type" "AssessmentType" NOT NULL,
     "disabled" BOOLEAN NOT NULL DEFAULT false,
     "weight_range_min" INTEGER NOT NULL DEFAULT 1,
@@ -123,8 +125,9 @@ CREATE TABLE "Template" (
 -- CreateTable
 CREATE TABLE "Category" (
     "category_id" SERIAL NOT NULL,
-    "category_name" TEXT NOT NULL,
-    "color" INTEGER NOT NULL,
+    "category_name" TEXT NOT NULL DEFAULT E'New Category',
+    "color" TEXT NOT NULL DEFAULT E'#FF0000',
+    "order" INTEGER NOT NULL,
     "template_id" INTEGER NOT NULL,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("category_id")
@@ -177,13 +180,16 @@ CREATE UNIQUE INDEX "Team_invite_token_key" ON "Team"("invite_token");
 CREATE INDEX "UserInTeam_team_id_user_id_idx" ON "UserInTeam"("team_id", "user_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Assessment_assessment_name_assessment_type_key" ON "Assessment"("assessment_name", "assessment_type");
+CREATE UNIQUE INDEX "Assessment_assessment_name_assessment_type_team_id_key" ON "Assessment"("assessment_name", "assessment_type", "team_id");
 
 -- CreateIndex
 CREATE INDEX "AssessmentParticipants_assessment_id_user_id_idx" ON "AssessmentParticipants"("assessment_id", "user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Template_template_name_template_type_key" ON "Template"("template_name", "template_type");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Category_category_name_template_id_key" ON "Category"("category_name", "template_id");
 
 -- AddForeignKey
 ALTER TABLE "Checkpoint" ADD CONSTRAINT "Checkpoint_maturity_id_fkey" FOREIGN KEY ("maturity_id") REFERENCES "Maturity"("maturity_id") ON DELETE RESTRICT ON UPDATE CASCADE;

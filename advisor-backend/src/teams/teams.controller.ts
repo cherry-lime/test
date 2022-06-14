@@ -19,9 +19,9 @@ import {
 } from '@nestjs/swagger';
 import { Team } from './dto/team.dto';
 import { TeamMembers } from './dto/team-member.dto';
-import { AssessmentResponse } from '../assessment/responses/AssessmentResponse';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
+import { AssessmentDto } from '../assessment/dto/assessment.dto';
 
 @ApiTags('teams')
 @Controller('teams')
@@ -128,14 +128,14 @@ export class TeamsController {
   @Get(':team_id/assessments')
   @ApiResponse({
     description: 'Get assessments of a team given a team id',
-    type: AssessmentResponse,
+    type: AssessmentDto,
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   getTeamAssessments(
     @Param('team_id', ParseIntPipe) team_id: number
-  ): Promise<AssessmentResponse[]> {
+  ): Promise<AssessmentDto[]> {
     return this.teamsService.getAssessments(team_id);
   }
 

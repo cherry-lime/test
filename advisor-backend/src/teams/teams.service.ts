@@ -8,9 +8,10 @@ import { CreateTeamDto } from './dto/create-team.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Team } from './dto/team.dto';
 import { TeamMembers } from './dto/team-member.dto';
-import { AssessmentResponse } from '../../src/assessment/responses/AssessmentResponse';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
+import { Assessment } from '@prisma/client';
+import { AssessmentDto } from 'src/assessment/dto/assessment.dto';
 
 @Injectable()
 export class TeamsService {
@@ -254,7 +255,7 @@ export class TeamsService {
    * @returns assessment objects corresponding to team_id
    * @throws Team not found
    */
-  async getAssessments(id: number): Promise<AssessmentResponse[]> {
+  async getAssessments(id: number): Promise<AssessmentDto[]> {
     const assessments = await this.prisma.team
       .findUnique({
         where: {
