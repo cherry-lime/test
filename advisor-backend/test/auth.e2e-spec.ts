@@ -3,10 +3,12 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AuthModule } from './../src/auth/auth.module';
 import { LoginDto } from '../src/auth/dto/login-user.dto';
+import { JwtStrategy } from '../src/auth/jwt.strategy';
+import { AppModule } from '../src/app.module';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
-  // let authToken: JwtStrategy;
+  let authToken: JwtStrategy;
 
   beforeEach(async () => {
     process.env = {
@@ -15,7 +17,7 @@ describe('AuthController (e2e)', () => {
       EXPIRESIN: "1h"
     };
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AuthModule],
+      imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();

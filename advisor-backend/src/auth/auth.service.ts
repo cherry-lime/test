@@ -51,7 +51,7 @@ export class AuthService {
     return {
       // token,
       token: await this.jwtService.signAsync({
-        username,
+        user_id: user.user_id,
       }),
       user,
     };
@@ -65,7 +65,7 @@ export class AuthService {
   async register(createUserDto: CreateUserDto): Promise<AuthResponse> {
     const user = await this.usersService.createUser(createUserDto);
     return {
-      token: this.jwtService.sign({ username: user.username }),
+      token: this.jwtService.sign({ user_id: user.user_id }),
       user,
     };
   }
