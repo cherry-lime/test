@@ -12,6 +12,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "16.x"
+          repo-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ github.token }}
+          
       - name: Frontend - npm install and coveralls
         working-directory: advisor-frontend
         run: |
@@ -27,13 +31,13 @@ jobs:
       - name: Frontend - Upload coverage reports to Codecov
         uses: coverallsapp/github-action@master
         with:
-          github-token: ${{ secrets.COVERALLS_TOKEN }}
+          github-token: ${{ github.token }}
           flag-name: frontend
           path-to-lcov: ${{ github.workspace }}/advisor-frontend/coverage/lcov.info
 
       - name: Backend - Upload coverage reports to Coveralls
         uses: coverallsapp/github-action@master
         with:
-          github-token: ${{ secrets.COVERALLS_TOKEN }}
+          github-token: ${{ github.token }}
           flag-name: backend
           path-to-lcov: ${{ github.workspace }}/advisor-backend/coverage/lcov.info
