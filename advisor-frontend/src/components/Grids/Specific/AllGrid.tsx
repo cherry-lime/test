@@ -22,7 +22,7 @@ export default function AllGrid() {
   const assessmentId = 0;
 
   return (
-    <div style={{ width: "90%" }}>
+    <div style={{ width: "100%" }}>
       <strong>Team Grid</strong>
       <TeamGrid theme={INGTheme} userId={userId} userRole={userRole} />
       <strong>Assessor Grid</strong>

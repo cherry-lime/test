@@ -77,7 +77,7 @@ export default function PageCard({
           {/* Use align="left" if alignment of title, divider and body text is left and JPG/PNG image is on the right, reverse if otherwise
            */}
           <Typography
-            color="text.primary"
+            color="text.secondary"
             align="left"
             sx={{ fontWeight: 600 }}
             variant="h6"
@@ -95,7 +95,7 @@ export default function PageCard({
           <Typography
             variant="subtitle1"
             align="left"
-            color="text.primary"
+            color="text.secondary"
             component="div"
           >
             {bodyText}

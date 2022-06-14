@@ -13,7 +13,7 @@ const INGTheme = createTheme({
       dark: "#5A534F", // Dark Grey
     },
     text: {
-      primary: "#5A534F", // Dark Grey
+      secondary: "#5A534F", // Dark Grey
     },
     info: {
       light: "#FAF6F3", // Lightest Grey

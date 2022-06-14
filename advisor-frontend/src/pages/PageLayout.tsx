@@ -40,7 +40,15 @@ export default function PageLayout({
         <Header name={title} bgcolor={headerColor} />
         {footer ? (
           <>
-            <Box className="body_footer"> {children} </Box>
+            <Box
+              className="body_footer"
+              sx={{
+                bgcolor: "secondary.light",
+              }}
+            >
+              {" "}
+              {children}{" "}
+            </Box>
             <Footer />
           </>
         ) : (
