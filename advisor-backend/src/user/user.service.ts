@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserDto } from './../auth/dto/register-user.dto';
+import { CreateUserDto } from '../auth/auth_dto/register-user.dto';
 import { User } from '../../node_modules/.prisma/client';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
