@@ -30,15 +30,15 @@ jobs:
         env:
           NODE_COVERALLS_DEBUG: 1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.COVERALLS_TOKEN }}
           flag-name: backend
-          path-to-lcov: ${{ github.workspace }}/testadvisor/advisor-backend/coverage/lcov.info
+          path-to-lcov: ${{ github.workspace }}/advisor-backend/coverage/lcov.info
 
       - name: Frontend - Upload coverage reports to Codecov
         uses: coverallsapp/github-action@master
         env:
           NODE_COVERALLS_DEBUG: 1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.COVERALLS_TOKEN }}
           flag-name: frontend
           path-to-lcov: ${{ github.workspace }}/advisor-frontend/coverage/lcov.info
