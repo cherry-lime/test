@@ -1,14 +1,4 @@
-import { createTheme, ThemeProvider, Button } from "@mui/material";
-
-//  coloring theme aligned with UI design
-//  ING orange is ff6200
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#ff6200",
-    },
-  },
-});
+import { Button } from "@mui/material";
 
 //  fill regular button with ING orange color according to style
 //  fonttext is bold
@@ -16,19 +6,19 @@ const theme = createTheme({
 //  size of the button is depending on the length of the button text string
 function ButtonRegular({ text }: { text: string }) {
   return (
-      <div>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ fontWeight: "600" }}
-          onClick={() => {
-            //  alert("Clicked")
-            //  action when clicking the button
-          }}
-        >
-          {text}
-        </Button>
-      </div>
+    <div>
+      <Button
+        variant="contained"
+        color="primary"
+        style={{ fontWeight: "600" }}
+        onClick={() => {
+          //  alert("Clicked")
+          //  action when clicking the button
+        }}
+      >
+        {text}
+      </Button>
+    </div>
   );
 }
 

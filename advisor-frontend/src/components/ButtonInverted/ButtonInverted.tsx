@@ -1,14 +1,4 @@
-import { createTheme, ThemeProvider, Button } from "@mui/material";
-
-//  coloring theme aligned with UI design
-//  ING orange is ff6200
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#ff6200",
-    },
-  },
-});
+import { Button } from "@mui/material";
 
 //  function that returns component button in inverted color scheme
 //  text = button text
@@ -16,27 +6,25 @@ const theme = createTheme({
 
 function ButtonInverted({ text }: { text: string }) {
   return (
-    <ThemeProvider theme={theme}>
-      <div>
-        <Button
-          //  set background color of inverted button to white
-          //  style is outlined
-          //  fonttext is bold
-          sx={{
-            backgroundColor: "white",
-          }}
-          variant="outlined"
-          color="primary"
-          style={{ fontWeight: "600" }}
-          onClick={() => {
-            //  alert("Clicked");
-            //  action when clicking the button
-          }}
-        >
-          {text}{" "}
-        </Button>
-      </div>
-    </ThemeProvider>
+    <div>
+      <Button
+        //  set background color of inverted button to white
+        //  style is outlined
+        //  fonttext is bold
+        sx={{
+          backgroundColor: "white",
+        }}
+        variant="outlined"
+        color="primary"
+        style={{ fontWeight: "600" }}
+        onClick={() => {
+          //  alert("Clicked");
+          //  action when clicking the button
+        }}
+      >
+        {text}{" "}
+      </Button>
+    </div>
   );
 }
 

@@ -78,7 +78,7 @@ export default function Sidebar({ children, sidebarType }: SidebarProps) {
           open={open}
           PaperProps={{
             sx: {
-              backgroundColor: 'grey.500',
+              backgroundColor: "grey.500",
             },
           }}
         >
