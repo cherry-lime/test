@@ -25,6 +25,13 @@ jobs:
           npm install
           npm run test:cov
           
+      - name: Write secret to file
+        run: |
+          repo_token: ${{ secrets.COVERALLS_TOKEN }} >> .coveralls.yml
+        shell: bash
+        env:
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+          
       - name: Backend - Upload coverage reports to Coveralls
         uses: coverallsapp/github-action@master
         env:
