@@ -14,6 +14,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { CategoryDto } from '../category/dto/category.dto';
+import { CategoryService } from '../category/category.service';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';
@@ -22,7 +24,10 @@ import { TemplateService } from './template.service';
 @Controller('template')
 @ApiTags('template')
 export class TemplateController {
-  constructor(private templateService: TemplateService) {}
+  constructor(
+    private readonly templateService: TemplateService,
+    private readonly categoryService: CategoryService
+  ) {}
 
   /**
    * [GET] /template - Get all templates
@@ -113,5 +118,43 @@ export class TemplateController {
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<TemplateDto> {
     return this.templateService.clone(id);
+  }
+
+  /**
+   * [POST] /template/:id/category - Create new category for template
+   * @param id template_id
+   * @param body Category data
+   * @returns Created category
+   */
+  @Post(':template_id/category')
+  @ApiTags('category')
+  @ApiResponse({ description: 'Category', type: CategoryDto })
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  @ApiConflictResponse({
+    description: 'Category with this already exists',
+  })
+  async createCategory(
+    @Param('template_id', ParseIntPipe) id: number
+  ): Promise<CategoryDto> {
+    return this.categoryService.create(id);
+  }
+
+  /**
+   * [GET] /template/:id/category - Get all categories for template
+   * @param id template_id
+   * @returns CategoryResponse[] List of all categories
+   */
+  @Get(':template_id/category')
+  @ApiTags('category')
+  @ApiResponse({
+    description: 'Found categories',
+    type: CategoryDto,
+    isArray: true,
+  })
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  async findAllCategories(
+    @Param('template_id', ParseIntPipe) id: number
+  ): Promise<CategoryDto[]> {
+    return this.categoryService.findAll(id);
   }
 }

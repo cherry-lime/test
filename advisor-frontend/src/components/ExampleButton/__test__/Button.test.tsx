@@ -1,9 +1,9 @@
 import { render, cleanup, screen, fireEvent } from "@testing-library/react";
-import Button from "../Button";
+import Button from "../ExampleButton";
 
 afterEach(cleanup);
 
-it("rendering without crash", () => {
+it("Rendering without crash", () => {
   render(<Button name="ClickButton" />);
   expect(screen.getByTestId("Button")).toHaveTextContent("ClickButton"); // the correct one
   // expect(getByTestId('Button')).toHaveTextContent("ClickButton2") // on purpose created an error

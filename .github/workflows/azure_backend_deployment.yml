@@ -42,7 +42,7 @@ jobs:
       - name: Push Prisma migration to database
         working-directory: ./advisor-backend
         run: |
-          npx prisma db push
+          npx prisma migrate deploy
 
       - name: Zip artifact for deployment
         run: zip ../backend.zip ./* -x node_modules -r
