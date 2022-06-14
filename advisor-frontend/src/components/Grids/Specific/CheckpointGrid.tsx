@@ -329,9 +329,11 @@ export default function CheckpointGrid({
       },
     ],
     [
-      preProcessEditOrder,
       handleUpward,
       handleDownward,
+      preProcessEditOrder,
+      handleTopicChange,
+      handleMaturityLevelChange,
       handleDuplicate,
       handleDelete,
     ]

@@ -204,7 +204,7 @@ export default function RecommendationGrid({
           ]
         : []),
     ],
-    [preProcessEditOrder, handleUpward, handleDownward, handleRevertToDefault]
+    [handleUpward, handleDownward, preProcessEditOrder, handleRevertToDefault]
   );
 
   return (

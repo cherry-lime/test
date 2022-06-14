@@ -144,7 +144,7 @@ export default function AnswerTypeGrid({
         ],
       },
     ],
-    [handleDelete]
+    [preProcessEditValue, handleDelete]
   );
 
   return (

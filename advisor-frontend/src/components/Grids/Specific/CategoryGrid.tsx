@@ -272,9 +272,9 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       },
     ],
     [
-      preProcessEditOrder,
       handleUpward,
       handleDownward,
+      preProcessEditOrder,
       handleColor,
       handleVisit,
       handleDuplicate,

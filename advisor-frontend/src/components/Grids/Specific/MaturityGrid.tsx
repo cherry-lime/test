@@ -206,9 +206,9 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       },
     ],
     [
-      preProcessEditOrder,
       handleUpward,
       handleDownward,
+      preProcessEditOrder,
       handleDuplicate,
       handleDelete,
     ]
