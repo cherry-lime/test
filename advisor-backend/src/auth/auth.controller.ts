@@ -5,7 +5,13 @@ import AuthUser from '../common/decorators/auth-user.decorator';
 import { User } from '.prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './auth_dto/register-user.dto';
-import { ApiNotFoundResponse, ApiOkResponse, ApiResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { ProfileDto } from '../user/dto/profile.dto';
 
@@ -20,9 +26,9 @@ export class AuthController {
    * @returns string message
    */
   @Post('/login')
-  @ApiOkResponse({ description: "login successful" })
-  @ApiNotFoundResponse({ description: "user not found" })
-  @ApiUnauthorizedResponse({ description: "incorrect password" })
+  @ApiOkResponse({ description: 'login successful' })
+  @ApiNotFoundResponse({ description: 'user not found' })
+  @ApiUnauthorizedResponse({ description: 'incorrect password' })
   @UseGuards(AuthGuard('local'))
   async login(
     @Body() loginDto: LoginDto,
