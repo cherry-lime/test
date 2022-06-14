@@ -10,8 +10,7 @@ import { Team } from './dto/team.dto';
 import { TeamMembers } from './dto/team-member.dto';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
-import { Assessment } from '@prisma/client';
-import { AssessmentDto } from 'src/assessment/dto/assessment.dto';
+import { AssessmentDto } from '../assessment/dto/assessment.dto';
 
 @Injectable()
 export class TeamsService {
