@@ -12,7 +12,7 @@ import {
 import RemoveIcon from "@mui/icons-material/HighlightOff";
 
 import GenericGrid from "../Generic/GenericGrid";
-import { handleDeleteDecorator, updateOrderRows } from "../decorators";
+import { handleDeleteDecorator } from "../decorators";
 
 // Define type for the rows in the grid
 type Row = {
@@ -64,7 +64,6 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
       const handleAPI = () => {};
 
       handleDeleteDecorator(handleAPI, setRows, rowId);
-      updateOrderRows(setRows);
     },
     []
   );

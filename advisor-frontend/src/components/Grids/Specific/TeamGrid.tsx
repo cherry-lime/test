@@ -18,7 +18,6 @@ import {
   handleAddDecorator,
   handleDeleteDecorator,
   processRowUpdateDecorator,
-  updateOrderRows,
 } from "../decorators";
 
 // Define type for the rows in the grid
@@ -56,16 +55,8 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
     (newRow: GridRowModel, oldRow: GridRowModel) => {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       const handleRowAPI = () => {};
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleOrderAPI = () => {};
 
-      return processRowUpdateDecorator(
-        handleRowAPI,
-        setRows,
-        newRow,
-        oldRow,
-        handleOrderAPI
-      );
+      return processRowUpdateDecorator(handleRowAPI, setRows, newRow, oldRow);
     },
     []
   );
@@ -86,7 +77,6 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
       const handleAPI = () => {};
 
       handleDeleteDecorator(handleAPI, setRows, rowId);
-      updateOrderRows(setRows);
     },
     []
   );

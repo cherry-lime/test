@@ -17,7 +17,6 @@ import {
   handleAddDecorator,
   handleDeleteDecorator,
   processRowUpdateDecorator,
-  updateOrderRows,
 } from "../decorators";
 
 // Define type for the rows in the grid
@@ -80,7 +79,6 @@ export default function MemberGrid({
       const handleAPI = () => {};
 
       handleDeleteDecorator(handleAPI, setRows, rowId);
-      updateOrderRows(setRows);
     },
     []
   );
