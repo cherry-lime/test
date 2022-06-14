@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { AssessmentModule } from './assessment/assessment.module';
 import { TemplateModule } from './template/template.module';
 import { CategoryModule } from './category/category.module';
+import { MaturityModule } from './maturity/maturity.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CategoryModule } from './category/category.module';
     TemplateModule,
     AssessmentModule,
     CategoryModule,
+    MaturityModule,
   ],
   controllers: [AppController],
   providers: [AppService],

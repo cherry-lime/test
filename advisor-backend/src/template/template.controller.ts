@@ -14,19 +14,22 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CategoryDto } from '../category/dto/category.dto';
 import { CategoryService } from '../category/category.service';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';
 import { TemplateService } from './template.service';
+import { MaturityDto } from '../maturity/dto/maturity.dto';
+import { MaturityService } from '../maturity/maturity.service';
+import { CategoryDto } from '../category/dto/category.dto';
 
 @Controller('template')
 @ApiTags('template')
 export class TemplateController {
   constructor(
     private readonly templateService: TemplateService,
-    private readonly categoryService: CategoryService
+    private readonly categoryService: CategoryService,
+    private readonly maturityService: MaturityService
   ) {}
 
   /**
@@ -156,5 +159,44 @@ export class TemplateController {
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<CategoryDto[]> {
     return this.categoryService.findAll(id);
+  }
+
+  /**
+   * [POST] /template/:template_id/maturity - Create new maturity for template
+   * @param id template_id
+   * @param body Maturity data
+   * @returns Created maturity
+   */
+  @Post(':template_id/maturity')
+  @ApiTags('maturity')
+  @ApiResponse({ description: 'Maturity', type: MaturityDto })
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  @ApiConflictResponse({
+    description: 'Maturity with this name already exists',
+  })
+  async createMaturity(
+    @Param('template_id', ParseIntPipe) id: number
+  ): Promise<MaturityDto> {
+    return this.maturityService.create(id);
+  }
+
+  /**
+   * [GET] /template/:template_id/maturity - Get all maturity for template
+   * @param id template_id
+   * @returns MaturityDto[] List of all maturity
+   * @throws NotFoundException if template not found
+   */
+  @Get(':template_id/maturity')
+  @ApiTags('maturity')
+  @ApiResponse({
+    description: 'Found maturities',
+    type: MaturityDto,
+    isArray: true,
+  })
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  async findAllMaturities(
+    @Param('template_id', ParseIntPipe) id: number
+  ): Promise<MaturityDto[]> {
+    return this.maturityService.findAll(id);
   }
 }
