@@ -35,7 +35,6 @@ export default function Example() {
     <PageLayout
       title="Home"
       footer
-      headerColor="#9f9dc4"
       sidebarType={userType.USER}
     >
       <Stack spacing={3}>
