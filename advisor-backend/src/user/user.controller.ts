@@ -5,7 +5,7 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiProperty, ApiResponse } from '@nestjs/swagger';
+import { ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { UserService } from './user.service';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -29,6 +29,7 @@ class userResponse {
   updated_at: Date;
 }
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
