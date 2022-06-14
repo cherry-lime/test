@@ -8,7 +8,7 @@ import { IsIn, IsString, IsUUID } from 'class-validator';
 export class AutheticationDto {
   @IsUUID()
   @ApiProperty()
-  password: String;
+  password: string;
 
   @ApiProperty()
   created_at: Date;
@@ -18,7 +18,7 @@ export class AutheticationDto {
 
   @IsString()
   @ApiProperty()
-  username: String;
+  username: string;
 
   @ApiProperty()
   user_id: number;
