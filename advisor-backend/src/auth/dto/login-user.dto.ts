@@ -1,11 +1,7 @@
-import { IsString, IsUUID } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-export class LoginDto {
-  @IsString()
-  @ApiProperty()
-  username: string;
+import { PickType } from '@nestjs/swagger';
+import { AutheticationDto } from './authentication.dto';
 
-  @IsUUID()
-  @ApiProperty()
-  password: string;
-}
+export class LoginDto extends PickType(AutheticationDto, [
+  'username',
+  'password',
+] as const) {}

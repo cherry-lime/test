@@ -9,6 +9,8 @@ const moduleMocker = new ModuleMocker(global);
 describe('AppModule', () => {
   process.env = {
     DATABASE_URL: 'postgres://localhost:5432/test',
+    JWT_SECRET: 'mycustomuselongsecret',
+    EXPIRESIN: '60 days',
   };
   let appModule: AppModule;
 

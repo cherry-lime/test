@@ -5,11 +5,16 @@ import { Test } from '@nestjs/testing';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { registerDto, userDto, UserWithoutPassword, userAuthenticationLog, userAuthenticationReg, mockPrisma} from '../prisma/mock/mockAuthService'
-import { JwtStrategy } from './jwt.strategy';
 import {
-  NotFoundException,
-} from '@nestjs/common';
+  registerDto,
+  userDto,
+  UserWithoutPassword,
+  userAuthenticationLog,
+  userAuthenticationReg,
+  mockPrisma,
+} from '../prisma/mock/mockAuthService';
+import { JwtStrategy } from './jwt.strategy';
+import { NotFoundException } from '@nestjs/common';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -48,8 +53,8 @@ describe('AuthService', () => {
   beforeEach(async () => {
     process.env = {
       DATABASE_URL: 'postgres://localhost:5432/test',
-      JWT_SECRET: "mycustomuselongsecret",
-      EXPIRESIN: "1h"
+      JWT_SECRET: 'mycustomuselongsecret',
+      EXPIRESIN: '60 days',
     };
     const module = await Test.createTestingModule({
       imports: [
@@ -59,7 +64,7 @@ describe('AuthService', () => {
           signOptions: {
             expiresIn: process.env.EXPIRESIN,
           },
-        })
+        }),
       ],
       providers: [
         // UserService,
@@ -68,25 +73,25 @@ describe('AuthService', () => {
         AuthService,
         {
           provide: PrismaService,
-          useValue: mockPrisma
-        }
+          useValue: mockPrisma,
+        },
       ],
     })
-    .useMocker((token) => {
-      if (token === UserService) {
-        return {
-          createUser: jest.fn().mockResolvedValue(UserWithoutPassword)
-        };
-      }
-      if (typeof token === 'function') {
-        const mockMetadata = moduleMocker.getMetadata(
-          token
-        ) as MockFunctionMetadata<any, any>;
-        const Mock = moduleMocker.generateFromMetadata(mockMetadata);
-        return new Mock();
-      }
-    })    
-    .compile();
+      .useMocker((token) => {
+        if (token === UserService) {
+          return {
+            createUser: jest.fn().mockResolvedValue(UserWithoutPassword),
+          };
+        }
+        if (typeof token === 'function') {
+          const mockMetadata = moduleMocker.getMetadata(
+            token
+          ) as MockFunctionMetadata<any, any>;
+          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
+          return new Mock();
+        }
+      })
+      .compile();
     authService = module.get<AuthService>(AuthService);
     prisma = module.get<PrismaService>(PrismaService);
   });
@@ -105,26 +110,26 @@ describe('AuthService', () => {
 
   describe('When registering', () => {
     it('should return the correct AuthResponse type', async () => {
-      expect(
-        typeof authService.register(registerDto)
-      )
-      .toEqual(typeof userAuthenticationReg);
+      expect(typeof authService.register(registerDto)).toEqual(
+        typeof userAuthenticationReg
+      );
     });
   });
 
-  
   describe('When logging in', () => {
     it('should return an AuthResponse type', () => {
       // const userId = 1;
-      expect(
-        typeof authService.login(userDto)
-      ).toEqual(typeof userAuthenticationLog)
+      expect(typeof authService.login(userDto)).toEqual(
+        typeof userAuthenticationLog
+      );
     });
-    
-    it('should reject if username is not found', async() => {
+
+    it('should reject if username is not found', async () => {
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
-      expect(authService.login(userDto)).rejects.toThrowError(NotFoundException);
-    })
+      expect(authService.login(userDto)).rejects.toThrowError(
+        NotFoundException
+      );
+    });
     // it('should return an AuthResponse type', () => {
     //   // const userId = 1;
     //   expect(
@@ -133,16 +138,16 @@ describe('AuthService', () => {
     // })
 
     // it("should", async () => {
-      // expect.assertions(1);
-      // try {
-      //   expect(authService.login(userDtoNotFound))
-      // } catch(error) {
-      //   expect(error.message).toBe("user not found")
-      // }
-      // expect(() => {
-      //   authService.login(userDtoNotFound);
-      // }).toThrowError("user not found");
-    // }) 
+    // expect.assertions(1);
+    // try {
+    //   expect(authService.login(userDtoNotFound))
+    // } catch(error) {
+    //   expect(error.message).toBe("user not found")
+    // }
+    // expect(() => {
+    //   authService.login(userDtoNotFound);
+    // }).toThrowError("user not found");
+    // })
 
     // it('should return a NotFoundException on the user', () => {
     //   // const userId = 1;
@@ -150,5 +155,5 @@ describe('AuthService', () => {
     //     authService.login(userDtoNotFound);}
     //   ).toThrow(new NotFoundException('user not found')) //.toEqual(userAuthenticationLog)
     // })
-  })
+  });
 });

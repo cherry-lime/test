@@ -41,26 +41,27 @@ export class UserService {
     const new_username = randomWords({ min: 2, max: 3, join: '_' });
 
     const myuuid = uuidv4();
-    const hashedPassword = await bcrypt.hash(myuuid,10);
+    const hashedPassword = await bcrypt.hash(myuuid, 10);
 
-    const user = await this.prisma.user.create({
-      data: {
-        ...data,
-        password: hashedPassword,
-        username: new_username,
-      },
-    }).catch((error) => {
-      if (error.code === 'P2002') {
-        // Throw error if username already exsits
-        throw new ConflictException('Username already exists');
-      } else {
-        throw new InternalServerErrorException();
-      }
-    });;
+    const user = await this.prisma.user
+      .create({
+        data: {
+          ...data,
+          password: hashedPassword,
+          username: new_username,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2002') {
+          // Throw error if username already exsits
+          throw new ConflictException('Username already exists');
+        } else {
+          throw new InternalServerErrorException();
+        }
+      });
 
-    var userinfos : User = {...user}
+    var userinfos: User = { ...user };
     userinfos.password = myuuid;
-
 
     //delete user.password_hash;
     return userinfos;

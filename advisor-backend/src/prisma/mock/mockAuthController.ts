@@ -13,9 +13,9 @@ export const mockUser = {
 };
 
 export const registerDto = {
-    role: Role.ASSESSOR,
-  };
-  
+  role: Role.ASSESSOR,
+};
+
 export const userinfo = {
   user_id: 1,
   username: 'discussion_believed_pleasant',
@@ -29,4 +29,3 @@ export const userAuthenticationLog = {
   token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV',
   user: userinfo,
 };
-

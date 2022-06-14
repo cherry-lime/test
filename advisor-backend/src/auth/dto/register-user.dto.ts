@@ -1,10 +1,6 @@
-import { Role } from '@prisma/client';
-import { IsIn } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { PickType } from '@nestjs/swagger';
+import { AutheticationDto } from './authentication.dto';
 
-export class CreateUserDto {
-  @IsIn([Role.USER, Role.ASSESSOR])
-  @ApiProperty()
-  role: Role;
-
-}
+export class CreateUserDto extends PickType(AutheticationDto, [
+  'role',
+] as const) {}

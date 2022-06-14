@@ -1,7 +1,7 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login-user.dto';
@@ -21,28 +21,24 @@ export class AuthService {
 
   /**
    * Log in
-   * @param loginDto username and password 
+   * @param loginDto username and password
    * @returns generated token and user information
    * @throws user is not found
    * @throws password is invalid
    */
-  async login({username, password}: LoginDto): Promise<AuthResponse> {
-
+  async login({ username, password }: LoginDto): Promise<AuthResponse> {
     const user = await this.prismaService.user.findUnique({
       where: { username },
-    })
-//    .catch(() => {
-  //    throw new InternalServerErrorException();
+    });
+    //    .catch(() => {
+    //    throw new InternalServerErrorException();
     //});;
 
     if (!user) {
       throw new NotFoundException('user not found');
     }
 
-    const validatePassword = await bcrypt.compare(
-      password,
-      user.password,
-    );
+    const validatePassword = await bcrypt.compare(password, user.password);
 
     if (!validatePassword) {
       throw new UnauthorizedException('invalid password');
@@ -60,7 +56,7 @@ export class AuthService {
   /**
    * Create a user
    * @param createUserDto information for creating a user
-   * @returns a generated token and user information 
+   * @returns a generated token and user information
    */
   async register(createUserDto: CreateUserDto): Promise<AuthResponse> {
     const user = await this.usersService.createUser(createUserDto);

@@ -11,8 +11,8 @@ describe('AuthController', () => {
   beforeEach(async () => {
     process.env = {
       DATABASE_URL: 'postgres://localhost:5432/test',
-      JWT_SECRET: "mycustomuselongsecret",
-      EXPIRESIN: "1h"
+      JWT_SECRET: 'mycustomuselongsecret',
+      EXPIRESIN: '60 days',
     };
     //const mock_AuthGuard: CanActivate = {canActivate: jest.fn(() => true)};
 
@@ -53,15 +53,15 @@ describe('AuthController', () => {
   });
 
   //describe('login', () => {
-    //it('should return not found exception', async () => {
-    //  expect(authController.login(null))
-    //  .rejects.toThrowError(NotFoundException);
-    //})
-    //it('should return token and user information', async () => {
-      //expect(authController.login(mockUser, Response)).toBe(
-        //"login successful"//userAuthenticationLog
-      //);
-    //});
+  //it('should return not found exception', async () => {
+  //  expect(authController.login(null))
+  //  .rejects.toThrowError(NotFoundException);
+  //})
+  //it('should return token and user information', async () => {
+  //expect(authController.login(mockUser, Response)).toBe(
+  //"login successful"//userAuthenticationLog
+  //);
+  //});
   //});
 
   //describe('profile', () => {

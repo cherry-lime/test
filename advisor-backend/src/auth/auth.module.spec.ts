@@ -11,8 +11,8 @@ const moduleMocker = new ModuleMocker(global);
 describe('AuthModule', () => {
   process.env = {
     DATABASE_URL: 'postgres://localhost:5432/test',
-    JWT_SECRET: "mycustomuselongsecret",
-    EXPIRESIN: "1h"
+    JWT_SECRET: 'mycustomuselongsecret',
+    EXPIRESIN: '60 days',
   };
   it('should compile the module', async () => {
     const module = await Test.createTestingModule({

@@ -8,8 +8,8 @@ describe('PrismaService', () => {
   beforeEach(async () => {
     process.env = {
       DATABASE_URL: 'postgres://localhost:5432/test',
-      JWT_SECRET: "mycustomuselongsecret",
-      EXPIRESIN: "1h"
+      JWT_SECRET: 'mycustomuselongsecret',
+      EXPIRESIN: '60 days',
     };
     const module: TestingModule = await Test.createTestingModule({
       providers: [PrismaService],
