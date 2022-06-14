@@ -15,7 +15,7 @@ type PageProps = {
 };
 const defaultProps = {
   footer: false,
-  headerColor: "secondary.main",
+  headerColor: "primary.main",
 };
 
 /**
@@ -37,7 +37,7 @@ export default function PageLayout({
   return (
     <Sidebar sidebarType={sidebarType}>
       <div className="main_container">
-        <Header name={title} bgcolor={headerColor} />
+        <Header name={title} bgColor={headerColor} />
         {footer ? (
           <>
             <Box
@@ -46,8 +46,7 @@ export default function PageLayout({
                 bgcolor: "secondary.light",
               }}
             >
-              {" "}
-              {children}{" "}
+              {children}
             </Box>
             <Footer />
           </>
