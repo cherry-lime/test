@@ -4,7 +4,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import PageLayout from "./PageLayout";
 import userType from "../components/Sidebar/listUsersTypes";
 import testimageFigma from "../components/PageCard/testimageFigma.png";
-import "../App.css";
+
 import ButtonRegular from "../components/ButtonRegular/ButtonRegular";
 import ButtonInverted from "../components/ButtonInverted/ButtonInverted";
 import Checkpoint from "../components/Checkpoint/Checkpoint";
@@ -21,7 +21,7 @@ import IndividualEvaluation from "./evaluations/IndividualEvaluation";
 import IndividualFeedback from "./evaluations/IndividualFeedback";
 import TeamEvaluation from "./evaluations/TeamEvaluation";
 import TeamFeedback from "./evaluations/TeamFeedback";
-import Home from "../Home"
+import Home from "../Home";
 import Team from "./teams/Team/Team";
 import TeamList from "./teams/TeamList/TeamList";
 import UserInterface from "./user/UserInterface/UserInterface";
@@ -37,27 +37,24 @@ export default function Example() {
       headerColor="#9f9dc4"
       sidebarType={userType.USER}
     >
-     <header className="App-header">
-        <Stack spacing={3}>
-          {/* all components are listed once as an example with parameters if applicable */}
-          <ButtonRegular text="Regular Button" />
-          <ButtonInverted text="Inverted Button" />
-          <Checkpoint description="Checkpoint Description" />
-          <TextfieldEdit text="Here is some text that can be edited" />
-          <Textfield text="Here is some text that can not be edited" />
-          <p />
-        </Stack>
-        <PageCard
-          bodyText="This is a description for the home page card"
-          headerText="Title"
-          cardHeight={125}
-          icon={<AssessmentIcon color="primary" fontSize="small" />}
-          image={testimageFigma}
-          isImageLeft
-          isImageRight
-        />
-       
-      </header>
+      <Stack spacing={3}>
+        {/* all components are listed once as an example with parameters if applicable */}
+        <ButtonRegular text="Regular Button" />
+        <ButtonInverted text="Inverted Button" />
+        <Checkpoint description="Checkpoint Description" />
+        <TextfieldEdit text="Here is some text that can be edited" />
+        <Textfield text="Here is some text that can not be edited" />
+        <p />
+      </Stack>
+      <PageCard
+        bodyText="This is a description for the home page card"
+        headerText="Title"
+        cardHeight={125}
+        icon={<AssessmentIcon color="primary" fontSize="small" />}
+        image={testimageFigma}
+        isImageLeft
+        isImageRight
+      />
       <Link data-testid="home" to="/">
         {" "}
         Home{" "}
