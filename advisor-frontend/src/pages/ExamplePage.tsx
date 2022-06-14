@@ -32,11 +32,7 @@ import AllGrid from "../components/Grids/Specific/AllGrid";
 // This is a template
 export default function Example() {
   return (
-    <PageLayout
-      title="Home"
-      footer
-      sidebarType={userType.USER}
-    >
+    <PageLayout title="Home" footer sidebarType={userType.USER}>
       <Stack spacing={3}>
         {/* all components are listed once as an example with parameters if applicable */}
         <ButtonRegular text="Regular Button" />
