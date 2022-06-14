@@ -60,7 +60,7 @@ export class UserService {
         }
       });
 
-    var userinfos: User = { ...user };
+    const userinfos: User = { ...user };
     userinfos.password = myuuid;
 
     //delete user.password_hash;

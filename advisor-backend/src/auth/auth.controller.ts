@@ -50,7 +50,7 @@ export class AuthController {
     @Body() createUserDto: CreateUserDto,
     @Res({ passthrough: true }) res: Response
   ) {
-    let register = await this.authService.register(createUserDto); //getJwtToken(req.user as User);
+    const register = await this.authService.register(createUserDto); //getJwtToken(req.user as User);
 
     const token = register.token;
     const user = register.user;

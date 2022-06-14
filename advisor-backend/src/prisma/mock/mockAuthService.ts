@@ -1,8 +1,8 @@
 import { Role } from '@prisma/client';
 
 // Random start and update date
-let myStartDate: any = new Date();
-let myEndDate: any = new Date();
+const myStartDate: any = new Date();
+const myEndDate: any = new Date();
 
 // Mock users array
 export const userArray = [
