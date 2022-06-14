@@ -17,7 +17,7 @@ import {
 import { AssessmentService } from './assessment.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
-import { AssessmentResponse } from './responses/AssessmentResponse';
+import { AssessmentDto } from './dto/assessment.dto';
 
 @ApiTags('assessment')
 @Controller('assessment')
@@ -33,6 +33,9 @@ export class AssessmentController {
   @ApiConflictResponse({
     description: 'Assessment with this name and type already exists',
   })
+  @ApiNotFoundResponse({
+    description: 'Team not found',
+  })
   create(@Body() createAssessmentDto: CreateAssessmentDto) {
     return this.assessmentService.create(createAssessmentDto);
   }
@@ -44,7 +47,7 @@ export class AssessmentController {
   @Get()
   @ApiResponse({
     description: 'Found assessments',
-    type: AssessmentResponse,
+    type: AssessmentDto,
     isArray: true,
   })
   findAll() {
@@ -56,10 +59,10 @@ export class AssessmentController {
    * @param id assessment_id
    * @returns Assessment object
    */
-  @Get(':id')
-  @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @Get(':assessment_id')
+  @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('template_id', ParseIntPipe) id: number) {
     return this.assessmentService.findOne(id);
   }
 
@@ -69,14 +72,14 @@ export class AssessmentController {
    * @param updateAssessmentDto updated assessment information
    * @returns
    */
-  @Patch(':id')
-  @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @Patch(':assessment_id')
+  @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   @ApiConflictResponse({
     description: 'Assessment with this name and type already exists',
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('assessment_id', ParseIntPipe) id: number,
     @Body() updateAssessmentDto: UpdateAssessmentDto
   ) {
     return this.assessmentService.update(id, updateAssessmentDto);
@@ -87,10 +90,22 @@ export class AssessmentController {
    * @param id assessment_id
    * @returns deleted Assessment object
    */
-  @Delete(':id')
-  @ApiResponse({ description: 'Assessment', type: AssessmentResponse })
+  @Delete(':assessment_id')
+  @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('assessment_id', ParseIntPipe) id: number) {
     return this.assessmentService.delete(id);
+  }
+
+  /**
+   * [POST] /assessment/:id/complete - mark assessment as complete
+   * @param id assessment_id
+   * @returns updated Assessment object
+   */
+  @Post(':assessment_id/complete')
+  @ApiResponse({ description: 'Assessment', type: AssessmentDto })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
+  complete(@Param('assessment_id', ParseIntPipe) id: number) {
+    return this.assessmentService.complete(id);
   }
 }

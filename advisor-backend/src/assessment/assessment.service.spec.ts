@@ -11,6 +11,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { aTeam } from '../prisma/mock/mockTeam';
+import { AssessmentType } from '@prisma/client';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -80,6 +81,16 @@ describe('AssessmentService', () => {
         ...aTeamAssessment,
       };
       delete aTeamAssessment2.team_id;
+      expect(assessmentService.create(aTeamAssessment2)).rejects.toThrowError(
+        BadRequestException
+      );
+    });
+
+    it('Should reject with BadRequestException if type individual but team_id', async () => {
+      const aTeamAssessment2 = {
+        ...aTeamAssessment,
+        assessment_type: AssessmentType.INDIVIDUAL,
+      };
       expect(assessmentService.create(aTeamAssessment2)).rejects.toThrowError(
         BadRequestException
       );
@@ -180,6 +191,32 @@ describe('AssessmentService', () => {
         .mockRejectedValueOnce({ code: 'TEST' });
       expect(
         assessmentService.delete(aAssessment.template_id)
+      ).rejects.toThrowError(InternalServerErrorException);
+    });
+  });
+
+  describe('complete', () => {
+    it('Should return the completed assessment', async () => {
+      expect(
+        assessmentService.complete(aAssessment.assessment_id)
+      ).resolves.toBe(aAssessment);
+    });
+
+    it('Should throw NotFoundException if not found', async () => {
+      jest
+        .spyOn(prisma.assessment, 'update')
+        .mockRejectedValueOnce({ code: 'P2025' });
+      expect(
+        assessmentService.complete(aAssessment.template_id)
+      ).rejects.toThrowError(NotFoundException);
+    });
+
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.assessment, 'update')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      expect(
+        assessmentService.complete(aAssessment.template_id)
       ).rejects.toThrowError(InternalServerErrorException);
     });
   });

@@ -21,6 +21,7 @@ describe('AssessmentController', () => {
             findOne: jest.fn().mockResolvedValue(aAssessment),
             update: jest.fn().mockResolvedValue(aAssessment),
             delete: jest.fn().mockResolvedValue(aAssessment),
+            complete: jest.fn().mockResolvedValue(aAssessment),
           };
         }
         if (typeof token === 'function') {
@@ -72,6 +73,12 @@ describe('AssessmentController', () => {
   describe('delete', () => {
     it('Should return the deleted assessment', async () => {
       expect(assessmentController.delete(1)).resolves.toBe(aAssessment);
+    });
+  });
+
+  describe('complete', () => {
+    it('Should return the completed assessment', async () => {
+      expect(assessmentController.complete(1)).resolves.toBe(aAssessment);
     });
   });
 });

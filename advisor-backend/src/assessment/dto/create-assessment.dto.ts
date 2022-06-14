@@ -1,25 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AssessmentType } from '@prisma/client';
-import { IsEnum, IsOptional } from 'class-validator';
+import { PickType } from '@nestjs/swagger';
+import { AssessmentDto } from './assessment.dto';
 
-export class CreateAssessmentDto {
-  @ApiProperty()
-  assessment_name: string;
-
-  @ApiProperty({ enum: AssessmentType })
-  @IsEnum(AssessmentType)
-  assessment_type: AssessmentType;
-
-  @ApiProperty()
-  template_id: number;
-
-  @ApiProperty()
-  country_name: string;
-
-  @ApiProperty()
-  department_name: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  team_id?: number;
-}
+export class CreateAssessmentDto extends PickType(AssessmentDto, [
+  'assessment_type',
+  'template_id',
+  'team_id',
+] as const) {}

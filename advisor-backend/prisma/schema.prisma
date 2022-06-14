@@ -94,9 +94,9 @@ model UserInTeam {
 
 model Assessment {
   assessment_id                     Int                                 @id @default(autoincrement())
-  assessment_name                   String
-  country_name                      String
-  department_name                   String
+  assessment_name                   String                              @default("New Assessment")
+  country_name                      String                              @default("")
+  department_name                   String                              @default("")
   created_at                        DateTime                            @default(now())
   updated_at                        DateTime                            @updatedAt
   completed_at                      DateTime?
@@ -108,7 +108,7 @@ model Assessment {
   AssessmentParticipants            AssessmentParticipants[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
-  @@unique([assessment_name, assessment_type])
+  @@unique([assessment_name, assessment_type, team_id])
 }
 
 model AssessmentParticipants {
@@ -123,7 +123,7 @@ model AssessmentParticipants {
 
 model Template {
   template_id       Int               @id @default(autoincrement())
-  template_name     String
+  template_name     String            @default("New Template")
   template_type     AssessmentType
   disabled          Boolean           @default(false)
   weight_range_min  Int               @default(1)
@@ -140,13 +140,16 @@ model Template {
 
 model Category {
   category_id   Int          @id @default(autoincrement())
-  category_name String
-  color         Int
+  category_name String       @default("New Category")
+  color         String       @default("#FF0000")
+  order         Int
   Template      Template     @relation(fields: [template_id], references: [template_id])
   template_id   Int
   Feedback      Feedback[]
   Checkpoint    Checkpoint[]
   SubArea       SubArea[]
+
+  @@unique([category_name, template_id])
 }
 
 model SubArea {
