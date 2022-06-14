@@ -1,9 +1,12 @@
+// Sample Button used for test setup front-end
+// this component should be removed in the end
+// DO NOT USE
 import { useState } from "react";
-import "./Button.css";
+import "./ExampleButton.css";
 
 type Message = { name: string };
 
-function Button({ name }: Message) {
+function ExampleButton({ name }: Message) {
   const [text, setText] = useState(name);
 
   const handleClick = () => {
@@ -22,4 +25,4 @@ function Button({ name }: Message) {
   );
 }
 
-export default Button;
+export default ExampleButton;
