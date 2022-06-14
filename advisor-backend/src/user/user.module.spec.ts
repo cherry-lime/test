@@ -1,9 +1,9 @@
 import { Test } from '@nestjs/testing';
-import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { PrismaService } from '../prisma/prisma.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { UserModule } from './user.module';
 import { UserController } from './user.controller';
+import { UserModule } from './user.module';
+import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { UserService } from './user.service';
 
 const moduleMocker = new ModuleMocker(global);

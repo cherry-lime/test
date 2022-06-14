@@ -11,14 +11,14 @@ datasource db {
 }
 
 model User {
-  user_id                Int                      @id @default(autoincrement())
-  username               String
-  password_hash          String
-  role                   Role                     @default(USER)
+  password               String
   created_at             DateTime                 @default(now())
   updated_at             DateTime                 @updatedAt
-  UserInTeam             UserInTeam[]
+  username               String                   @unique
+  user_id                Int                      @id @default(autoincrement())
+  role                   Role[]
   AssessmentParticipants AssessmentParticipants[]
+  UserInTeam             UserInTeam[]
 
   @@index([role])
 }
@@ -194,3 +194,6 @@ enum Role {
   ASSESSOR
   ADMIN
 }
+
+
+

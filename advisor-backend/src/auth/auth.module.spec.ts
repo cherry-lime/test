@@ -1,26 +1,26 @@
 import { Test } from '@nestjs/testing';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { AppModule } from './app.module';
-import { mockPrisma } from './prisma/mock/mockPrisma';
-import { PrismaService } from './prisma/prisma.service';
+import { AuthController } from './auth.controller';
+import { AuthModule } from './auth.module';
+import { AuthService } from './auth.service';
 
 const moduleMocker = new ModuleMocker(global);
 
-describe('AppModule', () => {
+describe('AuthModule', () => {
   process.env = {
     DATABASE_URL: 'postgres://localhost:5432/test',
     JWT_SECRET: 'mycustomuselongsecret',
     EXPIRESIN: '60 days',
   };
-  let appModule: AppModule;
-
-  beforeEach(async () => {
+  it('should compile the module', async () => {
     const module = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AuthModule],
     })
       .useMocker((token) => {
         if (token === PrismaService) {
-          return mockPrisma;
+          return Prisma;
         }
         if (typeof token === 'function') {
           const mockMetadata = moduleMocker.getMetadata(
@@ -32,10 +32,8 @@ describe('AppModule', () => {
       })
       .compile();
 
-    appModule = module.get<AppModule>(AppModule);
-  });
-
-  it('should compile the module', async () => {
-    expect(appModule).toBeDefined();
+    expect(module).toBeDefined();
+    expect(module.get(AuthController)).toBeInstanceOf(AuthController);
+    expect(module.get(AuthService)).toBeInstanceOf(AuthService);
   });
 });
