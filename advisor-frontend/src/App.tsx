@@ -27,6 +27,8 @@ import UserInterface from "./pages/user/UserInterface/UserInterface";
 import AllPages from "./pages/AllPages";
 import ListOfSelfEvals from "./pages/user/ListOfSelfEvals/ListOfSelfEvals";
 
+import AllGrid from "./components/Grids/Specific/AllGrid";
+
 function App() {
   return (
     <div className="App">
@@ -61,6 +63,7 @@ function App() {
         >
           Learn React
         </a>
+        <AllGrid />
       </header>
       <Link data-testid="home" to="/">
         {" "}
