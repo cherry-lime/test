@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -25,20 +28,20 @@ model Checkpoint {
   checkpoint_name                   String
   checkpoint_description            String
   weight                            Int
-  maturity_id                       Int
-  category_id                       Int
-  Category                          Category                            @relation(fields: [category_id], references: [category_id])
   Maturity                          Maturity                            @relation(fields: [maturity_id], references: [maturity_id])
-  CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+  maturity_id                       Int
+  Category                          Category                            @relation(fields: [category_id], references: [category_id])
+  category_id                       Int
   CheckpointInTopic                 CheckpointInTopic[]
+  CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 }
 
 model PossibleAnswers {
   possible_answer_id                Int                                 @id @default(autoincrement())
   answer                            String
   answer_weight                     Float
-  template_id                       Int
   Template                          Template                            @relation(fields: [template_id], references: [template_id])
+  template_id                       Int
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 }
 
@@ -53,17 +56,17 @@ model Maturity {
 model Topic {
   topic_id          Int                 @id @default(autoincrement())
   topic_name        String
-  template_id       Int
   Template          Template            @relation(fields: [template_id], references: [template_id])
+  template_id       Int
   CheckpointInTopic CheckpointInTopic[]
   Feedback          Feedback[]
 }
 
 model CheckpointInTopic {
-  checkpoint_id Int
-  topic_id      Int
   checkpoint    Checkpoint @relation(fields: [checkpoint_id], references: [checkpoint_id])
+  checkpoint_id Int
   topic         Topic      @relation(fields: [topic_id], references: [topic_id])
+  topic_id      Int
 
   @@id([topic_id, checkpoint_id])
 }
@@ -77,11 +80,11 @@ model Team {
 }
 
 model UserInTeam {
-  team_id   Int
-  joined_at DateTime @default(now())
+  user      User     @relation(fields: [user_id], references: [user_id])
   user_id   Int
   team      Team     @relation(fields: [team_id], references: [team_id])
-  user      User     @relation(fields: [user_id], references: [user_id])
+  team_id   Int
+  joined_at DateTime @default(now())
 
   @@id([user_id, team_id])
   @@index([team_id, user_id])
@@ -96,15 +99,10 @@ model Assessment {
   updated_at                        DateTime                            @updatedAt
   completed_at                      DateTime?
   assessment_type                   AssessmentType
-<<<<<<< HEAD
-  template_id                       Int
-  template                          Template                            @relation(fields: [template_id], references: [template_id])
-=======
   Template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
   Team                              Team?                               @relation(fields: [team_id], references: [team_id])
   team_id                           Int?
->>>>>>> 8c9ae34b0efdd2945889d7bc22834e9332218e50
   AssessmentParticipants            AssessmentParticipants[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
@@ -112,11 +110,10 @@ model Assessment {
 }
 
 model AssessmentParticipants {
-  assessment_id Int
-  user_id       Int
-  role          Role
-  Assessment    Assessment @relation(fields: [assessment_id], references: [assessment_id])
   User          User       @relation(fields: [user_id], references: [user_id])
+  user_id       Int
+  Assessment    Assessment @relation(fields: [assessment_id], references: [assessment_id])
+  assessment_id Int
 
   @@id([user_id, assessment_id])
   @@index([assessment_id, user_id])
@@ -127,27 +124,30 @@ model Template {
   template_name     String            @default("New Template")
   template_type     AssessmentType
   disabled          Boolean           @default(false)
-  include_no_answer Boolean           @default(false)
-  score_formula     String            @default("sum(x)")
-  weight_range_max  Int               @default(3)
   weight_range_min  Int               @default(1)
+  weight_range_max  Int               @default(3)
+  score_formula     String            @default("sum(x)")
+  include_no_answer Boolean           @default(false)
   Assessment        Assessment[]
-  Category          Category[]
   PossibleAnswers   PossibleAnswers[]
   Topic             Topic[]
+  Category          Category[]
 
   @@unique([template_name, template_type])
 }
 
 model Category {
   category_id   Int          @id @default(autoincrement())
-  category_name String
-  color         Int
-  template_id   Int
+  category_name String       @default("New Category")
+  color         String       @default("#FF0000")
+  order         Int
   Template      Template     @relation(fields: [template_id], references: [template_id])
-  Checkpoint    Checkpoint[]
+  template_id   Int
   Feedback      Feedback[]
+  Checkpoint    Checkpoint[]
   SubArea       SubArea[]
+
+  @@unique([category_name, template_id])
 }
 
 model SubArea {
@@ -155,17 +155,17 @@ model SubArea {
   subarea_name        String
   subarea_summary     String
   subarea_description String
-  category_id         Int
   Category            Category @relation(fields: [category_id], references: [category_id])
+  category_id         Int
 }
 
 model CheckpointAndAnswersInAssessments {
-  assessment_id      Int
-  checkpoint_id      Int
-  possible_answer_id Int
   assessment         Assessment      @relation(fields: [assessment_id], references: [assessment_id])
+  assessment_id      Int
   checkpoint         Checkpoint      @relation(fields: [checkpoint_id], references: [checkpoint_id])
+  checkpoint_id      Int
   answer             PossibleAnswers @relation(fields: [possible_answer_id], references: [possible_answer_id])
+  possible_answer_id Int
 
   @@id([assessment_id, checkpoint_id])
 }
@@ -174,14 +174,14 @@ model Feedback {
   feedback_id   Int      @id @default(autoincrement())
   feedback_name String
   feedback_text String
+  Topic         Topic    @relation(fields: [topic_id], references: [topic_id])
   topic_id      Int
+  Maturity      Maturity @relation(fields: [maturity_id], references: [maturity_id])
   maturity_id   Int
   answer_weight Float
+  Category      Category @relation(fields: [category_id], references: [category_id])
   category_id   Int
   weight_factor Int
-  Category      Category @relation(fields: [category_id], references: [category_id])
-  Maturity      Maturity @relation(fields: [maturity_id], references: [maturity_id])
-  Topic         Topic    @relation(fields: [topic_id], references: [topic_id])
 }
 
 enum AssessmentType {
@@ -194,3 +194,6 @@ enum Role {
   ASSESSOR
   ADMIN
 }
+
+
+
