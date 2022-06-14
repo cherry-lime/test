@@ -16,7 +16,6 @@ const theme = createTheme({
 //  size of the button is depending on the length of the button text string
 function ButtonRegular({ text }: { text: string }) {
   return (
-    <ThemeProvider theme={theme}>
       <div>
         <Button
           variant="contained"
@@ -30,7 +29,6 @@ function ButtonRegular({ text }: { text: string }) {
           {text}
         </Button>
       </div>
-    </ThemeProvider>
   );
 }
 
