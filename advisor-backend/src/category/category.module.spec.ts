@@ -5,6 +5,7 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { CategoryModule } from './category.module';
 import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
+import { SubareaService } from '../subarea/subarea.service';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -30,5 +31,6 @@ describe('TemplateModule', () => {
     expect(module).toBeDefined();
     expect(module.get(CategoryController)).toBeInstanceOf(CategoryController);
     expect(module.get(CategoryService)).toBeInstanceOf(CategoryService);
+    expect(module.get(SubareaService)).toBeInstanceOf(SubareaService);
   });
 });
