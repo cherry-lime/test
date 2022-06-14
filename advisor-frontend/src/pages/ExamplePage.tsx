@@ -26,6 +26,7 @@ import Team from "./teams/Team/Team";
 import TeamList from "./teams/TeamList/TeamList";
 import UserInterface from "./user/UserInterface/UserInterface";
 import ListOfSelfEvals from "./user/ListOfSelfEvals/ListOfSelfEvals";
+import AllGrid from "../components/Grids/Specific/AllGrid";
 
 // To create pages, copy the file and add content within <PageLayout>
 // This is a template
@@ -105,6 +106,7 @@ export default function Example() {
         <Route path="/admin/templates/:templateId" element={<Template />} />
         <Route path="/admin/templates/:templateId/:areaId" element={<Area />} />
       </Routes>
+      <AllGrid />
     </PageLayout>
   );
 }
