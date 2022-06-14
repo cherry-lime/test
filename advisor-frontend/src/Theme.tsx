@@ -21,6 +21,7 @@ const INGTheme = createTheme({
     },
     background: {
       paper: "#ff6404", // Different shade of orange, used as opaque overlay color
+      default: "#ffffff", // Used to define the custom sidebar text color.
     },
   },
 });

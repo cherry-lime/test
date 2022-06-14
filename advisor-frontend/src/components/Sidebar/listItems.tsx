@@ -7,22 +7,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EditIcon from "@mui/icons-material/Edit";
-import { createTheme, ThemeProvider } from "@mui/material";
-import { red } from "@mui/material/colors";
-
-const iconTheme = createTheme({
-  palette: {
-    primary: {
-      main: red[500],
-    },
-    secondary: {
-      light: "#ff7961",
-      main: "#ffffff",
-      dark: "#ba000d",
-      contrastText: "#000",
-    },
-  },
-});
 
 type SidebarListProps = {
   userType: Map<string, boolean>;
@@ -30,35 +14,35 @@ type SidebarListProps = {
 
 export default function SidebarList({ userType }: SidebarListProps) {
   return (
-    <ThemeProvider theme={iconTheme}>
+    <>
       {userType.get("home") && (
         <ListItemButton>
           <ListItemIcon>
-            <HomeIcon color="secondary" />
+            <HomeIcon color="info" />
           </ListItemIcon>
-          <ListItemText primary="Home" />
+          <ListItemText primary="Home" style={{ color: "background" }} />
         </ListItemButton>
       )}
       {userType.get("evaluation") && (
         <ListItemButton>
           <ListItemIcon>
-            <BarChartIcon color="secondary" />
+            <BarChartIcon color="info" />
           </ListItemIcon>
-          <ListItemText primary="Evaluations" />
+          <ListItemText primary="Evaluations" style={{ color: "background" }} />
         </ListItemButton>
       )}
       {userType.get("teams") && (
         <ListItemButton>
           <ListItemIcon>
-            <GroupsIcon color="secondary" />
+            <GroupsIcon color="info" />
           </ListItemIcon>
-          <ListItemText primary="Teams" />
+          <ListItemText primary="Teams" style={{ color: "background" }} />
         </ListItemButton>
       )}
       {userType.get("template") && (
         <ListItemButton>
           <ListItemIcon>
-            <EditIcon color="secondary" />
+            <EditIcon color="info" style={{ color: "background" }} />
           </ListItemIcon>
           <ListItemText primary="Templates" />
         </ListItemButton>
@@ -66,19 +50,19 @@ export default function SidebarList({ userType }: SidebarListProps) {
       {userType.get("settings") && (
         <ListItemButton>
           <ListItemIcon>
-            <SettingsIcon color="secondary" />
+            <SettingsIcon color="info" />
           </ListItemIcon>
-          <ListItemText primary="Settings" />
+          <ListItemText primary="Settings" style={{ color: "background" }} />
         </ListItemButton>
       )}
       {userType.get("signout") && (
         <ListItemButton>
           <ListItemIcon>
-            <LogoutIcon color="secondary" />
+            <LogoutIcon color="info" />
           </ListItemIcon>
-          <ListItemText primary="Sign Out" />
+          <ListItemText primary="Sign Out" style={{ color: "background" }} />
         </ListItemButton>
       )}
-    </ThemeProvider>
+    </>
   );
 }
