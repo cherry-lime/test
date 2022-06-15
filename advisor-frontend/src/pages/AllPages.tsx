@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import Example from "./ExamplePage";
+import UserInterface from "./user/UserInterface/UserInterface";
 
 /**
  * Used to setup routing of all the pages and give an overview of all the different pages in the webpage.
@@ -12,7 +13,7 @@ import Example from "./ExamplePage";
 export default function AllPages() {
   return (
     <Box>
-      <Example />
+      <UserInterface />
     </Box>
   );
 }

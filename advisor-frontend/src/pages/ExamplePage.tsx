@@ -45,7 +45,7 @@ export default function Example() {
       <PageCard
         bodyText="This is a description for the home page card"
         headerText="Title"
-        cardHeight={125}
+        cardHeight="15vh"
         icon={<AssessmentIcon color="primary" fontSize="small" />}
         image={testimageFigma}
         isImageLeft

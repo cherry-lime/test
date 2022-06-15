@@ -31,9 +31,13 @@ type PageCardProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   image: string;
-  isImageLeft: boolean;
-  isImageRight: boolean;
+  isImageLeft?: boolean;
+  isImageRight?: boolean;
 };
+const defaultProps = {
+  isImageLeft: false,
+  isImageRight: false,
+}
 
 function CardImage(ch: string, img: string) {
   return (
@@ -108,3 +112,4 @@ export default function PageCard({
     </Card>
   );
 }
+PageCard.defaultProps = defaultProps;
