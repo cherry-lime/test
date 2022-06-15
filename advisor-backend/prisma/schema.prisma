@@ -38,11 +38,13 @@ model Checkpoint {
 
 model PossibleAnswers {
   possible_answer_id                Int                                 @id @default(autoincrement())
-  answer                            String
-  answer_weight                     Float
+  answer_text                       String                              @default("New Answer") @map("answer")
+  answer_weight                     Float                               @default(0)
   Template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+
+  @@unique([answer_text, template_id])
 }
 
 model Maturity {
@@ -201,6 +203,3 @@ enum Role {
   ASSESSOR
   ADMIN
 }
-
-
-

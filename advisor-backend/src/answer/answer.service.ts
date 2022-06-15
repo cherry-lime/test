@@ -1,10 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 
 @Injectable()
 export class AnswerService {
-  create(template_id: number) {
-    return 'This action adds a new answer';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(template_id: number) {
+    return await this.prisma.possibleAnswers.create({
+      data: {
+        template_id,
+      },
+    });
   }
 
   findAll(template_id: number) {
