@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ExampleButton from "./components/ExampleButton/ExampleButton";
 import Greetings from "./components/SampleText/SampleText";
 import logo from "./logo.svg";
@@ -9,7 +10,9 @@ function UserInterface() {
       <h1>This is the home page</h1>
       Hello World
       <Greetings name="This is a test to test a component" />
-      <ExampleButton name="Buttontext" />
+      <Link to="/user">
+        <ExampleButton name="GOTO User" />{" "}
+      </Link>
       <img src={logo} className="App-logo" alt="logo" />
       <p>
         Edit <code>src/App.tsx</code> and save to reload.

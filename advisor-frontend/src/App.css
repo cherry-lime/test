@@ -49,4 +49,5 @@
 a {
   display: flex;
   width: inherit;
+  text-decoration: none;
 }

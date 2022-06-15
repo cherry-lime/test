@@ -68,39 +68,7 @@ export default function Example() {
         Admin{" "}
       </Link>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-
-        <Route path="/user" element={<UserInterface />} />
-        <Route path="/user/self_evaluations" element={<ListOfSelfEvals />} />
-        <Route
-          path="/user/self_evaluations/:assessmentId"
-          element={<IndividualEvaluation />}
-        />
-        <Route
-          path="/user/self_evaluations/feedback/:assessmentId"
-          element={<IndividualFeedback />}
-        />
-
-        <Route path="/teams" element={<TeamList />} />
-        <Route path="/teams/:teamId" element={<Team />} />
-        <Route
-          path="/teams/:teamId/:assessmentId"
-          element={<TeamEvaluation />}
-        />
-        <Route
-          path="/teams/:teamId/feedback/:assessmentId"
-          element={<TeamFeedback />}
-        />
-
-        <Route path="/assessor" element={<AssessorInterface />} />
-
-        <Route path="/admin" element={<AdminInterface />} />
-        <Route path="/admin/individuals" element={<ListOfIndividuals />} />
-        <Route path="/admin/templates" element={<ListOfTemplates />} />
-        <Route path="/admin/templates/:templateId" element={<Template />} />
-        <Route path="/admin/templates/:templateId/:areaId" element={<Area />} />
-      </Routes>
+     
       <AllGrid />
     </PageLayout>
   );
