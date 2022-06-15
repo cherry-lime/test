@@ -61,6 +61,7 @@ export default function Example() {
         />
         <Subarea
           title="Subarea title"
+          summary="Subarea summary"
           description="Subarea description here"
           theme={theme}
         />

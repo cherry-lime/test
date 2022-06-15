@@ -3,6 +3,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
+import "./Subarea.css";
 
 /*  
 passing parameter of the title and description of the subarea
@@ -15,9 +16,11 @@ main function returning a subarea component
 function Subarea({
   title,
   description,
+  summary,
   theme,
 }: {
   title: string;
+  summary: string;
   description: string;
   theme: ThemeOptions;
 }) {
@@ -36,7 +39,10 @@ function Subarea({
           >
             {title}
           </Typography>
-          <Typography sx={{ textAlign: "left" }} id="subarea-description">
+          <Typography className="subareaText" id="subarea-summary">
+            {summary}
+          </Typography>
+          <Typography className="subareaText" id="subarea-description">
             {description}
           </Typography>
         </CardContent>
