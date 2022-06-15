@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Stack, createTheme } from "@mui/material";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { Routes, Route, Link } from "react-router-dom";
 import PageLayout from "./PageLayout";
@@ -27,7 +27,22 @@ import TeamList from "./teams/TeamList/TeamList";
 import UserInterface from "./user/UserInterface/UserInterface";
 import ListOfSelfEvals from "./user/ListOfSelfEvals/ListOfSelfEvals";
 import AllGrid from "../components/Grids/Specific/AllGrid";
+import Subarea from "../components/Subarea/Subarea";
 
+//  coloring theme aligned with UI design
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#ff6200",
+    },
+    secondary: {
+      main: "#5a534f",
+    },
+    text: {
+      primary: "#5a534f",
+    },
+  },
+});
 // To create pages, copy the file and add content within <PageLayout>
 // This is a template
 export default function Example() {
@@ -38,6 +53,11 @@ export default function Example() {
         <ButtonRegular text="Regular Button" />
         <ButtonInverted text="Inverted Button" />
         <Checkpoint description="Checkpoint Description" />
+        <Subarea
+          title="Subarea title"
+          description="Subarea description here"
+          theme={theme}
+        />
         <TextfieldEdit text="Here is some text that can be edited" />
         <Textfield text="Here is some text that can not be edited" />
         <p />
