@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
-import { CheckpointsModule } from './checkpoints/checkpoints.module';
+import { CheckpointModule } from './checkpoint/checkpoint.module';
 import { AssessmentModule } from './assessment/assessment.module';
 import { TemplateModule } from './template/template.module';
 import { CategoryModule } from './category/category.module';
@@ -23,7 +23,7 @@ import { MaturityModule } from './maturity/maturity.module';
     CategoryModule,
     SubareaModule,
     MaturityModule,
-    CheckpointsModule,
+    CheckpointModule,
   ],
   controllers: [AppController],
   providers: [AppService],

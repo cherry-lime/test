@@ -3,7 +3,7 @@ import { CreateCheckpointDto } from './dto/create-checkpoint.dto';
 import { UpdateCheckpointDto } from './dto/update-checkpoint.dto';
 
 @Injectable()
-export class CheckpointsService {
+export class CheckpointService {
   create(createCheckpointDto: CreateCheckpointDto) {
     return 'This action adds a new checkpoint';
   }
