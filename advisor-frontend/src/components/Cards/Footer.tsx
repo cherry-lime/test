@@ -8,7 +8,10 @@ import footerImg from "./footer_img.svg";
  */
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary">
+    <Typography
+      variant="body2"
+      style={{ color: "background", fontWeight: "bold" }}
+    >
       {"Copyright © "}
       <Link color="inherit" href="https://tue.nl">
         TU/e
@@ -29,7 +32,7 @@ export default function Footer() {
       sx={{
         borderTopLeftRadius: "20px",
         borderTopRightRadius: "20px",
-        backgroundColor: "secondary.main",
+        backgroundColor: "primary.main",
         width: "100%",
       }}
     >

@@ -4,20 +4,20 @@ import { useState } from "react";
 import headerImg from "./header_img.svg";
 
 // headerProps defines the parameters background color and title used in Header().
-type headerProps = { name: string; bgcolor?: string };
+type headerProps = { name: string; bgColor?: string };
 
 const defaultProps = {
-  bgcolor: "secondary.main",
+  bgColor: "primary.main",
 };
 
 /**
  * Header function, which will display a header, with a speific title and a background color.
  * @param name String used to display the header title.
- * @param bgcolor Optional string used to give a specific background color.
+ * @param bgColor Optional string used to give a specific background color.
  * @returns React header component.
  */
 
-export default function Header({ name, bgcolor }: headerProps) {
+export default function Header({ name, bgColor }: headerProps) {
   const [text] = useState(name);
   return (
     <Paper
@@ -26,7 +26,7 @@ export default function Header({ name, bgcolor }: headerProps) {
         borderBottomRightRadius: "20px",
         borderTopLeftRadius: "0px",
         borderTopRightRadius: "0px",
-        backgroundColor: bgcolor,
+        bgcolor: bgColor,
       }}
       data-testid="headerID"
     >

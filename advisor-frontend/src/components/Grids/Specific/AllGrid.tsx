@@ -1,5 +1,3 @@
-import { createTheme } from "@mui/material/styles";
-
 import TeamGrid from "./TeamGrid";
 import MemberGrid from "./MemberGrid";
 import AssessmentOngoingGrid from "./AssessmentOngoingGrid";
@@ -13,26 +11,7 @@ import MaturityGrid from "./MaturityGrid";
 import AnswerTypeGrid from "./AnswerTypeGrid";
 import SubareaGrid from "./SubareaGrid";
 import CheckpointGrid from "./CheckpointGrid";
-
-// Style color palette
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: "#FFD6B1", // Light Orange
-      main: "#FF6200", // Orange
-      dark: "#AA3909", // Dark Orange
-    },
-    secondary: {
-      // Lightest Grey: #FAF6F3
-      light: "#EDE6E2", // Light Grey
-      main: "#8B817C", // Grey
-      dark: "#5A534F", // Dark Grey
-    },
-    text: {
-      primary: "#5A534F", // Dark Grey
-    },
-  },
-});
+import INGTheme from "../../../Theme";
 
 export default function AllGrid() {
   const userId = 0;
@@ -43,12 +22,12 @@ export default function AllGrid() {
   const assessmentId = 0;
 
   return (
-    <div style={{ width: "90%" }}>
+    <div style={{ width: "100%" }}>
       <strong>Team Grid</strong>
-      <TeamGrid theme={theme} userId={userId} userRole={userRole} />
+      <TeamGrid theme={INGTheme} userId={userId} userRole={userRole} />
       <strong>Assessor Grid</strong>
       <MemberGrid
-        theme={theme}
+        theme={INGTheme}
         userId={userId}
         userRole="USER"
         teamId={teamId}
@@ -56,7 +35,7 @@ export default function AllGrid() {
       />
       <strong>Member Grid</strong>
       <MemberGrid
-        theme={theme}
+        theme={INGTheme}
         userId={userId}
         userRole="USER"
         teamId={teamId}
@@ -64,21 +43,21 @@ export default function AllGrid() {
       />
       <strong>Ongoing Evaluations (Individual)</strong>
       <AssessmentOngoingGrid
-        theme={theme}
+        theme={INGTheme}
         userId={userId}
         userRole={userRole}
         assessmentType="INDIVIDUAL"
       />
       <strong>Completed Evaluations (Individual)</strong>
       <AssessmentCompletedGrid
-        theme={theme}
+        theme={INGTheme}
         userId={userId}
         userRole={userRole}
         assessmentType="INDIVIDUAL"
       />
       <strong>Ongoing Evaluations (Team)</strong>
       <AssessmentOngoingGrid
-        theme={theme}
+        theme={INGTheme}
         userId={userId}
         userRole={userRole}
         teamId={teamId}
@@ -86,7 +65,7 @@ export default function AllGrid() {
       />
       <strong>Completed Evaluations (Team)</strong>
       <AssessmentCompletedGrid
-        theme={theme}
+        theme={INGTheme}
         userId={userId}
         userRole={userRole}
         teamId={teamId}
@@ -94,35 +73,35 @@ export default function AllGrid() {
       />
       <strong>Recommendations</strong>
       <RecommendationGrid
-        theme={theme}
+        theme={INGTheme}
         assessmentId={assessmentId}
         assessmentType="TEAM"
         userId={userId}
         userRole={userRole}
       />
       <strong>Individuals</strong>
-      <IndividualGrid theme={theme} />
+      <IndividualGrid theme={INGTheme} />
       <strong>Individual Evaluation Templates</strong>
-      <TemplateGrid theme={theme} assessmentType="INDIVIDUAL" />
+      <TemplateGrid theme={INGTheme} assessmentType="INDIVIDUAL" />
       <strong>Team Evaluation Templates</strong>
-      <TemplateGrid theme={theme} assessmentType="TEAM" />
+      <TemplateGrid theme={INGTheme} assessmentType="TEAM" />
       <strong>Areas</strong>
-      <CategoryGrid theme={theme} templateId={templateId} />
+      <CategoryGrid theme={INGTheme} templateId={templateId} />
       <strong>Topics</strong>
-      <TopicGrid theme={theme} templateId={templateId} />
+      <TopicGrid theme={INGTheme} templateId={templateId} />
       <strong>Maturity Levels</strong>
-      <MaturityGrid theme={theme} templateId={templateId} />
+      <MaturityGrid theme={INGTheme} templateId={templateId} />
       <strong>Answer Types</strong>
-      <AnswerTypeGrid theme={theme} templateId={templateId} />
+      <AnswerTypeGrid theme={INGTheme} templateId={templateId} />
       <strong>Subareas</strong>
       <SubareaGrid
-        theme={theme}
+        theme={INGTheme}
         templateId={templateId}
         categoryId={categoryId}
       />
       <strong>Checkpoints</strong>
       <CheckpointGrid
-        theme={theme}
+        theme={INGTheme}
         templateId={templateId}
         categoryId={categoryId}
       />
