@@ -45,27 +45,22 @@ export default function Example() {
       <PageCard
         bodyText="This is a description for the home page card"
         headerText="Title"
-        cardHeight={125}
-        icon={<AssessmentIcon color="primary" fontSize="small" />}
+        cardHeight="15vh"
+        icon={<AssessmentIcon color="primary" fontSize="large" />}
         image={testimageFigma}
         isImageLeft
-        isImageRight
       />
       <Link data-testid="home" to="/">
-        {" "}
-        Home{" "}
+        Home
       </Link>
       <Link to="/user" state="user" data-testid="user">
-        {" "}
-        User{" "}
+        User
       </Link>
       <Link to="/assessor" state="assessor" data-testid="assessor">
-        {" "}
-        Assessor{" "}
+        Assessor
       </Link>
       <Link to="/admin" state="admin" data-testid="admin">
-        {" "}
-        Admin{" "}
+        Admin
       </Link>
 
       <Routes>
