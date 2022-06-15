@@ -1,23 +1,4 @@
-import { TextField, createTheme, ThemeProvider } from "@mui/material";
-
-/*
-coloring theme aligned with UI design
-ING orange is ff6200
-darkgray is 5a534f
-*/
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#ff6200",
-    },
-    secondary: {
-      main: "#5a534f",
-    },
-    text: {
-      primary: "5a534f",
-    },
-  },
-});
+import { TextField } from "@mui/material";
 
 /*
 size of the textfield is specified with the parameter width (in characters)
@@ -29,20 +10,17 @@ text can not be edited, but can be selected
 */
 function Textfield({ text }: { text: string }) {
   return (
-    <ThemeProvider theme={theme}>
-      <TextField
-        sx={{
-          backgroundColor: "white",
-          width: "50ch",
-        }}
-        variant="outlined"
-        color="secondary"
-        multiline
-        rows={5}
-        InputProps={{ readOnly: true }}
-        value={text}
-      />
-    </ThemeProvider>
+    <TextField
+      sx={{
+        backgroundColor: "white",
+        width: "50ch",
+      }}
+      variant="outlined"
+      multiline
+      rows={5}
+      InputProps={{ readOnly: true }}
+      value={text}
+    />
   );
 }
 export default Textfield;

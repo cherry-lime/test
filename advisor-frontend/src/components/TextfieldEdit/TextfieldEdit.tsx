@@ -1,24 +1,5 @@
-import { TextField, createTheme, ThemeProvider } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useState } from "react";
-
-/*
-coloring theme aligned with UI design
-ING orange is ff6200
-darkgray is 5a534f
-*/
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#ff6200",
-    },
-    secondary: {
-      main: "#5a534f",
-    },
-    text: {
-      primary: "#5a534f",
-    },
-  },
-});
 
 /*
 size of the textfield is specified with the parameter width (in characters)
@@ -40,21 +21,18 @@ function TextfieldEdit({ text }: { text: string }) {
     setValue(event.target.value);
   };
   return (
-    <ThemeProvider theme={theme}>
-      <TextField
-        sx={{
-          backgroundColor: "white",
-          width: "50ch",
-        }}
-        variant="outlined"
-        color="primary"
-        multiline
-        rows={5}
-        size="small"
-        value={value}
-        onChange={doSomething}
-      />
-    </ThemeProvider>
+    <TextField
+      sx={{
+        backgroundColor: "white",
+        width: "50ch",
+      }}
+      variant="outlined"
+      multiline
+      rows={5}
+      size="small"
+      value={value}
+      onChange={doSomething}
+    />
   );
 }
 
