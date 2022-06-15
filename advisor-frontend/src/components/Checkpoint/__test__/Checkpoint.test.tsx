@@ -46,7 +46,8 @@ it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 
       description="Checkpoint Description"
       number={1}
       theme={theme}
-      checkpointvalues={["Yes", "No", "N/A"]}
+      checkpointlabels={["Yes", "No", "N/A"]}
+      checkpointvalues={[0, 1, 2]}
     />
   );
   expect(getByText("Checkpoint Description")).toBeInTheDocument();

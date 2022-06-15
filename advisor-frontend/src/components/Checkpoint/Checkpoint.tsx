@@ -21,12 +21,14 @@ main function returning a checkpoint component
 function Checkpoint({
   description,
   number,
+  checkpointlabels,
   checkpointvalues,
   theme,
 }: {
   description: string;
   number: number;
-  checkpointvalues: string[];
+  checkpointlabels: string[];
+  checkpointvalues: number[];
   theme: ThemeOptions;
 }) {
   /*
@@ -50,7 +52,7 @@ function Checkpoint({
     items.push(
       <FormControlLabel
         control={<Radio color="primary" />}
-        label={checkpointvalues[i]}
+        label={checkpointlabels[i]}
         value={checkpointvalues[i]}
       />
     );
@@ -96,6 +98,7 @@ function Checkpoint({
           >
             <div>{items}</div>
           </RadioGroup>
+          {/* {console.log(value)}  */}
         </CardActions>
       </Card>
     </ThemeProvider>
@@ -113,6 +116,8 @@ Checkpoint.propTypes = {
   number: PropTypes.number.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   checkpointvalues: PropTypes.any.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  checkpointlabels: PropTypes.any.isRequired,
   theme: PropTypes.node.isRequired,
 };
 
