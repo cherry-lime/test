@@ -72,7 +72,7 @@ export class TopicController {
     type: TopicDto,
   })
   @ApiNotFoundResponse({ description: 'Topic not found' })
-  remove(@Param('topic_id', ParseIntPipe) topic_id: number) {
-    return this.topicService.remove(topic_id);
+  delete(@Param('topic_id', ParseIntPipe) topic_id: number) {
+    return this.topicService.delete(topic_id);
   }
 }
