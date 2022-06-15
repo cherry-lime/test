@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import AssessmentIcon from "@mui/icons-material/Assessment";
+import GroupsIcon from "@mui/icons-material/Groups";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import PageCard from "../../../components/PageCard/PageCard";
@@ -13,9 +14,7 @@ function UserInterface() {
   const data = location.state;
 
   return (
-    <PageLayout title="Home" sidebarType={userTypes.USER}>
-      <h2> User Interface Here </h2>
-
+    <PageLayout title="Home User" footer sidebarType={userTypes.USER}>
       <Link to="/user/self_evaluations" state={data} data-testid="user-evals">
         <PageCard
           bodyText="View and start individual evaluations"
@@ -26,14 +25,36 @@ function UserInterface() {
           isImageLeft
         />
       </Link>
-      <br />
       <Link to="/teams" state={data} data-testid="user-teams">
-        {" "}
-        Teams{" "}
+        <PageCard
+          bodyText="View your teams"
+          headerText="Teams "
+          cardHeight="15vh"
+          icon={<GroupsIcon color="info" fontSize="large" sx={{
+            bgcolor: "primary.main",
+            borderRadius: "5px",
+            padding: "2px",
+            margin: "5px"
+          }} />}
+          image={testimageFigma}
+          isImageRight
+        />
       </Link>
 
-      <h3>Progress</h3>
-      <br/>
+      <Link
+        to="/user/self_evaluations/:assessmentId"
+        state={data}
+        data-testid="user-progress"
+      >
+        <PageCard
+          bodyText="View your current progress"
+          headerText="Evaluations"
+          cardHeight="15vh"
+          icon={<GroupsIcon color="primary" fontSize="large" />}
+          image={testimageFigma}
+        />
+      </Link>
+      <br />
 
       <h3>Notifications</h3>
     </PageLayout>
