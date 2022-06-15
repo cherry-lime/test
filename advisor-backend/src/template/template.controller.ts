@@ -7,12 +7,14 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
   ApiNotFoundResponse,
   ApiResponse,
   ApiTags,
+  ApiBearerAuth
 } from '@nestjs/swagger';
 import { CategoryService } from '../category/category.service';
 import { CreateTemplateDto } from './dto/create-template.dto';
@@ -22,6 +24,10 @@ import { TemplateService } from './template.service';
 import { MaturityDto } from '../maturity/dto/maturity.dto';
 import { MaturityService } from '../maturity/maturity.service';
 import { CategoryDto } from '../category/dto/category.dto';
+import { Roles } from '../common/decorators/roles.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Role } from '@prisma/client';
 
 @Controller('template')
 @ApiTags('template')
@@ -36,12 +42,14 @@ export class TemplateController {
    * [GET] /template - Get all templates
    * @returns TemplateResponse[] List of all templates
    */
-  @Get('')
   @ApiResponse({
     description: 'Found templates',
     type: TemplateDto,
     isArray: true,
   })
+  @Get('')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async findAll(): Promise<TemplateDto[]> {
     return this.templateService.findAll();
   }
@@ -56,6 +64,8 @@ export class TemplateController {
   @ApiConflictResponse({
     description: 'Template with this name and type already exists',
   })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async create(
     @Body() { template_type }: CreateTemplateDto
   ): Promise<TemplateDto> {
@@ -70,6 +80,8 @@ export class TemplateController {
   @Get(':template_id')
   @ApiResponse({ description: 'Template', type: TemplateDto })
   @ApiNotFoundResponse()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async findOne(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<TemplateDto> {
@@ -88,6 +100,8 @@ export class TemplateController {
   @ApiConflictResponse({
     description: 'Template with this name and type already exists',
   })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async update(
     @Param('template_id', ParseIntPipe) id: number,
     @Body() updateTemplateDto: UpdateTemplateDto
@@ -103,6 +117,8 @@ export class TemplateController {
   @Delete(':template_id')
   @ApiResponse({ description: 'Deleted template', type: TemplateDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async delete(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<TemplateDto> {
@@ -117,6 +133,8 @@ export class TemplateController {
   @Post(':template_id/clone')
   @ApiResponse({ description: 'Template', type: TemplateDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async clone(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<TemplateDto> {
@@ -136,6 +154,8 @@ export class TemplateController {
   @ApiConflictResponse({
     description: 'Category with this already exists',
   })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async createCategory(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<CategoryDto> {
@@ -155,6 +175,8 @@ export class TemplateController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async findAllCategories(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<CategoryDto[]> {
@@ -174,6 +196,8 @@ export class TemplateController {
   @ApiConflictResponse({
     description: 'Maturity with this name already exists',
   })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async createMaturity(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<MaturityDto> {
@@ -194,6 +218,8 @@ export class TemplateController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async findAllMaturities(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<MaturityDto[]> {
