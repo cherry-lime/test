@@ -1,6 +1,6 @@
-import { TextField } from "@mui/material";
+import { TextField, ThemeOptions, ThemeProvider } from "@mui/material";
 import { useState } from "react";
-
+import PropTypes from "prop-types";
 /*
 size of the textfield is specified with the parameter width (in characters)
 default set to 50
@@ -9,7 +9,7 @@ default set to five
 the background color of the text is white
 text can be edited, after selection
 */
-function TextfieldEdit({ text }: { text: string }) {
+function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
   /*
   initial value of the textfield is set to the bodytext passed as parameter
   using the State Hook in React
@@ -21,19 +21,30 @@ function TextfieldEdit({ text }: { text: string }) {
     setValue(event.target.value);
   };
   return (
-    <TextField
-      sx={{
-        backgroundColor: "white",
-        width: "50ch",
-      }}
-      variant="outlined"
-      multiline
-      rows={5}
-      size="small"
-      value={value}
-      onChange={doSomething}
-    />
+    <ThemeProvider theme={theme}>
+      <TextField
+        sx={{
+          backgroundColor: "white",
+          width: "50ch",
+        }}
+        variant="outlined"
+        multiline
+        rows={5}
+        size="small"
+        value={value}
+        onChange={doSomething}
+      />
+    </ThemeProvider>
   );
 }
+/*
+Define proptypes for textfieldedit:
+1) text (which will be seen in the textfield)
+2) theme (according to UI)
+*/
+TextfieldEdit.propTypes = {
+  text: PropTypes.string.isRequired,
+  theme: PropTypes.node.isRequired,
+};
 
 export default TextfieldEdit;

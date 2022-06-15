@@ -63,8 +63,14 @@ export default function Example() {
           description="Subarea description here"
           theme={theme}
         />
-        <TextfieldEdit text="Here is some text that can be edited" />
-        <Textfield text="Here is some text that can not be edited" />
+        <TextfieldEdit
+          text="Here is some text that can be edited"
+          theme={theme}
+        />
+        <Textfield
+          text="Here is some text that can not be edited"
+          theme={theme}
+        />
         <p />
       </Stack>
       <PageCard
