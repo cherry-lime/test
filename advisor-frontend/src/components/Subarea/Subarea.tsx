@@ -4,12 +4,14 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 
-//  passing parameter of the title and description of the subarea
-//  title of subarea
-//  description of subarea = description
-//  description might be empty string
-//  theme of app
-//  main function returning a subarea component
+/*  
+passing parameter of the title and description of the subarea
+title of subarea
+description of subarea = description
+description might be empty string
+theme of app
+main function returning a subarea component
+*/
 function Subarea({
   title,
   description,
