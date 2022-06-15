@@ -22,8 +22,8 @@ import { TemplateService } from './template.service';
 import { MaturityDto } from '../maturity/dto/maturity.dto';
 import { MaturityService } from '../maturity/maturity.service';
 import { CategoryDto } from '../category/dto/category.dto';
-import { AnswerDto } from 'src/answer/dto/answer.dto';
-import { AnswerService } from 'src/answer/answer.service';
+import { AnswerDto } from '../answer/dto/answer.dto';
+import { AnswerService } from '../answer/answer.service';
 
 @Controller('template')
 @ApiTags('template')
