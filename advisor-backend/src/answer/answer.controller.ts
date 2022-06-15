@@ -68,7 +68,7 @@ export class AnswerController {
     type: AnswerDto,
   })
   @ApiNotFoundResponse({ description: 'Answer not found' })
-  remove(@Param('answer_id', ParseIntPipe) answer_id: number) {
-    return this.answerService.remove(answer_id);
+  delete(@Param('answer_id', ParseIntPipe) answer_id: number) {
+    return this.answerService.delete(answer_id);
   }
 }

@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 
@@ -6,27 +11,116 @@ import { UpdateAnswerDto } from './dto/update-answer.dto';
 export class AnswerService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Create answer
+   * @param template_id template id to which answer belongs
+   * @returns created answer
+   * @throws Answer with this name already exists
+   * @throws Template with id does not exist
+   */
   async create(template_id: number) {
-    return await this.prisma.possibleAnswers.create({
-      data: {
+    return await this.prisma.answer
+      .create({
+        data: {
+          template_id,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2002') {
+          // Throw error ïf name not unique
+          throw new ConflictException('Answer with this name already exists');
+        } else if (error.code === 'P2003') {
+          // Throw error if template not found
+          throw new NotFoundException('Template not found');
+        }
+        throw new InternalServerErrorException();
+      });
+  }
+
+  /**
+   * Find all answers in template
+   * @param template_id template id
+   * @returns all answers in template
+   */
+  async findAll(template_id: number) {
+    return await this.prisma.answer.findMany({
+      where: {
         template_id,
       },
     });
   }
 
-  findAll(template_id: number) {
-    return `This action returns all answer`;
+  /**
+   * Find answer by id
+   * @param answer_id answer id
+   * @returns answer
+   * @throws Answer not found
+   */
+  async findOne(answer_id: number) {
+    const answer = await this.prisma.answer.findUnique({
+      where: {
+        answer_id,
+      },
+    });
+
+    // Throw error if answer not found
+    if (!answer) {
+      throw new NotFoundException('Answer not found');
+    }
+
+    // Return answer
+    return answer;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} answer`;
+  /**
+   * Update answer
+   * @param answer_id answer id
+   * @param updateAnswerDto answer data
+   * @returns updated answer
+   * @throws Answer not found
+   * @throws Answer with this name already exists
+   */
+  async update(answer_id: number, updateAnswerDto: UpdateAnswerDto) {
+    return await this.prisma.answer
+      .update({
+        where: {
+          answer_id,
+        },
+        data: {
+          ...updateAnswerDto,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2002') {
+          // Throw error ïf name not unique
+          throw new ConflictException('Answer with this name already exists');
+        } else if (error.code === 'P2025') {
+          // Throw error if template not found
+          throw new NotFoundException('Template not found');
+        }
+        throw new InternalServerErrorException();
+      });
   }
 
-  update(id: number, updateAnswerDto: UpdateAnswerDto) {
-    return `This action updates a #${id} answer`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} answer`;
+  /**
+   * Delete answer
+   * @param answer_id answer id
+   * @returns deleted answer
+   * @throws Answer not found
+   */
+  async delete(answer_id: number) {
+    return await this.prisma.answer
+      .delete({
+        where: {
+          answer_id,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          // Throw error if template not found
+          throw new NotFoundException('Template not found');
+        }
+        throw new InternalServerErrorException();
+      });
   }
 }
