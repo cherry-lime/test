@@ -46,7 +46,7 @@ export class TopicController {
    * @throws Topic not found
    * @throws Topic with this name already exists
    */
-  @Patch(':id')
+  @Patch(':topic_id')
   @ApiResponse({
     description: 'Created topic',
     type: TopicDto,
