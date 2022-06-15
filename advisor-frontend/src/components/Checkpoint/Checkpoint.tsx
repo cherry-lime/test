@@ -12,35 +12,60 @@ import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { ThemeOptions } from "@mui/material/styles/experimental_extendTheme";
 
-//  passing parameter of the optional description of the checkpoints
-//  description of checkpoint = description
-//  description might be empty string
-//  main function returning a checkpoint component
+/*
+passing parameter of the optional description of the checkpoints
+description of checkpoint = description
+description might be empty string
+main function returning a checkpoint component 
+*/
 function Checkpoint({
   description,
   number,
+  checkpointvalues,
   theme,
 }: {
   description: string;
   number: number;
+  checkpointvalues: string[];
   theme: ThemeOptions;
 }) {
-  //  initial value of the checkpoint set to empty string
-  //  using the State Hook in React
-  //  set the value when clicking one of the radio-buttons
+  /*
+  initial value of the checkpoint set to empty string
+  using the State Hook in React
+  set the value when clicking one of the radio-buttons
+  */
 
   const [value, setValue] = useState("");
   const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
+
+  /*
+  the following for loop is used to dynamically generate an amount of checkpoints
+  the amount of checkpoints is defined in checkpointvalues, which is an array of strings
+  */
+  const items = [];
+
+  for (let i = 0; i < checkpointvalues.length; i += 1) {
+    items.push(
+      <FormControlLabel
+        control={<Radio color="primary" />}
+        label={checkpointvalues[i]}
+        value={checkpointvalues[i]}
+      />
+    );
+  }
+
   return (
-    //  styling of the checkpoint
-    //  there are three radio-buttons Yes, No and N/A in that order
-    //  with horizontal direction (in a row)
-    //  initially the value is empty string
-    //  onClick update the value
-    //  the styling of the checkpoint/radiobutton is in line with the color scheme
-    //  darkgrey when not active and ING orange when selected/clicked
+    /*  
+    styling of the checkpoint
+    there are three radio-buttons Yes, No and N/A in that order
+    with horizontal direction (in a row)
+    initially the value is empty string
+    onClick update the value
+    the styling of the checkpoint/radiobutton is in line with the color scheme
+    darkgrey when not active and ING orange when selected/clicked
+    */
     <ThemeProvider theme={theme}>
       <Card sx={{ width: "95%", alignSelf: "center" }}>
         <CardContent>
@@ -69,21 +94,7 @@ function Checkpoint({
             onChange={doSomething}
             row
           >
-            <FormControlLabel
-              control={<Radio color="primary" />}
-              label="Yes"
-              value="Yes"
-            />
-            <FormControlLabel
-              control={<Radio color="primary" />}
-              label="No"
-              value="No"
-            />
-            <FormControlLabel
-              control={<Radio color="primary" />}
-              label="N/A"
-              value="N/A"
-            />
+            <div>{items}</div>
           </RadioGroup>
         </CardActions>
       </Card>
@@ -91,9 +102,17 @@ function Checkpoint({
   );
 }
 
+/*
+Props of the checkpoints consisting of the description,
+the id number,
+the values of the checkpoints,
+and theme
+*/
 Checkpoint.propTypes = {
   description: PropTypes.string.isRequired,
   number: PropTypes.number.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  checkpointvalues: PropTypes.any.isRequired,
   theme: PropTypes.node.isRequired,
 };
 

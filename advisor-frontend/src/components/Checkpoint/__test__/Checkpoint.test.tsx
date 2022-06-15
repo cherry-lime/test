@@ -31,7 +31,12 @@ const theme = createTheme({
 //  only one button can be clicked at the same time
 it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 321 and 312 with 1=Yes, 2=No and 3=N/A", () => {
   const { getByText } = render(
-    <Checkpoint description="Checkpoint Description" number={1} theme={theme} />
+    <Checkpoint
+      description="Checkpoint Description"
+      number={1}
+      theme={theme}
+      checkpointvalues={["Yes", "No", "N/A"]}
+    />
   );
   expect(getByText("Checkpoint Description")).toBeInTheDocument();
 

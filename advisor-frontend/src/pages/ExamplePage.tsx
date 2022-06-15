@@ -55,6 +55,7 @@ export default function Example() {
         <Checkpoint
           number={12}
           description="Checkpoint Description"
+          checkpointvalues={["Yes", "No", "N/A", "Extra"]}
           theme={theme}
         />
         <Subarea

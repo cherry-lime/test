@@ -1,9 +1,11 @@
 import { TextField, createTheme, ThemeProvider } from "@mui/material";
 import { useState } from "react";
 
-//  coloring theme aligned with UI design
-//  ING orange is ff6200
-//  darkgray is 5a534f
+/*
+coloring theme aligned with UI design
+ING orange is ff6200
+darkgray is 5a534f
+*/
 const theme = createTheme({
   palette: {
     primary: {
@@ -18,16 +20,20 @@ const theme = createTheme({
   },
 });
 
-//  size of the textfield is specified with the parameter width (in characters)
-//  default set to 50
-//  and by the number of rows
-//  default set to five
-//  the background color of the text is white
-//  text can be edited, after selection
+/*
+size of the textfield is specified with the parameter width (in characters)
+default set to 50
+and by the number of rows
+default set to five
+the background color of the text is white
+text can be edited, after selection
+*/
 function TextfieldEdit({ text }: { text: string }) {
-  //  initial value of the textfield is set to the bodytext passed as parameter
-  //  using the State Hook in React
-  //  the value is updated when you are done entering and click outside the textfield
+  /*
+  initial value of the textfield is set to the bodytext passed as parameter
+  using the State Hook in React
+  the value is updated when you are done entering and click outside the textfield
+  */
   const initialState = text;
   const [value, setValue] = useState(initialState);
   const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {

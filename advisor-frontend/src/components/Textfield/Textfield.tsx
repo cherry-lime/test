@@ -1,8 +1,10 @@
 import { TextField, createTheme, ThemeProvider } from "@mui/material";
 
-//  coloring theme aligned with UI design
-//  ING orange is ff6200
-//  darkgray is 5a534f
+/*
+coloring theme aligned with UI design
+ING orange is ff6200
+darkgray is 5a534f
+*/
 const theme = createTheme({
   palette: {
     primary: {
@@ -17,12 +19,14 @@ const theme = createTheme({
   },
 });
 
-//  size of the textfield is specified with the parameter width (in characters)
-//  default set to 50
-//  and by the number of rows
-//  default set to five
-//  the background color of the text is white
-//  text can not be edited, but can be selected
+/*
+size of the textfield is specified with the parameter width (in characters)
+default set to 50
+and by the number of rows
+default set to five
+the background color of the text is white
+text can not be edited, but can be selected
+*/
 function Textfield({ text }: { text: string }) {
   return (
     <ThemeProvider theme={theme}>
@@ -41,5 +45,4 @@ function Textfield({ text }: { text: string }) {
     </ThemeProvider>
   );
 }
-
 export default Textfield;

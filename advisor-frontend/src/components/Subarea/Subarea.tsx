@@ -44,7 +44,10 @@ function Subarea({
     </ThemeProvider>
   );
 }
-
+/*
+props declarations:
+subarea card that contains title, description with its theme
+*/
 Subarea.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
