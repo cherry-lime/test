@@ -6,36 +6,40 @@ import Typography from "@mui/material/Typography";
 
 import Divider from "@mui/material/Divider";
 
-/*
-a card consist of:
-title with a small logo
-a seperator line (divider)
-a body text
-optionally: an JPEG image at the right side and/or left side
-title divider and body text are aligned left
-the card title and body text are darkgrey according style
-the logo in the title is ING orange
-the color of the JPG/PNG image must be set in the image itself (in this case also ING orange)
-there might be an image on the left or on the right or both
-*/
+//  a card consist of:
+//  title with a small logo
+//  a seperator line (divider)
+//  a body text
+//  optionally: an JPEG image at the right side and/or left side
+//  title divider and body text are aligned left
+//  the card title and body text are darkgrey according style
+//  the logo in the title is ING orange
+//  the color of the JPG/PNG image must be set in the image itself (in this case also ING orange)
+//  there might be an image on the left or on the right or both
+
+//  pagecard
+//  textcolor is text
+//  alignment is left
+//  font of title is bold (weight is 600)
+//  title of the card is set to "Individual Evaluation"
+//  title might be changed
 type PageCardProps = {
   headerText: string;
   bodyText: string;
-  cardHeight: number;
+  cardHeight: string;
   // eslint-disable-next-line @typescript-eslint/ban-types
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   image: string;
-  isImageLeft: boolean;
-  isImageRight: boolean;
+  isImageLeft?: boolean;
+  isImageRight?: boolean;
+};
+const defaultProps = {
+  isImageLeft: false,
+  isImageRight: false,
 };
 
-/*
-the function CardImage returns an image 
-the image has minimum width of 33% 
-orange opacity is applied according the defined theme
-*/
-function CardImage(ch: number, img: string) {
+function CardImage(ch: string, img: string) {
   return (
     <CardMedia
       component="img"
@@ -51,11 +55,6 @@ function CardImage(ch: number, img: string) {
   );
 }
 
-/*
-pagecard component definition consisting of 
-bodytext, headertext, cardheight, icon, image,
-booleans isImageLeft , isImageRight can be used to switch the left or right images on and off
-*/
 export default function PageCard({
   bodyText,
   headerText,
@@ -70,7 +69,7 @@ export default function PageCard({
       sx={{
         display: "flex",
         verticalAlign: "middle",
-        width: "vw",
+        width: "100vw",
         borderRadius: "20px",
       }}
     >
@@ -84,7 +83,7 @@ export default function PageCard({
           <Typography
             color="text.secondary"
             align="left"
-            sx={{ fontWeight: 600 }}
+            sx={{ fontWeight: 600, display: "flex", alignItems: "center" }}
             variant="h6"
           >
             {/* Here should be the title of the card
@@ -113,3 +112,4 @@ export default function PageCard({
     </Card>
   );
 }
+PageCard.defaultProps = defaultProps;
