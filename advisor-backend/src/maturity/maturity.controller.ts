@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { MaturityService } from './maturity.service';
 import { UpdateMaturityDto } from './dto/update-maturity.dto';
@@ -17,6 +18,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { MaturityDto } from './dto/maturity.dto';
+import { Roles } from '../common/decorators/roles.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Role } from '@prisma/client';
 
 @Controller('maturity')
 @ApiTags('maturity')
@@ -26,6 +31,8 @@ export class MaturityController {
   @Get(':maturity_id')
   @ApiResponse({ description: 'Found maturity', type: MaturityDto })
   @ApiNotFoundResponse({ description: 'Maturity not found' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   findOne(@Param('maturity_id', ParseIntPipe) id: number) {
     return this.maturityService.findOne(id);
   }
@@ -40,6 +47,8 @@ export class MaturityController {
     description:
       'Maturity order must be less than number of maturities in template',
   })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   update(
     @Param('maturity_id', ParseIntPipe) id: number,
     @Body() updateMaturityDto: UpdateMaturityDto
@@ -50,6 +59,8 @@ export class MaturityController {
   @Delete(':maturity_id')
   @ApiResponse({ description: 'Deleted maturity', type: MaturityDto })
   @ApiNotFoundResponse({ description: 'Maturity not found' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   delete(@Param('maturity_id', ParseIntPipe) id: number) {
     return this.maturityService.delete(id);
   }
