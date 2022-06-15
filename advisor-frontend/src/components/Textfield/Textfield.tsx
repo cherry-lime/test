@@ -16,6 +16,7 @@ function Textfield({ text, theme }: { text: string; theme: ThemeOptions }) {
           backgroundColor: "white",
           width: "50ch",
         }}
+        color="secondary"
         variant="outlined"
         multiline
         rows={5}
