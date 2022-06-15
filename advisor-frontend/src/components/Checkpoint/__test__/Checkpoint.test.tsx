@@ -1,8 +1,28 @@
+import { createTheme } from "@mui/material";
 import { render, cleanup, screen, fireEvent } from "@testing-library/react";
 import Checkpoint from "../Checkpoint";
 
 //  cleanup after each testcase
 afterEach(cleanup);
+
+//  coloring theme aligned with UI design
+//  ING orange is ff6200
+//  darkgray is 5a534f
+//  the labels are darkgrey according style
+//  the radio buttons are ING orange according style
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#ff6200",
+    },
+    secondary: {
+      main: "#5a534f",
+    },
+    text: {
+      primary: "#5a534f",
+    },
+  },
+});
 
 //  a checkpoint consists of three radio buttons
 //  checking rendering of the radio-buttons
@@ -10,8 +30,10 @@ afterEach(cleanup);
 //  initially no buttons are active
 //  only one button can be clicked at the same time
 it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 321 and 312 with 1=Yes, 2=No and 3=N/A", () => {
-  const { getByText } = render(<Checkpoint checkpointId="123" />);
-  expect(getByText("Checkpoint Description for id 123")).toBeInTheDocument();
+  const { getByText } = render(
+    <Checkpoint description="Checkpoint Description" number={1} theme={theme} />
+  );
+  expect(getByText("Checkpoint Description")).toBeInTheDocument();
 
   //  define three radio-buttons with labels Yes, No and N/A
   const radio1 = screen.getByLabelText("Yes");

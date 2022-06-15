@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  createTheme,
   ThemeProvider,
   FormControlLabel,
   RadioGroup,
@@ -11,35 +10,24 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
+import { ThemeOptions } from "@mui/material/styles/experimental_extendTheme";
 
-//  coloring theme aligned with UI design
-//  ING orange is ff6200
-//  darkgray is 5a534f
-//  the labels are darkgrey according style
-//  the radio buttons are ING orange according style
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#ff6200",
-    },
-    secondary: {
-      main: "#5a534f",
-    },
-    text: {
-      primary: "#5a534f",
-    },
-  },
-});
 //  passing parameter of the optional description of the checkpoints
 //  description of checkpoint = description
 //  description might be empty string
 //  main function returning a checkpoint component
-function Checkpoint({ checkpointId }: { checkpointId: string }) {
+function Checkpoint({
+  description,
+  number,
+  theme,
+}: {
+  description: string;
+  number: number;
+  theme: ThemeOptions;
+}) {
   //  initial value of the checkpoint set to empty string
   //  using the State Hook in React
   //  set the value when clicking one of the radio-buttons
-  const description = `Checkpoint Description for id ${checkpointId}`;
-  const number = 1;
 
   const [value, setValue] = useState("");
   const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,11 +42,12 @@ function Checkpoint({ checkpointId }: { checkpointId: string }) {
     //  the styling of the checkpoint/radiobutton is in line with the color scheme
     //  darkgrey when not active and ING orange when selected/clicked
     <ThemeProvider theme={theme}>
-      <Card sx={{ width: "90%", alignSelf: "center" }}>
+      <Card sx={{ width: "95%", alignSelf: "center" }}>
         <CardContent>
           <Typography
             sx={{
-              width: "10%",
+              width: "5%",
+              minWidth: "60px",
               float: "left",
               fontSize: "24px",
               fontWeight: "bold",
@@ -103,7 +92,9 @@ function Checkpoint({ checkpointId }: { checkpointId: string }) {
 }
 
 Checkpoint.propTypes = {
-  checkpointId: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  number: PropTypes.number.isRequired,
+  theme: PropTypes.node.isRequired,
 };
 
 export default Checkpoint;
