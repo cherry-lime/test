@@ -7,6 +7,7 @@ import {
   Delete,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -20,6 +21,10 @@ import { SubareaDto } from '../subarea/dto/subarea.dto';
 import { CategoryService } from './category.service';
 import { CategoryDto } from './dto/category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Roles } from '../common/decorators/roles.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Role } from '@prisma/client';
 
 @ApiTags('category')
 @Controller('category')
@@ -42,6 +47,8 @@ export class CategoryController {
   @ApiNotFoundResponse({
     description: 'Category not found',
   })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   findOne(@Param('category_id', ParseIntPipe) id: number) {
     return this.categoryService.findOne(id);
   }
@@ -58,6 +65,8 @@ export class CategoryController {
   @ApiBadRequestResponse({
     description: 'Order must be less than number of categories in template',
   })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   update(
     @Param('category_id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto
@@ -73,6 +82,8 @@ export class CategoryController {
   @Delete(':category_id')
   @ApiResponse({ description: 'Deleted category', type: CategoryDto })
   @ApiNotFoundResponse({ description: 'Category not found' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   delete(@Param('category_id', ParseIntPipe) id: number) {
     return this.categoryService.delete(id);
   }
@@ -90,6 +101,8 @@ export class CategoryController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   findAllSubareas(@Param('subarea_id', ParseIntPipe) id: number) {
     return this.subareaService.findAll(id);
   }
@@ -108,6 +121,8 @@ export class CategoryController {
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
   @ApiConflictResponse({ description: 'Subarea with this name already exists' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   createSubarea(@Param('subarea_id', ParseIntPipe) id: number) {
     return this.subareaService.create(id);
   }
