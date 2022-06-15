@@ -6,11 +6,9 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import {
-  registerDto,
   userDto,
   UserWithoutPassword,
   userAuthenticationLog,
-  userAuthenticationReg,
   mockPrisma,
 } from '../prisma/mock/mockAuthService';
 import { JwtStrategy } from './jwt.strategy';
