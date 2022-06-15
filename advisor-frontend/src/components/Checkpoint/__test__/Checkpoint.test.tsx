@@ -10,10 +10,8 @@ afterEach(cleanup);
 //  initially no buttons are active
 //  only one button can be clicked at the same time
 it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 321 and 312 with 1=Yes, 2=No and 3=N/A", () => {
-  const { getByText } = render(
-    <Checkpoint description="testcheckpointtitle" />
-  );
-  expect(getByText("testcheckpointtitle")).toBeInTheDocument();
+  const { getByText } = render(<Checkpoint checkpointId="123" />);
+  expect(getByText("Checkpoint Description for id 123")).toBeInTheDocument();
 
   //  define three radio-buttons with labels Yes, No and N/A
   const radio1 = screen.getByLabelText("Yes");

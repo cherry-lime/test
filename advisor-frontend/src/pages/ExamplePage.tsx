@@ -52,7 +52,7 @@ export default function Example() {
         {/* all components are listed once as an example with parameters if applicable */}
         <ButtonRegular text="Regular Button" />
         <ButtonInverted text="Inverted Button" />
-        <Checkpoint description="Checkpoint Description" />
+        <Checkpoint checkpointId="123" />
         <Subarea
           title="Subarea title"
           description="Subarea description here"

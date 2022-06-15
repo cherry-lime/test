@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import {
   createTheme,
   ThemeProvider,
-  Box,
-  FormControl,
-  FormLabel,
   FormControlLabel,
   RadioGroup,
   Radio,
 } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import PropTypes from "prop-types";
 
 //  coloring theme aligned with UI design
 //  ING orange is ff6200
@@ -28,17 +30,17 @@ const theme = createTheme({
     },
   },
 });
-
 //  passing parameter of the optional description of the checkpoints
 //  description of checkpoint = description
 //  description might be empty string
-type Message = { description: string };
-
 //  main function returning a checkpoint component
-function Checkpoint({ description }: Message) {
+function Checkpoint({ checkpointId }: { checkpointId: string }) {
   //  initial value of the checkpoint set to empty string
   //  using the State Hook in React
   //  set the value when clicking one of the radio-buttons
+  const description = `Checkpoint Description for id ${checkpointId}`;
+  const number = 1;
+
   const [value, setValue] = useState("");
   const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
@@ -52,11 +54,24 @@ function Checkpoint({ description }: Message) {
     //  the styling of the checkpoint/radiobutton is in line with the color scheme
     //  darkgrey when not active and ING orange when selected/clicked
     <ThemeProvider theme={theme}>
-      <Box>
-        <FormControl>
-          <FormLabel id="checkpointnamelabel" color="secondary">
+      <Card sx={{ width: "90%", alignSelf: "center" }}>
+        <CardContent>
+          <Typography
+            sx={{
+              width: "10%",
+              float: "left",
+              fontSize: "24px",
+              fontWeight: "bold",
+            }}
+            id="checkpointnrlabel"
+          >
+            {number}
+          </Typography>
+          <Typography sx={{ textAlign: "left" }} id="checkpointnamelabel">
             {description}
-          </FormLabel>
+          </Typography>
+        </CardContent>
+        <CardActions sx={{ justifyContent: "center" }}>
           <RadioGroup
             color="text.primary"
             name="checkpointname"
@@ -81,10 +96,14 @@ function Checkpoint({ description }: Message) {
               value="N/A"
             />
           </RadioGroup>
-        </FormControl>
-      </Box>
+        </CardActions>
+      </Card>
     </ThemeProvider>
   );
 }
+
+Checkpoint.propTypes = {
+  checkpointId: PropTypes.string.isRequired,
+};
 
 export default Checkpoint;
