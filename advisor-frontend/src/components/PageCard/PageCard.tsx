@@ -26,7 +26,7 @@ import Divider from "@mui/material/Divider";
 type PageCardProps = {
   headerText: string;
   bodyText: string;
-  cardHeight: number;
+  cardHeight: string;
   // eslint-disable-next-line @typescript-eslint/ban-types
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
@@ -35,7 +35,7 @@ type PageCardProps = {
   isImageRight: boolean;
 };
 
-function CardImage(ch: number, img: string) {
+function CardImage(ch: string, img: string) {
   return (
     <CardMedia
       component="img"
