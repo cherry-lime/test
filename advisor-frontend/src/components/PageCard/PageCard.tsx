@@ -5,6 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 
 import Divider from "@mui/material/Divider";
+import { Opacity } from "@mui/icons-material";
 
 //  a card consist of:
 //  title with a small logo
@@ -41,17 +42,26 @@ const defaultProps = {
 
 function CardImage(ch: string, img: string) {
   return (
-    <CardMedia
-      component="img"
-      sx={{
-        minWidth: "33vw",
-        width: "33vw",
-        height: ch,
-        opacity: 0.4,
-      }}
-      image={img}
-      alt="ING image"
-    />
+    // <CardMedia
+    //   component="img"
+    //   sx={{
+    //     minWidth: "33vw",
+    //     width: "33vw",
+    //     height: ch,
+    //     opacity: 0.4
+
+    //   }}
+    //   image={img}
+    //   alt="ING image"
+    // />
+
+    <div style={{ minWidth: "33vw", height: ch, backgroundColor: "#FF6200"}}>
+      <img
+        style={{ minWidth: "33vw", height: ch, objectFit: "cover", opacity: 0.4}}
+        src={img}
+        alt="ING"
+      />
+    </div>
   );
 }
 

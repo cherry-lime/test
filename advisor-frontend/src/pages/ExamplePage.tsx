@@ -74,7 +74,6 @@ export default function Example() {
         icon={<AssessmentIcon color="primary" fontSize="small" />}
         image={testimageFigma}
         isImageLeft
-        isImageRight
       />
       <Link data-testid="home" to="/">
         {" "}
