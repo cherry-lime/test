@@ -11,14 +11,14 @@ datasource db {
 }
 
 model User {
-  user_id                Int                      @id @default(autoincrement())
-  username               String
-  password_hash          String
-  role                   Role                     @default(USER)
+  password               String
   created_at             DateTime                 @default(now())
   updated_at             DateTime                 @updatedAt
-  UserInTeam             UserInTeam[]
+  username               String                   @unique
+  user_id                Int                      @id @default(autoincrement())
+  role                   Role[]
   AssessmentParticipants AssessmentParticipants[]
+  UserInTeam             UserInTeam[]
 
   @@index([role])
 }
@@ -47,10 +47,14 @@ model PossibleAnswers {
 
 model Maturity {
   maturity_id    Int          @id @default(autoincrement())
-  maturity_name  String
+  maturity_name  String       @default("New Maturity")
   maturity_order Int
+  Template       Template     @relation(fields: [template_id], references: [template_id])
+  template_id    Int
   Checkpoint     Checkpoint[]
   Feedback       Feedback[]
+
+  @@unique([maturity_name, template_id])
 }
 
 model Topic {
@@ -76,6 +80,7 @@ model Team {
   team_name    String
   invite_token String       @db.Uuid
   UserInTeam   UserInTeam[]
+  Assessment   Assessment[]
 }
 
 model UserInTeam {
@@ -91,17 +96,21 @@ model UserInTeam {
 
 model Assessment {
   assessment_id                     Int                                 @id @default(autoincrement())
-  assessment_name                   String
-  country_name                      String
-  department_name                   String
+  assessment_name                   String                              @default("New Assessment")
+  country_name                      String                              @default("")
+  department_name                   String                              @default("")
   created_at                        DateTime                            @default(now())
   updated_at                        DateTime                            @updatedAt
-  completed_at                      DateTime
+  completed_at                      DateTime?
   assessment_type                   AssessmentType
-  template                          Template                            @relation(fields: [template_id], references: [template_id])
+  Template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
+  Team                              Team?                               @relation(fields: [team_id], references: [team_id])
+  team_id                           Int?
   AssessmentParticipants            AssessmentParticipants[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+
+  @@unique([assessment_name, assessment_type, team_id])
 }
 
 model AssessmentParticipants {
@@ -116,7 +125,7 @@ model AssessmentParticipants {
 
 model Template {
   template_id       Int               @id @default(autoincrement())
-  template_name     String
+  template_name     String            @default("New Template")
   template_type     AssessmentType
   disabled          Boolean           @default(false)
   weight_range_min  Int               @default(1)
@@ -128,27 +137,33 @@ model Template {
   Topic             Topic[]
   Category          Category[]
 
-  @@map("AssessmentTemplate")
+  Maturity Maturity[]
+  @@unique([template_name, template_type])
 }
 
 model Category {
   category_id   Int          @id @default(autoincrement())
-  category_name String
-  color         Int
+  category_name String       @default("New Category")
+  color         String       @default("#FF0000")
+  order         Int
   Template      Template     @relation(fields: [template_id], references: [template_id])
   template_id   Int
   Feedback      Feedback[]
   Checkpoint    Checkpoint[]
   SubArea       SubArea[]
+
+  @@unique([category_name, template_id])
 }
 
 model SubArea {
   subarea_id          Int      @id @default(autoincrement())
-  subarea_name        String
-  subarea_summary     String
-  subarea_description String
+  subarea_name        String   @default("New Subarea")
+  subarea_summary     String   @default("")
+  subarea_description String   @default("")
   Category            Category @relation(fields: [category_id], references: [category_id])
   category_id         Int
+
+  @@unique([subarea_name, category_id])
 }
 
 model CheckpointAndAnswersInAssessments {
@@ -186,3 +201,6 @@ enum Role {
   ASSESSOR
   ADMIN
 }
+
+
+
