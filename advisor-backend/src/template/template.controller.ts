@@ -14,7 +14,6 @@ import {
   ApiNotFoundResponse,
   ApiResponse,
   ApiTags,
-  ApiBearerAuth
 } from '@nestjs/swagger';
 import { CategoryService } from '../category/category.service';
 import { CreateTemplateDto } from './dto/create-template.dto';
