@@ -10,7 +10,7 @@
 ALTER TABLE "AssessmentParticipants" DROP COLUMN "role";
 
 -- AlterTable
-ALTER TABLE "Category" ADD COLUMN     "order" INTEGER NOT NULL,
+-- ALTER TABLE "Category" ADD COLUMN     "order" INTEGER NOT NULL,
 ALTER COLUMN "category_name" SET DEFAULT E'New Category',
 ALTER COLUMN "color" SET DEFAULT E'#FF0000',
 ALTER COLUMN "color" SET DATA TYPE TEXT;
