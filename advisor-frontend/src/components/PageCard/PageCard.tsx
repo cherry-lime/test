@@ -5,23 +5,19 @@ import Typography from "@mui/material/Typography";
 
 import Divider from "@mui/material/Divider";
 
-//  a card consist of:
-//  title with a small logo
-//  a seperator line (divider)
-//  a body text
-//  optionally: an JPEG image at the right side and/or left side
-//  title divider and body text are aligned left
-//  the card title and body text are darkgrey according style
-//  the logo in the title is ING orange
-//  the color of the JPG/PNG image must be set in the image itself (in this case also ING orange)
-//  there might be an image on the left or on the right or both
+/*
+a card consist of:
+title with a small logo
+a seperator line (divider)
+a body text
+optionally: an JPEG image at the right side and/or left side
+title divider and body text are aligned left
+the card title and body text are darkgrey according style
+the logo in the title is ING orange
+the color of the JPG/PNG image must be set in the image itself (in this case also ING orange)
+there might be an image on the left or on the right or both
+*/
 
-//  pagecard
-//  textcolor is text
-//  alignment is left
-//  font of title is bold (weight is 600)
-//  title of the card is set to "Individual Evaluation"
-//  title might be changed
 type PageCardProps = {
   headerText: string;
   bodyText: string;
@@ -37,7 +33,11 @@ const defaultProps = {
   isImageLeft: false,
   isImageRight: false,
 };
-
+/*
+Function that displays an image
+The size is always 33% of the viewer width 
+and opacity is 0.4
+*/
 function CardImage(ch: string, img: string) {
   return (
     <div style={{ minWidth: "33vw", height: ch, backgroundColor: "#FF6222" }}>
@@ -54,7 +54,12 @@ function CardImage(ch: string, img: string) {
     </div>
   );
 }
-
+/*
+Function that displays a pagecard component consisting of 
+body text, headertext with icon next to it, optionally 
+an image on the left and/or the right 
+set by boolean isImageLeft and isImageRight
+*/
 export default function PageCard({
   bodyText,
   headerText,
