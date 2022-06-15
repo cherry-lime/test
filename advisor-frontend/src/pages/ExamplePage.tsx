@@ -112,7 +112,6 @@ export default function Example() {
           path="/user/self_evaluations/feedback/:assessmentId"
           element={<IndividualFeedback />}
         />
-
         <Route path="/teams" element={<TeamList />} />
         <Route path="/teams/:teamId" element={<Team />} />
         <Route
@@ -123,9 +122,7 @@ export default function Example() {
           path="/teams/:teamId/feedback/:assessmentId"
           element={<TeamFeedback />}
         />
-
         <Route path="/assessor" element={<AssessorInterface />} />
-
         <Route path="/admin" element={<AdminInterface />} />
         <Route path="/admin/individuals" element={<ListOfIndividuals />} />
         <Route path="/admin/templates" element={<ListOfTemplates />} />
