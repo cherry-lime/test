@@ -11,6 +11,7 @@ import MaturityGrid from "./MaturityGrid";
 import AnswerTypeGrid from "./AnswerTypeGrid";
 import SubareaGrid from "./SubareaGrid";
 import CheckpointGrid from "./CheckpointGrid";
+import TestGrid from "./TestGrid";
 import INGTheme from "../../../Theme";
 
 export default function AllGrid() {
@@ -23,6 +24,8 @@ export default function AllGrid() {
 
   return (
     <div style={{ width: "100%" }}>
+      <strong>Test Grid</strong>
+      <TestGrid theme={INGTheme} />
       <strong>Team Grid</strong>
       <TeamGrid theme={INGTheme} userId={userId} userRole={userRole} />
       <strong>Assessor Grid</strong>
