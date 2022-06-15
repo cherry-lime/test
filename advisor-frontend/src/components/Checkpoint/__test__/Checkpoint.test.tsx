@@ -78,8 +78,8 @@ it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 
   function clickradio2() {
     fireEvent.click(radio2);
     expect(radio1).not.toBeChecked();
-    expect(radio2).toBeChecked();
     expect(radio3).not.toBeChecked();
+    expect(radio2).toBeChecked();
   }
 
   //  click on N/A
@@ -97,7 +97,6 @@ it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 
   clickradio3();
   clickradio1();
   clickradio3();
-  clickradio2();
   clickradio2();
   clickradio1();
   clickradio3();

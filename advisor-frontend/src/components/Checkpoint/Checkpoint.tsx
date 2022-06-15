@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   ThemeProvider,
   FormControlLabel,
@@ -38,9 +38,17 @@ function Checkpoint({
   */
 
   const [value, setValue] = useState("");
-  const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
+
+  const handleClick = useCallback(
+    (event) => {
+      if (event.target.value === value) {
+        setValue("");
+      } else if (event.target.value !== undefined) {
+        setValue(event.target.value);
+      }
+    },
+    [value]
+  );
 
   /*
   the following for loop is used to dynamically generate an amount of checkpoints
@@ -53,7 +61,7 @@ function Checkpoint({
       <FormControlLabel
         control={<Radio color="primary" />}
         label={checkpointlabels[i]}
-        value={checkpointvalues[i]}
+        value={checkpointvalues[i].toString()}
       />
     );
   }
@@ -93,7 +101,7 @@ function Checkpoint({
             name="checkpointname"
             aria-labelledby="checkpointnamelabel"
             value={value}
-            onChange={doSomething}
+            onClick={handleClick}
             row
           >
             <div>{items}</div>
