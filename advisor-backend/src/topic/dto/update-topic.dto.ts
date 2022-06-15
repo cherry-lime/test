@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateTopicDto } from './create-topic.dto';
+import { PartialType, PickType } from '@nestjs/swagger';
+import { TopicDto } from './topic.dto';
 
-export class UpdateTopicDto extends PartialType(CreateTopicDto) {}
+export class UpdateTopicDto extends PartialType(
+  PickType(TopicDto, ['topic_name'])
+) {}

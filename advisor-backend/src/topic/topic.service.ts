@@ -1,26 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTopicDto } from './dto/create-topic.dto';
 import { UpdateTopicDto } from './dto/update-topic.dto';
 
 @Injectable()
 export class TopicService {
-  create(createTopicDto: CreateTopicDto) {
+  create(template_id: number) {
     return 'This action adds a new topic';
   }
 
-  findAll() {
+  findAll(template_id: number) {
     return `This action returns all topic`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} topic`;
+  findOne(topic_id: number) {
+    return `This action returns a #${topic_id} topic`;
   }
 
-  update(id: number, updateTopicDto: UpdateTopicDto) {
-    return `This action updates a #${id} topic`;
+  update(topic_id: number, updateTopicDto: UpdateTopicDto) {
+    return `This action updates a #${topic_id} topic`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} topic`;
+  remove(topic_id: number) {
+    return `This action removes a #${topic_id} topic`;
   }
 }
