@@ -1,9 +1,8 @@
 name: Automated testing of code quality/correctness/style (frontend)
 
 on:
-  push:
   pull_request:
-    branches: [ master ]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -11,24 +10,24 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Node.js version
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16.x'
-        
-    - name: npm install, build, and test
-      working-directory: ./advisor-frontend
-      run: |
-       npm install
-       npm run build --if-present
-       npm run test --if-present
-         
-    - name: test code quality (ESLint)
-      working-directory: ./advisor-frontend
-      run: npm run lint
-     
-    - name: stylize code (Prettier)
-      working-directory: ./advisor-frontend
-      run: npm run prettier-check
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+
+      - name: npm install, build, and test
+        working-directory: ./advisor-frontend
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+
+      - name: test code quality (ESLint)
+        working-directory: ./advisor-frontend
+        run: npm run lint
+
+      - name: stylize code (Prettier)
+        working-directory: ./advisor-frontend
+        run: npm run prettier-check
