@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
@@ -13,6 +13,11 @@ describe('UserController', () => {
   let userController: UserController;
 
   beforeEach(async () => {
+    process.env = {
+      DATABASE_URL: 'postgres://localhost:5432/test',
+      JWT_SECRET: 'mycustomuselongsecret',
+      EXPIRESIN: '60 days',
+    };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
     })

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import Button from "../../../components/Button/Button";
+import ExampleButton from "../../../components/ExampleButton/ExampleButton";
 
 /**
  * Page with the list of teams that the user or assessor is part of
@@ -20,7 +20,7 @@ function TeamList() {
 
       <h2> List of Teams </h2>
 
-      {data === "assessor" && <Button name="Create New Team" />}
+      {data === "assessor" && <ExampleButton name="Create New Team" />}
 
       <br />
 

@@ -1,4 +1,4 @@
-import Button from "./components/Button/Button";
+import ExampleButton from "./components/ExampleButton/ExampleButton";
 import Greetings from "./components/SampleText/SampleText";
 import logo from "./logo.svg";
 import "./App.css";
@@ -9,7 +9,7 @@ function UserInterface() {
       <h1>This is the home page</h1>
       Hello World
       <Greetings name="This is a test to test a component" />
-      <Button name="Buttontext" />
+      <ExampleButton name="Buttontext" />
       <img src={logo} className="App-logo" alt="logo" />
       <p>
         Edit <code>src/App.tsx</code> and save to reload.

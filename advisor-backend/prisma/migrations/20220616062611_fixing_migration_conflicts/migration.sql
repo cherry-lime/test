@@ -6,12 +6,12 @@ CREATE TYPE "Role" AS ENUM ('USER', 'ASSESSOR', 'ADMIN');
 
 -- CreateTable
 CREATE TABLE "User" (
-    "user_id" SERIAL NOT NULL,
-    "username" TEXT NOT NULL,
-    "password_hash" TEXT NOT NULL,
-    "role" "Role" NOT NULL DEFAULT E'USER',
+    "password" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "username" TEXT NOT NULL,
+    "user_id" SERIAL NOT NULL,
+    "role" "Role" NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("user_id")
 );
@@ -41,8 +41,9 @@ CREATE TABLE "PossibleAnswers" (
 -- CreateTable
 CREATE TABLE "Maturity" (
     "maturity_id" SERIAL NOT NULL,
-    "maturity_name" TEXT NOT NULL,
+    "maturity_name" TEXT NOT NULL DEFAULT E'New Maturity',
     "maturity_order" INTEGER NOT NULL,
+    "template_id" INTEGER NOT NULL,
 
     CONSTRAINT "Maturity_pkey" PRIMARY KEY ("maturity_id")
 );
@@ -136,9 +137,9 @@ CREATE TABLE "Category" (
 -- CreateTable
 CREATE TABLE "SubArea" (
     "subarea_id" SERIAL NOT NULL,
-    "subarea_name" TEXT NOT NULL,
-    "subarea_summary" TEXT NOT NULL,
-    "subarea_description" TEXT NOT NULL,
+    "subarea_name" TEXT NOT NULL DEFAULT E'New Subarea',
+    "subarea_summary" TEXT NOT NULL DEFAULT E'',
+    "subarea_description" TEXT NOT NULL DEFAULT E'',
     "category_id" INTEGER NOT NULL,
 
     CONSTRAINT "SubArea_pkey" PRIMARY KEY ("subarea_id")
@@ -168,7 +169,13 @@ CREATE TABLE "Feedback" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
 CREATE INDEX "User_role_idx" ON "User"("role");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Maturity_maturity_name_template_id_key" ON "Maturity"("maturity_name", "template_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Team_team_name_key" ON "Team"("team_name");
@@ -191,6 +198,9 @@ CREATE UNIQUE INDEX "Template_template_name_template_type_key" ON "Template"("te
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_category_name_template_id_key" ON "Category"("category_name", "template_id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "SubArea_subarea_name_category_id_key" ON "SubArea"("subarea_name", "category_id");
+
 -- AddForeignKey
 ALTER TABLE "Checkpoint" ADD CONSTRAINT "Checkpoint_maturity_id_fkey" FOREIGN KEY ("maturity_id") REFERENCES "Maturity"("maturity_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -199,6 +209,9 @@ ALTER TABLE "Checkpoint" ADD CONSTRAINT "Checkpoint_category_id_fkey" FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE "PossibleAnswers" ADD CONSTRAINT "PossibleAnswers_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "Template"("template_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Maturity" ADD CONSTRAINT "Maturity_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "Template"("template_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Topic" ADD CONSTRAINT "Topic_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "Template"("template_id") ON DELETE RESTRICT ON UPDATE CASCADE;

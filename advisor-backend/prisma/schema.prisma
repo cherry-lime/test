@@ -11,14 +11,14 @@ datasource db {
 }
 
 model User {
-  user_id                Int                      @id @default(autoincrement())
-  username               String
-  password_hash          String
-  role                   Role                     @default(USER)
+  password               String
   created_at             DateTime                 @default(now())
   updated_at             DateTime                 @updatedAt
-  UserInTeam             UserInTeam[]
+  username               String                   @unique
+  user_id                Int                      @id @default(autoincrement())
+  role                   Role
   AssessmentParticipants AssessmentParticipants[]
+  UserInTeam             UserInTeam[]
 
   @@index([role])
 }
@@ -47,10 +47,14 @@ model PossibleAnswers {
 
 model Maturity {
   maturity_id    Int          @id @default(autoincrement())
-  maturity_name  String
+  maturity_name  String       @default("New Maturity")
   maturity_order Int
+  Template       Template     @relation(fields: [template_id], references: [template_id])
+  template_id    Int
   Checkpoint     Checkpoint[]
   Feedback       Feedback[]
+
+  @@unique([maturity_name, template_id])
 }
 
 model Topic {
@@ -135,6 +139,7 @@ model Template {
   Topic             Topic[]
   Category          Category[]
 
+  Maturity Maturity[]
   @@unique([template_name, template_type])
 }
 
@@ -154,11 +159,13 @@ model Category {
 
 model SubArea {
   subarea_id          Int      @id @default(autoincrement())
-  subarea_name        String
-  subarea_summary     String
-  subarea_description String
+  subarea_name        String   @default("New Subarea")
+  subarea_summary     String   @default("")
+  subarea_description String   @default("")
   Category            Category @relation(fields: [category_id], references: [category_id])
   category_id         Int
+
+  @@unique([subarea_name, category_id])
 }
 
 model CheckpointAndAnswersInAssessments {

@@ -3,6 +3,8 @@ import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { aCategory } from '../prisma/mock/mockCategory';
+import { SubareaService } from '../subarea/subarea.service';
+import { aSubarea } from '../prisma/mock/mockSubarea';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -19,6 +21,12 @@ describe('CategoryController', () => {
             findOne: jest.fn().mockResolvedValue(aCategory),
             update: jest.fn().mockResolvedValue(aCategory),
             delete: jest.fn().mockResolvedValue(aCategory),
+          };
+        }
+        if (token === SubareaService) {
+          return {
+            findAll: jest.fn().mockResolvedValue([aSubarea]),
+            create: jest.fn().mockResolvedValue(aSubarea),
           };
         }
         if (typeof token === 'function') {
@@ -53,6 +61,18 @@ describe('CategoryController', () => {
   describe('delete', () => {
     it('Should return the deleted category', async () => {
       expect(await controller.delete(1)).toEqual(aCategory);
+    });
+  });
+
+  describe('findAllSubareas', () => {
+    it('Should return the subareas', async () => {
+      expect(controller.findAllSubareas(1)).resolves.toEqual([aSubarea]);
+    });
+  });
+
+  describe('createSubarea', () => {
+    it('Should return the created subarea', async () => {
+      expect(controller.createSubarea(1)).resolves.toEqual(aSubarea);
     });
   });
 });

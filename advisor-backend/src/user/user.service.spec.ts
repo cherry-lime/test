@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from './user.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
@@ -13,6 +13,11 @@ describe('UserService', () => {
   let prisma: PrismaService;
 
   beforeEach(async () => {
+    process.env = {
+      DATABASE_URL: 'postgres://localhost:5432/test',
+      JWT_SECRET: 'mycustomuselongsecret',
+      EXPIRESIN: '60 days',
+    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [UserService],
     })
@@ -42,6 +47,15 @@ describe('UserService', () => {
     it('Should return the found users', async () => {
       expect(userService.getUser(1)).resolves.toBe(aUser);
     });
+    //it('should reject if username is not found', async() => {
+    //  jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(null);
+    //  expect(userService.getUser(3)).rejects.toThrowError(NotFoundException);
+    //})
+  });
+
+  describe('CreateUsers', () => {
+    //it('Should return the found users', async () => {
+    //  expect(userService.getUser(1)).resolves.toBe(aUser);
 
     it('Should throw NotFoundException if no user is found', async () => {
       jest.spyOn(prisma.user, 'findFirst').mockReturnValueOnce(null);
