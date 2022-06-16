@@ -26,10 +26,10 @@ import { InviteTokenDto } from './dto/invite-token.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/common/guards/roles.guard';
-import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { Role, User } from '@prisma/client';
-import AuthUser from 'src/common/decorators/auth-user.decorator';
+import AuthUser from '../common/decorators/auth-user.decorator';
 
 @ApiTags('teams')
 @Controller('teams')

@@ -5,6 +5,7 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { TeamsModule } from './teams.module';
 import { TeamsController } from './teams.controller';
 import { TeamsService } from './teams.service';
+import { TeamsService2 } from './team.service2';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -30,5 +31,6 @@ describe('TemplateModule', () => {
     expect(module).toBeDefined();
     expect(module.get(TeamsController)).toBeInstanceOf(TeamsController);
     expect(module.get(TeamsService)).toBeInstanceOf(TeamsService);
+    expect(module.get(TeamsService2)).toBeInstanceOf(TeamsService2);
   });
 });

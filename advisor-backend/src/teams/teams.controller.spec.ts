@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { TeamsController } from './teams.controller';
 import { TeamsService } from './teams.service';
+import { TeamsService2 } from './team.service2';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import {
   aTeam,
@@ -10,6 +11,7 @@ import {
 import { aTeamMembers } from '../prisma/mock/mockTeamMembers';
 import { aAssessment } from '../prisma/mock/mockAssessment';
 import { InviteTokenDto } from './dto/invite-token.dto';
+import { aUser1 } from '../prisma/mock/mockUser';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -35,6 +37,12 @@ describe('TeamsController', () => {
             updateTeam: jest.fn().mockResolvedValue(aTeam),
           };
         }
+        if (token === TeamsService2) {
+          return {
+            getTeams: jest.fn().mockResolvedValue([aTeam]),
+            findOne: jest.fn().mockResolvedValue(aTeam),
+          };
+        }
         if (typeof token === 'function') {
           const mockMetadata = moduleMocker.getMetadata(
             token
@@ -45,7 +53,6 @@ describe('TeamsController', () => {
       })
       .compile();
 
-    //teamController = moduleRef.get(TeamsController);
     teamController = moduleRef.get<TeamsController>(TeamsController);
   });
 
@@ -67,13 +74,17 @@ describe('TeamsController', () => {
 
   describe('getTeamMembers', () => {
     it('Should return the team members', async () => {
-      expect(teamController.findTeamMembers(1)).resolves.toBe(aTeamMembers);
+      expect(teamController.findTeamMembers(aUser1, 1)).resolves.toBe(
+        aTeamMembers
+      );
     });
   });
 
   describe('addTeamMember', () => {
     it('Should return the team members', async () => {
-      expect(teamController.addTeamMember('test')).resolves.toBe(aTeamMembers);
+      expect(teamController.addTeamMember(aUser1, 'test')).resolves.toBe(
+        aTeamMembers
+      );
     });
   });
 

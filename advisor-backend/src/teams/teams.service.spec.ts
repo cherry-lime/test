@@ -18,16 +18,18 @@ import {
 } from '@nestjs/common';
 import { aUser1 } from '../prisma/mock/mockUser';
 import { InviteTokenDto } from './dto/invite-token.dto';
+import { TeamsService2 } from './team.service2';
 
 const moduleMocker = new ModuleMocker(global);
 
 describe('TeamsService', () => {
   let teamsService: TeamsService;
+  let teamsService2: TeamsService2;
   let prisma: PrismaService;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [TeamsService],
+      providers: [TeamsService, TeamsService2],
     })
       .useMocker((token) => {
         if (token === PrismaService) {
@@ -44,6 +46,7 @@ describe('TeamsService', () => {
       .compile();
 
     teamsService = moduleRef.get<TeamsService>(TeamsService);
+    teamsService2 = moduleRef.get<TeamsService2>(TeamsService2);
     prisma = moduleRef.get<PrismaService>(PrismaService);
   });
 
@@ -75,19 +78,19 @@ describe('TeamsService', () => {
 
   describe('getTeam', () => {
     it('Should return the team', async () => {
-      expect(teamsService.findOne(1)).resolves.toBe(aTeam);
+      expect(teamsService2.findOne(1)).resolves.toBe(aTeam);
     });
 
     it('Should reject if team not found', async () => {
       jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(null);
-      expect(teamsService.findOne(2)).rejects.toThrowError(NotFoundException);
+      expect(teamsService2.findOne(2)).rejects.toThrowError(NotFoundException);
     });
 
     it('Should reject with unknown error', async () => {
       jest
         .spyOn(prisma.team, 'findUnique')
         .mockRejectedValueOnce({ code: 'TEST' });
-      await expect(teamsService.findOne(1)).rejects.toThrowError(
+      await expect(teamsService2.findOne(1)).rejects.toThrowError(
         InternalServerErrorException
       );
     });
@@ -96,7 +99,8 @@ describe('TeamsService', () => {
   describe('getTeamMembers', () => {
     it('Should return the team members', async () => {
       jest.spyOn(prisma.user, 'findMany').mockResolvedValueOnce([aUser1]);
-      expect(teamsService.findTeamMembers(1)).resolves.toHaveProperty(
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(aTeam);
+      expect(teamsService.findTeamMembers(aUser1, 1)).resolves.toHaveProperty(
         'team_members[0].username',
         'test_username'
       );
@@ -104,42 +108,47 @@ describe('TeamsService', () => {
 
     it('Should return the team members', async () => {
       jest.spyOn(prisma.user, 'findMany').mockResolvedValueOnce([aUser1]);
-      expect(teamsService.findTeamMembers(1)).resolves.toHaveProperty(
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(aTeam);
+      expect(teamsService.findTeamMembers(aUser1, 1)).resolves.toHaveProperty(
         'team_members[0].role',
         'USER'
       );
     });
 
     it('Should reject if team not found', async () => {
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(aTeam);
       jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(null);
-      expect(teamsService.findTeamMembers(2)).rejects.toThrow(
+      expect(teamsService.findTeamMembers(aUser1, 2)).rejects.toThrow(
         NotFoundException
       );
     });
 
     it('Should reject if no members are associated with the team', async () => {
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(aTeam);
       jest
         .spyOn(prisma.team, 'findUnique')
         .mockResolvedValueOnce(aTeamNoMembers);
-      expect(teamsService.findTeamMembers(1)).rejects.toThrow(
+      expect(teamsService.findTeamMembers(aUser1, 1)).rejects.toThrow(
         NotFoundException
       );
     });
 
     it('Should reject with unknown error', async () => {
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(aTeam);
       jest
         .spyOn(prisma.team, 'findUnique')
         .mockRejectedValueOnce({ code: 'TEST' });
-      await expect(teamsService.findTeamMembers(1)).rejects.toThrow(
+      await expect(teamsService.findTeamMembers(aUser1, 1)).rejects.toThrow(
         InternalServerErrorException
       );
     });
 
     it('Should reject with unknown error', async () => {
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(aTeam);
       jest
         .spyOn(prisma.user, 'findMany')
         .mockRejectedValueOnce({ code: 'TEST' });
-      await expect(teamsService.findTeamMembers(1)).rejects.toThrow(
+      await expect(teamsService.findTeamMembers(aUser1, 1)).rejects.toThrow(
         InternalServerErrorException
       );
     });
@@ -149,36 +158,36 @@ describe('TeamsService', () => {
     it('Should return the team members', async () => {
       jest.spyOn(prisma.user, 'findMany').mockResolvedValueOnce([aUser1]);
       expect(
-        teamsService.addTeamMember('test_invite_token')
+        teamsService.addTeamMember(aUser1, 'test_invite_token')
       ).resolves.toHaveProperty('team_members[0].username', 'test_username');
     });
 
     it('Should return the team members', async () => {
       jest.spyOn(prisma.user, 'findMany').mockResolvedValueOnce([aUser1]);
       expect(
-        teamsService.addTeamMember('test_invite_token')
+        teamsService.addTeamMember(aUser1, 'test_invite_token')
       ).resolves.toHaveProperty('team_members[0].role', 'USER');
     });
 
     it('Should reject if team not found', async () => {
       jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(null);
-      expect(teamsService.addTeamMember('invalid_token')).rejects.toThrow(
-        NotFoundException
-      );
+      expect(
+        teamsService.addTeamMember(aUser1, 'invalid_token')
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('Should reject if team not found', async () => {
       jest.spyOn(prisma.user, 'findMany').mockResolvedValueOnce([]);
-      expect(teamsService.addTeamMember('invalid_token')).rejects.toThrow(
-        NotFoundException
-      );
+      expect(
+        teamsService.addTeamMember(aUser1, 'invalid_token')
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('Should reject with unknown error', async () => {
       jest
         .spyOn(prisma.team, 'findUnique')
         .mockRejectedValueOnce({ code: 'TEST' });
-      await expect(teamsService.addTeamMember('test')).rejects.toThrow(
+      await expect(teamsService.addTeamMember(aUser1, 'test')).rejects.toThrow(
         InternalServerErrorException
       );
     });
@@ -187,7 +196,7 @@ describe('TeamsService', () => {
       jest
         .spyOn(prisma.user, 'findMany')
         .mockRejectedValueOnce({ code: 'TEST' });
-      await expect(teamsService.addTeamMember('test')).rejects.toThrow(
+      await expect(teamsService.addTeamMember(aUser1, 'test')).rejects.toThrow(
         InternalServerErrorException
       );
     });
@@ -196,7 +205,7 @@ describe('TeamsService', () => {
       jest
         .spyOn(prisma.userInTeam, 'create')
         .mockRejectedValueOnce({ code: 'TEST' });
-      await expect(teamsService.addTeamMember('test')).rejects.toThrow(
+      await expect(teamsService.addTeamMember(aUser1, 'test')).rejects.toThrow(
         InternalServerErrorException
       );
     });
