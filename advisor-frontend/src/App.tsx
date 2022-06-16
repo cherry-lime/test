@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
 import UserInterface from "./pages/user/UserInterface/UserInterface";
 import Home from "./Home";
@@ -20,6 +20,18 @@ import AllPages from "./pages/AllPages";
 function App() {
   return (
     <div className="App">
+      <Link data-testid="home" to="/">
+        Home
+      </Link>
+      <Link to="/user" state="user" data-testid="user">
+        User
+      </Link>
+      <Link to="/assessor" state="assessor" data-testid="assessor">
+        Assessor
+      </Link>
+      <Link to="/admin" state="admin" data-testid="admin">
+        Admin
+      </Link>
       <AllPages />
       <Routes>
         <Route path="/" element={<Home />} />
