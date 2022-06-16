@@ -32,6 +32,8 @@ const theme = createTheme({
 
 //  test rendering of the noneditable textfield and check of bodytext
 it("Rendering without crash and check placeholdertext", () => {
-  const { getByText } = render(<Textfield text="lorem ipsum" theme={theme} />);
+  const { getByText } = render(
+    <Textfield text="lorem ipsum" theme={theme} rows={5} columns="50ch" />
+  );
   expect(getByText("lorem ipsum")).toBeInTheDocument();
 });

@@ -1,5 +1,13 @@
+import { Stack } from "@mui/material";
 import { Link, useLocation, useParams } from "react-router-dom";
 import ExampleButton from "../../../components/ExampleButton/ExampleButton";
+import PageLayout from "../../PageLayout";
+import userTypes from "../../../components/Sidebar/listUsersTypes";
+import TextField from "../../../components/Textfield/Textfield";
+import INGTheme from "../../../Theme";
+import MemberGrid from "../../../components/Grids/Specific/MemberGrid";
+import AssessmentOngoingGrid from "../../../components/Grids/Specific/AssessmentOngoingGrid";
+import AssessmentCompletedGrid from "../../../components/Grids/Specific/AssessmentCompletedGrid";
 
 /**
  * Page providing team details
@@ -15,59 +23,116 @@ function Team() {
   const assessmentIds = [234, 56, 76];
   const feedbackIds = [123, 555, 23];
 
+  const userId = 0;
+  const tmId = 4;
+  const userRole = "USER";
+
   return (
-    <div>
-      <p> {data} view </p>
-      <Link to="/teams" state={data}>
-        {" "}
-        Go Back to List of Teams{" "}
-      </Link>
+    <PageLayout title={`Team ${teamId}`} sidebarType={userTypes.USER}>
+      <Stack spacing={3}>
+        <strong> Team Information </strong>
+        <h6> Country </h6>
+        <TextField
+          text="Netherlands"
+          theme={INGTheme}
+          rows={1}
+          columns="100ch"
+        />
+        <h6> IT Area / Department </h6>
+        <TextField
+          text="Department A"
+          theme={INGTheme}
+          rows={1}
+          columns="100ch"
+        />
 
-      <h2 data-testid="team-id"> A Specific Team with id {teamId} </h2>
-      {data === "assessor" && <p> Editable team info </p>}
+        <strong>Assessors</strong>
+        <MemberGrid
+          theme={INGTheme}
+          userId={userId}
+          userRole={userRole}
+          teamId={tmId}
+          forAssessors={false}
+        />
+        <strong>Members</strong>
+        <MemberGrid
+          theme={INGTheme}
+          userId={userId}
+          userRole={userRole}
+          teamId={tmId}
+          forAssessors={false}
+        />
 
-      {data === "user" && <p> Non-editable team info </p>}
+        <strong>Ongoing Evaluations (Team)</strong>
+        <AssessmentOngoingGrid
+          theme={INGTheme}
+          userId={userId}
+          userRole={userRole}
+          assessmentType="TEAM"
+        />
 
-      <h3>List of assessors</h3>
+        <strong>Completed Evaluations (Team)</strong>
+        <AssessmentCompletedGrid
+          theme={INGTheme}
+          userId={userId}
+          userRole={userRole}
+          assessmentType="TEAM"
+        />
 
-      {data === "assessor" && <ExampleButton name="Add New Assessor" />}
-
-      <h3>List of members</h3>
-
-      {data === "assessor" && <ExampleButton name="Add New Member" />}
-
-      <h3>Evaluations in progress</h3>
-
-      {assessmentIds.map((assessmentId) => (
-        <div key={`t-${teamId}-a-${assessmentId}`}>
-          <Link
-            to={`/teams/${teamId}/${assessmentId}`}
-            state={data}
-            data-testid={`team-eval-${assessmentId}`}
-          >
+        <div>
+          <p> {data} view </p>
+          <Link to="/teams" state={data}>
             {" "}
-            Team Evaluation with id {assessmentId}{" "}
+            Go Back to List of Teams{" "}
           </Link>
-          <br />
-        </div>
-      ))}
 
-      <h3>Completed evaluations</h3>
+          <h2 data-testid="team-id"> A Specific Team with id {teamId} </h2>
+          {data === "assessor" && <p> Editable team info </p>}
 
-      {feedbackIds.map((feedbackId) => (
-        <div key={`t-${teamId}-f-${feedbackId}`}>
-          <Link
-            to={`/teams/${teamId}/feedback/${feedbackId}`}
-            state={data}
-            data-testid={`team-feedback-${feedbackId}`}
-          >
-            {" "}
-            Team Feedback with id {feedbackId}{" "}
-          </Link>
-          <br />
+          {data === "user" && <p> Non-editable team info </p>}
+
+          <h3>List of assessors</h3>
+
+          {data === "assessor" && <ExampleButton name="Add New Assessor" />}
+
+          <h3>List of members</h3>
+
+          {data === "assessor" && <ExampleButton name="Add New Member" />}
+
+          <h3>Evaluations in progress</h3>
+
+          {assessmentIds.map((assessmentId) => (
+            <div key={`t-${teamId}-a-${assessmentId}`}>
+              <Link
+                to={`/teams/${teamId}/${assessmentId}`}
+                state={data}
+                data-testid={`team-eval-${assessmentId}`}
+              >
+                {" "}
+                Team Evaluation with id {assessmentId}{" "}
+              </Link>
+              <br />
+            </div>
+          ))}
+
+          <h3>Completed evaluations</h3>
+
+          {feedbackIds.map((feedbackId) => (
+            <div key={`t-${teamId}-f-${feedbackId}`}>
+              <Link
+                to={`/teams/${teamId}/feedback/${feedbackId}`}
+                state={data}
+                data-testid={`team-feedback-${feedbackId}`}
+              >
+                {" "}
+                Team Feedback with id {feedbackId}{" "}
+              </Link>
+              <br />
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      </Stack>
+    </PageLayout>
   );
 }
 

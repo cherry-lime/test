@@ -55,6 +55,8 @@ export default function Example() {
         <Textfield
           text="Here is some text that can not be edited"
           theme={theme}
+          rows={5}
+          columns="50ch"
         />
         <p />
       </Stack>
