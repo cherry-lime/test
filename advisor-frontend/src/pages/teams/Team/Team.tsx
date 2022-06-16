@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { Link, useLocation, useParams } from "react-router-dom";
 import ExampleButton from "../../../components/ExampleButton/ExampleButton";
 import PageLayout from "../../PageLayout";
@@ -29,24 +29,35 @@ function Team() {
 
   return (
     <PageLayout title={`Team ${teamId}`} sidebarType={userTypes.USER}>
-      <Stack spacing={3}>
+      <Grid container direction="column" alignItems="left">
         <strong> Team Information </strong>
-        <h6> Country </h6>
+        <br />
+        <Grid item>
+          <Typography variant="h6" fontWeight={600}>
+            Country
+          </Typography>
+        </Grid>
         <TextField
           text="Netherlands"
           theme={INGTheme}
           rows={1}
-          columns="100ch"
+          columns="25ch"
         />
-        <h6> IT Area / Department </h6>
+        <br />
+        <Grid item>
+          <Typography variant="h6" fontWeight={600}>
+            IT Area / Department
+          </Typography>
+        </Grid>
         <TextField
           text="Department A"
           theme={INGTheme}
           rows={1}
-          columns="100ch"
+          columns="25ch"
         />
-
+        <br />
         <strong>Assessors</strong>
+
         <MemberGrid
           theme={INGTheme}
           userId={userId}
@@ -131,7 +142,7 @@ function Team() {
             </div>
           ))}
         </div>
-      </Stack>
+      </Grid>
     </PageLayout>
   );
 }
