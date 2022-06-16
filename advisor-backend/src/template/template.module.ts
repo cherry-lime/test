@@ -3,7 +3,7 @@ import { MaturityService } from '../maturity/maturity.service';
 import { CategoryService } from '../category/category.service';
 import { TemplateController } from './template.controller';
 import { TemplateService } from './template.service';
-import { TopicService } from 'src/topic/topic.service';
+import { TopicService } from '../topic/topic.service';
 
 @Module({
   controllers: [TemplateController],
