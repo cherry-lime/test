@@ -17,6 +17,42 @@ export class TeamsService {
   constructor(private prisma: PrismaService) {}
 
   /**
+   * Check whether user is in team given a user id and a unique team identifier
+   * @param id id of the user
+   * @param team_id id of the team
+   * @returns true if user is in team, false otherwise
+   * @throws Team with given team id not found
+   */
+  async isUserInTeam(id: number, team_id: number): Promise<boolean> {
+    // Get team id and associated user ids from team with team_id from prisma
+    const team = await this.prisma.team
+      .findUnique({
+        where: {
+          team_id,
+        },
+        select: {
+          team_id: true,
+          UserInTeam: {
+            select: {
+              user_id: true,
+            },
+          },
+        },
+      })
+      .catch(() => {
+        throw new InternalServerErrorException();
+      });
+
+    if (!team) {
+      // Throw error if team with given team id not found
+      throw new NotFoundException('Team with given team id not found');
+    }
+
+    // Return true if user is in team, false otherwise
+    return team.UserInTeam.some((a) => a.user_id === id);
+  }
+
+  /**
    * Create team object given a createTeamDto
    * @param createTeamDto CreateTeamDto
    * @returns created team

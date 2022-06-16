@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
@@ -22,11 +23,36 @@ import { TeamMembers } from './dto/team-member.dto';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role, User } from '@prisma/client';
+import AuthUser from 'src/common/decorators/auth-user.decorator';
 
 @ApiTags('teams')
 @Controller('teams')
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
+
+  /**
+   * [GET] /teams/:team_id/isUserInTeam
+   * @param team_id team_id
+   * @param user_id user_id
+   * @returns true if user is in team, false otherwise
+   * @throws {NotFoundException} if team_id is not found
+   * @throws {InternalServerErrorException} if error occurs
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/:team_id/isUserInTeam')
+  @ApiResponse({ description: 'Check if user is in team', type: Boolean })
+  @ApiNotFoundResponse({ description: 'Team with given team id not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  checkIfUserIsInTeam(
+    @AuthUser() user: User,
+    @Param('team_id', ParseIntPipe) team_id: number
+  ): Promise<boolean> {
+    return this.teamsService.isUserInTeam(user.user_id, team_id);
+  }
 
   /**
    * [POST] /team/create - Create team given a createTeamDto
@@ -40,6 +66,8 @@ export class TeamsController {
   })
   @ApiConflictResponse({ description: 'Team name already exists' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN, Role.ASSESSOR)
   create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
     return this.teamsService.create(createTeamDto);
   }
