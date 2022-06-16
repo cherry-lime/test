@@ -11,6 +11,7 @@ import {
 import {
   ApiConflictResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -18,6 +19,7 @@ import { AssessmentService } from './assessment.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { AssessmentDto } from './dto/assessment.dto';
+import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
 
 @ApiTags('assessment')
 @Controller('assessment')
@@ -107,5 +109,41 @@ export class AssessmentController {
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   complete(@Param('assessment_id', ParseIntPipe) id: number) {
     return this.assessmentService.complete(id);
+  }
+
+  /**
+   * [POST] /assessment/:id/save - save checkpoint
+   * @param assessment_id assessment_id
+   * @param saveCheckpointDto save checkpoint information
+   * @returns Checkpoint saved
+   */
+  @Post(':assessment_id/save')
+  @ApiOkResponse({ description: 'Checkpoint saved' })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
+  save(
+    @Param('assessment_id', ParseIntPipe) assessment_id: number,
+    @Body() saveCheckpointDto: SaveCheckpointDto
+  ) {
+    return this.assessmentService.saveCheckpoint(
+      assessment_id,
+      saveCheckpointDto
+    );
+  }
+
+  /**
+   * [GET] /assessment/:id/save - get saved checkpoints
+   * @param assessment_id assessment_id
+   * @returns Saved checkpoints
+   */
+  @Get(':assessment_id/save')
+  @ApiResponse({
+    description: 'Saved checkpoints',
+    type: SaveCheckpointDto,
+    isArray: true,
+  })
+  getSavedCheckpoints(
+    @Param('assessment_id', ParseIntPipe) assessment_id: number
+  ) {
+    return this.assessmentService.getSavedCheckpoints(assessment_id);
   }
 }

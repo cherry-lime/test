@@ -177,6 +177,7 @@ model CheckpointAndAnswersInAssessments {
   answer_id     Int
 
   @@id([assessment_id, checkpoint_id])
+  @@index([assessment_id])
 }
 
 model Feedback {

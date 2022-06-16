@@ -8,6 +8,7 @@ import {
 import { AssessmentType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
+import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
 @Injectable()
@@ -196,5 +197,64 @@ export class AssessmentService {
           throw new InternalServerErrorException();
         }
       });
+  }
+
+  /**
+   * Save checkpoint for assessment
+   * @param assessment_id assessment_id
+   * @param saveCheckpointDto checkpoint data
+   * @returns checkpoint saved
+   * @throws Assessment not found
+   */
+  async saveCheckpoint(
+    assessment_id: number,
+    { checkpoint_id, answer_id }: SaveCheckpointDto
+  ) {
+    // find assessment
+    const assessment = this.prisma.assessment.findUnique({
+      where: {
+        assessment_id,
+      },
+    });
+
+    // throw NotFoundException if checkpoint not found
+    if (!assessment) {
+      throw new NotFoundException('Checkpoint not found');
+    }
+
+    // Upsert checkpoint and answer
+    await this.prisma.checkpointAndAnswersInAssessments.upsert({
+      where: {
+        assessment_id_checkpoint_id: {
+          assessment_id,
+          checkpoint_id,
+        },
+      },
+      update: {
+        answer_id,
+      },
+      create: {
+        assessment_id,
+        checkpoint_id,
+        answer_id,
+      },
+    });
+    return {
+      msg: 'Checkpoint saved',
+    };
+  }
+
+  /**
+   * Find all saved checkpoints for assessment
+   * @param assessment_id assessment_id
+   * @returns all saved checkpoints
+   * @throws Assessment not found
+   */
+  async getSavedCheckpoints(assessment_id: number) {
+    return await this.prisma.checkpointAndAnswersInAssessments.findMany({
+      where: {
+        assessment_id,
+      },
+    });
   }
 }
