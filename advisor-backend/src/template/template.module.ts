@@ -3,7 +3,7 @@ import { MaturityService } from '../maturity/maturity.service';
 import { CategoryService } from '../category/category.service';
 import { TemplateController } from './template.controller';
 import { TemplateService } from './template.service';
-import { AnswerService } from 'src/answer/answer.service';
+import { AnswerService } from '../answer/answer.service';
 
 @Module({
   controllers: [TemplateController],
