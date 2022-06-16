@@ -33,6 +33,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: backend
           path-to-lcov: ${{ github.workspace }}/advisor-backend/coverage/lcov.info
+          base-path: advisor-backend
 
       - name: Frontend - Upload coverage reports to Codecov
         uses: coverallsapp/github-action@master
@@ -42,3 +43,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: frontend
           path-to-lcov: ${{ github.workspace }}/advisor-frontend/coverage/lcov.info
+          base-path: advisor-frontend
