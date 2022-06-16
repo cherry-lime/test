@@ -37,7 +37,7 @@ type PageCardProps = {
 const defaultProps = {
   isImageLeft: false,
   isImageRight: false,
-}
+};
 
 function CardImage(ch: string, img: string) {
   return (
@@ -83,10 +83,7 @@ export default function PageCard({
           <Typography
             color="text.secondary"
             align="left"
-            sx={{ fontWeight: 600,
-              display: "flex",
-              alignItems: "center"
-             }}
+            sx={{ fontWeight: 600, display: "flex", alignItems: "center" }}
             variant="h6"
           >
             {/* Here should be the title of the card
