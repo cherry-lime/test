@@ -1,7 +1,16 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiProperty, ApiResponse } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { UserService } from './user.service';
+import { Roles } from '../common/decorators/roles.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../common/guards/roles.guard';
 
 class userResponse {
   @ApiProperty()
@@ -20,10 +29,10 @@ class userResponse {
   updated_at: Date;
 }
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
-
+  constructor(private readonly userService: UserService) {}
   /**
    * [GET] /user/:id
    * @param id user_id
@@ -31,6 +40,8 @@ export class UserController {
    */
   @ApiResponse({ description: 'Found user', type: userResponse })
   @Get(':id')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN, Role.ASSESSOR)
   getUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getUser(id);
   }

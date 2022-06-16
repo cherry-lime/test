@@ -4,7 +4,7 @@ function Greetings({ name }: Message) {
   return (
     <div>
       <p>
-        Hello
+        {"Hello "}
         {name}!
       </p>
     </div>
