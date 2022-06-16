@@ -22,9 +22,7 @@ type PageCardProps = {
   headerText: string;
   bodyText: string;
   cardHeight: string;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon: any;
+  icon: JSX.Element;
   image: string;
   isImageLeft?: boolean;
   isImageRight?: boolean;
