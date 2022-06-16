@@ -20,7 +20,7 @@ export const userArray1 = [
   {
     user_id: 1,
     username: 'test_username',
-    password_hash: 'test_password_hash',
+    password: 'test_password_hash',
     role: Role.USER,
     created_at: new Date(),
     updated_at: new Date(),
