@@ -5,7 +5,7 @@ import { IsIn, IsString, IsUUID } from 'class-validator';
 /**
  * Response with authentication information
  */
-export class AutheticationDto {
+export class AuthenticationDto {
   @IsUUID()
   @ApiProperty()
   password: string;
@@ -25,7 +25,7 @@ export class AutheticationDto {
 
   @IsIn([Role.USER, Role.ASSESSOR])
   @ApiProperty()
-  role: Role[];
+  role: Role;
 
   @ApiProperty()
   AssessmentParticipants: AssessmentParticipants[];
