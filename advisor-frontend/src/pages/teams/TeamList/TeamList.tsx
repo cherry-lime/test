@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { Grid } from "@mui/material";
 import ExampleButton from "../../../components/ExampleButton/ExampleButton";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
@@ -17,7 +18,9 @@ function TeamList() {
 
   return (
     <PageLayout title="Teams" sidebarType={userTypes.USER}>
-      <strong>Team Grid</strong>
+      <Grid container direction="column" alignItems="left">
+        <strong> Teams </strong>
+      </Grid>
       <TeamGrid theme={INGTheme} userId={userId} userRole={userRole} />
       <div>
         <p> {data} view </p>
