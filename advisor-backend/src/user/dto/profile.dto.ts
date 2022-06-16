@@ -1,7 +1,7 @@
 import { OmitType } from '@nestjs/swagger';
-import { AutheticationDto } from '../../auth/auth_dto/authentication.dto';
+import { AuthenticationDto } from '../../auth/auth_dto/authentication.dto';
 
-export class ProfileDto extends OmitType(AutheticationDto, [
+export class ProfileDto extends OmitType(AuthenticationDto, [
   'password',
   'AssessmentParticipants',
   'UserInTeam',
