@@ -1,6 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import GroupsIcon from "@mui/icons-material/Groups";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import PageCard from "../../../components/PageCard/PageCard";
@@ -52,10 +54,10 @@ function UserInterface() {
       >
         <PageCard
           bodyText="View your current progress"
-          headerText="Evaluations"
+          headerText="Progress"
           cardHeight="15vh"
           icon={
-            <GroupsIcon
+            <ShowChartIcon
               color="info"
               fontSize="large"
               className="inverse_icon"
@@ -73,55 +75,11 @@ function UserInterface() {
         data-testid="user-progress"
       >
         <PageCard
-          bodyText="View your current progress"
-          headerText="Evaluations"
+          bodyText="View your updates and notifications"
+          headerText="Notifications"
           cardHeight="15vh"
           icon={
-            <GroupsIcon
-              color="info"
-              fontSize="large"
-              className="inverse_icon"
-              sx={{
-                bgcolor: "primary.main",
-              }}
-            />
-          }
-          image={testimageFigma}
-        />
-      </Link>
-      <Link
-        to="/user/self_evaluations/:assessmentId"
-        state={data}
-        data-testid="user-progress"
-      >
-        <PageCard
-          bodyText="View your current progress"
-          headerText="Evaluations"
-          cardHeight="15vh"
-          icon={
-            <GroupsIcon
-              color="info"
-              fontSize="large"
-              className="inverse_icon"
-              sx={{
-                bgcolor: "primary.main",
-              }}
-            />
-          }
-          image={testimageFigma}
-        />
-      </Link>
-      <Link
-        to="/user/self_evaluations/:assessmentId"
-        state={data}
-        data-testid="user-progress"
-      >
-        <PageCard
-          bodyText="View your current progress"
-          headerText="Evaluations"
-          cardHeight="15vh"
-          icon={
-            <GroupsIcon
+            <NotificationsNoneIcon
               color="info"
               fontSize="large"
               className="inverse_icon"

@@ -1,6 +1,5 @@
 import { Stack, createTheme } from "@mui/material";
 import AssessmentIcon from "@mui/icons-material/Assessment";
-import { Routes, Route, Link } from "react-router-dom";
 import PageLayout from "./PageLayout";
 import userType from "../components/Sidebar/listUsersTypes";
 import testimageFigma from "../components/PageCard/testimageFigma.png";

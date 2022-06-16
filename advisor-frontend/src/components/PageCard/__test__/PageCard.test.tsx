@@ -1,6 +1,6 @@
 import { render, cleanup } from "@testing-library/react";
 import AssessmentIcon from "@mui/icons-material/Assessment";
-import PageCard from "../PageCard";
+import PageCard from "../PageCard"
 
 //  cleanup after each test case
 afterEach(cleanup);
