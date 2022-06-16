@@ -78,30 +78,15 @@ export default function RecommendationGrid({
 
   // Called when a row is edited
   const processRowUpdate = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleRowAPI = () => {};
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleOrderAPI = () => {};
-
-      return processRowUpdateDecorator(
-        handleRowAPI,
-        setRows,
-        newRow,
-        oldRow,
-        handleOrderAPI
-      );
-    },
+    (newRow: GridRowModel, oldRow: GridRowModel) =>
+      processRowUpdateDecorator(setRows, newRow, oldRow, true),
     []
   );
 
   // Called when the "Upward" action is pressed
   const handleUpward = React.useCallback(
     (row: Row) => () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleAPI = () => {};
-
-      handleMoveRows(handleAPI, setRows, row, row.order - 1);
+      handleMoveRows(setRows, row, row.order - 1);
     },
     []
   );
@@ -109,10 +94,7 @@ export default function RecommendationGrid({
   // Called when the "Downward" action is pressed
   const handleDownward = React.useCallback(
     (row: Row) => () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleAPI = () => {};
-
-      handleMoveRows(handleAPI, setRows, row, row.order + 1);
+      handleMoveRows(setRows, row, row.order + 1);
     },
     []
   );

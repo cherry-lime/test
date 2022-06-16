@@ -1,11 +1,14 @@
 import * as React from "react";
-import { QueryKey, useQuery } from "react-query";
+import { QueryKey, useQuery, useMutation } from "react-query";
 import axios from "axios";
 
-import { GridColumns } from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
 
 import GenericGrid from "../Generic/GenericGrid";
+
+import { handleDuplicateDecorator } from "../decorators";
 
 // Define type for the rows in the grid
 type Row = {
@@ -37,6 +40,30 @@ export default function TestGrid({ theme }: { theme: Theme }) {
     }
   }, [status, data, error, isFetching]);
 
+  const mutation = useMutation((row: Row) => axios.post("/todos", row));
+
+  const handleDuplicate = React.useCallback(
+    (row: Row) => () => {
+      mutation.mutate(row, {
+        onSuccess: (dat, variables, context) => {
+          console.log(`SUCCESS DATA: ${dat}`);
+          console.log(`SUCCESS VARIABLES: ${variables}`);
+          console.log(`SUCCESS CONTEXT: ${context}`);
+
+          handleDuplicateDecorator(setRows, row);
+        },
+        onError: (err, variables, context) => {
+          console.log(`ERROR ERROR: ${err}`);
+          console.log(`ERROR VARIABLES: ${variables}`);
+          console.log(`ERROR CONTEXT: ${context}`);
+
+          handleDuplicateDecorator(setRows, row);
+        },
+      });
+    },
+    []
+  );
+
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
@@ -56,6 +83,18 @@ export default function TestGrid({ theme }: { theme: Theme }) {
         headerName: "Body",
         type: "string",
         flex: 1,
+      },
+      {
+        field: "actions",
+        type: "actions",
+        width: 75,
+        getActions: (params: { id: GridRowId; row: Row }) => [
+          <GridActionsCellItem
+            icon={<FileCopyIcon />}
+            label="Duplicate"
+            onClick={handleDuplicate(params.row)}
+          />,
+        ],
       },
     ],
     []

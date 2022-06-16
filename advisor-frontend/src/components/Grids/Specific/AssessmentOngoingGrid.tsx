@@ -63,10 +63,7 @@ export default function AssessmentOngoingGrid({
 
   // Called when the "Add" button is pressed below the grid
   const handleAdd = React.useCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const handleAPI = () => {};
-
-    handleAddDecorator(handleAPI, setRows, getDefaultRow());
+    handleAddDecorator(setRows, getDefaultRow());
   }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(

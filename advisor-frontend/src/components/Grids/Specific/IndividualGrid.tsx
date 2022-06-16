@@ -60,10 +60,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDelete = React.useCallback(
     (rowId: GridRowId) => () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleAPI = () => {};
-
-      handleDeleteDecorator(handleAPI, setRows, rowId);
+      handleDeleteDecorator(setRows, rowId);
     },
     []
   );

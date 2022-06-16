@@ -76,30 +76,15 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
 
   // Called when a row is edited
   const processRowUpdate = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleRowAPI = () => {};
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleOrderAPI = () => {};
-
-      return processRowUpdateDecorator(
-        handleRowAPI,
-        setRows,
-        newRow,
-        oldRow,
-        handleOrderAPI
-      );
-    },
+    (newRow: GridRowModel, oldRow: GridRowModel) =>
+      processRowUpdateDecorator(setRows, newRow, oldRow, true),
     []
   );
 
   // Called when the "Upward" action is pressed
   const handleUpward = React.useCallback(
     (row: Row) => () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleAPI = () => {};
-
-      handleMoveRows(handleAPI, setRows, row, row.order - 1);
+      handleMoveRows(setRows, row, row.order - 1);
     },
     []
   );
@@ -107,20 +92,14 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownward = React.useCallback(
     (row: Row) => () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleAPI = () => {};
-
-      handleMoveRows(handleAPI, setRows, row, row.order + 1);
+      handleMoveRows(setRows, row, row.order + 1);
     },
     []
   );
 
   // Called when color picker registers a complete change
   const handleColor = React.useCallback((color: ColorResult, row: Row) => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const handleAPI = () => {};
-
-    handleColorDecorator(handleAPI, setRows, row, color);
+    handleColorDecorator(setRows, row, color);
   }, []);
 
   // Called when the "Visit" action is pressed
@@ -135,10 +114,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDelete = React.useCallback(
     (rowId: GridRowId) => () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleAPI = () => {};
-
-      handleDeleteDecorator(handleAPI, setRows, rowId);
+      handleDeleteDecorator(setRows, rowId);
       updateOrderRows(setRows);
     },
     []
@@ -147,20 +123,14 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Duplicate" action is pressed in the menu
   const handleDuplicate = React.useCallback(
     (row: GridRowModel) => () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleAPI = () => {};
-
-      handleDuplicateDecorator(handleAPI, setRows, row);
+      handleDuplicateDecorator(setRows, row);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAdd = React.useCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const handleAPI = () => {};
-
-    handleAddDecorator(handleAPI, setRows, getDefaultRow(rows));
+    handleAddDecorator(setRows, getDefaultRow(rows));
   }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(

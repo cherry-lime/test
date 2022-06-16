@@ -54,12 +54,8 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
 
   // Called when a row is edited
   const processRowUpdate = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleRowAPI = () => {};
-
-      return processRowUpdateDecorator(handleRowAPI, setRows, newRow, oldRow);
-    },
+    (newRow: GridRowModel, oldRow: GridRowModel) =>
+      processRowUpdateDecorator(setRows, newRow, oldRow, false),
     []
   );
 
@@ -75,10 +71,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDelete = React.useCallback(
     (rowId: GridRowId) => () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleAPI = () => {};
-
-      handleDeleteDecorator(handleAPI, setRows, rowId);
+      handleDeleteDecorator(setRows, rowId);
     },
     []
   );
@@ -86,20 +79,14 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   // Called when the "Duplicate" action is pressed in the menu
   const handleDuplicate = React.useCallback(
     (row: GridRowModel) => () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleAPI = () => {};
-
-      handleDuplicateDecorator(handleAPI, setRows, row);
+      handleDuplicateDecorator(setRows, row);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAdd = React.useCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const handleAPI = () => {};
-
-    handleAddDecorator(handleAPI, setRows, getDefaultRow());
+    handleAddDecorator(setRows, getDefaultRow());
   }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(

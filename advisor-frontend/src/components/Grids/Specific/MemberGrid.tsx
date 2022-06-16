@@ -63,32 +63,22 @@ export default function MemberGrid({
 
   // Called when a row is edited
   const processRowUpdate = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleRowAPI = () => {};
-
-      return processRowUpdateDecorator(handleRowAPI, setRows, newRow, oldRow);
-    },
+    (newRow: GridRowModel, oldRow: GridRowModel) =>
+      processRowUpdateDecorator(setRows, newRow, oldRow, false),
     []
   );
 
   // Called when the "Delete" action is pressed in the menu
   const handleDelete = React.useCallback(
     (rowId: GridRowId) => () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      const handleAPI = () => {};
-
-      handleDeleteDecorator(handleAPI, setRows, rowId);
+      handleDeleteDecorator(setRows, rowId);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAdd = React.useCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const handleAPI = () => {};
-
-    handleAddDecorator(handleAPI, setRows, getDefaultRow());
+    handleAddDecorator(setRows, getDefaultRow());
   }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(

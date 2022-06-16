@@ -10,7 +10,6 @@ import {
 const generateId = () => Date.now();
 
 export function handleAddDecorator(
-  handleAPI: () => void,
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   defaultRow: GridRowModel
 ) {
@@ -18,16 +17,12 @@ export function handleAddDecorator(
     // Create new row with default content and generated id
     const newRow = { ...defaultRow, id: generateId() };
 
-    // Create newRow in database
-    handleAPI();
-
     // Update rows state with added row
     return [...prevRows, newRow];
   });
 }
 
 export function handleDeleteDecorator(
-  handleAPI: () => void,
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   rowId: GridRowId
 ) {
@@ -35,16 +30,12 @@ export function handleDeleteDecorator(
     // Filter row with rowId from state
     const newRows = prevRows.filter((row) => row.id !== rowId);
 
-    // Delete row with rowId from database
-    handleAPI();
-
     // Update rows state with deleted row
     return newRows;
   });
 }
 
 export function handleDuplicateDecorator(
-  handleAPI: () => void,
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   row: GridRowModel
 ) {
@@ -52,16 +43,12 @@ export function handleDuplicateDecorator(
     // Create new row with duplicated content and generated id
     const newRow = { ...row, id: generateId(), order: prevRows.length };
 
-    // Create newRow in database
-    handleAPI();
-
     // Update rows state with duplicated row
     return [...prevRows, newRow];
   });
 }
 
 export function handleColorDecorator(
-  handleAPI: () => void,
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   row: GridRowModel,
   color: ColorResult
@@ -71,9 +58,6 @@ export function handleColorDecorator(
     const newRows = prevRows.map((prevRow) =>
       prevRow.id === row.id ? { ...prevRow, color: color.hex } : prevRow
     );
-
-    // Update row in database with color
-    handleAPI();
 
     // Update row in rows state with color
     return newRows;
@@ -96,7 +80,6 @@ export function updateOrderRows(
 }
 
 export function handleMoveRows(
-  handleAPI: () => void,
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   row: GridRowModel,
   index: number
@@ -112,9 +95,6 @@ export function handleMoveRows(
 
     // Insert row at index
     newRows.splice(index, 0, row);
-
-    // Update row in database with new index
-    handleAPI();
 
     // Update rows state with moved rows
     return newRows;
@@ -136,11 +116,10 @@ export function preProcessEditOrderDecorator(
 }
 
 export function processRowUpdateDecorator(
-  handleRowAPI: () => void,
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   newRow: GridRowModel,
   oldRow: GridRowModel,
-  handleOrderAPI?: () => void
+  isOrder: boolean
 ) {
   // If row has not changed
   if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
@@ -149,19 +128,16 @@ export function processRowUpdateDecorator(
   }
 
   // If this grid is ordered
-  if (handleOrderAPI) {
+  if (isOrder) {
     // If the 'Order' value has changed
     if (newRow.order !== oldRow.order) {
       // Move rows
-      handleMoveRows(handleOrderAPI, setRows, oldRow, newRow.order);
+      handleMoveRows(setRows, oldRow, newRow.order);
 
       // Update internal state
       return newRow;
     }
   }
-
-  // Update row change in database
-  handleRowAPI();
 
   // Update row change in state
   setRows((prevRows) =>
