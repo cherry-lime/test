@@ -9,7 +9,6 @@ import { CreateTeamDto } from './dto/create-team.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Team } from './dto/team.dto';
 import { TeamMembers } from './dto/team-member.dto';
-import { InviteTokenDto } from './dto/invite-token.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
 import { User } from '@prisma/client';
