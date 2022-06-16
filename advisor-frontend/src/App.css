@@ -38,6 +38,7 @@
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  row-gap: 20px;
 }
 .header {
   border-bottom-left-radius: 20px;
