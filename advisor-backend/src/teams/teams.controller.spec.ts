@@ -30,9 +30,6 @@ describe('TeamsController', () => {
             findUnique: jest.fn().mockResolvedValue(aTeam),
             findTeamMembers: jest.fn().mockResolvedValue(aTeamMembers),
             addTeamMember: jest.fn().mockResolvedValue(aTeamMembers),
-            getInviteToken: jest.fn().mockResolvedValue({
-              invite_token: 'test_invite_token',
-            } as InviteTokenDto),
             getAssessments: jest.fn().mockResolvedValue([aAssessment]),
             updateTeam: jest.fn().mockResolvedValue(aTeam),
           };
@@ -41,6 +38,9 @@ describe('TeamsController', () => {
           return {
             getTeams: jest.fn().mockResolvedValue([aTeam]),
             findOne: jest.fn().mockResolvedValue(aTeam),
+            getInviteToken: jest.fn().mockResolvedValue({
+              invite_token: 'test_invite_token',
+            } as InviteTokenDto),
           };
         }
         if (typeof token === 'function') {
@@ -62,7 +62,9 @@ describe('TeamsController', () => {
 
   describe('createTeam', () => {
     it('Should return the created team', async () => {
-      expect(teamController.create(mockCreateTeamBody)).resolves.toBe(aTeam);
+      expect(teamController.create(aUser1, mockCreateTeamBody)).resolves.toBe(
+        aTeam
+      );
     });
   });
 

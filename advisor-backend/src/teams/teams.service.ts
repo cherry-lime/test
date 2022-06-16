@@ -57,11 +57,12 @@ export class TeamsService {
   /**
    * Create team object given a createTeamDto
    * @param createTeamDto CreateTeamDto
+   * @param user_id id of user that is issuing the request
    * @returns created team
    * @throws Team name already exists
    */
-  async create(createTeamDto: CreateTeamDto): Promise<Team> {
-    return await this.prisma.team
+  async create(user_id: number, createTeamDto: CreateTeamDto): Promise<Team> {
+    const team = await this.prisma.team
       .create({
         data: {
           team_name: createTeamDto.team_name,
@@ -77,6 +78,19 @@ export class TeamsService {
           throw new InternalServerErrorException();
         }
       });
+
+    this.prisma.userInTeam
+      .create({
+        data: {
+          user_id: user_id,
+          team_id: team.team_id,
+        },
+      })
+      .catch(() => {
+        throw new InternalServerErrorException();
+      });
+
+    return team;
   }
 
   /**
@@ -240,37 +254,6 @@ export class TeamsService {
       });
 
     return teamMembers;
-  }
-
-  /**
-   * Get invite_token of team given a team id
-   * @param id id of team
-   * @returns inviteTokenDto object corresponding to team_id
-   * @throws Team not found
-   */
-  async getInviteToken(id: number): Promise<InviteTokenDto> {
-    // Get team id and associated user ids from team with team_id from prisma
-    const invite_token = await this.prisma.team
-      .findUnique({
-        where: {
-          team_id: id,
-        },
-        select: {
-          invite_token: true,
-        },
-      })
-      .catch(() => {
-        throw new InternalServerErrorException();
-      });
-
-    if (!invite_token) {
-      // Throw error if team with given team id not found
-      throw new NotFoundException('Team with given team id not found');
-    }
-
-    return {
-      invite_token: invite_token.invite_token,
-    } as InviteTokenDto;
   }
 
   /**

@@ -91,8 +91,11 @@ export class TeamsController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN, Role.ASSESSOR)
-  create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
-    return this.teamsService.create(createTeamDto);
+  create(
+    @AuthUser() user: User,
+    @Body() createTeamDto: CreateTeamDto
+  ): Promise<Team> {
+    return this.teamsService.create(user.user_id, createTeamDto);
   }
 
   /**
@@ -173,7 +176,7 @@ export class TeamsController {
   getInviteToken(
     @Param('team_id', ParseIntPipe) team_id: number
   ): Promise<InviteTokenDto> {
-    return this.teamsService.getInviteToken(team_id);
+    return this.teamsService2.getInviteToken(team_id);
   }
 
   /**
