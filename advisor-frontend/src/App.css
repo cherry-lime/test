@@ -16,7 +16,7 @@
   align-content: flex-start;
   flex-wrap: wrap;
   padding: 4vh;
-  margin-top: -100px;
+  margin-top: -80px;
   margin-bottom: 1%;
   min-height: 82vh;
   background-color: lightgrey;
@@ -35,7 +35,7 @@
   flex-wrap: wrap;
   padding: 4vh;
   flex-grow: 1;
-  margin-top: -100px;
+  margin-top: -80px;
   border-radius: 20px;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
