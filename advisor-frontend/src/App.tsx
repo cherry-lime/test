@@ -15,6 +15,7 @@ import ListOfTemplates from "./pages/admin/templates/ListOfTemplates/ListOfTempl
 import ListOfIndividuals from "./pages/admin/ListOfIndividuals/ListOfIndividuals";
 import Area from "./pages/admin/templates/Area/Area";
 import Template from "./pages/admin/templates/Template/Template";
+import Example from "./pages/ExamplePage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
       <Link to="/admin" state="admin" data-testid="admin">
         Admin
       </Link>
+      <Link to="/example"> Examples</Link>
       <Routes>
         <Route path="/" element={<Home />} />
 
@@ -63,6 +65,7 @@ function App() {
         <Route path="/admin/templates" element={<ListOfTemplates />} />
         <Route path="/admin/templates/:templateId" element={<Template />} />
         <Route path="/admin/templates/:templateId/:areaId" element={<Area />} />
+        <Route path="/example" element={<Example />} />
       </Routes>
     </div>
   );
