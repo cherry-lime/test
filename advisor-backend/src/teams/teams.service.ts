@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -11,6 +12,7 @@ import { TeamMembers } from './dto/team-member.dto';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class TeamsService {
@@ -78,39 +80,29 @@ export class TeamsService {
   }
 
   /**
-   * Get team object by team_id
-   * @param id team_id
-   * @returns team object corresponding to team_id
-   * @throws Team not found
-   */
-  async findOne(id: number): Promise<Team> {
-    // Get team by team_id from prisma
-    const team = await this.prisma.team
-      .findUnique({
-        where: {
-          team_id: id,
-        },
-      })
-      .catch(() => {
-        throw new InternalServerErrorException();
-      });
-
-    if (!team) {
-      // Throw error if team with given team id not found
-      throw new NotFoundException('Team with given team id not found');
-    }
-
-    // Return team
-    return team;
-  }
-
-  /**
    * Get team members object given a team id
    * @param id id of team
+   * @param user user that is issuing the request
    * @returns team members object corresponding to team_id
    * @throws Team not found
    */
-  async findTeamMembers(id: number): Promise<TeamMembers> {
+  async findTeamMembers(user: User, id: number): Promise<TeamMembers> {
+    const isUserInTeam = await this.isUserInTeam(user.user_id, id).catch(
+      (error) => {
+        if (error instanceof NotFoundException) {
+          // Throw error if team with given team id not found
+          throw new NotFoundException('Team with given team id not found');
+        } else {
+          // Throw error if internal server error
+          throw new InternalServerErrorException();
+        }
+      }
+    );
+    if (!isUserInTeam && user.role !== 'ADMIN') {
+      // Throw error if user is not in team
+      throw new ForbiddenException('You are not part of this team');
+    }
+
     // Response stored in teamMembers
     const teamMembers = new TeamMembers();
 
@@ -172,10 +164,11 @@ export class TeamsService {
   /**
    * Add team member to team with invite_token
    * @param invite_token invite token
+   * @param user user that is issuing the request
    * @returns team members object corresponding, given invite_token
    * @throws Team not found
    */
-  async addTeamMember(invite_token: string): Promise<TeamMembers> {
+  async addTeamMember(user: User, invite_token: string): Promise<TeamMembers> {
     // Response stored in teamMembers
     const teamMembers = new TeamMembers();
 
@@ -207,8 +200,7 @@ export class TeamsService {
     teamMembers.team_name = temp.team_name;
     let teamMemberIds = temp.UserInTeam.map((a) => a.user_id);
     //get user/assessor being added to team and add to teamMemberIds
-    const user_id = 1; // TODO
-    teamMemberIds = [...teamMemberIds, user_id];
+    teamMemberIds = [...teamMemberIds, user.user_id];
     teamMemberIds.sort((a, b) => a - b); // Sort ascending order
 
     // Get team member usernames from team with team_member_ids from prisma
@@ -234,15 +226,12 @@ export class TeamsService {
     }
 
     teamMembers.team_members = teamMemberUsernames;
-    //get user/assessor being added to team and add to teamMemberUsernames2
-    const username = 'username'; // TODO
-    const role = 'user'; // TODO
-    teamMembers.team_members.push({ username: username, role: role });
+    teamMembers.team_members.push({ username: user.username, role: user.role });
 
     await this.prisma.userInTeam
       .create({
         data: {
-          user_id: user_id,
+          user_id: user.user_id,
           team_id: temp.team_id,
         },
       })
@@ -342,10 +331,58 @@ export class TeamsService {
       });
   }
 
-  // TODO get all teams of user
-  // TODO permissions for all endpoints
+  /**
+   * Delete team given a team id
+   * @param id id of team
+   * @returns deleted team object
+   * @throws Team not found
+   * @throws InternalServerErrorException
+   */
+  async deleteTeam(user: User, id: number): Promise<Team> {
+    const isUserInTeam = await this.isUserInTeam(user.user_id, id).catch(
+      (error) => {
+        if (error instanceof NotFoundException) {
+          // Throw error if team with given team id not found
+          throw new NotFoundException('Team with given team id not found');
+        } else {
+          // Throw error if internal server error
+          throw new InternalServerErrorException();
+        }
+      }
+    );
+    if (!isUserInTeam && user.role !== 'ADMIN') {
+      // Throw error if user is not in team
+      throw new ForbiddenException('You are not part of this team');
+    }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} team`;
-  // }
+    await this.prisma.userInTeam
+      .deleteMany({
+        where: {
+          team_id: id,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Team with given team id not found');
+        } else {
+          // Throw error if internal server error
+          throw new InternalServerErrorException();
+        }
+      });
+
+    return await this.prisma.team
+      .delete({
+        where: {
+          team_id: id,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Team with given team id not found');
+        } else {
+          console.log(error);
+          throw new InternalServerErrorException();
+        }
+      });
+  }
 }

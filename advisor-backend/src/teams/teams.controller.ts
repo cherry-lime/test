@@ -8,8 +8,10 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
+import { TeamsService2 } from './team.service2';
 import { CreateTeamDto } from './dto/create-team.dto';
 import {
   ApiConflictResponse,
@@ -32,10 +34,30 @@ import AuthUser from 'src/common/decorators/auth-user.decorator';
 @ApiTags('teams')
 @Controller('teams')
 export class TeamsController {
-  constructor(private readonly teamsService: TeamsService) {}
+  constructor(
+    private readonly teamsService: TeamsService,
+    private readonly teamsService2: TeamsService2
+  ) {}
 
   /**
-   * [GET] /teams/:team_id/isUserInTeam
+   * [GET] /teams/my-teams - get the teams of the user issuing the request
+   * @returns array of team object
+   * @throws {NotFoundException} if user is not in any team
+   * @throws {NotFoundException} team with given team id not found
+   * @throws {InternalServerErrorException} internal server error
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/my-teams/')
+  @ApiResponse({ description: 'Get ', type: Team })
+  @ApiNotFoundResponse({ description: 'user is not in any team' })
+  @ApiInternalServerErrorResponse({ description: 'internal server error' })
+  getTeams(@AuthUser() user: User): Promise<Team[]> {
+    return this.teamsService2.getTeams(user.user_id);
+  }
+
+  /**
+   * [GET] /teams/:team_id/isUserInTeam - check whether user
+   *                       issuing the request is in the team
    * @param team_id team_id
    * @param user_id user_id
    * @returns true if user is in team, false otherwise
@@ -56,6 +78,7 @@ export class TeamsController {
 
   /**
    * [POST] /team/create - Create team given a createTeamDto
+   * Allowed roles: ADMIN, ASSESSOR
    * @param createTeamDto CreateTeamDto
    * @returns Team object
    */
@@ -85,14 +108,17 @@ export class TeamsController {
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   findOne(@Param('team_id', ParseIntPipe) team_id: number): Promise<Team> {
-    return this.teamsService.findOne(team_id);
+    return this.teamsService2.findOne(team_id);
   }
 
   /**
    * [GET] /team/:team_id/members - Get members of a team given a team id
+   * Permission: ADMIN, ASSESSOR (if is part of the team),
+   *             USER (if is part of the team)
    * @param team_id team_id
    * @returns Team members object
    */
+  @UseGuards(AuthGuard('jwt'))
   @Get(':team_id/members')
   @ApiResponse({
     description: 'Get members of a team given a team id',
@@ -102,9 +128,10 @@ export class TeamsController {
   @ApiNotFoundResponse({ description: 'No members are associated to the team' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   findTeamMembers(
+    @AuthUser() user: User,
     @Param('team_id', ParseIntPipe) team_id: number
   ): Promise<TeamMembers> {
-    return this.teamsService.findTeamMembers(team_id);
+    return this.teamsService.findTeamMembers(user, team_id);
   }
 
   /**
@@ -112,6 +139,7 @@ export class TeamsController {
    * @param invite_token invite_token
    * @returns Udated team members object
    */
+  @UseGuards(AuthGuard('jwt'))
   @Patch('join/:invite_token')
   @ApiResponse({
     description: 'Join team via invite_token',
@@ -123,9 +151,10 @@ export class TeamsController {
   @ApiNotFoundResponse({ description: 'No members are associated to the team' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   addTeamMember(
+    @AuthUser() user: User,
     @Param('invite_token', ParseUUIDPipe) invite_token: string
   ): Promise<TeamMembers> {
-    return this.teamsService.addTeamMember(invite_token);
+    return this.teamsService.addTeamMember(user, invite_token);
   }
 
   /**
@@ -169,6 +198,7 @@ export class TeamsController {
 
   /**
    * [PATCH] /team/:team_id - Update team given a team_id and an updateTeamDto
+   * Allowed roles: ADMIN, ASSESSOR
    * @param team_id team_id
    * @param updateTeamDto UpdateTeamDto
    * @returns an updated team object
@@ -184,6 +214,8 @@ export class TeamsController {
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
   @ApiConflictResponse({ description: 'Team name already exists' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN, Role.ASSESSOR)
   updateTeam(
     @Param('team_id', ParseIntPipe) team_id: number,
     @Body() updateTeamDto: UpdateTeamDto
@@ -191,8 +223,28 @@ export class TeamsController {
     return this.teamsService.updateTeam(team_id, updateTeamDto);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.teamsService.remove(+id);
-  // }
+  /**
+   * [DELETE] /team/:team_id - Delete team given a team_id
+   * Allowed roles: ADMIN, ASSESSOR (if is part of the team)
+   * @param team_id team_id
+   * @returns the deleted team object
+   * @throws Team not found
+   * @throws Internal server error
+   * @throws assessor is not part of the team
+   */
+  @Delete(':team_id')
+  @ApiNotFoundResponse({ description: 'Team with given team id not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiResponse({
+    description: 'Delete team given a team_id',
+    type: Team,
+  })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN, Role.ASSESSOR)
+  deleteTeam(
+    @AuthUser() user: User,
+    @Param('team_id', ParseIntPipe) team_id: number
+  ): Promise<Team> {
+    return this.teamsService.deleteTeam(user, team_id);
+  }
 }
