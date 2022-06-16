@@ -30,12 +30,16 @@ function UserInterface() {
           bodyText="View your teams"
           headerText="Teams "
           cardHeight="15vh"
-          icon={<GroupsIcon color="info" fontSize="large" sx={{
-            bgcolor: "primary.main",
-            borderRadius: "5px",
-            padding: "2px",
-            margin: "5px"
-          }} />}
+          icon={
+            <GroupsIcon
+              color="info"
+              fontSize="large"
+              className="inverse_icon"
+              sx={{
+                bgcolor: "primary.main",
+              }}
+            />
+          }
           image={testimageFigma}
           isImageRight
         />
@@ -50,11 +54,85 @@ function UserInterface() {
           bodyText="View your current progress"
           headerText="Evaluations"
           cardHeight="15vh"
-          icon={<GroupsIcon color="primary" fontSize="large" />}
+          icon={
+            <GroupsIcon
+              color="info"
+              fontSize="large"
+              className="inverse_icon"
+              sx={{
+                bgcolor: "primary.main",
+              }}
+            />
+          }
           image={testimageFigma}
         />
       </Link>
-      <br />
+      <Link
+        to="/user/self_evaluations/:assessmentId"
+        state={data}
+        data-testid="user-progress"
+      >
+        <PageCard
+          bodyText="View your current progress"
+          headerText="Evaluations"
+          cardHeight="15vh"
+          icon={
+            <GroupsIcon
+              color="info"
+              fontSize="large"
+              className="inverse_icon"
+              sx={{
+                bgcolor: "primary.main",
+              }}
+            />
+          }
+          image={testimageFigma}
+        />
+      </Link>
+      <Link
+        to="/user/self_evaluations/:assessmentId"
+        state={data}
+        data-testid="user-progress"
+      >
+        <PageCard
+          bodyText="View your current progress"
+          headerText="Evaluations"
+          cardHeight="15vh"
+          icon={
+            <GroupsIcon
+              color="info"
+              fontSize="large"
+              className="inverse_icon"
+              sx={{
+                bgcolor: "primary.main",
+              }}
+            />
+          }
+          image={testimageFigma}
+        />
+      </Link>
+      <Link
+        to="/user/self_evaluations/:assessmentId"
+        state={data}
+        data-testid="user-progress"
+      >
+        <PageCard
+          bodyText="View your current progress"
+          headerText="Evaluations"
+          cardHeight="15vh"
+          icon={
+            <GroupsIcon
+              color="info"
+              fontSize="large"
+              className="inverse_icon"
+              sx={{
+                bgcolor: "primary.main",
+              }}
+            />
+          }
+          image={testimageFigma}
+        />
+      </Link>
 
       <h3>Notifications</h3>
     </PageLayout>

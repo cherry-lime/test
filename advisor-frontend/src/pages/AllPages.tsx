@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import Example from "./ExamplePage";
 import UserInterface from "./user/UserInterface/UserInterface";
 
 /**
