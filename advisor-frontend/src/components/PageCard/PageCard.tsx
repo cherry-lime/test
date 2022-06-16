@@ -26,16 +26,20 @@ import Divider from "@mui/material/Divider";
 type PageCardProps = {
   headerText: string;
   bodyText: string;
-  cardHeight: number;
+  cardHeight: string;
   // eslint-disable-next-line @typescript-eslint/ban-types
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   image: string;
-  isImageLeft: boolean;
-  isImageRight: boolean;
+  isImageLeft?: boolean;
+  isImageRight?: boolean;
+};
+const defaultProps = {
+  isImageLeft: false,
+  isImageRight: false,
 };
 
-function CardImage(ch: number, img: string) {
+function CardImage(ch: string, img: string) {
   return (
     <CardMedia
       component="img"
@@ -65,7 +69,7 @@ export default function PageCard({
       sx={{
         display: "flex",
         verticalAlign: "middle",
-        width: "vw",
+        width: "100vw",
         borderRadius: "20px",
       }}
     >
@@ -79,7 +83,7 @@ export default function PageCard({
           <Typography
             color="text.secondary"
             align="left"
-            sx={{ fontWeight: 600 }}
+            sx={{ fontWeight: 600, display: "flex", alignItems: "center" }}
             variant="h6"
           >
             {/* Here should be the title of the card
@@ -108,3 +112,4 @@ export default function PageCard({
     </Card>
   );
 }
+PageCard.defaultProps = defaultProps;
