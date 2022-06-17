@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { mockPrisma } from 'src/prisma/mock/mockPrisma';
+import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { PrismaService } from '../prisma/prisma.service';
 import { CheckpointService } from './checkpoint.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
