@@ -1,5 +1,5 @@
 import * as React from "react";
-import { QueryKey, useQuery, useMutation } from "react-query";
+import { QueryKey, useQuery, useMutation, MutationKey } from "react-query";
 import axios from "axios";
 
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
@@ -18,17 +18,35 @@ type Row = {
   body: string;
 };
 
-function useData(key: QueryKey, url: string) {
+function useGet(key: QueryKey, url: string) {
   return useQuery(key, async () => {
     const { data } = await axios.get(url);
     return data;
   });
 }
 
+function usePost<BodyType>(key: MutationKey) {
+  return useMutation(key, (variables: { url: string; body: BodyType }) =>
+    axios.post(variables.url, variables.body)
+  );
+}
+
+function usePatch<BodyType>(key: MutationKey) {
+  return useMutation(key, (variables: { url: string; body: BodyType }) =>
+    axios.patch(variables.url, variables.body)
+  );
+}
+
+function useDelete(key: MutationKey) {
+  return useMutation(key, (url: string) => axios.delete(url));
+}
+
 export default function TestGrid({ theme }: { theme: Theme }) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
-  const { status, data, error, isFetching } = useData(
+  const postMutation = usePost<Row>(["test", "testId"]);
+
+  const { status, data, error, isFetching } = useGet(
     ["parameter 1", "parameter 2"],
     "https://jsonplaceholder.typicode.com/posts"
   );
@@ -40,26 +58,25 @@ export default function TestGrid({ theme }: { theme: Theme }) {
     }
   }, [status, data, error, isFetching]);
 
-  const mutation = useMutation((row: Row) => axios.post("/todos", row));
-
   const handleDuplicate = React.useCallback(
     (row: Row) => () => {
-      mutation.mutate(row, {
-        onSuccess: (dat, variables, context) => {
-          console.log(`SUCCESS DATA: ${dat}`);
-          console.log(`SUCCESS VARIABLES: ${variables}`);
-          console.log(`SUCCESS CONTEXT: ${context}`);
+      postMutation.mutate(
+        { url: "/post", body: row },
+        {
+          onSuccess: (dat, variables) => {
+            console.log(`SUCCESS DATA: ${dat}`);
+            console.log(`SUCCESS VARIABLES: ${JSON.stringify(variables)}`);
 
-          handleDuplicateDecorator(setRows, row);
-        },
-        onError: (err, variables, context) => {
-          console.log(`ERROR ERROR: ${err}`);
-          console.log(`ERROR VARIABLES: ${variables}`);
-          console.log(`ERROR CONTEXT: ${context}`);
+            handleDuplicateDecorator(setRows, row);
+          },
+          onError: (err, variables) => {
+            console.log(`ERROR ERROR: ${err}`);
+            console.log(`ERROR VARIABLES: ${JSON.stringify(variables)}`);
 
-          handleDuplicateDecorator(setRows, row);
-        },
-      });
+            handleDuplicateDecorator(setRows, row);
+          },
+        }
+      );
     },
     []
   );
