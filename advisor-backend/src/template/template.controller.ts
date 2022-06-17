@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -22,6 +23,12 @@ import { TemplateService } from './template.service';
 import { MaturityDto } from '../maturity/dto/maturity.dto';
 import { MaturityService } from '../maturity/maturity.service';
 import { CategoryDto } from '../category/dto/category.dto';
+import { AnswerDto } from '../answer/dto/answer.dto';
+import { AnswerService } from '../answer/answer.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('template')
 @ApiTags('template')
@@ -29,7 +36,8 @@ export class TemplateController {
   constructor(
     private readonly templateService: TemplateService,
     private readonly categoryService: CategoryService,
-    private readonly maturityService: MaturityService
+    private readonly maturityService: MaturityService,
+    private readonly answerService: AnswerService
   ) {}
 
   /**
@@ -198,5 +206,34 @@ export class TemplateController {
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<MaturityDto[]> {
     return this.maturityService.findAll(id);
+  }
+
+  /**
+   * [GET] /template/:template_id/answer - Get all answers for template
+   * @param template_id template_id
+   * @returns AnswerDto[] List of all answers
+   */
+  @Get(':template_id/answer')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiTags('answer')
+  @ApiResponse({
+    description: 'Found answers',
+    type: AnswerDto,
+    isArray: true,
+  })
+  async getAnswers(@Param('template_id', ParseIntPipe) template_id: number) {
+    return this.answerService.findAll(template_id);
+  }
+
+  @Post(':template_id/answer')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiTags('answer')
+  @ApiResponse({ description: 'Answer', type: AnswerDto })
+  @ApiConflictResponse({
+    description: 'Answer with this name already exists',
+  })
+  async createAnswer(@Param('template_id', ParseIntPipe) template_id: number) {
+    return this.answerService.create(template_id);
   }
 }
