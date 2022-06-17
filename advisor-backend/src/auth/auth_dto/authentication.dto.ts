@@ -23,7 +23,7 @@ export class AuthenticationDto {
   @ApiProperty()
   user_id: number;
 
-  //@IsIn([Role.USER, Role.ASSESSOR])
+  @IsIn([Role.USER, Role.ASSESSOR])
   @ApiProperty()
   role: Role;
 
