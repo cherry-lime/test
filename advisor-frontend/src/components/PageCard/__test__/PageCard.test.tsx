@@ -1,4 +1,5 @@
 import { render, cleanup } from "@testing-library/react";
+import AssessmentIcon from "@mui/icons-material/Assessment";
 import PageCard from "../PageCard";
 
 //  cleanup after each test case
@@ -10,8 +11,8 @@ it("Rendering without crash and check title and text on card", () => {
     <PageCard
       headerText="This is a description for the home page card"
       bodyText="Title"
-      cardHeight={120}
-      icon={undefined}
+      cardHeight="120px"
+      icon={<AssessmentIcon />}
       image="image"
       isImageLeft
       isImageRight

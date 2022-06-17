@@ -25,6 +25,8 @@ import { MaturityService } from '../maturity/maturity.service';
 import { CategoryDto } from '../category/dto/category.dto';
 import { TopicDto } from '../topic/dto/topic.dto';
 import { TopicService } from '../topic/topic.service';
+import { AnswerDto } from '../answer/dto/answer.dto';
+import { AnswerService } from '../answer/answer.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -38,6 +40,7 @@ export class TemplateController {
     private readonly categoryService: CategoryService,
     private readonly maturityService: MaturityService,
     private readonly topicService: TopicService
+    private readonly answerService: AnswerService
   ) {}
 
   /**
@@ -243,5 +246,34 @@ export class TemplateController {
   })
   async createTopic(@Param('template_id', ParseIntPipe) template_id: number) {
     return this.topicService.create(template_id);
+  }
+  
+  /**
+   * [GET] /template/:template_id/answer - Get all answers for template
+   * @param template_id template_id
+   * @returns AnswerDto[] List of all answers
+   */
+  @Get(':template_id/answer')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiTags('answer')
+  @ApiResponse({
+    description: 'Found answers',
+    type: AnswerDto,
+    isArray: true,
+  })
+  async getAnswers(@Param('template_id', ParseIntPipe) template_id: number) {
+    return this.answerService.findAll(template_id);
+  }
+
+  @Post(':template_id/answer')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiTags('answer')
+  @ApiResponse({ description: 'Answer', type: AnswerDto })
+  @ApiConflictResponse({
+    description: 'Answer with this name already exists',
+  })
+  async createAnswer(@Param('template_id', ParseIntPipe) template_id: number) {
+    return this.answerService.create(template_id);
   }
 }

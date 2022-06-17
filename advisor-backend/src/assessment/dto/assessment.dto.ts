@@ -24,6 +24,9 @@ export class AssessmentDto {
   template_id: number;
 
   @ApiProperty()
+  feedback_text: string;
+
+  @ApiProperty()
   created_at: Date;
 
   @ApiProperty()
