@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -24,6 +25,10 @@ import { MaturityService } from '../maturity/maturity.service';
 import { CategoryDto } from '../category/dto/category.dto';
 import { TopicDto } from '../topic/dto/topic.dto';
 import { TopicService } from '../topic/topic.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('template')
 @ApiTags('template')
@@ -209,6 +214,7 @@ export class TemplateController {
    * @returns TopicDto[] List of all topics
    */
   @Get(':template_id/topic')
+  @UseGuards(AuthGuard('jwt'))
   @ApiTags('topic')
   @ApiResponse({
     description: 'Found topics',
@@ -227,6 +233,8 @@ export class TemplateController {
    * @throws ConflictException if topic with this name already exists
    */
   @Post(':template_id/topic')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiTags('topic')
   @ApiResponse({ description: 'Topic', type: TopicDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
