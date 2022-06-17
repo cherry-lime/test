@@ -34,6 +34,23 @@ class userResponse {
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  /**
+   * [GET] /template - Get all templates
+   * @returns TemplateResponse[] List of all templates
+   */
+  @ApiResponse({
+    description: 'Found users',
+    type: userResponse,
+    isArray: true,
+  })
+  @Get('')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN, Role.ASSESSOR)
+  async findAll(): Promise<any> {
+    return this.userService.findAll();
+  }
+
   /**
    * [GET] /user/:id
    * @param id user_id
@@ -55,8 +72,8 @@ export class UserController {
   @Delete(':user_id')
   @ApiResponse({ description: 'Deleted user', type: userResponse })
   @ApiNotFoundResponse({ description: 'User not found' })
-  //@UseGuards(AuthGuard('jwt'), RolesGuard)
-  //@Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   async delete(
   @Param('user_id', ParseIntPipe) id: number
   ): Promise<any> {

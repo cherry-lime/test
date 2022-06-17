@@ -15,6 +15,15 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
+   * Get all users
+   * @returns All users
+   */
+  async findAll(): Promise<any> {
+    // Return all templates from prisma
+    return await this.prisma.user.findMany();
+  }
+
+  /**
    * Get user object by id
    * @param id id of user
    * @returns user object corresponding to user_id, null if not found

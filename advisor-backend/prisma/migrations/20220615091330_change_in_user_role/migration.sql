@@ -6,11 +6,11 @@
 
 */
 -- DropIndex
-DROP INDEX "User_roles_idx";
+--DROP INDEX "User_roles_idx";
 
 -- AlterTable
-ALTER TABLE "User" DROP COLUMN "roles",
-ADD COLUMN     "role" "Role" NOT NULL;
+--ALTER TABLE "User" DROP COLUMN "roles",
+--ADD COLUMN     "role" "Role" NOT NULL;
 
 -- CreateIndex
-CREATE INDEX "User_role_idx" ON "User"("role");
+--CREATE INDEX "User_role_idx" ON "User"("role");
