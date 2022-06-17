@@ -20,7 +20,6 @@ const INGTheme = createTheme({
       main: "#ffffff", // White color for icons.
     },
     background: {
-      paper: "#ff6404", // Different shade of orange, used as opaque overlay color
       default: "#ffffff", // Used to define the custom sidebar text color.
     },
   },
