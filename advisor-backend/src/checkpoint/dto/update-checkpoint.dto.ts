@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
+import { PartialType,OmitType } from '@nestjs/swagger';
 import { CreateCheckpointDto } from './create-checkpoint.dto';
-
-export class UpdateCheckpointDto extends PartialType(CreateCheckpointDto) {}
+import { CheckpointDto } from './checkpoint.dto';
+export class UpdateCheckpointDto extends PartialType(CreateCheckpointDto){
+OmitType(CheckpointDto, ['chekpoint_id', 'category_id'] as const)
+} {}

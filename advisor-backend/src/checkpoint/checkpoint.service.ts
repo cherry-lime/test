@@ -12,20 +12,164 @@ import {
 @Injectable()
 export class CheckpointService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createCheckpointDto: CreateCheckpointDto) {
-    return 'This action adds a new checkpoint';
+   /**
+   * Create checkpoint
+   * @param category_id category id to which checkpoint belongs
+   * @param createcheckpointDto checkpoint data
+   * @returns created checkpoint
+   * @throws checkpoint with this name already exists
+   * @throws category with id does not exist
+   */
+    async create(category_id: number) {
+      const order = await this.prisma.checkpoint.count({
+        where: {
+          category_id,
+        },
+      });
+  
+      return await this.prisma.checkpoint
+        .create({
+          data: {
+            category_id,
+            order: order + 1,
+          },
+        })
+        .catch((error) => {
+          if (error.code === 'P2002') {
+            // Throw error ïf name and type not unique
+            throw new ConflictException(
+              'category with this name and type already exists'
+            );
+          } else if (error.code === 'P2003') {
+            // Throw error if category not found
+            throw new NotFoundException('category not found');
+          }
+          throw new InternalServerErrorException();
+        });
+    }
+  
+ /**
+   * Find all checkpoints in category
+   * @param category_id category id
+   * @returns all checkpoints in category
+   */
+  async findAll(category_id: number) {
+    return await this.prisma.category.findMany({
+      where: {
+        category_id,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all checkpoints`;
+  /**
+   * Get checkpoint by id
+   * @param checkpoint checkpoint id
+   * @returns the checkpoint object
+   * @throws Checkpoint not found
+   */
+  async findOne(checkpoint_id: number) {
+    // Get checkpoint by id from prisma
+    const checkpoint = await this.prisma.checkpoint.findUnique({
+      where: {
+        checkpoint_id,
+      },
+    });
+
+    // Throw NotFoundException if checkpoint not found
+    if (!checkpoint) {
+      throw new NotFoundException('the checkpoint was not found');
+    }
+
+    return checkpoint;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} checkpoint`;
-  }
 
-  update(id: number, updateCheckpointDto: UpdateCheckpointDto) {
-    return `This action updates a #${id} checkpoint`;
+  /**
+   * Update checkpoint
+   * @param checkpoint_id checkpoint id
+   * @param updateCheckpointDto checkpoint data
+   * @returns updated checkpoint
+   */
+   async update(checkpoint_id: number, updateCheckpointDto: UpdateCheckpointDto) {
+    // Get checkpoint by id from prisma
+    const checkpoint = await this.prisma.checkpoint.findUnique({
+      where: {
+        checkpoint_id,
+      },
+    });
+
+    // Throw NotFoundException if checkpointnot found
+    if (!checkpoint) {
+      throw new NotFoundException('checkpoint not found');
+    }
+
+    // Update orders if order changed
+    if (updateCheckpointDto.order) {
+      // Check if order is valid (not more than number of categories in template)
+      const order = await this.prisma.checkpoint.count({
+        where: {
+          category_id: checkpoint.category_id,
+        },
+      });
+
+      if (updateCheckpointDto.order > order) {
+        throw new BadRequestException(
+          'Order must be less than number of hcekpoints in the category'
+        );
+      }
+      // If new order is smaller than old order, increase order of all categories with between new and old order
+      if (updateCheckpointDto.order < checkpoint.order) {
+        await this.prisma.checkpoint.updateMany({
+          where: {
+            category_id: checkpoint.category_id,
+            order: {
+              gte: updateCheckpointDto.order,
+              lte: checkpoint.order,
+            },
+          },
+          data: {
+            order: {
+              increment: 1,
+            },
+          },
+        });
+      } else if (updateCheckpointDto.order > checkpoint.order) {
+        // If new order is bigger than old order, decrease order of all categories with between old and new order
+        await this.prisma.checkpoint.updateMany({
+          where: {
+            category_id: checkpoint.category_id,
+            order: {
+              gte: checkpoint.order,
+              lte: updateCheckpointDto.order,
+            },
+          },
+          data: {
+            order: {
+              decrement: 1,
+            },
+          },
+        });
+      }
+    }
+
+    // Update checkpoint
+    return await this.prisma.checkpoint
+      .update({
+        where: {
+          checkpoint_id,
+        },
+        data: updateCheckpointDto,
+      })
+      .catch((error) => {
+        if (error.code === 'P2002') {
+          // Throw error ïf name not unique
+          throw new ConflictException('Checkpoint with this name already exists');
+        } else if (error.code === 'P2025') {
+          // Throw error if category not found
+          throw new NotFoundException('Category not found');
+        }
+        throw new InternalServerErrorException();
+      });
   }
 
   /**
@@ -50,7 +194,7 @@ export class CheckpointService {
     // Decrement order of all categories with order bigger than deleted checkpoint
     await this.prisma.checkpoint.updateMany({
       where: {
-        category_id: checkpoint.category_id,
+        checkpoint_id: checkpoint.checkpoint_id,
         order: {
           gte: checkpoint.order,
         },
@@ -70,9 +214,9 @@ export class CheckpointService {
         },
       })
       .catch((error) => {
-        // Throw error if category not found
+        // Throw error if checkpoint not found
         if (error.code === 'P2025') {
-          throw new NotFoundException('checkpoint not found');
+          throw new NotFoundException('checkpoint was not found');
         }
         throw new InternalServerErrorException();
       });
