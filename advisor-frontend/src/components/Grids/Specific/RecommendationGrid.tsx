@@ -19,9 +19,9 @@ import { UserRole } from "../../../types/UserRole";
 import { AssessmentType } from "../../../types/AssessmentType";
 import {
   handleMoveRows,
-  preProcessEditOrderDecorator,
-  processRowUpdateDecorator,
-} from "../decorators";
+  preProcessEditOrder,
+  processRowUpdate,
+} from "../handlers";
 
 // Define type for the rows in the grid
 type Row = {
@@ -70,16 +70,15 @@ export default function RecommendationGrid({
   }, []);
 
   // Called when the 'Order' column is edited
-  const preProcessEditOrder = React.useCallback(
-    (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrderDecorator(rows, params),
+  const preProcessEditOrderDecorator = React.useCallback(
+    (params: GridPreProcessEditCellProps) => preProcessEditOrder(rows, params),
     [rows]
   );
 
   // Called when a row is edited
-  const processRowUpdate = React.useCallback(
+  const processRowUpdateDecorator = React.useCallback(
     (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdateDecorator(setRows, newRow, oldRow, true),
+      processRowUpdate(setRows, newRow, oldRow, true),
     []
   );
 
@@ -149,7 +148,7 @@ export default function RecommendationGrid({
         type: "number",
         width: 75,
         editable: userRole === "ASSESSOR" && assessmentType === "TEAM",
-        preProcessEditCellProps: preProcessEditOrder,
+        preProcessEditCellProps: preProcessEditOrderDecorator,
       },
       {
         field: "description",
@@ -186,7 +185,12 @@ export default function RecommendationGrid({
           ]
         : []),
     ],
-    [handleUpward, handleDownward, preProcessEditOrder, handleRevertToDefault]
+    [
+      handleUpward,
+      handleDownward,
+      preProcessEditOrderDecorator,
+      handleRevertToDefault,
+    ]
   );
 
   return (
@@ -194,7 +198,7 @@ export default function RecommendationGrid({
       theme={theme}
       rows={rows}
       columns={columns}
-      processRowUpdate={processRowUpdate}
+      processRowUpdate={processRowUpdateDecorator}
       hasToolbar
     />
   );

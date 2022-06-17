@@ -13,11 +13,7 @@ import { Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import GenericGrid from "../Generic/GenericGrid";
-import {
-  handleAddDecorator,
-  handleDeleteDecorator,
-  processRowUpdateDecorator,
-} from "../decorators";
+import { handleAdd, handleDelete, processRowUpdate } from "../handlers";
 
 // Define type for the rows in the grid
 type Row = {
@@ -70,23 +66,23 @@ export default function AnswerTypeGrid({
   );
 
   // Called when a row is edited
-  const processRowUpdate = React.useCallback(
+  const processRowUpdateDecorator = React.useCallback(
     (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdateDecorator(setRows, newRow, oldRow, false),
+      processRowUpdate(setRows, newRow, oldRow, false),
     []
   );
 
   // Called when the "Delete" action is pressed in the menu
-  const handleDelete = React.useCallback(
+  const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDeleteDecorator(setRows, rowId);
+      handleDelete(setRows, rowId);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
-  const handleAdd = React.useCallback(() => {
-    handleAddDecorator(setRows, getDefaultRow());
+  const handleAddDecorator = React.useCallback(() => {
+    handleAdd(setRows, getDefaultRow());
   }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(
@@ -129,12 +125,12 @@ export default function AnswerTypeGrid({
               </Tooltip>
             }
             label="Delete"
-            onClick={handleDelete(params.id)}
+            onClick={handleDeleteDecorator(params.id)}
           />,
         ],
       },
     ],
-    [preProcessEditValue, handleDelete]
+    [preProcessEditValue, handleDeleteDecorator]
   );
 
   return (
@@ -142,11 +138,11 @@ export default function AnswerTypeGrid({
       theme={theme}
       rows={rows}
       columns={columns}
-      processRowUpdate={processRowUpdate}
+      processRowUpdate={processRowUpdateDecorator}
       hasToolbar
       add={{
         text: "ADD ANSWER OPTION",
-        handler: handleAdd,
+        handler: handleAddDecorator,
       }}
     />
   );

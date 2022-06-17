@@ -13,11 +13,7 @@ import RemoveIcon from "@mui/icons-material/HighlightOff";
 import GenericGrid from "../Generic/GenericGrid";
 
 import { UserRole } from "../../../types/UserRole";
-import {
-  handleAddDecorator,
-  handleDeleteDecorator,
-  processRowUpdateDecorator,
-} from "../decorators";
+import { handleAdd, handleDelete, processRowUpdate } from "../handlers";
 
 // Define type for the rows in the grid
 type Row = {
@@ -62,23 +58,23 @@ export default function MemberGrid({
   }, []);
 
   // Called when a row is edited
-  const processRowUpdate = React.useCallback(
+  const processRowUpdateDecorator = React.useCallback(
     (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdateDecorator(setRows, newRow, oldRow, false),
+      processRowUpdate(setRows, newRow, oldRow, false),
     []
   );
 
   // Called when the "Delete" action is pressed in the menu
-  const handleDelete = React.useCallback(
+  const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDeleteDecorator(setRows, rowId);
+      handleDelete(setRows, rowId);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
-  const handleAdd = React.useCallback(() => {
-    handleAddDecorator(setRows, getDefaultRow());
+  const handleAddDecorator = React.useCallback(() => {
+    handleAdd(setRows, getDefaultRow());
   }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(
@@ -104,14 +100,14 @@ export default function MemberGrid({
                     </Tooltip>
                   }
                   label="Remove"
-                  onClick={handleDelete(params.id)}
+                  onClick={handleDeleteDecorator(params.id)}
                 />,
               ],
             },
           ]
         : []),
     ],
-    [handleDelete]
+    [handleDeleteDecorator]
   );
 
   return (
@@ -119,13 +115,13 @@ export default function MemberGrid({
       theme={theme}
       rows={rows}
       columns={columns}
-      processRowUpdate={processRowUpdate}
+      processRowUpdate={processRowUpdateDecorator}
       hasToolbar
       add={
         userRole === "ASSESSOR"
           ? {
               text: forAssessors ? "ADD ASSESSOR" : "ADD MEMBER",
-              handler: handleAdd,
+              handler: handleAddDecorator,
             }
           : undefined
       }

@@ -12,7 +12,7 @@ import {
 import RemoveIcon from "@mui/icons-material/HighlightOff";
 
 import GenericGrid from "../Generic/GenericGrid";
-import { handleDeleteDecorator } from "../decorators";
+import { handleDelete } from "../handlers";
 
 // Define type for the rows in the grid
 type Row = {
@@ -58,9 +58,9 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   );
 
   // Called when the "Delete" action is pressed in the menu
-  const handleDelete = React.useCallback(
+  const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDeleteDecorator(setRows, rowId);
+      handleDelete(setRows, rowId);
     },
     []
   );
@@ -107,12 +107,12 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
               </Tooltip>
             }
             label="Remove"
-            onClick={handleDelete(params.id)}
+            onClick={handleDeleteDecorator(params.id)}
           />,
         ],
       },
     ],
-    [handleRoleChange, handleDelete]
+    [handleRoleChange, handleDeleteDecorator]
   );
 
   return <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />;

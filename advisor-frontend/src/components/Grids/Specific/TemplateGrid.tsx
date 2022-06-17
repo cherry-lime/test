@@ -16,11 +16,11 @@ import GenericGrid from "../Generic/GenericGrid";
 
 import { AssessmentType } from "../../../types/AssessmentType";
 import {
-  handleAddDecorator,
-  handleDeleteDecorator,
-  handleDuplicateDecorator,
-  processRowUpdateDecorator,
-} from "../decorators";
+  handleAdd,
+  handleDelete,
+  handleDuplicate,
+  processRowUpdate,
+} from "../handlers";
 
 // Define type for the rows in the grid
 type Row = {
@@ -57,9 +57,9 @@ export default function TemplateGrid({
   }, []);
 
   // Called when a row is edited
-  const processRowUpdate = React.useCallback(
+  const processRowUpdateDecorator = React.useCallback(
     (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdateDecorator(setRows, newRow, oldRow, false),
+      processRowUpdate(setRows, newRow, oldRow, false),
     []
   );
 
@@ -73,24 +73,24 @@ export default function TemplateGrid({
   );
 
   // Called when the "Delete" action is pressed in the menu
-  const handleDelete = React.useCallback(
+  const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDeleteDecorator(setRows, rowId);
+      handleDelete(setRows, rowId);
     },
     []
   );
 
   // Called when the "Duplicate" action is pressed in the menu
-  const handleDuplicate = React.useCallback(
+  const handleDuplicateDecorator = React.useCallback(
     (row: GridRowModel) => () => {
-      handleDuplicateDecorator(setRows, row);
+      handleDuplicate(setRows, row);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
-  const handleAdd = React.useCallback(() => {
-    handleAddDecorator(setRows, getDefaultRow());
+  const handleAddDecorator = React.useCallback(() => {
+    handleAdd(setRows, getDefaultRow());
   }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(
@@ -126,19 +126,19 @@ export default function TemplateGrid({
           <GridActionsCellItem
             icon={<FileCopyIcon />}
             label="Duplicate"
-            onClick={handleDuplicate(params.row)}
+            onClick={handleDuplicateDecorator(params.row)}
             showInMenu
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDelete(params.id)}
+            onClick={handleDeleteDecorator(params.id)}
             showInMenu
           />,
         ],
       },
     ],
-    [handleVisit, handleDuplicate, handleDelete]
+    [handleVisit, handleDuplicateDecorator, handleDeleteDecorator]
   );
 
   return (
@@ -146,11 +146,11 @@ export default function TemplateGrid({
       theme={theme}
       rows={rows}
       columns={columns}
-      processRowUpdate={processRowUpdate}
+      processRowUpdate={processRowUpdateDecorator}
       hasToolbar
       add={{
         text: `CREATE NEW ${assessmentType} EVALUATION TEMPLATE`,
-        handler: handleAdd,
+        handler: handleAddDecorator,
       }}
     />
   );

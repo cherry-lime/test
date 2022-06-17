@@ -8,7 +8,7 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 
 import GenericGrid from "../Generic/GenericGrid";
 
-import { handleDuplicateDecorator } from "../decorators";
+import { handleDuplicate } from "../handlers";
 
 // Define type for the rows in the grid
 type Row = {
@@ -58,7 +58,7 @@ export default function TestGrid({ theme }: { theme: Theme }) {
     }
   }, [status, data, error, isFetching]);
 
-  const handleDuplicate = React.useCallback(
+  const handleDuplicateDecorator = React.useCallback(
     (row: Row) => () => {
       postMutation.mutate(
         { url: "/post", body: row },
@@ -67,13 +67,13 @@ export default function TestGrid({ theme }: { theme: Theme }) {
             console.log(`SUCCESS DATA: ${dat}`);
             console.log(`SUCCESS VARIABLES: ${JSON.stringify(variables)}`);
 
-            handleDuplicateDecorator(setRows, row);
+            handleDuplicate(setRows, row);
           },
           onError: (err, variables) => {
             console.log(`ERROR ERROR: ${err}`);
             console.log(`ERROR VARIABLES: ${JSON.stringify(variables)}`);
 
-            handleDuplicateDecorator(setRows, row);
+            handleDuplicate(setRows, row);
           },
         }
       );
@@ -109,12 +109,12 @@ export default function TestGrid({ theme }: { theme: Theme }) {
           <GridActionsCellItem
             icon={<FileCopyIcon />}
             label="Duplicate"
-            onClick={handleDuplicate(params.row)}
+            onClick={handleDuplicateDecorator(params.row)}
           />,
         ],
       },
     ],
-    []
+    [handleDuplicateDecorator]
   );
 
   return <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />;

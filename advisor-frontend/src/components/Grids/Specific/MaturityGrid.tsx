@@ -16,14 +16,14 @@ import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
 import GenericGrid from "../Generic/GenericGrid";
 import {
-  handleAddDecorator,
-  handleDeleteDecorator,
-  handleDuplicateDecorator,
+  handleAdd,
+  handleDelete,
+  handleDuplicate,
   handleMoveRows,
-  preProcessEditOrderDecorator,
-  processRowUpdateDecorator,
+  preProcessEditOrder,
+  processRowUpdate,
   updateOrderRows,
-} from "../decorators";
+} from "../handlers";
 
 // Define type for the rows in the grid
 type Row = {
@@ -63,16 +63,15 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   }, []);
 
   // Called when the 'Order' column is edited
-  const preProcessEditOrder = React.useCallback(
-    (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrderDecorator(rows, params),
+  const preProcessEditOrderDecorator = React.useCallback(
+    (params: GridPreProcessEditCellProps) => preProcessEditOrder(rows, params),
     [rows]
   );
 
   // Called when a row is edited
-  const processRowUpdate = React.useCallback(
+  const processRowUpdateDecorator = React.useCallback(
     (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdateDecorator(setRows, newRow, oldRow, true),
+      processRowUpdate(setRows, newRow, oldRow, true),
     []
   );
 
@@ -93,25 +92,25 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   );
 
   // Called when the "Delete" action is pressed in the menu
-  const handleDelete = React.useCallback(
+  const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDeleteDecorator(setRows, rowId);
+      handleDelete(setRows, rowId);
       updateOrderRows(setRows);
     },
     []
   );
 
   // Called when the "Duplicate" action is pressed in the menu
-  const handleDuplicate = React.useCallback(
+  const handleDuplicateDecorator = React.useCallback(
     (row: GridRowModel) => () => {
-      handleDuplicateDecorator(setRows, row);
+      handleDuplicate(setRows, row);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
-  const handleAdd = React.useCallback(() => {
-    handleAddDecorator(setRows, getDefaultRow(rows));
+  const handleAddDecorator = React.useCallback(() => {
+    handleAdd(setRows, getDefaultRow(rows));
   }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(
@@ -142,7 +141,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         type: "number",
         width: 75,
         editable: true,
-        preProcessEditCellProps: preProcessEditOrder,
+        preProcessEditCellProps: preProcessEditOrderDecorator,
       },
       {
         field: "name",
@@ -166,13 +165,13 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
           <GridActionsCellItem
             icon={<FileCopyIcon />}
             label="Duplicate"
-            onClick={handleDuplicate(params.row)}
+            onClick={handleDuplicateDecorator(params.row)}
             showInMenu
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDelete(params.id)}
+            onClick={handleDeleteDecorator(params.id)}
             showInMenu
           />,
         ],
@@ -181,9 +180,9 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     [
       handleUpward,
       handleDownward,
-      preProcessEditOrder,
-      handleDuplicate,
-      handleDelete,
+      preProcessEditOrderDecorator,
+      handleDuplicateDecorator,
+      handleDeleteDecorator,
     ]
   );
 
@@ -192,11 +191,11 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       theme={theme}
       rows={rows}
       columns={columns}
-      processRowUpdate={processRowUpdate}
+      processRowUpdate={processRowUpdateDecorator}
       hasToolbar
       add={{
         text: "CREATE NEW MATURITY LEVEL",
-        handler: handleAdd,
+        handler: handleAddDecorator,
       }}
     />
   );

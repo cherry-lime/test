@@ -9,7 +9,7 @@ import {
 // Generate new id based on time
 const generateId = () => Date.now();
 
-export function handleAddDecorator(
+export function handleAdd(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   defaultRow: GridRowModel
 ) {
@@ -22,7 +22,7 @@ export function handleAddDecorator(
   });
 }
 
-export function handleDeleteDecorator(
+export function handleDelete(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   rowId: GridRowId
 ) {
@@ -35,7 +35,7 @@ export function handleDeleteDecorator(
   });
 }
 
-export function handleDuplicateDecorator(
+export function handleDuplicate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   row: GridRowModel
 ) {
@@ -48,7 +48,7 @@ export function handleDuplicateDecorator(
   });
 }
 
-export function handleColorDecorator(
+export function handleColor(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   row: GridRowModel,
   color: ColorResult
@@ -103,7 +103,7 @@ export function handleMoveRows(
   updateOrderRows(setRows);
 }
 
-export function preProcessEditOrderDecorator(
+export function preProcessEditOrder(
   rows: GridRowModel[],
   params: GridPreProcessEditCellProps
 ) {
@@ -115,7 +115,7 @@ export function preProcessEditOrderDecorator(
   return { ...params.props, error: hasError };
 }
 
-export function processRowUpdateDecorator(
+export function processRowUpdate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   newRow: GridRowModel,
   oldRow: GridRowModel,

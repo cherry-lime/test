@@ -8,7 +8,7 @@ import GenericGrid from "../Generic/GenericGrid";
 
 import { UserRole } from "../../../types/UserRole";
 import { AssessmentType } from "../../../types/AssessmentType";
-import { handleAddDecorator } from "../decorators";
+import { handleAdd } from "../handlers";
 
 // Define type for the rows in the grid
 type Row = {
@@ -62,8 +62,8 @@ export default function AssessmentOngoingGrid({
   );
 
   // Called when the "Add" button is pressed below the grid
-  const handleAdd = React.useCallback(() => {
-    handleAddDecorator(setRows, getDefaultRow());
+  const handleAddDecorator = React.useCallback(() => {
+    handleAdd(setRows, getDefaultRow());
   }, [rows]);
 
   const columns = React.useMemo<GridColumns<Row>>(
@@ -109,7 +109,7 @@ export default function AssessmentOngoingGrid({
           ? undefined
           : {
               text: "START NEW EVALUATION",
-              handler: handleAdd,
+              handler: handleAddDecorator,
             }
       }
     />
