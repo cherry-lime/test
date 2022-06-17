@@ -10,6 +10,8 @@ import { TemplateModule } from './template/template.module';
 import { CategoryModule } from './category/category.module';
 import { SubareaModule } from './subarea/subarea.module';
 import { MaturityModule } from './maturity/maturity.module';
+import { TopicModule } from './topic/topic.module';
+import { AnswerModule } from './answer/answer.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { MaturityModule } from './maturity/maturity.module';
     CategoryModule,
     SubareaModule,
     MaturityModule,
+    TopicModule,
+    AnswerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -23,9 +23,13 @@ import { TemplateService } from './template.service';
 import { MaturityDto } from '../maturity/dto/maturity.dto';
 import { MaturityService } from '../maturity/maturity.service';
 import { CategoryDto } from '../category/dto/category.dto';
-import { Roles } from '../common/decorators/roles.decorator';
+import { TopicDto } from '../topic/dto/topic.dto';
+import { TopicService } from '../topic/topic.service';
+import { AnswerDto } from '../answer/dto/answer.dto';
+import { AnswerService } from '../answer/answer.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 
 @Controller('template')
@@ -34,7 +38,9 @@ export class TemplateController {
   constructor(
     private readonly templateService: TemplateService,
     private readonly categoryService: CategoryService,
-    private readonly maturityService: MaturityService
+    private readonly maturityService: MaturityService,
+    private readonly topicService: TopicService,
+    private readonly answerService: AnswerService
   ) {}
 
   /**
@@ -223,5 +229,71 @@ export class TemplateController {
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<MaturityDto[]> {
     return this.maturityService.findAll(id);
+  }
+
+  /**
+   * [GET] /template/:template_id/topic - Get all topics for template
+   * @param template_id template_id
+   * @returns TopicDto[] List of all topics
+   */
+  @Get(':template_id/topic')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiTags('topic')
+  @ApiResponse({
+    description: 'Found topics',
+    type: TopicDto,
+    isArray: true,
+  })
+  async findAllTopics(@Param('template_id', ParseIntPipe) template_id: number) {
+    return this.topicService.findAll(template_id);
+  }
+
+  /**
+   * [POST] /template/:template_id/topic - Create new topic for template
+   * @param template_id template_id
+   * @returns Created topic
+   * @throws NotFoundException if template not found
+   * @throws ConflictException if topic with this name already exists
+   */
+  @Post(':template_id/topic')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiTags('topic')
+  @ApiResponse({ description: 'Topic', type: TopicDto })
+  @ApiNotFoundResponse({ description: 'Template not found' })
+  @ApiConflictResponse({
+    description: 'Topic with this name already exists',
+  })
+  async createTopic(@Param('template_id', ParseIntPipe) template_id: number) {
+    return this.topicService.create(template_id);
+  }
+
+  /**
+   * [GET] /template/:template_id/answer - Get all answers for template
+   * @param template_id template_id
+   * @returns AnswerDto[] List of all answers
+   */
+  @Get(':template_id/answer')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiTags('answer')
+  @ApiResponse({
+    description: 'Found answers',
+    type: AnswerDto,
+    isArray: true,
+  })
+  async getAnswers(@Param('template_id', ParseIntPipe) template_id: number) {
+    return this.answerService.findAll(template_id);
+  }
+
+  @Post(':template_id/answer')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiTags('answer')
+  @ApiResponse({ description: 'Answer', type: AnswerDto })
+  @ApiConflictResponse({
+    description: 'Answer with this name already exists',
+  })
+  async createAnswer(@Param('template_id', ParseIntPipe) template_id: number) {
+    return this.answerService.create(template_id);
   }
 }
