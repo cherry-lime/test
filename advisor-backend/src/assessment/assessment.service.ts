@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Assessment, AssessmentType, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { AssessmentDto } from './dto/assessment.dto';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
@@ -207,11 +208,24 @@ export class AssessmentService {
    * @throws Assessment not found
    */
   async saveCheckpoint(
-    assessment_id: number,
+    { assessment_id, template_id }: AssessmentDto,
     { checkpoint_id, answer_id }: SaveCheckpointDto
   ) {
     // Save NA to checkpoint if no answer_id is provided
     if (!answer_id) {
+      // Check if NA is allowed
+      const template = await this.prisma.template.findUnique({
+        where: {
+          template_id,
+        },
+      });
+
+      if (!template.include_no_answer) {
+        throw new BadRequestException(
+          'No answer is not allowed in this template'
+        );
+      }
+
       return await this.saveNaAnswer(assessment_id, checkpoint_id);
     }
 

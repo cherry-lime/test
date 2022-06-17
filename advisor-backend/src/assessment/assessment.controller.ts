@@ -141,10 +141,7 @@ export class AssessmentController {
       throw new ForbiddenException();
     }
 
-    return this.assessmentService.saveCheckpoint(
-      assessment_id,
-      saveCheckpointDto
-    );
+    return this.assessmentService.saveCheckpoint(assessment, saveCheckpointDto);
   }
 
   /**
