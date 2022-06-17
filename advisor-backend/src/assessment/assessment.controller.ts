@@ -25,11 +25,15 @@ import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
+import { CheckpointService } from '../checkpoint/checkpoint.service';
 
 @ApiTags('assessment')
 @Controller('assessment')
 export class AssessmentController {
-  constructor(private readonly assessmentService: AssessmentService) {}
+  constructor(
+    private readonly assessmentService: AssessmentService,
+    private readonly checkpointService: CheckpointService
+  ) {}
 
   /**
    * [POST] /assessment - create new assessment
@@ -141,7 +145,7 @@ export class AssessmentController {
       throw new ForbiddenException();
     }
 
-    return this.assessmentService.saveCheckpoint(assessment, saveCheckpointDto);
+    return this.checkpointService.saveCheckpoint(assessment, saveCheckpointDto);
   }
 
   /**
@@ -170,6 +174,6 @@ export class AssessmentController {
       throw new ForbiddenException();
     }
 
-    return this.assessmentService.getSavedCheckpoints(assessment);
+    return this.checkpointService.getSavedCheckpoints(assessment);
   }
 }
