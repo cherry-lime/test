@@ -1,14 +1,16 @@
 import * as React from "react";
-import { QueryKey, useQuery, useMutation, MutationKey } from "react-query";
-import axios from "axios";
 
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 
+import { useQuery, useMutation, QueryKey, MutationKey } from "react-query";
+import axios from "axios";
+
 import GenericGrid from "../Generic/GenericGrid";
 
 import { handleDuplicate } from "../handlers";
+import { useGet, usePost } from "../../../api";
 
 // Define type for the rows in the grid
 type Row = {
@@ -18,35 +20,10 @@ type Row = {
   body: string;
 };
 
-function useGet(key: QueryKey, url: string) {
-  return useQuery(key, async () => {
-    const { data } = await axios.get(url);
-    return data;
-  });
-}
-
-function usePost<BodyType>(key: MutationKey) {
-  return useMutation(key, (variables: { url: string; body: BodyType }) =>
-    axios.post(variables.url, variables.body)
-  );
-}
-
-function usePatch<BodyType>(key: MutationKey) {
-  return useMutation(key, (variables: { url: string; body: BodyType }) =>
-    axios.patch(variables.url, variables.body)
-  );
-}
-
-function useDelete(key: MutationKey) {
-  return useMutation(key, (url: string) => axios.delete(url));
-}
-
 export default function TestGrid({ theme }: { theme: Theme }) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
-  const postMutation = usePost<Row>(["test", "testId"]);
-
-  const { status, data, error, isFetching } = useGet(
+  const { status, data, error } = useGet(
     ["parameter 1", "parameter 2"],
     "https://jsonplaceholder.typicode.com/posts"
   );
@@ -56,11 +33,13 @@ export default function TestGrid({ theme }: { theme: Theme }) {
     if (status === "success") {
       setRows(() => data);
     }
-  }, [status, data, error, isFetching]);
+  }, [status]);
+
+  const duplicateMutation = usePost<Row>(["testDuplicate", "testId"]);
 
   const handleDuplicateDecorator = React.useCallback(
     (row: Row) => () => {
-      postMutation.mutate(
+      duplicateMutation.mutate(
         { url: "/post", body: row },
         {
           onSuccess: (dat, variables) => {
