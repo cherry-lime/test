@@ -6,29 +6,13 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { UserService } from './user.service';
 import { Roles } from '../common/decorators/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../common/guards/roles.guard';
-
-class userResponse {
-  @ApiProperty()
-  user_id: number;
-
-  @ApiProperty()
-  username: string;
-
-  @ApiProperty()
-  role: Role;
-
-  @ApiProperty()
-  created_at: Date;
-
-  @ApiProperty()
-  updated_at: Date;
-}
+import { userResponse } from './dto/userResponse.dto';
 
 @ApiTags('user')
 @Controller('user')
