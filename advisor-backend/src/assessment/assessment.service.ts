@@ -1,11 +1,13 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { AssessmentType } from '@prisma/client';
+import { Assessment, AssessmentType, User } from '@prisma/client';
+import { check } from 'prettier';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
@@ -210,35 +212,41 @@ export class AssessmentService {
     assessment_id: number,
     { checkpoint_id, answer_id }: SaveCheckpointDto
   ) {
-    // find assessment
-    const assessment = this.prisma.assessment.findUnique({
-      where: {
-        assessment_id,
-      },
-    });
-
-    // throw NotFoundException if checkpoint not found
-    if (!assessment) {
-      throw new NotFoundException('Checkpoint not found');
-    }
-
     // Upsert checkpoint and answer
-    await this.prisma.checkpointAndAnswersInAssessments.upsert({
-      where: {
-        assessment_id_checkpoint_id: {
-          assessment_id,
-          checkpoint_id,
+    await this.prisma.checkpointAndAnswersInAssessments
+      .upsert({
+        where: {
+          assessment_id_checkpoint_id: {
+            assessment_id,
+            checkpoint_id,
+          },
         },
-      },
-      update: {
-        answer_id,
-      },
-      create: {
-        assessment_id,
-        checkpoint_id,
-        answer_id,
-      },
-    });
+        update: {
+          answer_id,
+        },
+        create: {
+          assessment: {
+            connect: {
+              assessment_id,
+            },
+          },
+          checkpoint: {
+            connect: {
+              checkpoint_id,
+            },
+          },
+          Answer: {
+            connect: {
+              answer_id,
+            },
+          },
+        },
+      })
+      .catch(() => {
+        // Throw BadRequestException if anything doesn't exist
+        throw new BadRequestException();
+      });
+
     return {
       msg: 'Checkpoint saved',
     };
@@ -250,11 +258,71 @@ export class AssessmentService {
    * @returns all saved checkpoints
    * @throws Assessment not found
    */
-  async getSavedCheckpoints(assessment_id: number) {
+  async getSavedCheckpoints({ assessment_id, template_id }: Assessment) {
+    // Get categories in assessment template
+    const categories = await this.prisma.category.findMany({
+      where: {
+        template_id,
+      },
+      include: {
+        Checkpoint: true,
+      },
+    });
+
+    // Get possible answers for template
+    const answers = await this.prisma.answer.findMany({
+      where: {
+        template_id,
+      },
+    });
+
+    // Get checkpoints in assessment
+    const checkpoints = categories.flatMap((category) => category.Checkpoint);
+
+    // find all saved answers in assessment
     return await this.prisma.checkpointAndAnswersInAssessments.findMany({
       where: {
         assessment_id,
+        checkpoint_id: {
+          in: checkpoints.map((checkpoint) => checkpoint.checkpoint_id),
+        },
+        answer_id: {
+          in: answers.map((answer) => answer.answer_id),
+        },
       },
     });
+  }
+
+  /**
+   * Check if user is part of assessment
+   * @param assessment_id assessment_id
+   * @param user user
+   * @returns assessment if member, null otherwise
+   */
+  async userInAssessment(assessment_id: number, user: User) {
+    const assessment = await this.prisma.assessment.findUnique({
+      where: {
+        assessment_id,
+      },
+      include: {
+        AssessmentParticipants: true,
+      },
+    });
+
+    if (!assessment) {
+      return null;
+    }
+
+    const userInAssessment = assessment.AssessmentParticipants.find(
+      (participant) => {
+        return participant.user_id === user.user_id;
+      }
+    );
+
+    if (!userInAssessment) {
+      return null;
+    }
+
+    return assessment;
   }
 }

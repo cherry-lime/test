@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -20,6 +22,9 @@ import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { AssessmentDto } from './dto/assessment.dto';
 import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from '@prisma/client';
+import AuthUser from '../common/decorators/auth-user.decorator';
 
 @ApiTags('assessment')
 @Controller('assessment')
@@ -118,12 +123,24 @@ export class AssessmentController {
    * @returns Checkpoint saved
    */
   @Post(':assessment_id/save')
+  @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ description: 'Checkpoint saved' })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
-  save(
+  async saveCheckpointAnswer(
     @Param('assessment_id', ParseIntPipe) assessment_id: number,
-    @Body() saveCheckpointDto: SaveCheckpointDto
+    @Body() saveCheckpointDto: SaveCheckpointDto,
+    @AuthUser() user: User
   ) {
+    // Check if user in assessment
+    const assessment = await this.assessmentService.userInAssessment(
+      assessment_id,
+      user
+    );
+
+    if (!assessment) {
+      throw new ForbiddenException();
+    }
+
     return this.assessmentService.saveCheckpoint(
       assessment_id,
       saveCheckpointDto
@@ -136,14 +153,26 @@ export class AssessmentController {
    * @returns Saved checkpoints
    */
   @Get(':assessment_id/save')
+  @UseGuards(AuthGuard('jwt'))
   @ApiResponse({
     description: 'Saved checkpoints',
     type: SaveCheckpointDto,
     isArray: true,
   })
-  getSavedCheckpoints(
-    @Param('assessment_id', ParseIntPipe) assessment_id: number
+  async getSavedCheckpoints(
+    @Param('assessment_id', ParseIntPipe) assessment_id: number,
+    @AuthUser() user: User
   ) {
-    return this.assessmentService.getSavedCheckpoints(assessment_id);
+    // Check if user in assessment
+    const assessment = await this.assessmentService.userInAssessment(
+      assessment_id,
+      user
+    );
+
+    if (!assessment) {
+      throw new ForbiddenException();
+    }
+
+    return this.assessmentService.getSavedCheckpoints(assessment);
   }
 }
