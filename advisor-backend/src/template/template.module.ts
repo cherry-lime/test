@@ -8,7 +8,12 @@ import { AnswerService } from '../answer/answer.service';
 
 @Module({
   controllers: [TemplateController],
-  providers: [TemplateService, CategoryService, MaturityService, TopicService, AnswerService],
+  providers: [
+    TemplateService,
+    CategoryService,
+    MaturityService,
+    TopicService,
+    AnswerService,
+  ],
 })
-
 export class TemplateModule {}

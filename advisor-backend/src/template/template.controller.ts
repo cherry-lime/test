@@ -39,7 +39,7 @@ export class TemplateController {
     private readonly templateService: TemplateService,
     private readonly categoryService: CategoryService,
     private readonly maturityService: MaturityService,
-    private readonly topicService: TopicService
+    private readonly topicService: TopicService,
     private readonly answerService: AnswerService
   ) {}
 
@@ -247,7 +247,7 @@ export class TemplateController {
   async createTopic(@Param('template_id', ParseIntPipe) template_id: number) {
     return this.topicService.create(template_id);
   }
-  
+
   /**
    * [GET] /template/:template_id/answer - Get all answers for template
    * @param template_id template_id

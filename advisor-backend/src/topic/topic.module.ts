@@ -4,6 +4,6 @@ import { TopicController } from './topic.controller';
 
 @Module({
   controllers: [TopicController],
-  providers: [TopicService]
+  providers: [TopicService],
 })
 export class TopicModule {}
