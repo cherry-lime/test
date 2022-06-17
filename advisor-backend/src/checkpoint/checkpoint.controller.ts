@@ -7,9 +7,8 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-}from '@nestjs/common';
+} from '@nestjs/common';
 import {
-  ApiConflictResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiResponse,
@@ -33,22 +32,22 @@ export class CheckpointController {
   findAll() {
     return this.checkpointService.findAll();
   }
-/**
+  /**
    * [GET] /checkpoint/:checkpoint_id - Get checkpoint by id
    * @param id - Template id
    * @returns checkpointDto
    */
- @Get(':checkpoint_id')
- @ApiResponse({
-   description: 'Found checkpoint',
-   type: CheckpointDto,
- })
- @ApiNotFoundResponse({
-   description: 'checkpoint not found',
- })
- findOne(@Param('checkpoint_id', ParseIntPipe) id: number) {
-   return this.checkpointService.findOne(id);
- }
+  @Get(':checkpoint_id')
+  @ApiResponse({
+    description: 'Found checkpoint',
+    type: CheckpointDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'checkpoint not found',
+  })
+  findOne(@Param('checkpoint_id', ParseIntPipe) id: number) {
+    return this.checkpointService.findOne(id);
+  }
 
   /**
    * [PATCH] /checkpoint/:checkpoint_id - Update checkpoint by id
@@ -56,21 +55,20 @@ export class CheckpointController {
    * @param UpdateCheckpointDto - Template update information
    * @returns checkpointDto
    */
-   @Patch(':checkpoint_id')
-   @ApiResponse({ description: 'Updated checkpoint', type: CheckpointDto })
-   @ApiNotFoundResponse({ description: 'checkpoint not found' })
-   @ApiBadRequestResponse({
-     description: 'Order must be less than number of categories in template',
-   })
-   update(
-     @Param('checkpoint_id', ParseIntPipe) id: number,
-     @Body() updatecheckpointDto: UpdateCheckpointDto
-   ) {
-     return this.checkpointService.update(id, updatecheckpointDto);
-   }
- 
+  @Patch(':checkpoint_id')
+  @ApiResponse({ description: 'Updated checkpoint', type: CheckpointDto })
+  @ApiNotFoundResponse({ description: 'checkpoint not found' })
+  @ApiBadRequestResponse({
+    description: 'Order must be less than number of categories in template',
+  })
+  update(
+    @Param('checkpoint_id', ParseIntPipe) id: number,
+    @Body() updatecheckpointDto: UpdateCheckpointDto
+  ) {
+    return this.checkpointService.update(id, updatecheckpointDto);
+  }
 
- /**
+  /**
    * [DELETE] /checkpoint/:checkpoint_id - Delete checkpoint
    * @param id - checkpoint id
    * @returns Deleted checkpoint
