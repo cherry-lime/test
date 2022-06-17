@@ -1,11 +1,12 @@
 import {
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { UserService } from './user.service';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -44,5 +45,21 @@ export class UserController {
   @Roles(Role.ADMIN, Role.ASSESSOR)
   getUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getUser(id);
+  }
+
+  /**
+   * [DELETE] /user/:id - Delete user by id
+   * @param id user_id
+   * @returns Deleted user
+   */
+  @Delete(':user_id')
+  @ApiResponse({ description: 'Deleted user', type: userResponse })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
+  //@Roles(Role.ADMIN)
+  async delete(
+  @Param('user_id', ParseIntPipe) id: number
+  ): Promise<any> {
+    return this.userService.delete(id);
   }
 }
