@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import GroupsIcon from "@mui/icons-material/Groups";
+import BarChartIcon from '@mui/icons-material/BarChart';
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PageLayout from "../../PageLayout";
@@ -22,7 +23,16 @@ function UserInterface() {
           bodyText="View and start individual evaluations"
           headerText="Individual Evaluations"
           cardHeight="15vh"
-          icon={<AssessmentIcon color="primary" fontSize="large" />}
+          icon={
+            <BarChartIcon
+              color="info"
+              fontSize="large"
+              className="inverse_icon"
+              sx={{
+                bgcolor: "primary.main",
+              }}
+            />
+          }
           image={testimageFigma}
           isImageLeft
         />
