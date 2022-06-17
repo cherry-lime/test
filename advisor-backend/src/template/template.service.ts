@@ -146,6 +146,7 @@ export class TemplateService {
 
     delete template.template_id;
     delete template.template_name;
+    template.enabled = false;
 
     // While template is not created
     while (!newTemplate) {
