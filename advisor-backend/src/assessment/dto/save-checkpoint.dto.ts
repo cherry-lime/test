@@ -8,7 +8,5 @@ export class SaveCheckpointDto {
   checkpoint_id: number;
 
   @ApiProperty()
-  @IsNumber()
-  @Min(1)
   answer_id: number;
 }

@@ -1,13 +1,11 @@
 import {
   BadRequestException,
   ConflictException,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { Assessment, AssessmentType, User } from '@prisma/client';
-import { check } from 'prettier';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
@@ -212,6 +210,11 @@ export class AssessmentService {
     assessment_id: number,
     { checkpoint_id, answer_id }: SaveCheckpointDto
   ) {
+    // Save NA to checkpoint if no answer_id is provided
+    if (!answer_id) {
+      return await this.saveNaAnswer(assessment_id, checkpoint_id);
+    }
+
     // Upsert checkpoint and answer
     await this.prisma.checkpointAndAnswersInAssessments
       .upsert({
@@ -253,6 +256,47 @@ export class AssessmentService {
   }
 
   /**
+   * Save NA answer to checkpoint
+   * @param assessment_id assessment_id
+   * @param checkpoint_id checkpoint_id
+   * @returns checkpoint saved
+   */
+  async saveNaAnswer(assessment_id, checkpoint_id) {
+    const saved =
+      await this.prisma.checkpointAndAnswersInAssessments.findUnique({
+        where: {
+          assessment_id_checkpoint_id: {
+            assessment_id,
+            checkpoint_id,
+          },
+        },
+      });
+
+    if (!saved) {
+      await this.prisma.checkpointAndAnswersInAssessments.create({
+        data: {
+          assessment_id,
+          checkpoint_id,
+        },
+      });
+    } else {
+      await this.prisma.checkpointAndAnswersInAssessments.update({
+        where: {
+          assessment_id_checkpoint_id: {
+            assessment_id,
+            checkpoint_id,
+          },
+        },
+        data: {
+          answer_id: null,
+        },
+      });
+    }
+
+    return { msg: 'Checkpoint saved' };
+  }
+
+  /**
    * Find all saved checkpoints for assessment
    * @param assessment_id assessment_id
    * @returns all saved checkpoints
@@ -280,17 +324,20 @@ export class AssessmentService {
     const checkpoints = categories.flatMap((category) => category.Checkpoint);
 
     // find all saved answers in assessment
-    return await this.prisma.checkpointAndAnswersInAssessments.findMany({
-      where: {
-        assessment_id,
-        checkpoint_id: {
-          in: checkpoints.map((checkpoint) => checkpoint.checkpoint_id),
+    return (
+      await this.prisma.checkpointAndAnswersInAssessments.findMany({
+        where: {
+          assessment_id,
+          checkpoint_id: {
+            in: checkpoints.map((checkpoint) => checkpoint.checkpoint_id),
+          },
         },
-        answer_id: {
-          in: answers.map((answer) => answer.answer_id),
-        },
-      },
-    });
+      })
+    ).filter(
+      (saved) =>
+        saved.answer_id === null ||
+        answers.map((answer) => answer.answer_id).includes(saved.answer_id)
+    );
   }
 
   /**
