@@ -9,6 +9,7 @@ import { Assessment, AssessmentType, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
+import { FeedbackDto } from './dto/feedback.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
 @Injectable()
@@ -371,5 +372,31 @@ export class AssessmentService {
     }
 
     return assessment;
+  }
+
+  /**
+   * Add feedback to assessment
+   * @param assessment_id assessment_id
+   * @param feedbackDto feedback data
+   * @returns updated assessment
+   * @throws Assessment not found
+   */
+  async feedback(assessment_id: number, { feedback_text }: FeedbackDto) {
+    return await this.prisma.assessment
+      .update({
+        where: {
+          assessment_id,
+        },
+        data: {
+          feedback_text,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Assessment not found');
+        } else {
+          throw new InternalServerErrorException();
+        }
+      });
   }
 }
