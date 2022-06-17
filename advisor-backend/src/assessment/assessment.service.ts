@@ -5,11 +5,9 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { Assessment, AssessmentType, User } from '@prisma/client';
+import { AssessmentType, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { AssessmentDto } from './dto/assessment.dto';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
-import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
 import { FeedbackDto } from './dto/feedback.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
