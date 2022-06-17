@@ -18,9 +18,9 @@ import {
 } from '@nestjs/swagger';
 import { TopicDto } from './dto/topic.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from 'src/common/decorators/roles.decorator';
+import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
-import { RolesGuard } from 'src/common/guards/roles.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
 
 @Controller('topic')
 @ApiTags('topic')
