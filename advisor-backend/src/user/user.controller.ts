@@ -36,8 +36,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   /**
-   * [GET] /template - Get all templates
-   * @returns TemplateResponse[] List of all templates
+   * [GET] /user - Get all users
+   * @returns userResponse[] List of all users
    */
   @ApiResponse({
     description: 'Found users',
