@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -24,6 +25,10 @@ import { MaturityService } from '../maturity/maturity.service';
 import { CategoryDto } from '../category/dto/category.dto';
 import { AnswerDto } from '../answer/dto/answer.dto';
 import { AnswerService } from '../answer/answer.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('template')
 @ApiTags('template')
@@ -209,6 +214,7 @@ export class TemplateController {
    * @returns AnswerDto[] List of all answers
    */
   @Get(':template_id/answer')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiTags('answer')
   @ApiResponse({
     description: 'Found answers',
@@ -220,6 +226,8 @@ export class TemplateController {
   }
 
   @Post(':template_id/answer')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiTags('answer')
   @ApiResponse({ description: 'Answer', type: AnswerDto })
   @ApiConflictResponse({
