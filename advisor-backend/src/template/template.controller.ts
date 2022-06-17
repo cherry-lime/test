@@ -26,8 +26,8 @@ import { CategoryDto } from '../category/dto/category.dto';
 import { AnswerDto } from '../answer/dto/answer.dto';
 import { AnswerService } from '../answer/answer.service';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/common/guards/roles.guard';
-import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 
 @Controller('template')
