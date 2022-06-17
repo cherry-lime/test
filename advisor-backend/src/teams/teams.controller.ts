@@ -161,12 +161,12 @@ export class TeamsController {
   }
 
   /**
-   * [GET] /team/:team_id/invite - Get invite token for a team
+   * [GET] /team/:team_id/invite_token - Get invite token for a team
    * @param team_id team_id
    * @returns invite_token
    * @throws Team not found
    */
-  @Get(':team_id/invite')
+  @Get(':team_id/invite_token')
   @ApiResponse({
     description: 'Get invite token of a team',
     type: String,

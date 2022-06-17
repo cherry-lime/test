@@ -239,7 +239,6 @@ export class TeamsService {
     }
 
     teamMembers.team_members = teamMemberUsernames;
-    teamMembers.team_members.push({ username: user.username, role: user.role });
 
     await this.prisma.userInTeam
       .create({
