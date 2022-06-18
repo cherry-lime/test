@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AssessmentDto } from 'src/assessment/dto/assessment.dto';
-import { CheckpointService } from 'src/checkpoint/checkpoint.service';
+import { AssessmentDto } from '../assessment/dto/assessment.dto';
+import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
