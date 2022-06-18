@@ -12,7 +12,7 @@ import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import GenericGrid from "../Generic/GenericGrid";
+import GenericGrid from "../../Generic/GenericGrid";
 import { handleAdd, handleDelete, processRowUpdate } from "../handlers";
 
 // Define type for the rows in the grid

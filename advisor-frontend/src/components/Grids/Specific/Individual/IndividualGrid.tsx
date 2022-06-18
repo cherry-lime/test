@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/HighlightOff";
 
-import GenericGrid from "../Generic/GenericGrid";
+import GenericGrid from "../../Generic/GenericGrid";
 import { handleDelete } from "../handlers";
 
 // Define type for the rows in the grid

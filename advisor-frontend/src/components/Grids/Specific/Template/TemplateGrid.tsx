@@ -12,9 +12,9 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import GenericGrid from "../Generic/GenericGrid";
+import GenericGrid from "../../Generic/GenericGrid";
 
-import { AssessmentType } from "../../../types/AssessmentType";
+import { AssessmentType } from "../../../../types/AssessmentType";
 import {
   handleAdd,
   handleDelete,

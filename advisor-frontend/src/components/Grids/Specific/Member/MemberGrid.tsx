@@ -10,9 +10,9 @@ import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/HighlightOff";
 
-import GenericGrid from "../Generic/GenericGrid";
+import GenericGrid from "../../Generic/GenericGrid";
 
-import { UserRole } from "../../../types/UserRole";
+import { UserRole } from "../../../../types/UserRole";
 import { handleAdd, handleDelete, processRowUpdate } from "../handlers";
 
 // Define type for the rows in the grid

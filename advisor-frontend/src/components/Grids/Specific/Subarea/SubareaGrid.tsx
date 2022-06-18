@@ -8,13 +8,13 @@ import {
   GridRowModel,
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
-import { IconButton } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
+import { IconButton } from "@mui/material";
 
-import GenericGrid from "../Generic/GenericGrid";
+import GenericGrid from "../../Generic/GenericGrid";
 import {
   handleAdd,
   handleDelete,
@@ -30,30 +30,37 @@ type Row = {
   id: number;
   order: number;
   name: string;
+  summary: string;
+  description: string;
   enabled: boolean;
 };
-
-// Generate new id based on time
-const generateId = () => Date.now();
 
 // Get row object with default values
 const getDefaultRow = (prevRows: Row[]) => {
   const defaultRow = {
-    id: generateId(),
+    id: Date.now(),
     order: prevRows.length,
     name: "Name...",
+    summary: "Summary...",
+    description: "Description...",
     enabled: false,
   };
   return defaultRow;
 };
 
-type MaturityGridProps = {
+type SubareaGridProps = {
   theme: Theme;
   templateId: number;
+  categoryId: number;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
+export default function SubareaGrid({
+  theme,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  templateId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  categoryId,
+}: SubareaGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
   // Fetch initial rows of the grid
@@ -147,6 +154,20 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         field: "name",
         headerName: "Name",
         type: "string",
+        width: 200,
+        editable: true,
+      },
+      {
+        field: "summary",
+        headerName: "Summary",
+        type: "string",
+        flex: 1,
+        editable: true,
+      },
+      {
+        field: "description",
+        headerName: "Description",
+        type: "string",
         flex: 1,
         editable: true,
       },
@@ -194,7 +215,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       processRowUpdate={processRowUpdateDecorator}
       hasToolbar
       add={{
-        text: "CREATE NEW MATURITY LEVEL",
+        text: "CREATE NEW SUBAREA",
         handler: handleAddDecorator,
       }}
     />

@@ -4,12 +4,9 @@ import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 
-import { useQuery, useMutation, QueryKey, MutationKey } from "react-query";
-import axios from "axios";
-
 import GenericGrid from "../Generic/GenericGrid";
 
-import { handleDuplicate } from "../handlers";
+import { handleDuplicate } from "./handlers";
 import { useGet, usePost } from "../../../api";
 
 // Define type for the rows in the grid

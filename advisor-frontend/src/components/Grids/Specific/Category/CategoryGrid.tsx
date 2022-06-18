@@ -16,7 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
-import GenericGrid from "../Generic/GenericGrid";
+import GenericGrid from "../../Generic/GenericGrid";
 import {
   handleAdd,
   handleColor,

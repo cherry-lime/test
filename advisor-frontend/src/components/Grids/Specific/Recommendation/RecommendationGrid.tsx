@@ -13,10 +13,10 @@ import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import RevertIcon from "@mui/icons-material/Cached";
 
-import GenericGrid from "../Generic/GenericGrid";
+import GenericGrid from "../../Generic/GenericGrid";
 
-import { UserRole } from "../../../types/UserRole";
-import { AssessmentType } from "../../../types/AssessmentType";
+import { UserRole } from "../../../../types/UserRole";
+import { AssessmentType } from "../../../../types/AssessmentType";
 import {
   handleMoveRows,
   preProcessEditOrder,

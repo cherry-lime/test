@@ -1,17 +1,16 @@
-import TeamGrid from "./TeamGrid";
-import MemberGrid from "./MemberGrid";
-import AssessmentOngoingGrid from "./AssessmentOngoingGrid";
-import AssessmentCompletedGrid from "./AssessmentCompletedGrid";
-import RecommendationGrid from "./RecommendationGrid";
-import IndividualGrid from "./IndividualGrid";
-import TemplateGrid from "./TemplateGrid";
-import CategoryGrid from "./CategoryGrid";
-import TopicGrid from "./TopicGrid";
-import MaturityGrid from "./MaturityGrid";
-import AnswerTypeGrid from "./AnswerTypeGrid";
-import SubareaGrid from "./SubareaGrid";
-import CheckpointGrid from "./CheckpointGrid";
-import TestGrid from "./TestGrid";
+import TeamGrid from "./Team/TeamGrid";
+import MemberGrid from "./Member/MemberGrid";
+import AssessmentOngoingGrid from "./AssessmentOngoing/AssessmentOngoingGrid";
+import AssessmentCompletedGrid from "./AssessmentCompleted/AssessmentCompletedGrid";
+import RecommendationGrid from "./Recommendation/RecommendationGrid";
+import IndividualGrid from "./Individual/IndividualGrid";
+import TemplateGrid from "./Template/TemplateGrid";
+import CategoryGrid from "./Category/CategoryGrid";
+import TopicGrid from "./Topic/TopicGrid";
+import MaturityGrid from "./Maturity/MaturityGrid";
+import AnswerTypeGrid from "./AnswerType/AnswerTypeGrid";
+import SubareaGrid from "./Subarea/SubareaGrid";
+import CheckpointGrid from "./Checkpoint/CheckpointGrid";
 import INGTheme from "../../../Theme";
 
 export default function AllGrid() {
@@ -24,8 +23,6 @@ export default function AllGrid() {
 
   return (
     <div style={{ width: "100%" }}>
-      <strong>Test Grid</strong>
-      <TestGrid theme={INGTheme} />
       <strong>Team Grid</strong>
       <TeamGrid theme={INGTheme} userId={userId} userRole={userRole} />
       <strong>Assessor Grid</strong>
