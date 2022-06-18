@@ -1,7 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { TeamsController } from './teams.controller';
 import { TeamsService } from './teams.service';
-import { TeamsService2 } from './team.service2';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import {
   aTeam,
@@ -32,15 +31,12 @@ describe('TeamsController', () => {
             addTeamMember: jest.fn().mockResolvedValue(aTeamMembers),
             getAssessments: jest.fn().mockResolvedValue([aAssessment]),
             updateTeam: jest.fn().mockResolvedValue(aTeam),
-          };
-        }
-        if (token === TeamsService2) {
-          return {
             getTeams: jest.fn().mockResolvedValue([aTeam]),
-            findOne: jest.fn().mockResolvedValue(aTeam),
             getInviteToken: jest.fn().mockResolvedValue({
               invite_token: 'test_invite_token',
             } as InviteTokenDto),
+            deleteTeam: jest.fn().mockResolvedValue(aTeam),
+            isUserInTeam: jest.fn().mockResolvedValue(true),
           };
         }
         if (typeof token === 'function') {

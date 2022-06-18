@@ -9,9 +9,11 @@ import {
   ParseUUIDPipe,
   UseGuards,
   Delete,
+  NotFoundException,
+  InternalServerErrorException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
-import { TeamsService2 } from './team.service2';
 import { CreateTeamDto } from './dto/create-team.dto';
 import {
   ApiConflictResponse,
@@ -34,10 +36,7 @@ import AuthUser from '../common/decorators/auth-user.decorator';
 @ApiTags('teams')
 @Controller('teams')
 export class TeamsController {
-  constructor(
-    private readonly teamsService: TeamsService,
-    private readonly teamsService2: TeamsService2
-  ) {}
+  constructor(private readonly teamsService: TeamsService) {}
 
   /**
    * [GET] /teams/my-teams - get the teams of the user issuing the request
@@ -52,7 +51,7 @@ export class TeamsController {
   @ApiNotFoundResponse({ description: 'user is not in any team' })
   @ApiInternalServerErrorResponse({ description: 'internal server error' })
   getTeams(@AuthUser() user: User): Promise<Team[]> {
-    return this.teamsService2.getTeams(user.user_id);
+    return this.teamsService.getTeams(user.user_id);
   }
 
   /**
@@ -111,7 +110,7 @@ export class TeamsController {
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   findOne(@Param('team_id', ParseIntPipe) team_id: number): Promise<Team> {
-    return this.teamsService2.findOne(team_id);
+    return this.teamsService.findOne(team_id);
   }
 
   /**
@@ -130,11 +129,27 @@ export class TeamsController {
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
   @ApiNotFoundResponse({ description: 'No members are associated to the team' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  findTeamMembers(
+  async findTeamMembers(
     @AuthUser() user: User,
     @Param('team_id', ParseIntPipe) team_id: number
   ): Promise<TeamMembers> {
-    return this.teamsService.findTeamMembers(user, team_id);
+    const isUserInTeam = await this.teamsService
+      .isUserInTeam(user.user_id, team_id)
+      .catch((error) => {
+        if (error instanceof NotFoundException) {
+          // Throw error if team with given team id not found
+          throw new NotFoundException('Team with given team id not found');
+        } else {
+          // Throw error if internal server error
+          throw new InternalServerErrorException();
+        }
+      });
+    if (!isUserInTeam && user.role !== 'ADMIN') {
+      // Throw error if user is not in team
+      throw new ForbiddenException('You are not part of this team');
+    }
+
+    return this.teamsService.findTeamMembers(team_id);
   }
 
   /**
@@ -176,7 +191,7 @@ export class TeamsController {
   getInviteToken(
     @Param('team_id', ParseIntPipe) team_id: number
   ): Promise<InviteTokenDto> {
-    return this.teamsService2.getInviteToken(team_id);
+    return this.teamsService.getInviteToken(team_id);
   }
 
   /**
@@ -244,10 +259,26 @@ export class TeamsController {
   })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN, Role.ASSESSOR)
-  deleteTeam(
+  async deleteTeam(
     @AuthUser() user: User,
     @Param('team_id', ParseIntPipe) team_id: number
   ): Promise<Team> {
-    return this.teamsService.deleteTeam(user, team_id);
+    const isUserInTeam = await this.teamsService
+      .isUserInTeam(user.user_id, team_id)
+      .catch((error) => {
+        if (error instanceof NotFoundException) {
+          // Throw error if team with given team id not found
+          throw new NotFoundException('Team with given team id not found');
+        } else {
+          // Throw error if internal server error
+          throw new InternalServerErrorException();
+        }
+      });
+    if (!isUserInTeam && user.role !== 'ADMIN') {
+      // Throw error if user is not in team
+      throw new ForbiddenException('You are not part of this team');
+    }
+
+    return this.teamsService.deleteTeam(team_id);
   }
 }
