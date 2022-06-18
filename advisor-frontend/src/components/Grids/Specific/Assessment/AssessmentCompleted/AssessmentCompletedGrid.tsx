@@ -4,10 +4,10 @@ import { GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Button } from "@mui/material";
 
-import GenericGrid from "../../Generic/GenericGrid";
+import GenericGrid from "../../../Generic/GenericGrid";
 
-import { UserRole } from "../../../../types/UserRole";
-import { AssessmentType } from "../../../../types/AssessmentType";
+import { UserRole } from "../../../../../types/UserRole";
+import { AssessmentType } from "../../../../../types/AssessmentType";
 
 // Define type for the rows in the grid
 type Row = {
