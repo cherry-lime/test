@@ -122,9 +122,6 @@ export class TeamsService {
    * @throws Team not found
    */
   async addTeamMember(user: User, invite_token: string): Promise<TeamMembers> {
-    // Response stored in teamMembers
-    const teamMembers = new TeamMembers();
-
     // Get team id, team name and associated user ids from team with invite_token from prisma
     const temp = await this.prisma.team
       .findUnique({
@@ -133,12 +130,6 @@ export class TeamsService {
         },
         select: {
           team_id: true,
-          team_name: true,
-          UserInTeam: {
-            select: {
-              user_id: true,
-            },
-          },
         },
       })
       .catch(() => {
@@ -149,36 +140,6 @@ export class TeamsService {
       // Throw error if team with given invite token not found
       throw new NotFoundException('Team with given invite_token not found');
     }
-
-    teamMembers.team_name = temp.team_name;
-    let teamMemberIds = temp.UserInTeam.map((a) => a.user_id);
-    //get user/assessor being added to team and add to teamMemberIds
-    teamMemberIds = [...teamMemberIds, user.user_id];
-    teamMemberIds.sort((a, b) => a - b); // Sort ascending order
-
-    // Get team member usernames from team with team_member_ids from prisma
-    const teamMemberUsernames = await this.prisma.user
-      .findMany({
-        where: {
-          user_id: {
-            in: teamMemberIds,
-          },
-        },
-        select: {
-          username: true,
-          role: true,
-        },
-      })
-      .catch(() => {
-        throw new InternalServerErrorException();
-      });
-
-    if (teamMemberUsernames.length === 0) {
-      // Throw error if no members are associated to the member ids
-      throw new NotFoundException('No members are associated to the ids');
-    }
-
-    teamMembers.team_members = teamMemberUsernames;
 
     await this.prisma.userInTeam
       .create({
@@ -191,7 +152,17 @@ export class TeamsService {
         throw new InternalServerErrorException();
       });
 
-    return teamMembers;
+    // Response stored in teamMembers
+    return await this.findTeamMembers(temp.team_id).catch((error) => {
+      if (error === NotFoundException) {
+        throw new NotFoundException(
+          'Team with given team id not found or no \
+         members are associated to the team'
+        );
+      } else {
+        throw new InternalServerErrorException();
+      }
+    });
   }
 
   /**
