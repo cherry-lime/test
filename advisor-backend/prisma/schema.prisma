@@ -178,10 +178,11 @@ model CheckpointAndAnswersInAssessments {
   assessment_id Int
   checkpoint    Checkpoint @relation(fields: [checkpoint_id], references: [checkpoint_id])
   checkpoint_id Int
-  Answer        Answer     @relation(fields: [answer_id], references: [answer_id])
-  answer_id     Int
+  Answer        Answer?    @relation(fields: [answer_id], references: [answer_id])
+  answer_id     Int?
 
   @@id([assessment_id, checkpoint_id])
+  @@index([assessment_id])
 }
 
 model Feedback {
