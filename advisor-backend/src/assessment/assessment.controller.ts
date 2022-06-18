@@ -77,7 +77,7 @@ export class AssessmentController {
   @Get(':assessment_id')
   @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
-  findOne(@Param('template_id', ParseIntPipe) id: number) {
+  findOne(@Param('assessment_id', ParseIntPipe) id: number) {
     return this.assessmentService.findOne(id);
   }
 
@@ -180,7 +180,7 @@ export class AssessmentController {
 
     return this.checkpointService.getSavedCheckpoints(assessment);
   }
-  
+
   /**
    * [POST] /assessment/:id/feedback - Add feedback to assessment
    * @param id assessment_id
