@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   UseGuards,
   ForbiddenException,
+  Query,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -30,13 +31,16 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
+import { RecommendationDto } from '../feedback/dto/recommendation.dto';
+import { FeedbackService } from 'src/feedback/feedback.service';
 
 @ApiTags('assessment')
 @Controller('assessment')
 export class AssessmentController {
   constructor(
     private readonly assessmentService: AssessmentService,
-    private readonly checkpointService: CheckpointService
+    private readonly checkpointService: CheckpointService,
+    private readonly feedbackService: FeedbackService
   ) {}
 
   /**
@@ -196,5 +200,32 @@ export class AssessmentController {
     @Body() feedbackDto: FeedbackDto
   ) {
     return this.assessmentService.feedback(id, feedbackDto);
+  }
+
+  @Get(':assessment_id/feedback')
+  @ApiTags('feedback')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    description: 'Recommendations',
+    type: RecommendationDto,
+    isArray: true,
+  })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
+  async getRecommendations(
+    @Param('assessment_id', ParseIntPipe) assessment_id: number,
+    @Query('topic_id', ParseIntPipe) topic_id: number,
+    @AuthUser() user: User
+  ) {
+    // Check if user in assessment
+    const assessment = await this.assessmentService.userInAssessment(
+      assessment_id,
+      user
+    );
+
+    if (!assessment?.completed_at) {
+      throw new ForbiddenException();
+    }
+
+    return this.feedbackService.getRecommendations(assessment, topic_id);
   }
 }
