@@ -1,6 +1,6 @@
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import PageCard from "../PageCard";
-import testimageFigma from "../testimageFigma.png";
+import testimageFigma from "../Images/testimageFigma.png";
 
 export default function ProgressCard() {
   return (

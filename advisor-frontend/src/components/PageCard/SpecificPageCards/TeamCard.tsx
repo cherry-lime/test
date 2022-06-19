@@ -1,6 +1,6 @@
 import GroupsIcon from "@mui/icons-material/Groups";
 import PageCard from "../PageCard";
-import testimageFigma from "../testimageFigma.png";
+import testimageFigma from "../Images/testimageFigma.png";
 
 export default function TeamCard() {
   return (

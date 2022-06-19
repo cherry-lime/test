@@ -1,6 +1,6 @@
 import PersonIcon from "@mui/icons-material/Person";
 import PageCard from "../PageCard";
-import testimageFigma from "../testimageFigma.png";
+import individual from "../Images/individual.png";
 
 export default function IndividualCard() {
   return (
@@ -18,7 +18,8 @@ export default function IndividualCard() {
           }}
         />
       }
-      image={testimageFigma}
+      image={individual}
+      isImageRight
     />
   );
 }

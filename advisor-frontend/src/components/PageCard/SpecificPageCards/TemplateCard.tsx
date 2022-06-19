@@ -1,6 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import PageCard from "../PageCard";
-import testimageFigma from "../testimageFigma.png";
+import template from "../Images/template.png";
 
 export default function TemplateCard() {
   return (
@@ -18,7 +18,8 @@ export default function TemplateCard() {
           }}
         />
       }
-      image={testimageFigma}
+      image={template}
+      isImageLeft
     />
   );
 }

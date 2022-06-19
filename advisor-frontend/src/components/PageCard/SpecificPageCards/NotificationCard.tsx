@@ -1,6 +1,6 @@
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PageCard from "../PageCard";
-import testimageFigma from "../testimageFigma.png";
+import testimageFigma from "../Images/testimageFigma.png";
 
 export default function NotificationCard() {
   return (

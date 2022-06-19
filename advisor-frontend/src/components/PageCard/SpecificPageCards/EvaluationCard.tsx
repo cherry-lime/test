@@ -1,6 +1,6 @@
 import BarChartIcon from "@mui/icons-material/BarChart";
 import PageCard from "../PageCard";
-import testimageFigma from "../testimageFigma.png";
+import individualEvaluation from "../Images/individualEvaluation.png";
 
 export default function EvaluationCard() {
   return (
@@ -18,7 +18,7 @@ export default function EvaluationCard() {
           }}
         />
       }
-      image={testimageFigma}
+      image={individualEvaluation}
       isImageLeft
     />
   );
