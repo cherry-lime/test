@@ -46,3 +46,9 @@
 .header h1 {
   font-size: 400px;
 }
+
+a {
+  width: inherit;
+  display:inline-flex;
+  text-decoration: none;
+}
