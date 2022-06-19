@@ -5,7 +5,6 @@ import INGTheme from "../../../Theme";
 import AssessmentOngoingGrid from "../../../components/Grids/Specific/AssessmentOngoingGrid";
 import AssessmentCompletedGrid from "../../../components/Grids/Specific/AssessmentCompletedGrid";
 
-
 /**
  * Page with the list of self evaluations that belog to the user
  */
@@ -23,7 +22,6 @@ function ListOfSelfEvals() {
 
   return (
     <PageLayout title="Individual Evaluations" sidebarType={userTypes.USER}>
-    
       <strong>Ongoing Evaluations (Individual)</strong>
       <AssessmentOngoingGrid
         theme={INGTheme}
