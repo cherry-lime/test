@@ -2,7 +2,7 @@ import { Stack, createTheme } from "@mui/material";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import PageLayout from "./PageLayout";
 import userType from "../components/Sidebar/listUsersTypes";
-import testimageFigma from "../components/PageCard/testimageFigma.png";
+import testimageFigma from "../components/PageCard/Images/testimageFigma.png";
 import ButtonRegular from "../components/ButtonRegular/ButtonRegular";
 import ButtonInverted from "../components/ButtonInverted/ButtonInverted";
 import Checkpoint from "../components/Checkpoint/Checkpoint";

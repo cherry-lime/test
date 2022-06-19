@@ -23,7 +23,6 @@
   flex-grow: 1;
   border-radius: 20px;
   row-gap: 30px;
-
 }
 .body_footer {
   width: 96%;
@@ -50,7 +49,7 @@
   font-size: 400px;
 }
 a {
-  display: flex;
+  display: inline-flex;
   width: inherit;
   text-decoration: none;
 }
