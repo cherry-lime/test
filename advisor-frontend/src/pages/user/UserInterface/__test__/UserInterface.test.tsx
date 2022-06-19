@@ -10,7 +10,7 @@ test("app rendering/navigating from user interface to teams", async () => {
   );
   const button = screen.getByTestId("user");
   fireEvent.click(button);
-  expect(screen.getByText(/user Interface here/i)).toBeInTheDocument();
+  expect(screen.getByText(/Home User/i)).toBeInTheDocument();
 
   const buttonTeams = screen.getByTestId("user-teams");
   fireEvent.click(buttonTeams);
@@ -26,7 +26,7 @@ test("app rendering/navigating from user interface to self-evals", async () => {
   );
   const button = screen.getByTestId("user");
   fireEvent.click(button);
-  expect(screen.getByText(/user Interface here/i)).toBeInTheDocument();
+  expect(screen.getByText(/Home User/i)).toBeInTheDocument();
 
   const buttonEvals = screen.getByTestId("user-evals");
   fireEvent.click(buttonEvals);
