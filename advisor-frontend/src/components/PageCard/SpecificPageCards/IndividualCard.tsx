@@ -6,7 +6,7 @@ export default function IndividualCard() {
   return (
     <PageCard
       bodyText="View and start evaluations"
-      headerText="Indivduals"
+      headerText="Individuals"
       cardHeight="15vh"
       icon={
         <PersonIcon
