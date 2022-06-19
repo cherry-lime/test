@@ -1,6 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import PageCard from "../../../components/PageCard/PageCard";
 import userType from "../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../PageLayout";
 import IndividualCard from "../../../components/PageCard/SpecificPageCards/IndividualCard";
@@ -19,13 +17,13 @@ function AdminInterface() {
         <h2> Admin Interface </h2>
 
         <Link to="/admin/individuals" state={data} data-testid="individuals">
-          <IndividualCard/>
+          <IndividualCard />
         </Link>
 
         <br />
 
         <Link to="/admin/templates" state={data} data-testid="templates">
-          <TemplateCard/>
+          <TemplateCard />
         </Link>
       </PageLayout>
     </div>
