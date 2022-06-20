@@ -12,7 +12,6 @@ it("PageLayout rendering without crash", () => {
         text
       </PageLayout>
     </BrowserRouter>
-    
   );
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
 });

@@ -6,7 +6,11 @@ import userType from "../listUsersTypes";
 afterEach(cleanup);
 
 it("user sidebar rendering without crash", () => {
-  render(<BrowserRouter><Sidebar sidebarType={userType.USER} /></BrowserRouter>);
+  render(
+    <BrowserRouter>
+      <Sidebar sidebarType={userType.USER} />
+    </BrowserRouter>
+  );
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Evaluations");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Teams");
@@ -16,7 +20,11 @@ it("user sidebar rendering without crash", () => {
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
 it("assessor sidebar rendering without crash", () => {
-  render(<BrowserRouter><Sidebar sidebarType={userType.ASSESSOR} /></BrowserRouter>);
+  render(
+    <BrowserRouter>
+      <Sidebar sidebarType={userType.ASSESSOR} />
+    </BrowserRouter>
+  );
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
   expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Evaluations");
   expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Templates");
@@ -26,7 +34,11 @@ it("assessor sidebar rendering without crash", () => {
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
 it("admin sidebar rendering without crash", () => {
-  render(<BrowserRouter><Sidebar sidebarType={userType.ADMIN} /></BrowserRouter>);
+  render(
+    <BrowserRouter>
+      <Sidebar sidebarType={userType.ADMIN} />
+    </BrowserRouter>
+  );
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
   expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Evaluations");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Templates");
