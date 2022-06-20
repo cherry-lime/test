@@ -10,7 +10,10 @@ const GlobalStyles = createGlobalStyle`
   }
   .MuiOutlinedInput-input { 
     background-color: white;
-  },
+  }
+  p {
+    width: inherit;
+  }
 `;
 
 export default GlobalStyles;

@@ -11,7 +11,6 @@ function TextfieldEditWeight({
   theme: ThemeOptions;
   setWeight: (weight: number) => void;
 }) {
-
   const initialState = weightValue.toString();
   const [error, setError] = useState(false);
   const [value, setValue] = useState(initialState);
