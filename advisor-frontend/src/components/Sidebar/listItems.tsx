@@ -7,6 +7,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EditIcon from "@mui/icons-material/Edit";
+import { Link } from "react-router-dom";
 
 type SidebarListProps = {
   userType: Map<string, boolean>;
@@ -16,28 +17,37 @@ export default function SidebarList({ userType }: SidebarListProps) {
   return (
     <>
       {userType.get("home") && (
-        <ListItemButton>
-          <ListItemIcon>
-            <HomeIcon color="info" />
-          </ListItemIcon>
-          <ListItemText primary="Home" style={{ color: "background" }} />
-        </ListItemButton>
+        <Link to="/">
+          <ListItemButton>
+            <ListItemIcon>
+              <HomeIcon color="info" />
+            </ListItemIcon>
+            <ListItemText primary="Home" style={{ color: "background" }} />
+          </ListItemButton>
+        </Link>
       )}
       {userType.get("evaluation") && (
-        <ListItemButton>
-          <ListItemIcon>
-            <BarChartIcon color="info" />
-          </ListItemIcon>
-          <ListItemText primary="Evaluations" style={{ color: "background" }} />
-        </ListItemButton>
+        <Link to="/user/self_evaluations">
+          <ListItemButton>
+            <ListItemIcon>
+              <BarChartIcon color="info" />
+            </ListItemIcon>
+            <ListItemText
+              primary="Evaluations"
+              style={{ color: "background" }}
+            />
+          </ListItemButton>
+        </Link>
       )}
       {userType.get("teams") && (
-        <ListItemButton>
-          <ListItemIcon>
-            <GroupsIcon color="info" />
-          </ListItemIcon>
-          <ListItemText primary="Teams" style={{ color: "background" }} />
-        </ListItemButton>
+        <Link to="/teams">
+          <ListItemButton>
+            <ListItemIcon>
+              <GroupsIcon color="info" />
+            </ListItemIcon>
+            <ListItemText primary="Teams" style={{ color: "background" }} />
+          </ListItemButton>
+        </Link>
       )}
       {userType.get("template") && (
         <ListItemButton>
