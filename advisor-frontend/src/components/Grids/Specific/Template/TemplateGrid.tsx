@@ -1,4 +1,5 @@
 import * as React from "react";
+import { UseMutationResult } from "react-query";
 
 import {
   GridActionsCellItem,
@@ -22,7 +23,13 @@ import {
   usePatchTemplate,
   usePostTemplate,
 } from "./TemplateAPI";
-import { processRowUpdate } from "../helpers";
+import {
+  handleAdd,
+  handleDelete,
+  handleDuplicate,
+  handleInit,
+  processRowUpdate,
+} from "../handlersNew";
 
 type TemplateGridProps = {
   theme: Theme;
@@ -35,24 +42,29 @@ export default function TemplateGrid({
 }: TemplateGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
-  // Get and set initial rows
-  useGetTemplates(setRows, assessmentType);
+  // Template query
+  const { status, data, error } = useGetTemplates(assessmentType);
 
-  // Mutations
+  // Template mutations
   const patchTemplate = usePatchTemplate();
-  const postTemplate = usePostTemplate(setRows);
-  const deleteTemplate = useDeleteTemplate(setRows);
-  const duplicateTemplate = useDuplicateTemplate(setRows);
+  const postTemplate = usePostTemplate();
+  const deleteTemplate = useDeleteTemplate();
+  const duplicateTemplate = useDuplicateTemplate();
+
+  // Called when "status" of templates query is changed
+  React.useEffect(() => {
+    handleInit(setRows, status, data, error);
+  }, [status]);
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    async (newRow: Row, oldRow: Row) => {
-      const mutate = async (row: Row) => {
-        await patchTemplate.mutateAsync(row);
-      };
-
-      return processRowUpdate(setRows, newRow, oldRow, mutate);
-    },
+    async (newRow: Row, oldRow: Row) =>
+      processRowUpdate(
+        setRows,
+        patchTemplate as UseMutationResult,
+        newRow,
+        oldRow
+      ),
     []
   );
 
@@ -66,24 +78,36 @@ export default function TemplateGrid({
   );
 
   // Called when the "Delete" action is pressed in the menu
-  const handleDelete = React.useCallback(
+  const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      deleteTemplate.mutate(rowId as number);
+      handleDelete<number>(
+        setRows,
+        deleteTemplate as UseMutationResult,
+        rowId as number
+      );
     },
     []
   );
 
   // Called when the "Duplicate" action is pressed in the menu
-  const handleDuplicate = React.useCallback(
+  const handleDuplicateDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      duplicateTemplate.mutate(rowId as number);
+      handleDuplicate<number>(
+        setRows,
+        duplicateTemplate as UseMutationResult,
+        rowId as number
+      );
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
-  const handleAdd = React.useCallback(() => {
-    postTemplate.mutate(assessmentType);
+  const handleAddDecorator = React.useCallback(() => {
+    handleAdd<AssessmentType>(
+      setRows,
+      postTemplate as UseMutationResult,
+      assessmentType
+    );
   }, []);
 
   const columns = React.useMemo<GridColumns<GridRowModel>>(
@@ -119,19 +143,19 @@ export default function TemplateGrid({
           <GridActionsCellItem
             icon={<FileCopyIcon />}
             label="Duplicate"
-            onClick={handleDuplicate(params.id)}
+            onClick={handleDuplicateDecorator(params.id)}
             showInMenu
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDelete(params.id)}
+            onClick={handleDeleteDecorator(params.id)}
             showInMenu
           />,
         ],
       },
     ],
-    [handleVisit, handleDuplicate, handleDelete]
+    [handleVisit, handleDuplicateDecorator, handleDeleteDecorator]
   );
 
   return (
@@ -143,7 +167,7 @@ export default function TemplateGrid({
       hasToolbar
       add={{
         text: `CREATE NEW ${assessmentType} EVALUATION TEMPLATE`,
-        handler: handleAdd,
+        handler: handleAddDecorator,
       }}
     />
   );

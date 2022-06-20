@@ -1,8 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import axios from "axios";
-import { GridRowId, GridRowModel } from "@mui/x-data-grid";
+import { GridRowId } from "@mui/x-data-grid";
 import { AssessmentType } from "../../../../types/AssessmentType";
-import { addRow, deleteRow, initRows } from "../helpers";
 
 const API_URL = "https://tabackend.azurewebsites.net";
 
@@ -20,6 +19,7 @@ export type Template = {
 export type Row = {
   id: GridRowId;
   name: string;
+  description: string;
   templateType: AssessmentType;
   disabled: boolean;
   weightRangeMin: number;
@@ -39,7 +39,7 @@ function templateToRow(template: Template) {
     weightRangeMax: template.weight_range_max,
     scoreFormula: template.score_formula,
     includeNoAnswer: template.include_no_answer,
-  };
+  } as Row;
 }
 
 function rowToTemplate(row: Row) {
@@ -52,46 +52,31 @@ function rowToTemplate(row: Row) {
     weight_range_max: row.weightRangeMax,
     score_formula: row.scoreFormula,
     include_no_answer: row.includeNoAnswer,
-  };
+  } as Template;
 }
 
 // Get all templates from database
-export function useGetTemplates(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  assessmentType: AssessmentType
-) {
-  return useQuery(
-    ["GET", "/template", assessmentType],
-    async () => {
-      // Get response data from database
-      const { data } = await axios.get(`${API_URL}/template`);
+export function useGetTemplates(assessmentType: AssessmentType) {
+  return useQuery(["GET", "/template", assessmentType], async () => {
+    // Get response data from database
+    const { data } = await axios.get(`${API_URL}/template`);
 
-      // Convert data to rows
-      const rows = data.map((template: Template) => templateToRow(template));
+    // Filter data on type of the templates
+    const dataFiltered = data.filter(
+      (template: Template) => template.template_type === assessmentType
+    );
 
-      // Filter rows on type of the templates
-      const rowsFiltered = rows.filter(
-        (row: Row) => row.templateType === assessmentType
-      );
+    // Convert filtered data to rows
+    const rows = dataFiltered.map((template: Template) =>
+      templateToRow(template)
+    );
 
-      return rowsFiltered as Row[];
-    },
-    {
-      onSuccess: (rows) => {
-        // Initialize rows of the grid
-        initRows(setRows, rows);
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    }
-  );
+    return rows as Row[];
+  });
 }
 
 // Post template to database
-export function usePostTemplate(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>
-) {
+export function usePostTemplate() {
   return useMutation(
     ["POST", "/template"],
     async (templateType: AssessmentType) => {
@@ -102,14 +87,6 @@ export function usePostTemplate(
 
       // Convert data to row
       return templateToRow(data);
-    },
-    {
-      onSuccess: (row) => {
-        addRow(setRows, row);
-      },
-      onError: (error) => {
-        console.log(error);
-      },
     }
   );
 }
@@ -143,19 +120,12 @@ export function usePatchTemplate() {
 
       // Convert data to row
       return templateToRow(data);
-    },
-    {
-      onError: (error) => {
-        console.log(error);
-      },
     }
   );
 }
 
 // Delete template from database
-export function useDeleteTemplate(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>
-) {
+export function useDeleteTemplate() {
   return useMutation(
     ["DELETE", "/template", "/{template_id}"],
     async (templateId: number) => {
@@ -164,22 +134,12 @@ export function useDeleteTemplate(
 
       // Convert data to row
       return templateToRow(data);
-    },
-    {
-      onSuccess: (row) => {
-        deleteRow(setRows, row.id);
-      },
-      onError: (error) => {
-        console.log(error);
-      },
     }
   );
 }
 
 // Duplicate template to database
-export function useDuplicateTemplate(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>
-) {
+export function useDuplicateTemplate() {
   return useMutation(
     ["POST", "/template", "/{template_id}", "/clone"],
     async (templateId: number) => {
@@ -188,14 +148,6 @@ export function useDuplicateTemplate(
       );
 
       return templateToRow(data);
-    },
-    {
-      onSuccess: (row) => {
-        addRow(setRows, row);
-      },
-      onError: (error) => {
-        console.log(error);
-      },
     }
   );
 }
