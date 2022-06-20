@@ -8,6 +8,9 @@ const GlobalStyles = createGlobalStyle`
     text-align: left;
     margin-bottom: 0px;
   }
+  .MuiOutlinedInput-input { 
+    background-color: white;
+  },
 `;
 
 export default GlobalStyles;
