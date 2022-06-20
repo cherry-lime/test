@@ -90,6 +90,7 @@ export default function GenericGrid({
           width: "inherit",
           marginTop: "10px",
           marginBottom: "50px",
+          marginRight: "0px",
           borderRadius: "5px",
           backgroundColor: theme.palette.secondary.dark,
         }}

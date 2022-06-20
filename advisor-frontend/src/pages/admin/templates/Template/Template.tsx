@@ -42,13 +42,11 @@ function Template() {
 
         <h2> Areas </h2>
 
-        <div style={{ width: "inherit" }}>
-          <p style={{ margin: "0px" }}>
-            To view, edit, add, or delete subareas and checkpoints belonging to
-            an area, click on the arrow button.
-          </p>
-          <CategoryGrid theme={Theme} templateId={templateId} />
-        </div>
+        <p style={{ margin: "0px" }}>
+          To view, edit, add, or delete subareas and checkpoints belonging to an
+          area, click on the arrow button.
+        </p>
+        <CategoryGrid theme={Theme} templateId={templateId} />
 
         <h2>Topics </h2>
 

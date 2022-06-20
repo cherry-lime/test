@@ -6,6 +6,7 @@ const GlobalStyles = createGlobalStyle`
     color: ${Theme.palette.text.secondary};
     width: inherit;
     text-align: left;
+    margin-top: 10px;
     margin-bottom: 0px;
   }
   .MuiOutlinedInput-input { 
