@@ -1,14 +1,17 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { AssessmentType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { AssessmentScoreService } from './assessment-score.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { FeedbackDto } from './dto/feedback.dto';
+import { ScoreDto } from './dto/score.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
 @Injectable()
@@ -223,5 +226,64 @@ export class AssessmentService {
           throw new InternalServerErrorException();
         }
       });
+  }
+
+  /**
+   * Calculate score for assessment for all topics or for one specific topic
+   * @param assessment_id assessment_id
+   * @param topic_id topic_id
+   * @returns ScoreDto score data for all topics
+   * @throws NotFoundException if assessment not found
+   * @throws InternalServerErrorException
+   * @throws ForbiddenException if assessment type is INDIVIDUAL
+   * @throws BadRequestException if assessment is not completed
+   * @throws BadRequestException if no enabled maturities found associated to this template
+   * @throws BadRequestException if no enabled categories found associated to this template
+   * @throws BadRequestException if topic not found or not enabled for this template
+   * @throws BadRequestException if no enabled checkpoints found associated to this template
+   */
+  async getScore(assessment_id: number, topic_id: number) {
+    const score = await new AssessmentScoreService(this.prisma)
+      .getScore(assessment_id, topic_id)
+      .catch((error) => {
+        if (error instanceof NotFoundException) {
+          throw new NotFoundException('Assessment not found');
+        } else if (error instanceof ForbiddenException) {
+          throw new ForbiddenException(
+            'Individual assessment cannot be scored'
+          );
+        } else if (error instanceof BadRequestException) {
+          if (error.message === 'Assessment not completed') {
+            throw new BadRequestException('Assessment not completed');
+          } else if (
+            error.message ===
+            'No enabled maturities found associated to this template'
+          ) {
+            throw new BadRequestException(
+              'No enabled maturities found associated to this template'
+            );
+          } else if (
+            error.message ===
+            'No enabled categories found associated to this template'
+          ) {
+            throw new BadRequestException(
+              'No enabled categories found associated to this template'
+            );
+          } else if (error.message === 'Topic not found or not enabled') {
+            throw new BadRequestException('Topic not found or not enabled');
+          } else if (
+            error.message ===
+            'No enabled checkpoints found associated to this template'
+          ) {
+            throw new BadRequestException(
+              'No enabled checkpoints found associated to this template'
+            );
+          }
+        } else {
+          throw new InternalServerErrorException();
+        }
+      });
+
+    return score as number[][];
   }
 }

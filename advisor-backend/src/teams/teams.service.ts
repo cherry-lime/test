@@ -247,7 +247,6 @@ export class TeamsService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Team with given team id not found');
         } else {
-          console.log(error);
           throw new InternalServerErrorException();
         }
       });
