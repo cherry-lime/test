@@ -28,11 +28,15 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import { ScoreDto } from './dto/score.dto';
 import { ScorePerTopicDto } from './dto/score-per-topic.dto';
+import { AssessmentScoreService } from './assessment-score.service';
 
 @ApiTags('assessment')
 @Controller('assessment')
 export class AssessmentController {
-  constructor(private readonly assessmentService: AssessmentService) {}
+  constructor(
+    private readonly assessmentService: AssessmentService,
+    private readonly assessmentScoreService: AssessmentScoreService
+  ) {}
 
   /**
    * [POST] /assessment - create new assessment
@@ -162,7 +166,7 @@ export class AssessmentController {
     @Param('assessment_id', ParseIntPipe) id: number
   ): Promise<ScoreDto> {
     return {
-      scores: await this.assessmentService.getScore(id, null),
+      scores: await this.assessmentScoreService.getScore(id, null),
     } as ScoreDto;
   }
 
@@ -197,7 +201,7 @@ export class AssessmentController {
   ): Promise<ScorePerTopicDto> {
     return {
       topic_id: topicId,
-      scores: await this.assessmentService.getScore(id, topicId),
+      scores: await this.assessmentScoreService.getScore(id, topicId),
     } as ScorePerTopicDto;
   }
 }

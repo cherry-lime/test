@@ -1,12 +1,14 @@
 import {
   BadRequestException,
   ForbiddenException,
+  Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { AssessmentType } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
+@Injectable()
 export class AssessmentScoreService {
   constructor(private readonly prisma: PrismaService) {}
 
