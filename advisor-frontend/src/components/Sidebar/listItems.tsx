@@ -50,12 +50,14 @@ export default function SidebarList({ userType }: SidebarListProps) {
         </Link>
       )}
       {userType.get("template") && (
-        <ListItemButton>
-          <ListItemIcon>
-            <EditIcon color="info" style={{ color: "background" }} />
-          </ListItemIcon>
-          <ListItemText primary="Templates" />
-        </ListItemButton>
+        <Link to="/admin/templates">
+          <ListItemButton>
+            <ListItemIcon>
+              <EditIcon color="info" />
+            </ListItemIcon>
+            <ListItemText primary="Templates" style={{ color: "background" }} />
+          </ListItemButton>
+        </Link>
       )}
       {userType.get("settings") && (
         <ListItemButton>
