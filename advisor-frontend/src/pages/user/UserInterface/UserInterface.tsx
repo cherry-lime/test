@@ -14,29 +14,25 @@ import { RootState } from "../../../app/store";
  * Home page visible to anyone with the user role
  */
 function UserInterface() {
-  const location = useLocation();
-  const data = location.state;
-  const {userID} = useSelector((state: RootState) => state.userData);
-  const pageTitle = `Home ${  userID  }`;
+  const { userID } = useSelector((state: RootState) => state.userData);
+  const pageTitle = `Home ${userID}`;
 
   return (
-    <PageLayout title={pageTitle} footer sidebarType={userTypes.USER }>
-      <Link to="/user/self_evaluations" state={data} data-testid="user-evals">
+    <PageLayout title={pageTitle} footer sidebarType={userTypes.USER}>
+      <Link to="/user/self_evaluations" data-testid="user-evals">
         <EvaluationCard />
       </Link>
-      <Link to="/teams" state={data} data-testid="user-teams">
+      <Link to="/teams" data-testid="user-teams">
         <TeamCard />
       </Link>
       <Link
         to="/user/self_evaluations/:assessmentId"
-        state={data}
         data-testid="user-progress"
       >
         <ProgressCard />
       </Link>
       <Link
         to="/user/self_evaluations/:assessmentId"
-        state={data}
         data-testid="user-progress"
       >
         <NotificationCard />
@@ -44,7 +40,6 @@ function UserInterface() {
 
       <Link
         to="/user/self_evaluations/:assessmentId"
-        state={data}
         data-testid="user-progress"
       >
         <IndividualCard />{" "}
@@ -52,7 +47,6 @@ function UserInterface() {
 
       <Link
         to="/user/self_evaluations/:assessmentId"
-        state={data}
         data-testid="user-progress"
       >
         <TemplateCard />
