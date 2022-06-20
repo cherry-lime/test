@@ -1,29 +1,37 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import userTypes from "../components/Sidebar/listUsersTypes";
 
+/**
+ * Creates an interface to set the global state variables
+ */
 export interface UserDataState {
   value: number;
   userID: string;
-  userRole: string
+  userRole: string;
 }
-
+/**
+ * Initializes the global state variables
+ */
 const initialState: UserDataState = {
   value: 0,
   userID: "0000",
-  userRole: "user"
+  userRole: "user",
 };
 
+/**
+ * Redux Toolkit based state manager that handles the state manipulation
+ */
 export const userDataSlice = createSlice({
   name: "userData",
   initialState,
   reducers: {
-
+    // Sets the userID in the global state variable with the supplied variable
     setUserID: (state, action: PayloadAction<string>) => {
       state.userID = action.payload;
     },
+    // Sets the current userRole in the global state variable with the supplied variable
     setUserRole: (state, action: PayloadAction<string>) => {
       state.userRole = action.payload;
-    }
+    },
   },
 });
 
