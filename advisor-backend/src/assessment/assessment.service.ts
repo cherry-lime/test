@@ -11,7 +11,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AssessmentScoreService } from './assessment-score.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { FeedbackDto } from './dto/feedback.dto';
-import { ScoreDto } from './dto/score.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
 @Injectable()
