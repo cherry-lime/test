@@ -2,6 +2,13 @@ import { TextField, ThemeOptions, ThemeProvider } from "@mui/material";
 import { useState } from "react";
 import PropTypes from "prop-types";
 
+/**
+ * An editable textfield made specifically for weight factors
+ * It accepts only integers values and gives errors for non-integers and empty value
+ * @param weightValue current weight value
+ * @param setWeight function to set the weight
+ * @param theme inherited
+ */
 function TextfieldEditWeight({
   weightValue,
   setWeight,

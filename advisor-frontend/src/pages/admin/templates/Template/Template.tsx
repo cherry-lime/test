@@ -7,7 +7,7 @@ import MaturityGrid from "../../../../components/Grids/Specific/MaturityGrid";
 import TopicGrid from "../../../../components/Grids/Specific/TopicGrid";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import TextfieldEdit from "../../../../components/TextfieldEdit/TextfieldEdit";
-import TextfieldEditWeight from "../../../../components/TextEditWeight/TextfieldEditWeight";
+import TextfieldEditWeight from "../../../../components/TextfieldEditWeight/TextfieldEditWeight";
 import Theme from "../../../../Theme";
 import PageLayout from "../../../PageLayout";
 
