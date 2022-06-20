@@ -1,5 +1,6 @@
 import * as React from "react";
 import { BlockPicker, ColorResult } from "react-color";
+import { Link } from "react-router-dom";
 
 import {
   GridActionsCellItem,
@@ -54,7 +55,7 @@ const getDefaultRow = (rows: Row[]) => {
 
 type CategoryGridProps = {
   theme: Theme;
-  templateId: number;
+  templateId: string | undefined;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -122,15 +123,6 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
 
     handleColorDecorator(handleAPI, setRows, row, color);
   }, []);
-
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by routing
-      window.location.href = `http://google.com/search?q=${rowId}`;
-    },
-    []
-  );
 
   // Called when the "Delete" action is pressed in the menu
   const handleDelete = React.useCallback(
@@ -250,11 +242,12 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
           <GridActionsCellItem
             icon={
               <Tooltip title="Visit">
-                <ArrowForwardIcon />
+                <Link to={`/admin/templates/${templateId}/${params.id}`}>
+                  <ArrowForwardIcon />
+                </Link>
               </Tooltip>
             }
             label="Visit"
-            onClick={handleVisit(params.id)}
           />,
           <GridActionsCellItem
             icon={<FileCopyIcon />}
@@ -276,7 +269,6 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       handleDownward,
       preProcessEditOrder,
       handleColor,
-      handleVisit,
       handleDuplicate,
       handleDelete,
     ]

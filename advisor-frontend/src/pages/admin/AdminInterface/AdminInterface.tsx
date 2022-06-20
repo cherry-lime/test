@@ -13,9 +13,7 @@ function AdminInterface() {
 
   return (
     <div>
-      <PageLayout title="Home" footer sidebarType={userType.ADMIN}>
-        <h2> Admin Interface </h2>
-
+      <PageLayout title="Admin Home" footer sidebarType={userType.ADMIN}>
         <Link to="/admin/individuals" state={data} data-testid="individuals">
           <IndividualCard />
         </Link>

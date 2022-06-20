@@ -122,7 +122,10 @@ export default function TemplateGrid({
           <GridActionsCellItem
             icon={
               <Tooltip title="Visit">
-                <Link to={`/admin/templates/${params.id}`}>
+                <Link
+                  to={`/admin/templates/${params.id}`}
+                  data-testid={`template-${params.id}`}
+                >
                   <ArrowForwardIcon />
                 </Link>
               </Tooltip>

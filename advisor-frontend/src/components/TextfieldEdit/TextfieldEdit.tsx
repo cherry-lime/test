@@ -25,7 +25,7 @@ function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
       <TextField
         sx={{
           backgroundColor: "white",
-          width: "50ch",
+          width: "inherit",
         }}
         variant="outlined"
         multiline

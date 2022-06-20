@@ -1,38 +1,57 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import CategoryGrid from "../../../../components/Grids/Specific/CategoryGrid";
+import userType from "../../../../components/Sidebar/listUsersTypes";
+import TextfieldEdit from "../../../../components/TextfieldEdit/TextfieldEdit";
+import Theme from "../../../../Theme";
+import PageLayout from "../../../PageLayout";
 
 /**
  * Page with details regarding a certain template
  * This should only be accessible to admins
  */
 function Template() {
-  const location = useLocation();
-  const data = location.state;
   const { templateId } = useParams();
-  const areaIds = [99, 88, 15];
+  const templateName = "Random";
 
   return (
     <div>
-      <p> {data} view </p>
-      <Link to="/admin/templates" state={data}>
-        {" "}
-        Go Back to List of Templates{" "}
-      </Link>
+      <PageLayout
+        title={`Template "${templateName}"`}
+        footer
+        sidebarType={userType.ADMIN}
+      >
+        <h2> Feedback Textbox </h2>
 
-      <h2> Template options for template id {templateId} </h2>
+        <TextfieldEdit theme={Theme} text="Get editable feedback text" />
 
-      {areaIds.map((areaId) => (
-        <div key={`templ-${areaId}`}>
-          <Link
-            to={`/admin/templates/${templateId}/${areaId}`}
-            state={data}
-            data-testid={`template-${templateId}-a-${areaId}`}
-          >
-            {" "}
-            Area with id {areaId}{" "}
-          </Link>
-          <br />
-        </div>
-      ))}
+        <h2> Areas </h2>
+
+        <CategoryGrid theme={Theme} templateId={templateId} />
+
+        <h2>Topics </h2>
+
+        <h2> Maturity Levels </h2>
+
+        <h2> Score Formula </h2>
+
+        <h2> Weight Range </h2>
+
+        <h2> Answer Type </h2>
+
+        {/* {areaIds.map((areaId) => (
+          <div key={`templ-${areaId}`}>
+            <Link
+              to={`/admin/templates/${templateId}/${areaId}`}
+              state={data}
+              data-testid={`template-${templateId}-a-${areaId}`}
+            >
+              {" "}
+              Area with id {areaId}{" "}
+            </Link>
+            <br />
+          </div>
+        ))} */}
+      </PageLayout>
     </div>
   );
 }

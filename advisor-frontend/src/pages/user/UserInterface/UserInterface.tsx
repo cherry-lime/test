@@ -16,7 +16,7 @@ function UserInterface() {
   const data = location.state;
 
   return (
-    <PageLayout title="Home User" footer sidebarType={userTypes.USER}>
+    <PageLayout title="User Home" footer sidebarType={userTypes.USER}>
       <Link to="/user/self_evaluations" state={data} data-testid="user-evals">
         <EvaluationCard />
       </Link>
