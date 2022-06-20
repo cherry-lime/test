@@ -1,4 +1,6 @@
 import { useParams } from "react-router-dom";
+import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { useCallback, useState } from "react";
 import AnswerTypeGrid from "../../../../components/Grids/Specific/AnswerTypeGrid";
 import CategoryGrid from "../../../../components/Grids/Specific/CategoryGrid";
 import MaturityGrid from "../../../../components/Grids/Specific/MaturityGrid";
@@ -16,6 +18,17 @@ import PageLayout from "../../../PageLayout";
 function Template() {
   const { templateId } = useParams();
   const templateName = "Random";
+  const [minWeight, setMinWeight] = useState(0);
+  const [maxWeight, setMaxWeight] = useState(100);
+
+  const [allowNa, setAllowNa] = useState(true);
+
+  const handleAllowNa = useCallback(
+    (event) => {
+      setAllowNa(event.target.value);
+    },
+    [allowNa]
+  );
 
   return (
     <div>
@@ -52,11 +65,45 @@ function Template() {
         >
           <div>Start</div>
           <div>End</div>
-          <TextfieldEditWeight theme={Theme} weightValue={0} />
-          <TextfieldEditWeight theme={Theme} weightValue={100} />
+          <TextfieldEditWeight
+            theme={Theme}
+            weightValue={minWeight}
+            setWeight={setMinWeight}
+          />
+          <TextfieldEditWeight
+            theme={Theme}
+            weightValue={maxWeight}
+            setWeight={setMaxWeight}
+          />
         </div>
         <h2> Answer Type </h2>
 
+        <div style={{ width: "inherit" }}>
+          Include N/A
+          <RadioGroup
+            sx={{
+              width: "inherit",
+              marginTop: "5px",
+            }}
+            name="allowna"
+            aria-labelledby="allowna-checkpoints"
+            value={allowNa}
+            onClick={handleAllowNa}
+            row
+          >
+            <FormControlLabel
+              control={<Radio color="primary" />}
+              label="Yes"
+              value
+            />
+
+            <FormControlLabel
+              control={<Radio color="primary" />}
+              label="No"
+              value={false}
+            />
+          </RadioGroup>
+        </div>
         <AnswerTypeGrid theme={Theme} templateId={templateId} />
 
         {/* {areaIds.map((areaId) => (

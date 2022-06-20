@@ -12,10 +12,12 @@ text can be edited, after selection
 */
 function TextfieldEditWeight({
   weightValue,
+  setWeight,
   theme,
 }: {
   weightValue: number;
   theme: ThemeOptions;
+  setWeight: (weight: number) => void;
 }) {
   /*
   initial value of the textfield is set to the bodytext passed as parameter
@@ -34,6 +36,8 @@ function TextfieldEditWeight({
       if (Number.isInteger(newValue)) {
         setError(false);
         setValue(newValue.toString());
+        // changes the weight value inherited
+        setWeight(newValue);
       }
     }
   };
