@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  Assessment,
-  Checkpoint,
-  CheckpointAndAnswersInAssessments,
-} from '@prisma/client';
+import { Assessment, CheckpointAndAnswersInAssessments } from '@prisma/client';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { PrismaService } from '../prisma/prisma.service';
