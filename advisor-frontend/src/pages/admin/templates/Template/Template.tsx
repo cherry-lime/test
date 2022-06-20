@@ -5,6 +5,7 @@ import MaturityGrid from "../../../../components/Grids/Specific/MaturityGrid";
 import TopicGrid from "../../../../components/Grids/Specific/TopicGrid";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import TextfieldEdit from "../../../../components/TextfieldEdit/TextfieldEdit";
+import TextfieldEditWeight from "../../../../components/TextfieldEdit/TextfieldEditWeight";
 import Theme from "../../../../Theme";
 import PageLayout from "../../../PageLayout";
 
@@ -41,7 +42,19 @@ function Template() {
         <h2> Score Formula </h2>
 
         <h2> Weight Range </h2>
-
+        <div
+          style={{
+            width: "inherit",
+            display: "inline-grid",
+            gridTemplateColumns: "repeat(2, 250px [col-start])",
+            rowGap: "10px",
+          }}
+        >
+          <div>Start</div>
+          <div>End</div>
+          <TextfieldEditWeight theme={Theme} weightValue={0} />
+          <TextfieldEditWeight theme={Theme} weightValue={100} />
+        </div>
         <h2> Answer Type </h2>
 
         <AnswerTypeGrid theme={Theme} templateId={templateId} />

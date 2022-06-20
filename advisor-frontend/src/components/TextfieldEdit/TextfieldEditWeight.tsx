@@ -43,6 +43,7 @@ function TextfieldEditWeight({
         type="number"
         sx={{
           width: "160px",
+          position: "relative",
         }}
         variant="outlined"
         label={error ? "Error" : ""}
