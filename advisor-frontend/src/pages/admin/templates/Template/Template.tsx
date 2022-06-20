@@ -17,7 +17,6 @@ function Template() {
     <div>
       <PageLayout
         title={`Template "${templateName}"`}
-        footer
         sidebarType={userType.ADMIN}
       >
         <h2> Feedback Textbox </h2>
