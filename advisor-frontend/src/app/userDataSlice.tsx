@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface CounterState {
   value: number;
   userID: string;
+  userRole: string
 }
 
 const initialState: CounterState = {
   value: 0,
   userID: "0000",
+  userRole: "ADMIN"
 };
 
 export const counterSlice = createSlice({

@@ -8,11 +8,12 @@ import { RootState } from "./app/store";
 import { setUserID } from "./app/userDataSlice";
 
 function UserInterface() {
-  const { userID } = useSelector((state: RootState) => state.userData);
+  const { userID, userRole } = useSelector((state: RootState) => state.userData);
   const dispatch = useDispatch();
   return (
     <div className="App-header">
       <h1>This is the home page with {userID}</h1>
+      <h2> I am {userRole}</h2>
       Hello World
       <Greetings name="This is a test to test a component" />
       <ExampleButton name="Buttontext" />
