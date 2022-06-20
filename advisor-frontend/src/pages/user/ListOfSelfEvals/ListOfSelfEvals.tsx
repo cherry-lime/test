@@ -1,10 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
+import { Grid } from "@mui/material";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import INGTheme from "../../../Theme";
 import AssessmentOngoingGrid from "../../../components/Grids/Specific/AssessmentOngoingGrid";
 import AssessmentCompletedGrid from "../../../components/Grids/Specific/AssessmentCompletedGrid";
-import { Grid } from "@mui/material";
 
 /**
  * Page with the list of self evaluations that belog to the user
