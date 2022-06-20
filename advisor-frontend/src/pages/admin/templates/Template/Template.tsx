@@ -106,19 +106,6 @@ function Template() {
         </div>
         <AnswerTypeGrid theme={Theme} templateId={templateId} />
 
-        {/* {areaIds.map((areaId) => (
-          <div key={`templ-${areaId}`}>
-            <Link
-              to={`/admin/templates/${templateId}/${areaId}`}
-              state={data}
-              data-testid={`template-${templateId}-a-${areaId}`}
-            >
-              {" "}
-              Area with id {areaId}{" "}
-            </Link>
-            <br />
-          </div>
-        ))} */}
       </PageLayout>
     </div>
   );
