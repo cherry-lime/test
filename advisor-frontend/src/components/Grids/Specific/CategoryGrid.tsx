@@ -243,7 +243,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
             icon={
               <Tooltip title="Visit">
                 <Link to={`/admin/templates/${templateId}/${params.id}`}>
-                  <ArrowForwardIcon />
+                  <ArrowForwardIcon className="arrowIcon" />
                 </Link>
               </Tooltip>
             }

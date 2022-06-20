@@ -14,6 +14,9 @@ const GlobalStyles = createGlobalStyle`
   p {
     width: inherit;
   }
+  .arrowIcon {
+    color: ${Theme.palette.primary.main};
+  }
 `;
 
 export default GlobalStyles;

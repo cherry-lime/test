@@ -99,7 +99,7 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
             icon={
               <Tooltip title="Visit">
                 <Link to={`/teams/${params.id}`}>
-                  <ArrowForwardIcon />
+                  <ArrowForwardIcon className="arrowIcon" />
                 </Link>
               </Tooltip>
             }

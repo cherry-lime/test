@@ -126,7 +126,7 @@ export default function TemplateGrid({
                   to={`/admin/templates/${params.id}`}
                   data-testid={`template-${params.id}`}
                 >
-                  <ArrowForwardIcon />
+                  <ArrowForwardIcon className="arrowIcon" />
                 </Link>
               </Tooltip>
             }
