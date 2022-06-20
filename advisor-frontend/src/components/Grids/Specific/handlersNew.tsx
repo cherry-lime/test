@@ -21,7 +21,6 @@ export function handleInit(
       break;
     case "success":
       if (data) {
-        console.log(data);
         initRows(setRows, data);
       }
       break;

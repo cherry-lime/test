@@ -1,3 +1,7 @@
+import * as React from "react";
+import { useMutation } from "react-query";
+import axios from "axios";
+
 import TeamGrid from "./Team/TeamGrid";
 import MemberGrid from "./Member/MemberGrid";
 import AssessmentOngoingGrid from "./Assessment/AssessmentOngoing/AssessmentOngoingGrid";
@@ -13,7 +17,28 @@ import SubareaGrid from "./Subarea/SubareaGrid";
 import CheckpointGrid from "./Checkpoint/CheckpointGrid";
 import INGTheme from "../../../Theme";
 
+const API_URL = "https://tabackend.azurewebsites.net";
+
 export default function AllGrid() {
+  const login = useMutation(
+    ["Login Admin"],
+    () =>
+      axios.post(`${API_URL}/auth/login`, {
+        username: "usual_recognize",
+        password: "25c62d48-9178-48a8-97d5-5b182b1023dc",
+      }),
+    {
+      onSuccess: (data: any) => {
+        console.log(data);
+      },
+      onError: (error: any) => {
+        console.log(error);
+      },
+    }
+  );
+
+  login.mutate();
+
   const userId = 0;
   const userRole = "ASSESSOR";
   const teamId = 0;
