@@ -10,7 +10,7 @@ import TemplateGrid from "../../../../components/Grids/Specific/TemplateGrid";
 function ListOfTemplates() {
   return (
     <div>
-      <PageLayout title="Templates" footer sidebarType={userType.ADMIN}>
+      <PageLayout title="Templates" sidebarType={userType.ADMIN}>
         <h2>Individual Templates</h2>
         <TemplateGrid theme={Theme} assessmentType="INDIVIDUAL" />
         <h2>Team Templates</h2>

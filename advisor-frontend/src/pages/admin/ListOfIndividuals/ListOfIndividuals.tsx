@@ -10,7 +10,7 @@ import Theme from "../../../Theme";
 function ListOfIndividuals() {
   return (
     <div>
-      <PageLayout title="Individuals" footer sidebarType={userType.ADMIN}>
+      <PageLayout title="Individuals" sidebarType={userType.ADMIN}>
         <IndividualGrid theme={Theme} />
       </PageLayout>
     </div>
