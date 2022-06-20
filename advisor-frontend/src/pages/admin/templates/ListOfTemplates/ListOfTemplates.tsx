@@ -34,7 +34,6 @@ function ListOfTemplates() {
       <PageLayout title="Templates" sidebarType={userType.ADMIN}>
         <h2>Individual Templates</h2>
         <p style={{ marginBottom: "0px" }}>
-          {" "}
           Active template for individual evaluations:
         </p>
         <FormControl sx={{ width: "inherit" }}>
