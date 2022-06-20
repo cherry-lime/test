@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import EvaluationCard from "../../../components/PageCard/SpecificPageCards/EvaluationCard";
@@ -7,6 +8,7 @@ import ProgressCard from "../../../components/PageCard/SpecificPageCards/Progres
 import NotificationCard from "../../../components/PageCard/SpecificPageCards/NotificationCard";
 import IndividualCard from "../../../components/PageCard/SpecificPageCards/IndividualCard";
 import TemplateCard from "../../../components/PageCard/SpecificPageCards/TemplateCard";
+import { RootState } from "../../../app/store";
 
 /**
  * Home page visible to anyone with the user role
@@ -14,9 +16,11 @@ import TemplateCard from "../../../components/PageCard/SpecificPageCards/Templat
 function UserInterface() {
   const location = useLocation();
   const data = location.state;
+  const {userID} = useSelector((state: RootState) => state.userData);
+  const pageTitle = `Home ${  userID  }`;
 
   return (
-    <PageLayout title="Home User" footer sidebarType={userTypes.USER}>
+    <PageLayout title={pageTitle} footer sidebarType={userTypes.USER }>
       <Link to="/user/self_evaluations" state={data} data-testid="user-evals">
         <EvaluationCard />
       </Link>

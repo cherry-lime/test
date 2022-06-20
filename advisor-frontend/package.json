@@ -58,6 +58,7 @@
   "devDependencies": {
     "@types/react": "^17.0.45",
     "@types/react-color": "^3.0.6",
+    "@types/react-redux": "^7.1.24",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "c8": "^7.11.3",
