@@ -1,11 +1,12 @@
 import { render, cleanup, screen, fireEvent } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import userType from "../listUsersTypes";
 
 afterEach(cleanup);
 
 it("user sidebar rendering without crash", () => {
-  render(<Sidebar sidebarType={userType.USER} />);
+  render(<BrowserRouter><Sidebar sidebarType={userType.USER} /></BrowserRouter>);
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Evaluations");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Teams");
@@ -15,7 +16,7 @@ it("user sidebar rendering without crash", () => {
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
 it("assessor sidebar rendering without crash", () => {
-  render(<Sidebar sidebarType={userType.ASSESSOR} />);
+  render(<BrowserRouter><Sidebar sidebarType={userType.ASSESSOR} /></BrowserRouter>);
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
   expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Evaluations");
   expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Templates");
@@ -25,7 +26,7 @@ it("assessor sidebar rendering without crash", () => {
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
 it("admin sidebar rendering without crash", () => {
-  render(<Sidebar sidebarType={userType.ADMIN} />);
+  render(<BrowserRouter><Sidebar sidebarType={userType.ADMIN} /></BrowserRouter>);
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
   expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Evaluations");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Templates");
