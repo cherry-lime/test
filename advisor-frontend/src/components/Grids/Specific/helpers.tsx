@@ -5,11 +5,6 @@ import {
   GridRowId,
   GridRowModel,
 } from "@mui/x-data-grid";
-import { UseMutationResult } from "react-query";
-import { AxiosResponse } from "axios";
-
-// Generate new id based on time
-const generateId = () => Date.now();
 
 export function initializeRows(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
