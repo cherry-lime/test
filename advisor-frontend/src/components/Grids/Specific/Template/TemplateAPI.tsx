@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from "react-query";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { GridRowId, GridRowModel } from "@mui/x-data-grid";
 import { AssessmentType } from "../../../../types/AssessmentType";
 import { addRow, deleteRow, initRows } from "../helpers";
@@ -20,7 +20,7 @@ export type Template = {
 export type Row = {
   id: GridRowId;
   name: string;
-  type: AssessmentType;
+  templateType: AssessmentType;
   disabled: boolean;
   weightRangeMin: number;
   weightRangeMax: number;
@@ -33,7 +33,7 @@ function templateToRow(template: Template) {
     id: template.template_id,
     name: template.template_name,
     description: "Description",
-    type: template.template_type,
+    templateType: template.template_type,
     disabled: template.disabled,
     weightRangeMin: template.weight_range_min,
     weightRangeMax: template.weight_range_max,
@@ -46,7 +46,7 @@ function rowToTemplate(row: Row) {
   return {
     template_id: row.id,
     template_name: row.name,
-    template_type: row.type,
+    template_type: row.templateType,
     disabled: row.disabled,
     weight_range_min: row.weightRangeMin,
     weight_range_max: row.weightRangeMax,
@@ -61,24 +61,28 @@ export function useGetTemplates(
   assessmentType: AssessmentType
 ) {
   return useQuery(
-    ["GET", "/template"],
+    ["GET", "/template", assessmentType],
     async () => {
+      // Get response data from database
       const { data } = await axios.get(`${API_URL}/template`);
-      return data as Template[];
+
+      // Convert data to rows
+      const rows = data.map((template: Template) => templateToRow(template));
+
+      // Filter rows on type of the templates
+      const rowsFiltered = rows.filter(
+        (row: Row) => row.templateType === assessmentType
+      );
+
+      return rowsFiltered as Row[];
     },
     {
-      onSuccess: (data) => {
-        // Filter data by template type and convert to expected format
-        const dataFiltered = data.filter(
-          (template) => template.template_type === assessmentType
-        );
-        const rows = dataFiltered.map((template) => templateToRow(template));
-
+      onSuccess: (rows) => {
         // Initialize rows of the grid
         initRows(setRows, rows);
       },
       onError: (error) => {
-        //
+        console.log(error);
       },
     }
   );
@@ -88,15 +92,19 @@ export function useGetTemplates(
 export function usePostTemplate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>
 ) {
-  return useMutation<AxiosResponse, unknown, AssessmentType>(
+  return useMutation(
     ["POST", "/template"],
-    (templateType: AssessmentType) =>
-      axios.post(`${API_URL}/template`, {
+    async (templateType: AssessmentType) => {
+      // Get response data from database
+      const { data } = await axios.post(`${API_URL}/template`, {
         template_type: templateType,
-      }),
+      });
+
+      // Convert data to row
+      return templateToRow(data);
+    },
     {
-      onSuccess: (res) => {
-        const row = templateToRow(res.data);
+      onSuccess: (row) => {
         addRow(setRows, row);
       },
       onError: (error) => {
@@ -108,10 +116,12 @@ export function usePostTemplate(
 
 // Get template with id from database
 export function useGetTemplate() {
-  return useQuery<Template>(
+  return useQuery(
     ["GET", "/template", "/{template_id}"],
     async (templateId) => {
+      // Get data from database
       const { data } = await axios.get(`${API_URL}/template/${templateId}`);
+
       return data as Template;
     }
   );
@@ -121,12 +131,18 @@ export function useGetTemplate() {
 export function usePatchTemplate() {
   return useMutation(
     ["PATCH", "/template", "/{template_id}"],
-    (row: Row) => {
+    async (row: Row) => {
+      // Convert row to template
       const template = rowToTemplate(row);
-      return axios.patch(
+
+      // Get response data from database
+      const { data } = await axios.patch(
         `${API_URL}/template/${template.template_id}`,
         template
       );
+
+      // Convert data to row
+      return templateToRow(data);
     },
     {
       onError: (error) => {
@@ -140,12 +156,18 @@ export function usePatchTemplate() {
 export function useDeleteTemplate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>
 ) {
-  return useMutation<AxiosResponse, unknown, number>(
+  return useMutation(
     ["DELETE", "/template", "/{template_id}"],
-    (templateId: number) => axios.delete(`${API_URL}/template/${templateId}`),
+    async (templateId: number) => {
+      // Get response data from database
+      const { data } = await axios.delete(`${API_URL}/template/${templateId}`);
+
+      // Convert data to row
+      return templateToRow(data);
+    },
     {
-      onSuccess: (res) => {
-        deleteRow(setRows, res.data.template_id);
+      onSuccess: (row) => {
+        deleteRow(setRows, row.id);
       },
       onError: (error) => {
         console.log(error);
@@ -158,13 +180,17 @@ export function useDeleteTemplate(
 export function useDuplicateTemplate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>
 ) {
-  return useMutation<AxiosResponse, unknown, number>(
+  return useMutation(
     ["POST", "/template", "/{template_id}", "/clone"],
-    (templateId: number) =>
-      axios.post(`${API_URL}/template/${templateId}/clone`),
+    async (templateId: number) => {
+      const { data } = await axios.post(
+        `${API_URL}/template/${templateId}/clone`
+      );
+
+      return templateToRow(data);
+    },
     {
-      onSuccess: (res) => {
-        const row = templateToRow(res.data);
+      onSuccess: (row) => {
         addRow(setRows, row);
       },
       onError: (error) => {
