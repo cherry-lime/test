@@ -1,5 +1,8 @@
 import { useParams } from "react-router-dom";
+import AnswerTypeGrid from "../../../../components/Grids/Specific/AnswerTypeGrid";
 import CategoryGrid from "../../../../components/Grids/Specific/CategoryGrid";
+import MaturityGrid from "../../../../components/Grids/Specific/MaturityGrid";
+import TopicGrid from "../../../../components/Grids/Specific/TopicGrid";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import TextfieldEdit from "../../../../components/TextfieldEdit/TextfieldEdit";
 import Theme from "../../../../Theme";
@@ -29,13 +32,19 @@ function Template() {
 
         <h2>Topics </h2>
 
+        <TopicGrid theme={Theme} templateId={templateId} />
+
         <h2> Maturity Levels </h2>
+
+        <MaturityGrid theme={Theme} templateId={templateId} />
 
         <h2> Score Formula </h2>
 
         <h2> Weight Range </h2>
 
         <h2> Answer Type </h2>
+
+        <AnswerTypeGrid theme={Theme} templateId={templateId} />
 
         {/* {areaIds.map((areaId) => (
           <div key={`templ-${areaId}`}>
