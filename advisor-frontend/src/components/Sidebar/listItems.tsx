@@ -8,7 +8,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EditIcon from "@mui/icons-material/Edit";
 import { useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { RootState } from "../../app/store";
 
 type SidebarListProps = {
@@ -20,12 +20,12 @@ export default function SidebarList({ userType }: SidebarListProps) {
   return (
     <>
       {userType.get("home") && (
-          <ListItemButton component={Link} to={`/${userRole}`}>
-            <ListItemIcon>
-              <HomeIcon color="info" />
-            </ListItemIcon>
-            <ListItemText primary="Home" style={{ color: "background" }} />
-          </ListItemButton>
+        <ListItemButton component={Link} to={`/${userRole}`}>
+          <ListItemIcon>
+            <HomeIcon color="info" />
+          </ListItemIcon>
+          <ListItemText primary="Home" style={{ color: "background" }} />
+        </ListItemButton>
       )}
       {userType.get("evaluation") && (
         <ListItemButton component={Link} to={`/${userRole}/self_evaluations`}>
@@ -36,7 +36,7 @@ export default function SidebarList({ userType }: SidebarListProps) {
         </ListItemButton>
       )}
       {userType.get("teams") && (
-        <ListItemButton component={Link} to='/teams'>
+        <ListItemButton component={Link} to="/teams">
           <ListItemIcon>
             <GroupsIcon color="info" />
           </ListItemIcon>

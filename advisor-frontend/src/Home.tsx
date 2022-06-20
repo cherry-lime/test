@@ -6,10 +6,11 @@ import logo from "./logo.svg";
 import "./App.css";
 import { RootState } from "./app/store";
 import { setUserID } from "./app/userDataSlice";
-import userTypes from "./components/Sidebar/listUsersTypes";
 
 function UserInterface() {
-  const { userID, userRole } = useSelector((state: RootState) => state.userData);
+  const { userID, userRole } = useSelector(
+    (state: RootState) => state.userData
+  );
   const dispatch = useDispatch();
   return (
     <div className="App-header">
@@ -18,9 +19,10 @@ function UserInterface() {
       Hello World
       <Greetings name="This is a test to test a component" />
       <ExampleButton name="Buttontext" />
-
-      <button type="button" onClick={() => dispatch(setUserID("u1948234"))} > click to change ID</button>
-
+      <button type="button" onClick={() => dispatch(setUserID("u1948234"))}>
+        {" "}
+        click to change ID
+      </button>
       <img src={logo} className="App-logo" alt="logo" />
       <p>
         Edit <code>src/App.tsx</code> and save to reload.
