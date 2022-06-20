@@ -14,8 +14,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import GenericGrid from "../../Generic/GenericGrid";
 import { AssessmentType } from "../../../../types/AssessmentType";
-import { Row, TemplateAPI } from "./TemplateAPI";
-import { updateRow } from "../helpers";
+import {
+  Row,
+  useDeleteTemplate,
+  useDuplicateTemplate,
+  useGetTemplates,
+  usePatchTemplate,
+  usePostTemplate,
+} from "./TemplateAPI";
+import { processRowUpdate } from "../helpers";
 
 type TemplateGridProps = {
   theme: Theme;
@@ -28,39 +35,23 @@ export default function TemplateGrid({
 }: TemplateGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
 
-  const templateAPI = new TemplateAPI(setRows);
-
-  // Query for initial data
-  templateAPI.useGetTemplates(assessmentType);
+  // Get and set initial rows
+  useGetTemplates(setRows, assessmentType);
 
   // Mutations
-  const postTemplate = templateAPI.usePostTemplate();
-  const patchTemplate = templateAPI.usePatchTemplate();
-  const deleteTemplate = templateAPI.useDeleteTemplate();
-  const duplicateTemplate = templateAPI.useDuplicateTemplate();
+  const patchTemplate = usePatchTemplate();
+  const postTemplate = usePostTemplate(setRows);
+  const deleteTemplate = useDeleteTemplate(setRows);
+  const duplicateTemplate = useDuplicateTemplate(setRows);
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: Row, oldRow: Row) => {
-      // If row has not changed
-      if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
-        // Keep internal state
-        return oldRow;
-      }
+      const mutate = async (row: Row) => {
+        await patchTemplate.mutateAsync(row);
+      };
 
-      try {
-        // Wait for mutation response
-        await patchTemplate.mutateAsync(newRow);
-
-        // Update row state with new row
-        updateRow(setRows, newRow, oldRow);
-
-        // Update internal state
-        return newRow;
-      } catch (error) {
-        // Keep internal state
-        return oldRow;
-      }
+      return processRowUpdate(setRows, newRow, oldRow, mutate);
     },
     []
   );
@@ -93,7 +84,7 @@ export default function TemplateGrid({
   // Called when the "Add" button is pressed below the grid
   const handleAdd = React.useCallback(() => {
     postTemplate.mutate(assessmentType);
-  }, [rows]);
+  }, []);
 
   const columns = React.useMemo<GridColumns<GridRowModel>>(
     () => [

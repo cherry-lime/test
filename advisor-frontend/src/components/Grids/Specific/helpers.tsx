@@ -6,7 +6,7 @@ import {
   GridRowModel,
 } from "@mui/x-data-grid";
 
-export function initializeRows(
+export function initRows(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   rows: GridRowModel[]
 ) {
@@ -111,7 +111,7 @@ export function updateRow(
   if (Object.prototype.hasOwnProperty.call(newRow, "order")) {
     // If the 'Order' value has changed
     if (newRow.order !== oldRow.order) {
-      // Move rows
+      // Move row
       moveRow(setRows, oldRow, newRow.order);
     }
   } else {
@@ -119,5 +119,33 @@ export function updateRow(
     setRows((prevRows) =>
       prevRows.map((prevRow) => (prevRow.id === newRow.id ? newRow : prevRow))
     );
+  }
+}
+
+export async function processRowUpdate(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  newRow: GridRowModel,
+  oldRow: GridRowModel,
+  mutate: (row: GridRowModel) => Promise<void>
+) {
+  // If row has not changed
+  if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
+    // Keep internal state
+    return oldRow;
+  }
+
+  // Mutate may throw error
+  try {
+    // Mutate new row to API
+    await mutate(newRow);
+
+    // Update row state with new row
+    updateRow(setRows, newRow, oldRow);
+
+    // Update internal state
+    return newRow;
+  } catch (error) {
+    // Keep internal state
+    return oldRow;
   }
 }
