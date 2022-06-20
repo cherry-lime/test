@@ -1,7 +1,7 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
 
-import { GridRowModel } from "@mui/x-data-grid";
+import { GridPreProcessEditCellProps, GridRowModel } from "@mui/x-data-grid";
 
 import { initRows, addRow, deleteRow, updateRow } from "./helpers";
 
@@ -51,7 +51,7 @@ export function handleDelete<Context>(
 ) {
   deleteMutation.mutate(context, {
     onSuccess: (row: GridRowModel) => {
-      deleteRow(setRows, row.id);
+      deleteRow(setRows, row);
     },
     onError: (error) => {
       handleError(error);
@@ -72,6 +72,18 @@ export function handleDuplicate<Context>(
       handleError(error);
     },
   });
+}
+
+export function preProcessEditOrder(
+  rows: GridRowModel[],
+  params: GridPreProcessEditCellProps
+) {
+  const { value } = params.props;
+
+  // If order is below 0, above row length, or null: reject
+  const hasError = value < 0 || value >= rows.length || value === null;
+
+  return { ...params.props, error: hasError };
 }
 
 export async function processRowUpdate(
