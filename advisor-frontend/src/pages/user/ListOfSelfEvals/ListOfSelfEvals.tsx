@@ -4,6 +4,7 @@ import userTypes from "../../../components/Sidebar/listUsersTypes";
 import INGTheme from "../../../Theme";
 import AssessmentOngoingGrid from "../../../components/Grids/Specific/AssessmentOngoingGrid";
 import AssessmentCompletedGrid from "../../../components/Grids/Specific/AssessmentCompletedGrid";
+import { Grid } from "@mui/material";
 
 /**
  * Page with the list of self evaluations that belog to the user
@@ -22,49 +23,51 @@ function ListOfSelfEvals() {
 
   return (
     <PageLayout title="Individual Evaluations" sidebarType={userTypes.USER}>
-      <strong>Ongoing Evaluations (Individual)</strong>
-      <AssessmentOngoingGrid
-        theme={INGTheme}
-        userId={userId}
-        userRole={userRole}
-        assessmentType="INDIVIDUAL"
-      />
+      <Grid container direction="column" alignItems="left">
+        <strong>Ongoing Evaluations (Individual)</strong>
+        <AssessmentOngoingGrid
+          theme={INGTheme}
+          userId={userId}
+          userRole={userRole}
+          assessmentType="INDIVIDUAL"
+        />
 
-      <strong>Completed Evaluations (Individual)</strong>
-      <AssessmentCompletedGrid
-        theme={INGTheme}
-        userId={userId}
-        userRole={userRole}
-        assessmentType="INDIVIDUAL"
-      />
+        <strong>Completed Evaluations (Individual)</strong>
+        <AssessmentCompletedGrid
+          theme={INGTheme}
+          userId={userId}
+          userRole={userRole}
+          assessmentType="INDIVIDUAL"
+        />
 
-      {assessmentIds.map((assessmentId) => (
-        <div key={`se-${assessmentId}`}>
-          <Link
-            to={`/user/self_evaluations/${assessmentId}`}
-            state={data}
-            data-testid={`user-eval-${assessmentId}`}
-          >
-            {" "}
-            Evaluation with id {assessmentId}{" "}
-          </Link>
-          <br />
-        </div>
-      ))}
+        {assessmentIds.map((assessmentId) => (
+          <div key={`se-${assessmentId}`}>
+            <Link
+              to={`/user/self_evaluations/${assessmentId}`}
+              state={data}
+              data-testid={`user-eval-${assessmentId}`}
+            >
+              {" "}
+              Evaluation with id {assessmentId}{" "}
+            </Link>
+            <br />
+          </div>
+        ))}
 
-      {feedbackIds.map((feedbackId) => (
-        <div key={`f-${feedbackId}`}>
-          <Link
-            to={`/user/self_evaluations/feedback/${feedbackId}`}
-            state={data}
-            data-testid={`user-feedback-${feedbackId}`}
-          >
-            {" "}
-            Completed Evaluation with id {feedbackId}{" "}
-          </Link>
-          <br />
-        </div>
-      ))}
+        {feedbackIds.map((feedbackId) => (
+          <div key={`f-${feedbackId}`}>
+            <Link
+              to={`/user/self_evaluations/feedback/${feedbackId}`}
+              state={data}
+              data-testid={`user-feedback-${feedbackId}`}
+            >
+              {" "}
+              Completed Evaluation with id {feedbackId}{" "}
+            </Link>
+            <br />
+          </div>
+        ))}
+      </Grid>
     </PageLayout>
   );
 }

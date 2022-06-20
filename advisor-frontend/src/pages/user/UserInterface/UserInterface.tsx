@@ -53,8 +53,6 @@ function UserInterface() {
       >
         <TemplateCard />
       </Link>
-
-      <h3>Notifications</h3>
     </PageLayout>
   );
 }
