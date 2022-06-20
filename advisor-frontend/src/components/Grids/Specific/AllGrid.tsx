@@ -17,7 +17,7 @@ export default function AllGrid() {
   const userId = 0;
   const userRole = "ASSESSOR";
   const teamId = 0;
-  const templateId = 0;
+  const templateId = 58;
   const categoryId = 0;
   const assessmentId = 0;
 
@@ -82,9 +82,9 @@ export default function AllGrid() {
       <strong>Individuals</strong>
       <IndividualGrid theme={INGTheme} />
       <strong>Individual Evaluation Templates</strong>
-      <TemplateGrid theme={INGTheme} assessmentType="INDIVIDUAL" />
+      <TemplateGrid theme={INGTheme} templateType="INDIVIDUAL" />
       <strong>Team Evaluation Templates</strong>
-      <TemplateGrid theme={INGTheme} assessmentType="TEAM" />
+      <TemplateGrid theme={INGTheme} templateType="TEAM" />
       <strong>Areas</strong>
       <CategoryGrid theme={INGTheme} templateId={templateId} />
       <strong>Topics</strong>

@@ -1,12 +1,7 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
 
-import {
-  GridActionsCellItem,
-  GridColumns,
-  GridRowId,
-  GridRowModel,
-} from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -16,7 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import GenericGrid from "../../Generic/GenericGrid";
 import { AssessmentType } from "../../../../types/AssessmentType";
 import {
-  Row,
+  TemplateRow,
   useDeleteTemplate,
   useDuplicateTemplate,
   useGetTemplates,
@@ -33,21 +28,21 @@ import {
 
 type TemplateGridProps = {
   theme: Theme;
-  assessmentType: AssessmentType;
+  templateType: AssessmentType;
 };
 
 export default function TemplateGrid({
   theme,
-  assessmentType,
+  templateType,
 }: TemplateGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+  const [rows, setRows] = React.useState<TemplateRow[]>([]);
 
   // Template query
-  const { status, data, error } = useGetTemplates(assessmentType);
+  const { status, data, error } = useGetTemplates(templateType);
 
   // Template mutations
   const patchTemplate = usePatchTemplate();
-  const postTemplate = usePostTemplate();
+  const postTemplate = usePostTemplate(templateType);
   const deleteTemplate = useDeleteTemplate();
   const duplicateTemplate = useDuplicateTemplate();
 
@@ -58,7 +53,7 @@ export default function TemplateGrid({
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    async (newRow: Row, oldRow: Row) =>
+    async (newRow: TemplateRow, oldRow: TemplateRow) =>
       processRowUpdate(
         setRows,
         patchTemplate as UseMutationResult,
@@ -103,14 +98,10 @@ export default function TemplateGrid({
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd<AssessmentType>(
-      setRows,
-      postTemplate as UseMutationResult,
-      assessmentType
-    );
+    handleAdd(setRows, postTemplate as UseMutationResult);
   }, []);
 
-  const columns = React.useMemo<GridColumns<GridRowModel>>(
+  const columns = React.useMemo<GridColumns<TemplateRow>>(
     () => [
       {
         field: "name",
@@ -166,7 +157,7 @@ export default function TemplateGrid({
       processRowUpdate={processRowUpdateDecorator}
       hasToolbar
       add={{
-        text: `CREATE NEW ${assessmentType} EVALUATION TEMPLATE`,
+        text: `CREATE NEW ${templateType} EVALUATION TEMPLATE`,
         handler: handleAddDecorator,
       }}
     />

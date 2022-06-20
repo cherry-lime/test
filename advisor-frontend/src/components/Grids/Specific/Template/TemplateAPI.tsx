@@ -5,18 +5,7 @@ import { AssessmentType } from "../../../../types/AssessmentType";
 
 const API_URL = "https://tabackend.azurewebsites.net";
 
-export type Template = {
-  template_id: number;
-  template_name: string;
-  template_type: string;
-  disabled: boolean;
-  weight_range_min: number;
-  weight_range_max: number;
-  score_formula: string;
-  include_no_answer: boolean;
-};
-
-export type Row = {
+export type TemplateRow = {
   id: GridRowId;
   name: string;
   description: string;
@@ -28,7 +17,18 @@ export type Row = {
   includeNoAnswer: boolean;
 };
 
-function templateToRow(template: Template) {
+type Template = {
+  template_id: number;
+  template_name: string;
+  template_type: string;
+  disabled: boolean;
+  weight_range_min: number;
+  weight_range_max: number;
+  score_formula: string;
+  include_no_answer: boolean;
+};
+
+function toRow(template: Template) {
   return {
     id: template.template_id,
     name: template.template_name,
@@ -39,10 +39,10 @@ function templateToRow(template: Template) {
     weightRangeMax: template.weight_range_max,
     scoreFormula: template.score_formula,
     includeNoAnswer: template.include_no_answer,
-  } as Row;
+  } as TemplateRow;
 }
 
-function rowToTemplate(row: Row) {
+function fromRow(row: TemplateRow) {
   return {
     template_id: row.id,
     template_name: row.name,
@@ -56,39 +56,34 @@ function rowToTemplate(row: Row) {
 }
 
 // Get all templates from database
-export function useGetTemplates(assessmentType: AssessmentType) {
-  return useQuery(["GET", "/template", assessmentType], async () => {
+export function useGetTemplates(templateType: AssessmentType) {
+  return useQuery(["GET", "/template", templateType], async () => {
     // Get response data from database
     const { data } = await axios.get(`${API_URL}/template`);
 
     // Filter data on type of the templates
     const dataFiltered = data.filter(
-      (template: Template) => template.template_type === assessmentType
+      (template: Template) => template.template_type === templateType
     );
 
     // Convert filtered data to rows
-    const rows = dataFiltered.map((template: Template) =>
-      templateToRow(template)
-    );
+    const rows = dataFiltered.map((template: Template) => toRow(template));
 
-    return rows as Row[];
+    return rows as TemplateRow[];
   });
 }
 
 // Post template to database
-export function usePostTemplate() {
-  return useMutation(
-    ["POST", "/template"],
-    async (templateType: AssessmentType) => {
-      // Get response data from database
-      const { data } = await axios.post(`${API_URL}/template`, {
-        template_type: templateType,
-      });
+export function usePostTemplate(templateType: AssessmentType) {
+  return useMutation(["POST", "/template"], async () => {
+    // Get response data from database
+    const { data } = await axios.post(`${API_URL}/template`, {
+      template_type: templateType,
+    });
 
-      // Convert data to row
-      return templateToRow(data);
-    }
-  );
+    // Convert data to row
+    return toRow(data);
+  });
 }
 
 // Get template with id from database
@@ -108,9 +103,9 @@ export function useGetTemplate() {
 export function usePatchTemplate() {
   return useMutation(
     ["PATCH", "/template", "/{template_id}"],
-    async (row: Row) => {
+    async (row: TemplateRow) => {
       // Convert row to template
-      const template = rowToTemplate(row);
+      const template = fromRow(row);
 
       // Get response data from database
       const { data } = await axios.patch(
@@ -119,7 +114,7 @@ export function usePatchTemplate() {
       );
 
       // Convert data to row
-      return templateToRow(data);
+      return toRow(data);
     }
   );
 }
@@ -133,7 +128,7 @@ export function useDeleteTemplate() {
       const { data } = await axios.delete(`${API_URL}/template/${templateId}`);
 
       // Convert data to row
-      return templateToRow(data);
+      return toRow(data);
     }
   );
 }
@@ -147,7 +142,7 @@ export function useDuplicateTemplate() {
         `${API_URL}/template/${templateId}/clone`
       );
 
-      return templateToRow(data);
+      return toRow(data);
     }
   );
 }

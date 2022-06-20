@@ -1,61 +1,57 @@
 import * as React from "react";
+import { UseMutationResult } from "react-query";
 
-import {
-  GridActionsCellItem,
-  GridColumns,
-  GridRowId,
-  GridRowModel,
-} from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import GenericGrid from "../../Generic/GenericGrid";
 import {
+  handleInit,
   handleAdd,
   handleDelete,
-  handleDuplicate,
   processRowUpdate,
-} from "../handlers";
-
-// Define type for the rows in the grid
-type Row = {
-  id: number;
-  name: string;
-  enabled: boolean;
-};
-
-// Get row object with default values
-const getDefaultRow = () => {
-  const defaultRow = {
-    id: Date.now(),
-    name: "Name...",
-    enabled: false,
-  };
-  return defaultRow;
-};
+} from "../handlersNew";
+import {
+  TopicRow,
+  useDeleteTopic,
+  useGetTopics,
+  usePatchTopic,
+  usePostTopic,
+} from "./TopicAPI";
 
 type TopicGridProps = {
   theme: Theme;
   templateId: number;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function TopicGrid({ theme, templateId }: TopicGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+  const [rows, setRows] = React.useState<TopicRow[]>([]);
 
-  // Fetch initial rows of the grid
+  // Topic query
+  const { status, data, error } = useGetTopics(templateId);
+
+  // Topic mutations
+  const patchTopic = usePatchTopic();
+  const postTopic = usePostTopic(templateId);
+  const deleteTopic = useDeleteTopic();
+
+  // Called when "status" of templates query is changed
   React.useEffect(() => {
-    // TODO Replace this by API fetch
-    setRows(() => []);
-  }, []);
+    handleInit(setRows, status, data, error);
+  }, [status]);
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdate(setRows, newRow, oldRow, false),
+    async (newRow: TopicRow, oldRow: TopicRow) =>
+      processRowUpdate(
+        setRows,
+        patchTopic as UseMutationResult,
+        newRow,
+        oldRow
+      ),
     []
   );
 
@@ -71,25 +67,21 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, rowId);
-    },
-    []
-  );
-
-  // Called when the "Duplicate" action is pressed in the menu
-  const handleDuplicateDecorator = React.useCallback(
-    (row: GridRowModel) => () => {
-      handleDuplicate(setRows, row);
+      handleDelete<number>(
+        setRows,
+        deleteTopic as UseMutationResult,
+        rowId as number
+      );
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, getDefaultRow());
-  }, [rows]);
+    handleAdd(setRows, postTopic as UseMutationResult);
+  }, []);
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColumns<TopicRow>>(
     () => [
       {
         field: "name",
@@ -109,7 +101,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
         field: "actions",
         type: "actions",
         width: 100,
-        getActions: (params: { id: GridRowId; row: Row }) => [
+        getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
             icon={
               <Tooltip title="Visit">
@@ -120,12 +112,6 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
             onClick={handleVisit(params.id)}
           />,
           <GridActionsCellItem
-            icon={<FileCopyIcon />}
-            label="Duplicate"
-            onClick={handleDuplicateDecorator(params.row)}
-            showInMenu
-          />,
-          <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteDecorator(params.id)}
@@ -134,7 +120,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
         ],
       },
     ],
-    [handleVisit, handleDuplicateDecorator, handleDeleteDecorator]
+    [handleVisit, handleDeleteDecorator]
   );
 
   return (

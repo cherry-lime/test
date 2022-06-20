@@ -21,6 +21,7 @@ export function handleInit(
       break;
     case "success":
       if (data) {
+        console.log(data);
         initRows(setRows, data);
       }
       break;
@@ -32,7 +33,7 @@ export function handleInit(
 export function handleAdd<Context>(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   addMutation: UseMutationResult,
-  context: Context
+  context?: Context
 ) {
   addMutation.mutate(context, {
     onSuccess: (row: GridRowModel) => {
