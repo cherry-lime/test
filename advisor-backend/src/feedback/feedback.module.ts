@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AnswerService } from 'src/answer/answer.service';
+import { AnswerService } from '../answer/answer.service';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { FeedbackService } from './feedback.service';
 

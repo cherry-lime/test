@@ -31,7 +31,7 @@ import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { RecommendationDto } from '../feedback/dto/recommendation.dto';
-import { FeedbackService } from 'src/feedback/feedback.service';
+import { FeedbackService } from '../feedback/feedback.service';
 
 @ApiTags('assessment')
 @Controller('assessment')
