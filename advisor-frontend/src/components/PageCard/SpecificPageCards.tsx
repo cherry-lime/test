@@ -3,7 +3,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import PageCard from "./PageCard";
-import testimageFigma from "./testimageFigma.png";
+import testimageFigma from "./Images/testimageFigma.png";
 
 function EvaluationCard() {
   return (
