@@ -43,6 +43,7 @@ const theme = createTheme({
 it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 321 and 312 with 1=Yes, 2=No and 3=N/A", () => {
   const { getByText } = render(
     <Checkpoint
+      feedback={false}
       description="Checkpoint Description"
       number={1}
       theme={theme}
@@ -91,8 +92,8 @@ it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 
     expect(radio3).toBeChecked();
   }
   //  all sequences are tested starting with the initial state
+  fireEvent.click(radio1);
   alloff();
-  clickradio1();
   clickradio2();
   clickradio3();
   clickradio1();

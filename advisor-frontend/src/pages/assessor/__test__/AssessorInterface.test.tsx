@@ -19,7 +19,6 @@ test("app rendering/navigating from assessor interface to teams", async () => {
   const buttonTeams = screen.getByTestId("assessor-teams");
   fireEvent.click(buttonTeams);
   expect(screen.getByText(/List of Teams/i)).toBeInTheDocument();
-  expect(screen.getByText(/assessor view/i)).toBeInTheDocument();
 });
 
 // describe block = test suite

@@ -21,9 +21,7 @@ test("app rendering/navigating from user interface to self-evals", async () => {
   const buttonEval = screen.getByTestId("user-eval-43");
   fireEvent.click(buttonEval);
 
-  expect(
-    screen.getByText(/An Individual Evaluation with id 43/i)
-  ).toBeInTheDocument();
+  expect(screen.getByText(/Individual Evaluation/i)).toBeInTheDocument();
 });
 
 test("app rendering/navigating from user interface to feedback on self-eval", async () => {
@@ -44,7 +42,7 @@ test("app rendering/navigating from user interface to feedback on self-eval", as
   fireEvent.click(buttonEval);
 
   expect(
-    screen.getByText(/Recommendations for assessment with id 66/i)
+    screen.getByText(/Individual Evaluation Feedback/i)
   ).toBeInTheDocument();
 });
 

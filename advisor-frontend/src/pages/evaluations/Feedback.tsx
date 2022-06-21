@@ -27,7 +27,9 @@ function Feedback({ team }: { team: boolean }) {
 
   return (
     <PageLayout
-      title={`Recommendations for assessment with id ${assessmentId}`}
+      title={
+        team ? "Team Evaluation Feedback" : "Individual Evaluation Feedback"
+      }
       sidebarType={userTypes.USER}
     >
       <Grid container direction="column" alignItems="left" spacing="20px">
