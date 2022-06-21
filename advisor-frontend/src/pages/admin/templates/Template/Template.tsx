@@ -7,9 +7,9 @@ import MaturityGrid from "../../../../components/Grids/Specific/MaturityGrid";
 import TopicGrid from "../../../../components/Grids/Specific/TopicGrid";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import TextfieldEdit from "../../../../components/TextfieldEdit/TextfieldEdit";
-import TextfieldEditWeight from "../../../../components/TextfieldEditWeight/TextfieldEditWeight";
 import Theme from "../../../../Theme";
 import PageLayout from "../../../PageLayout";
+import TextfieldEditWeight from "../../../../components/TextfieldEditWeight/TextfieldEditWeight";
 
 /**
  * Page with details regarding a certain template
@@ -80,7 +80,7 @@ function Template() {
             setWeight={setMaxWeight}
           />
         </div>
-        <h2> Answer Type </h2>
+        <h2> Checkpoint Values </h2>
 
         <div style={{ width: "inherit" }}>
           Include N/A
