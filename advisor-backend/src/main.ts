@@ -11,7 +11,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  app.enableCors();
+  app.enableCors({
+    credentials: true,
+    origin: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('TestING Advisor API')

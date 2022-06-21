@@ -12,8 +12,15 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Response } from 'express';
+import { CookieOptions, Response } from 'express';
 import { ProfileDto } from '../user/dto/profile.dto';
+
+// Cookie options
+const cookieOptions: CookieOptions = {
+  httpOnly: true,
+  sameSite: 'none',
+  secure: true,
+};
 
 @Controller('auth')
 @ApiTags('auth')
@@ -42,7 +49,7 @@ export class AuthController {
       refreshToken: '',
     };
 
-    res.cookie('token', secretData, { httpOnly: true });
+    res.cookie('token', secretData, cookieOptions);
     return { msg: 'login successful' }; // this.authService.login(loginDto);
   }
 
@@ -70,7 +77,7 @@ export class AuthController {
       refreshToken: '',
     };
 
-    res.cookie('token', secretData, { httpOnly: true });
+    res.cookie('token', secretData, cookieOptions);
     return { username: user.username, password: user.password };
   }
 
