@@ -20,6 +20,19 @@ import INGTheme from "../../../Theme";
 const API_URL = "https://tabackend.azurewebsites.net";
 
 export default function AllGrid() {
+  const logout = useMutation(
+    ["Logout Admin"],
+    () => axios.post(`${API_URL}/auth/logout`),
+    {
+      onSuccess: (data: any) => {
+        console.log(data);
+      },
+      onError: (error: any) => {
+        console.log(error);
+      },
+    }
+  );
+
   const login = useMutation(
     ["Login Admin"],
     () =>
@@ -37,6 +50,7 @@ export default function AllGrid() {
     }
   );
 
+  logout.mutate();
   login.mutate();
 
   const userId = 0;
