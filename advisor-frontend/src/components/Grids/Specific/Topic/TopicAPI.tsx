@@ -37,7 +37,10 @@ function fromRow(row: TopicRow) {
 export function useGetTopics(templateId: number) {
   return useQuery(["GET", "/template", templateId, "/topic"], async () => {
     // Get response data from database
-    const { data } = await axios.get(`${API_URL}/template/${templateId}/topic`);
+    const { data } = await axios.get(
+      `${API_URL}/template/${templateId}/topic`,
+      { withCredentials: true }
+    );
 
     // Filter data on type of the templates
     const dataFiltered = data.filter(
