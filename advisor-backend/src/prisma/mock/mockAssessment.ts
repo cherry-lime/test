@@ -25,4 +25,5 @@ export const mockAssessment = {
   update: jest.fn().mockResolvedValue(aAssessment),
   findMany: jest.fn().mockResolvedValue([aAssessment]),
   delete: jest.fn().mockResolvedValue(aAssessment),
+  getAssessments: jest.fn().mockResolvedValue([aAssessment]),
 };

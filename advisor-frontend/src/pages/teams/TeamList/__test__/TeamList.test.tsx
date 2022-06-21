@@ -1,12 +1,16 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import App from "../../../../App";
+import { store } from "../../../../app/store";
 
 test("app rendering/navigating from assessor view to specific team", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("assessor");
   fireEvent.click(button);
@@ -24,17 +28,18 @@ test("app rendering/navigating from assessor view to specific team", async () =>
 
 test("app rendering/navigating from user view to specific team", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("user");
   fireEvent.click(button);
   const buttonTeams = screen.getByTestId("user-teams");
   fireEvent.click(buttonTeams);
   expect(screen.getByText(/List of Teams/i)).toBeInTheDocument();
-  expect(screen.getByText(/user view/i)).toBeInTheDocument();
-
+  
   const buttonTeam2 = screen.getByTestId("team-4");
   fireEvent.click(buttonTeam2);
   expect(screen.getByText(/A Specific Team with id 4/i)).toBeInTheDocument();
