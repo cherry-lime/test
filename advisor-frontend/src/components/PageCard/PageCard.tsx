@@ -74,6 +74,7 @@ export default function PageCard({
         verticalAlign: "middle",
         width: "100vw",
         borderRadius: "20px",
+        marginBottom: "10px",
       }}
     >
       {/* if Cardmedia,add image to the left side */}

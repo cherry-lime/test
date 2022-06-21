@@ -1,26 +1,19 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import App from "../../../../../App";
+import { store } from "../../../../../app/store";
+import ListOfTemplates from "../ListOfTemplates";
 
-test("app rendering/navigating from admin interface to speficictemplates", async () => {
+test("app render list of templates", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ListOfTemplates />
+      </BrowserRouter>
+    </Provider>
   );
-  const button = screen.getByTestId("admin");
-  fireEvent.click(button);
-  expect(screen.getByText(/admin Interface/i)).toBeInTheDocument();
-
-  const buttonTemplates = screen.getByTestId("templates");
-  fireEvent.click(buttonTemplates);
-  expect(screen.getByText(/List of Templates/i)).toBeInTheDocument();
-
-  const buttonTemplate = screen.getByTestId("template-21");
-  fireEvent.click(buttonTemplate);
-  expect(
-    screen.getByText(/Template options for template id 21/i)
-  ).toBeInTheDocument();
+  expect(screen.getByText(/Individual Templates/i)).toBeInTheDocument();
+  expect(screen.getByText(/Team Templates/i)).toBeInTheDocument();
 });
 
 // describe block = test suite

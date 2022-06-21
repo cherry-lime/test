@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 import { GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
@@ -46,15 +47,6 @@ export default function AssessmentCompletedGrid({
     ]);
   }, []);
 
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
-    },
-    []
-  );
-
   const columns = React.useMemo<GridColumns<Row>>(
     () => [
       {
@@ -74,13 +66,22 @@ export default function AssessmentCompletedGrid({
         type: "actions",
         width: 125,
         getActions: (params: { id: GridRowId }) => [
-          <Button variant="outlined" onClick={handleVisit(params.id)}>
-            <strong>Review</strong>
-          </Button>,
+          <Link
+            to={
+              assessmentType === "INDIVIDUAL"
+                ? `/user/self_evaluations/feedback/${params.id}`
+                : `/teams/${teamId}/feedback/${params.id}`
+            }
+          >
+            <Button variant="outlined">
+              <strong>Review</strong>
+            </Button>
+            ,
+          </Link>,
         ],
       },
     ],
-    [handleVisit]
+    []
   );
 
   return <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />;

@@ -1,24 +1,34 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import SubareaGrid from "../../../../components/Grids/Specific/SubareaGrid";
+import Theme from "../../../../Theme";
+import userType from "../../../../components/Sidebar/listUsersTypes";
+import PageLayout from "../../../PageLayout";
+import CheckpointGrid from "../../../../components/Grids/Specific/CheckpointGrid";
 
 /**
  * Page with details regarding an area beloging to a certain template
  * This should only be accessible to admins
  */
 function Area() {
-  const location = useLocation();
-  const data = location.state;
   const { templateId } = useParams();
   const { areaId } = useParams();
 
   return (
     <div>
-      <p> {data} view </p>
-      <Link to={`/admin/templates/${templateId}`} state={data}>
-        {" "}
-        Go Back to Template{" "}
-      </Link>
-
-      <h2> Area with id {areaId} </h2>
+      <PageLayout title={`Subarea "${areaId}"`} sidebarType={userType.ADMIN}>
+        <h2>Subareas</h2>
+        <SubareaGrid
+          theme={Theme}
+          templateId={templateId}
+          categoryId={areaId}
+        />
+        <h2>Checkpoints</h2>
+        <CheckpointGrid
+          theme={Theme}
+          templateId={templateId}
+          categoryId={areaId}
+        />
+      </PageLayout>
     </div>
   );
 }

@@ -1,34 +1,21 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
 import App from "../../../../App";
-
-test("app rendering/navigating from admin interface to templates", async () => {
-  render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  );
-  const button = screen.getByTestId("admin");
-  fireEvent.click(button);
-  expect(screen.getByText(/admin Interface/i)).toBeInTheDocument();
-
-  const buttonTeams = screen.getByTestId("templates");
-  fireEvent.click(buttonTeams);
-  expect(screen.getByText(/List of Templates/i)).toBeInTheDocument();
-});
+import { store } from "../../../../app/store";
 
 test("app rendering/navigating from admin interface to individuals", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("admin");
   fireEvent.click(button);
-  const buttonIndividuals = screen.getByTestId("individuals");
-  fireEvent.click(buttonIndividuals);
-  expect(screen.getByText(/List of Individuals/i)).toBeInTheDocument();
+  expect(screen.getByText(/Admin Home/i)).toBeInTheDocument();
 });
 
 // describe block = test suite
