@@ -8,12 +8,14 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import GenericGrid from "../../Generic/GenericGrid";
+
 import {
-  handleInit,
   handleAdd,
   handleDelete,
+  handleInit,
   processRowUpdate,
 } from "../handlersNew";
+
 import {
   TopicRow,
   useDeleteTopic,
@@ -67,11 +69,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete<number>(
-        setRows,
-        deleteTopic as UseMutationResult,
-        rowId as number
-      );
+      handleDelete(setRows, deleteTopic as UseMutationResult, rowId as number);
     },
     []
   );

@@ -3,10 +3,22 @@ import { UseMutationResult } from "react-query";
 
 import { GridPreProcessEditCellProps, GridRowModel } from "@mui/x-data-grid";
 
-import { initRows, addRow, deleteRow, updateRow } from "./helpers";
+import { initRows, addRow, deleteRow, updateRow, moveRow } from "./helpers";
 
-function handleError(error: unknown) {
+function processError(error: unknown) {
   console.log(error);
+}
+
+export function preProcessEditOrder(
+  rows: GridRowModel[],
+  params: GridPreProcessEditCellProps
+) {
+  const { value } = params.props;
+
+  // If order is below 0, above row length, or null: reject
+  const hasError = value < 1 || value > rows.length || value === null;
+
+  return { ...params.props, error: hasError };
 }
 
 export function handleInit(
@@ -17,7 +29,7 @@ export function handleInit(
 ) {
   switch (status) {
     case "error":
-      handleError(error);
+      processError(error);
       break;
     case "success":
       if (data) {
@@ -27,63 +39,6 @@ export function handleInit(
     default:
       break;
   }
-}
-
-export function handleAdd<Context>(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  addMutation: UseMutationResult,
-  context?: Context
-) {
-  addMutation.mutate(context, {
-    onSuccess: (row: GridRowModel) => {
-      addRow(setRows, row);
-    },
-    onError: (error) => {
-      handleError(error);
-    },
-  });
-}
-
-export function handleDelete<Context>(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  deleteMutation: UseMutationResult,
-  context: Context
-) {
-  deleteMutation.mutate(context, {
-    onSuccess: (row: GridRowModel) => {
-      deleteRow(setRows, row);
-    },
-    onError: (error) => {
-      handleError(error);
-    },
-  });
-}
-
-export function handleDuplicate<Context>(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  duplicateMutation: UseMutationResult,
-  context: Context
-) {
-  duplicateMutation.mutate(context, {
-    onSuccess: (row: GridRowModel) => {
-      addRow(setRows, row);
-    },
-    onError: (error) => {
-      handleError(error);
-    },
-  });
-}
-
-export function preProcessEditOrder(
-  rows: GridRowModel[],
-  params: GridPreProcessEditCellProps
-) {
-  const { value } = params.props;
-
-  // If order is below 0, above row length, or null: reject
-  const hasError = value < 0 || value >= rows.length || value === null;
-
-  return { ...params.props, error: hasError };
 }
 
 export async function processRowUpdate(
@@ -109,9 +64,68 @@ export async function processRowUpdate(
     // Update internal state
     return newRow;
   } catch (error) {
-    handleError(error);
+    processError(error);
 
     // Keep internal state
     return oldRow;
   }
+}
+
+export function handleMove(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  patchMutation: UseMutationResult,
+  row: GridRowModel
+) {
+  patchMutation.mutate(row, {
+    onSuccess: (movedRow: GridRowModel) => {
+      moveRow(setRows, movedRow, movedRow.order);
+    },
+    onError: (error: unknown) => {
+      processError(error);
+    },
+  });
+}
+
+export function handleAdd(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  addMutation: UseMutationResult
+) {
+  addMutation.mutate(undefined, {
+    onSuccess: (addedRow: GridRowModel) => {
+      addRow(setRows, addedRow);
+    },
+    onError: (error: unknown) => {
+      processError(error);
+    },
+  });
+}
+
+export function handleDelete(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  deleteMutation: UseMutationResult,
+  rowId: number
+) {
+  deleteMutation.mutate(rowId, {
+    onSuccess: (deletedRow: GridRowModel) => {
+      deleteRow(setRows, deletedRow);
+    },
+    onError: (error: unknown) => {
+      processError(error);
+    },
+  });
+}
+
+export function handleDuplicate(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  duplicateMutation: UseMutationResult,
+  row: GridRowModel
+) {
+  duplicateMutation.mutate(row, {
+    onSuccess: (duplicatedRow: GridRowModel) => {
+      addRow(setRows, duplicatedRow);
+    },
+    onError: (error: unknown) => {
+      processError(error);
+    },
+  });
 }

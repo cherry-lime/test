@@ -1,66 +1,57 @@
 import * as React from "react";
+import { UseMutationResult } from "react-query";
 
 import {
   GridActionsCellItem,
   GridColumns,
   GridPreProcessEditCellProps,
   GridRowId,
-  GridRowModel,
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { IconButton } from "@mui/material";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
 import GenericGrid from "../../Generic/GenericGrid";
+
 import {
   handleAdd,
   handleDelete,
-  handleDuplicate,
-  handleMoveRows,
+  handleInit,
+  handleMove,
   preProcessEditOrder,
   processRowUpdate,
-  updateOrderRows,
-} from "../handlers";
+} from "../handlersNew";
 
-// Define type for the rows in the grid
-type Row = {
-  id: number;
-  order: number;
-  name: string;
-  enabled: boolean;
-};
-
-// Generate new id based on time
-const generateId = () => Date.now();
-
-// Get row object with default values
-const getDefaultRow = (prevRows: Row[]) => {
-  const defaultRow = {
-    id: generateId(),
-    order: prevRows.length,
-    name: "Name...",
-    enabled: false,
-  };
-  return defaultRow;
-};
+import {
+  MaturityRow,
+  useDeleteMaturity,
+  useGetMaturities,
+  usePatchMaturity,
+  usePostMaturity,
+} from "./MaturityAPI";
 
 type MaturityGridProps = {
   theme: Theme;
   templateId: number;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+  const [rows, setRows] = React.useState<MaturityRow[]>([]);
 
-  // Fetch initial rows of the grid
+  // Topic query
+  const { status, data, error } = useGetMaturities(templateId);
+
+  // Topic mutations
+  const patchMaturity = usePatchMaturity();
+  const postMaturity = usePostMaturity(templateId);
+  const deleteMaturity = useDeleteMaturity();
+
+  // Called when "status" of maturities query is changed
   React.useEffect(() => {
-    // TODO Replace this by API fetch
-    setRows(() => []);
-  }, []);
+    handleInit(setRows, status, data, error);
+  }, [status]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
@@ -70,23 +61,34 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdate(setRows, newRow, oldRow, true),
+    async (newRow: MaturityRow, oldRow: MaturityRow) =>
+      processRowUpdate(
+        setRows,
+        patchMaturity as UseMutationResult,
+        newRow,
+        oldRow
+      ),
     []
   );
 
   // Called when the "Upward" action is pressed
-  const handleUpward = React.useCallback(
-    (row: Row) => () => {
-      handleMoveRows(setRows, row, row.order - 1);
+  const handleUpwardDecorator = React.useCallback(
+    (row: MaturityRow) => () => {
+      handleMove(setRows, patchMaturity as UseMutationResult, {
+        ...row,
+        order: row.order - 1,
+      });
     },
     []
   );
 
   // Called when the "Downward" action is pressed
-  const handleDownward = React.useCallback(
-    (row: Row) => () => {
-      handleMoveRows(setRows, row, row.order + 1);
+  const handleDownwardDecorator = React.useCallback(
+    (row: MaturityRow) => () => {
+      handleMove(setRows, patchMaturity as UseMutationResult, {
+        ...row,
+        order: row.order + 1,
+      });
     },
     []
   );
@@ -94,39 +96,34 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, rowId);
-      updateOrderRows(setRows);
-    },
-    []
-  );
-
-  // Called when the "Duplicate" action is pressed in the menu
-  const handleDuplicateDecorator = React.useCallback(
-    (row: GridRowModel) => () => {
-      handleDuplicate(setRows, row);
+      handleDelete(
+        setRows,
+        deleteMaturity as UseMutationResult,
+        rowId as number
+      );
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, getDefaultRow(rows));
-  }, [rows]);
+    handleAdd(setRows, postMaturity as UseMutationResult);
+  }, []);
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColumns<MaturityRow>>(
     () => [
       {
         field: "",
         width: 50,
-        renderCell: (params: { row: Row }) => (
+        renderCell: (params: { row: MaturityRow }) => (
           <div className="parent">
             <div className="child">
-              <IconButton onClick={handleUpward(params.row)}>
+              <IconButton onClick={handleUpwardDecorator(params.row)}>
                 <UpwardIcon />
               </IconButton>
             </div>
             <div className="child">
-              <IconButton onClick={handleDownward(params.row)}>
+              <IconButton onClick={handleDownwardDecorator(params.row)}>
                 <DownwardIcon />
               </IconButton>
             </div>
@@ -161,13 +158,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         field: "actions",
         type: "actions",
         width: 75,
-        getActions: (params: { id: GridRowId; row: Row }) => [
-          <GridActionsCellItem
-            icon={<FileCopyIcon />}
-            label="Duplicate"
-            onClick={handleDuplicateDecorator(params.row)}
-            showInMenu
-          />,
+        getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
@@ -178,10 +169,9 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       },
     ],
     [
-      handleUpward,
-      handleDownward,
+      handleUpwardDecorator,
+      handleDownwardDecorator,
       preProcessEditOrderDecorator,
-      handleDuplicateDecorator,
       handleDeleteDecorator,
     ]
   );

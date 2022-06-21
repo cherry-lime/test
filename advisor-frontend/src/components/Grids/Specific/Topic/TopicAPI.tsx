@@ -41,13 +41,8 @@ export function useGetTopics(templateId: number) {
       withCredentials: true,
     });
 
-    // Filter data on type of the templates
-    const dataFiltered = data.filter(
-      (topic: Topic) => topic.template_id === templateId
-    );
-
-    // Convert filtered data to rows
-    const rows = dataFiltered.map((topic: Topic) => toRow(topic));
+    // Convert data to rows
+    const rows = data.map((topic: Topic) => toRow(topic));
 
     return rows as TopicRow[];
   });
