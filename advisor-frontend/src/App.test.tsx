@@ -21,7 +21,9 @@ test("app rendering/navigating to user interface", async () => {
 
   const button = screen.getByTestId("user");
   fireEvent.click(button);
-  expect(screen.getByText(/User Home/i)).toBeInTheDocument();
+  expect(
+    screen.getByText(/View and start individual evaluations/i)
+  ).toBeInTheDocument();
 });
 
 test("app rendering/navigating to admin interface", async () => {
