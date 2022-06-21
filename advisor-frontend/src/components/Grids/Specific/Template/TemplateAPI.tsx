@@ -10,7 +10,7 @@ export type TemplateRow = {
   name: string;
   description: string;
   templateType: AssessmentType;
-  disabled: boolean;
+  enabled: boolean;
   weightRangeMin: number;
   weightRangeMax: number;
   scoreFormula: string;
@@ -20,8 +20,8 @@ export type TemplateRow = {
 type Template = {
   template_id: number;
   template_name: string;
-  template_type: string;
-  disabled: boolean;
+  template_type: AssessmentType;
+  enabled: boolean;
   weight_range_min: number;
   weight_range_max: number;
   score_formula: string;
@@ -34,7 +34,7 @@ function toRow(template: Template) {
     name: template.template_name,
     description: "Description",
     templateType: template.template_type,
-    disabled: template.disabled,
+    enabled: template.enabled,
     weightRangeMin: template.weight_range_min,
     weightRangeMax: template.weight_range_max,
     scoreFormula: template.score_formula,
@@ -47,7 +47,7 @@ function fromRow(row: TemplateRow) {
     template_id: row.id,
     template_name: row.name,
     template_type: row.templateType,
-    disabled: row.disabled,
+    enabled: row.enabled,
     weight_range_min: row.weightRangeMin,
     weight_range_max: row.weightRangeMax,
     score_formula: row.scoreFormula,
