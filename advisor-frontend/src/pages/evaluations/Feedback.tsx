@@ -1,6 +1,6 @@
 import { Card, Grid, Stack, Tab, Tabs } from "@mui/material";
 import React from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import RecommendationGrid from "../../components/Grids/Specific/RecommendationGrid";
 import userTypes from "../../components/Sidebar/listUsersTypes";
@@ -8,14 +8,13 @@ import Subarea from "../../components/Subarea/Subarea";
 import INGTheme from "../../Theme";
 import PageLayout from "../PageLayout";
 import ListOfCheckpoints from "../../components/ListOfCheckpoints/ListOfCheckpoints";
+import TextfieldEdit from "../../components/TextfieldEdit/TextfieldEdit";
 
 /**
  * Page with the feedback related to a self assessment
  * This should only be accessible to the user whose assement this belongs to
  */
-function IndividualFeedback() {
-  const location = useLocation();
-  const data = location.state;
+function Feedback({ team }: { team: boolean }) {
   const { assessmentId } = useParams();
 
   const userId = 0;
@@ -56,6 +55,13 @@ function IndividualFeedback() {
             description="TIP: only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
           />
         </Grid>
+        {!team && (
+          <Grid item>
+            <h2>Assessor Feedback</h2>
+            <TextfieldEdit theme={INGTheme} text="assessor feedback here" />
+          </Grid>
+        )}
+
         <Grid item>
           {value === "Recommendations" && (
             <RecommendationGrid
@@ -81,20 +87,8 @@ function IndividualFeedback() {
           </Stack>
         </Grid>
       </Grid>
-      <div>
-        <p> {data} view </p>
-        <Link to="/user/self_evaluations" state={data}>
-          {" "}
-          Go Back to Evaluations Page{" "}
-        </Link>
-
-        <h2> Recommendations for assessment with id {assessmentId} </h2>
-
-        <h3>List of recommendations</h3>
-      </div>
-      ;
     </PageLayout>
   );
 }
 
-export default IndividualFeedback;
+export default Feedback;

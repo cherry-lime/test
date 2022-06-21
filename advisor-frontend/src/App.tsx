@@ -2,13 +2,11 @@ import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
 import UserInterface from "./pages/user/UserInterface/UserInterface";
 import Home from "./Home";
-import IndividualEvaluation from "./pages/evaluations/IndividualEvaluation";
+import Evaluation from "./pages/evaluations/Evaluation";
 import ListOfSelfEvals from "./pages/user/ListOfSelfEvals/ListOfSelfEvals";
-import IndividualFeedback from "./pages/evaluations/IndividualFeedback";
+import Feedback from "./pages/evaluations/Feedback";
 import TeamList from "./pages/teams/TeamList/TeamList";
 import Team from "./pages/teams/Team/Team";
-import TeamEvaluation from "./pages/evaluations/TeamEvaluation";
-import TeamFeedback from "./pages/evaluations/TeamFeedback";
 import AssessorInterface from "./pages/assessor/AssessorInterface";
 import AdminInterface from "./pages/admin/AdminInterface/AdminInterface";
 import ListOfTemplates from "./pages/admin/templates/ListOfTemplates/ListOfTemplates";
@@ -40,22 +38,22 @@ function App() {
         <Route path="/user/self_evaluations" element={<ListOfSelfEvals />} />
         <Route
           path="/user/self_evaluations/:assessmentId"
-          element={<IndividualEvaluation />}
+          element={<Evaluation team={false} />}
         />
         <Route
           path="/user/self_evaluations/feedback/:assessmentId"
-          element={<IndividualFeedback />}
+          element={<Feedback team={false} />}
         />
 
         <Route path="/teams" element={<TeamList />} />
         <Route path="/teams/:teamId" element={<Team />} />
         <Route
           path="/teams/:teamId/:assessmentId"
-          element={<TeamEvaluation />}
+          element={<Evaluation team />}
         />
         <Route
           path="/teams/:teamId/feedback/:assessmentId"
-          element={<TeamFeedback />}
+          element={<Feedback team />}
         />
 
         <Route path="/assessor" element={<AssessorInterface />} />

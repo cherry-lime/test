@@ -17,14 +17,11 @@ function ListOfSelfEvals() {
 
   const userId = 0;
   const userRole = "USER";
-  const teamId = 0;
-  const templateId = 0;
-  const categoryId = 0;
 
   return (
     <PageLayout title="Individual Evaluations" sidebarType={userTypes.USER}>
       <Grid container direction="column" alignItems="left">
-        <h2>Ongoing Evaluations (Individual)</h2>
+        <h2>Ongoing Evaluations</h2>
         <AssessmentOngoingGrid
           theme={INGTheme}
           userId={userId}
@@ -32,7 +29,7 @@ function ListOfSelfEvals() {
           assessmentType="INDIVIDUAL"
         />
 
-        <h2>Completed Evaluations (Individual)</h2>
+        <h2>Completed Evaluations</h2>
         <AssessmentCompletedGrid
           theme={INGTheme}
           userId={userId}

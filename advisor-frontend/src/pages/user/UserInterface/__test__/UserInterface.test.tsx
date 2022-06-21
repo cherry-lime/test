@@ -35,7 +35,7 @@ test("app rendering/navigating from user interface to self-evals", async () => {
 
   const buttonEvals = screen.getByTestId("user-evals");
   fireEvent.click(buttonEvals);
-  expect(screen.getByText(/List of evaluations/i)).toBeInTheDocument();
+  expect(screen.getByText(/Ongoing Evaluations/i)).toBeInTheDocument();
 });
 
 // describe block = test suite

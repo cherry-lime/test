@@ -10,16 +10,17 @@ import PageLayout from "../PageLayout";
  * Page with a self evaluation that can be filled in
  * This should only be accessible to the user whose assement this belongs to
  */
-function IndividualEvaluation() {
-  const { assessmentId } = useParams();
+function Evaluation({ team }: { team: boolean }) {
+  const { assessmentId, teamId } = useParams();
+  const userRole = "USER";
 
   return (
     <PageLayout
-      title={`An Individual Evaluation with id ${assessmentId}`}
-      sidebarType={userTypes.USER}
+      title={team ? "Team Evaluation" : "Individual Evaluation"}
+      sidebarType={userTypes[userRole]}
     >
       <ListOfCheckpoints
-        feedback={false}
+        feedback={false || (team && userRole === "USER")}
         theme={INGTheme}
         assessmentId={assessmentId}
       />
@@ -32,7 +33,11 @@ function IndividualEvaluation() {
       >
         <Link
           className="buttonLink"
-          to={`/user/self_evaluations/feedback/${assessmentId}`}
+          to={
+            team
+              ? `/teams/${teamId}/feedback/${assessmentId}`
+              : `/user/self_evaluations/feedback/${assessmentId}`
+          }
         >
           <ButtonRegular text="Finish Assessment" />
         </Link>
@@ -41,4 +46,4 @@ function IndividualEvaluation() {
   );
 }
 
-export default IndividualEvaluation;
+export default Evaluation;
