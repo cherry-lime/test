@@ -55,6 +55,8 @@ export default function PageLayout({
             className="body"
             sx={{
               bgcolor: "secondary.light",
+              diplay: "flex",
+              justifyContent: "flex-start"
             }}
           >
             {children}

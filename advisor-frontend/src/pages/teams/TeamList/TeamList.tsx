@@ -18,18 +18,9 @@ function TeamList() {
 
   return (
     <PageLayout title="Teams" sidebarType={userTypes.USER}>
-      <Grid container direction="column" alignItems="left">
-        <strong> Teams </strong>
-      </Grid>
+      <Grid container direction="column" alignItems="left" />
       <TeamGrid theme={INGTheme} userId={userId} userRole={userRole} />
       <div>
-        <p> {data} view </p>
-
-        <Link to={`/${data}`} state={data}>
-          {" "}
-          Go back to {data} interface{" "}
-        </Link>
-
         <h2> List of Teams </h2>
 
         {data === "assessor" && <ExampleButton name="Create New Team" />}

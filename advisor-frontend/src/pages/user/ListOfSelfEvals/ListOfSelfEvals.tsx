@@ -24,7 +24,7 @@ function ListOfSelfEvals() {
   return (
     <PageLayout title="Individual Evaluations" sidebarType={userTypes.USER}>
       <Grid container direction="column" alignItems="left">
-        <strong>Ongoing Evaluations (Individual)</strong>
+        <h2>Ongoing Evaluations (Individual)</h2>
         <AssessmentOngoingGrid
           theme={INGTheme}
           userId={userId}
@@ -32,7 +32,7 @@ function ListOfSelfEvals() {
           assessmentType="INDIVIDUAL"
         />
 
-        <strong>Completed Evaluations (Individual)</strong>
+        <h2>Completed Evaluations (Individual)</h2>
         <AssessmentCompletedGrid
           theme={INGTheme}
           userId={userId}

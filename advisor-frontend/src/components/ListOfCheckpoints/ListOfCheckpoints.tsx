@@ -1,21 +1,21 @@
-import { Grid, Stack, Pagination, Card, Tab, Tabs } from "@mui/material";
+import { Grid, Stack, Pagination, Card, Tab, Tabs, ThemeOptions } from "@mui/material";
 import React from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
-import ButtonRegular from "../../components/ButtonRegular/ButtonRegular";
-import Checkpoint from "../../components/Checkpoint/Checkpoint";
-import userTypes from "../../components/Sidebar/listUsersTypes";
-import Subarea from "../../components/Subarea/Subarea";
-import INGTheme from "../../Theme";
-import PageLayout from "../PageLayout";
+import { Link } from "react-router-dom";
+import ButtonRegular from "../ButtonRegular/ButtonRegular";
+import Checkpoint from "../Checkpoint/Checkpoint";
+import Subarea from "../Subarea/Subarea";
 
 /**
  * Page with a self evaluation that can be filled in
  * This should only be accessible to the user whose assement this belongs to
  */
-function IndividualEvaluation() {
-  const location = useLocation();
-  const data = location.state;
-  const { assessmentId } = useParams();
+function ListOfCheckpoints({
+  assessmentId,
+  theme,
+}: {
+  assessmentId: string | undefined;
+  theme: ThemeOptions;
+}) {
   const assessmentItems = 12;
   const checkpointlist = [];
   const subareaname = "Subarea Name";
@@ -32,7 +32,7 @@ function IndividualEvaluation() {
     checkpointlist.push(
       <Checkpoint
         number={i}
-        theme={INGTheme}
+        theme={theme}
         description="Lorem ipsum"
         checkpointvalues={[0, 1, 2]}
         checkpointlabels={["Yes", "No", "N/A"]}
@@ -46,11 +46,8 @@ function IndividualEvaluation() {
   };
 
   return (
-    <PageLayout
-      title={`An Individual Evaluation with id ${assessmentId}`}
-      sidebarType={userTypes.USER}
-    >
-      <Grid container direction="column" alignItems="left">
+    <div style={{width: "inherit", margin: "auto"}}>
+        <Grid container direction="column" alignItems="left">
         <Grid item>
           <Card
             sx={{
@@ -71,7 +68,7 @@ function IndividualEvaluation() {
         <br />
         <Grid item>
           <Subarea
-            theme={INGTheme}
+            theme={theme}
             title={subareaname}
             summary="Lorem ipsum"
             description="Lorem ipsum 2"
@@ -81,7 +78,7 @@ function IndividualEvaluation() {
           {value === "Single" && (
             <Checkpoint
               number={page}
-              theme={INGTheme}
+              theme={theme}
               description="Lorem ipsum"
               checkpointvalues={[0, 1, 2]}
               checkpointlabels={["Yes", "No", "N/A"]}
@@ -108,19 +105,9 @@ function IndividualEvaluation() {
           </Stack>
         </Grid>
       </Grid>
-      <div>
-        <p> {data} view </p>
-        <Link to="/user/self_evaluations" state={data}>
-          {" "}
-          Go Back to Evaluations Page{" "}
-        </Link>
-
-        <h2> An Individual Evaluation with id {assessmentId} </h2>
-
-        <h3>List of checkpoints</h3>
-      </div>
-    </PageLayout>
+    </div>
+      
   );
 }
 
-export default IndividualEvaluation;
+export default ListOfCheckpoints;
