@@ -61,11 +61,13 @@ model Maturity {
 
 model Topic {
   topic_id          Int                 @id @default(autoincrement())
-  topic_name        String
+  topic_name        String              @default("New Topic")
   Template          Template            @relation(fields: [template_id], references: [template_id])
   template_id       Int
   CheckpointInTopic CheckpointInTopic[]
   Feedback          Feedback[]
+
+  @@unique([topic_name, template_id])
 }
 
 model CheckpointInTopic {

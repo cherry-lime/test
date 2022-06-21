@@ -54,7 +54,7 @@ export class AuthController {
   @Post('/register')
   @ApiResponse({
     description: 'Registered',
-    type: CreateUserDto,
+    type: LoginDto,
   })
   async register(
     @Body() createUserDto: CreateUserDto,
