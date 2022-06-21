@@ -16,6 +16,7 @@ async function bootstrap() {
     })
   );
   app.use(cookieParser());
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('TestING Advisor API')
