@@ -21,38 +21,38 @@ import INGTheme from "../../../Theme";
 const API_URL = "https://tabackend.azurewebsites.net";
 
 export default function AllGrid() {
-  // const logout = useMutation(
-  //   ["Logout Admin"],
-  //   () => axios.post(`${API_URL}/auth/logout`),
-  //   {
-  //     onSuccess: (data: any) => {
-  //       console.log(data);
-  //     },
-  //     onError: (error: any) => {
-  //       console.log(error);
-  //     },
-  //   }
-  // );
+  const logout = useMutation(
+    ["Logout Admin"],
+    () => axios.post(`${API_URL}/auth/logout`),
+    {
+      onSuccess: (data: any) => {
+        console.log(data);
+      },
+      onError: (error: any) => {
+        console.log(error);
+      },
+    }
+  );
 
-  // const login = useMutation(
-  //   ["Login Admin"],
-  //   () =>
-  //     axios.post(`${API_URL}/auth/login`, {
-  //       username: "birth_taken",
-  //       password: "994c801d-e32b-4281-9e83-f7937b4a1bff",
-  //     }),
-  //   {
-  //     onSuccess: (data: any) => {
-  //       console.log(data);
-  //     },
-  //     onError: (error: any) => {
-  //       console.log(error);
-  //     },
-  //   }
-  // );
+  const login = useMutation(
+    ["Login Admin"],
+    () =>
+      axios.post(`${API_URL}/auth/login`, {
+        username: "birth_taken",
+        password: "994c801d-e32b-4281-9e83-f7937b4a1bff",
+      }),
+    {
+      onSuccess: (data: any) => {
+        console.log(data);
+      },
+      onError: (error: any) => {
+        console.log(error);
+      },
+    }
+  );
 
-  // logout.mutate();
-  // login.mutate();
+  logout.mutate();
+  login.mutate();
 
   const userId = 0;
   const userRole = "ASSESSOR";
