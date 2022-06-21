@@ -1,6 +1,7 @@
 export const aTemplate = {
   template_id: 1,
   template_name: 'test',
+  template_description: 'test',
   template_type: 'INDIVIDUAL',
   disabled: false,
   weight_range_min: 1,
@@ -12,6 +13,7 @@ export const aTemplate = {
 export const updateTemplate = {
   template_id: 1,
   template_name: 'new_name',
+  template_description: 'new_description',
   template_type: 'INDIVIDUAL',
   disabled: false,
   weight_range_min: 1,
