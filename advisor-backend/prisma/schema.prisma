@@ -80,11 +80,13 @@ model CheckpointInTopic {
 }
 
 model Team {
-  team_id      Int          @id @default(autoincrement())
-  team_name    String
-  invite_token String       @db.Uuid
-  UserInTeam   UserInTeam[]
-  Assessment   Assessment[]
+  team_id         Int          @id @default(autoincrement())
+  team_name       String       @unique
+  invite_token    String       @unique @default(uuid()) @db.Uuid
+  team_country    String
+  team_department String
+  UserInTeam      UserInTeam[]
+  Assessment      Assessment[]
 }
 
 model UserInTeam {
@@ -108,7 +110,7 @@ model Assessment {
   updated_at                        DateTime                            @updatedAt
   completed_at                      DateTime?
   assessment_type                   AssessmentType
-  Template                          Template                            @relation(fields: [template_id], references: [template_id])
+  template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
   Team                              Team?                               @relation(fields: [team_id], references: [team_id])
   team_id                           Int?
@@ -132,7 +134,7 @@ model Template {
   template_id       Int            @id @default(autoincrement())
   template_name     String         @default("New Template")
   template_type     AssessmentType
-  disabled          Boolean        @default(false)
+  enabled           Boolean        @default(false)
   weight_range_min  Int            @default(1)
   weight_range_max  Int            @default(3)
   score_formula     String         @default("sum(x)")

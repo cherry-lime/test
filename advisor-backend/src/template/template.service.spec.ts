@@ -17,7 +17,7 @@ const moduleMocker = new ModuleMocker(global);
 export const updateTemplateDto: UpdateTemplateDto = {
   template_name: 'new_name',
   template_type: 'INDIVIDUAL',
-  disabled: false,
+  enabled: false,
   weight_range_min: 1,
   weight_range_max: 5,
   score_formula: 'avg(x)',
