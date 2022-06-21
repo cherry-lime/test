@@ -88,7 +88,23 @@ export class AssessmentScoreService {
 
     const categoryIdsList = categoryIds.map((category) => category.category_id);
 
-    let checkpoints;
+    const selectParam = {
+      // Used in select part of prisma checkpoints query
+      checkpoint_id: true,
+      maturity_id: true,
+      category_id: true,
+      weight: true,
+      CheckpointAndAnswersInAssessments: {
+        where: {
+          assessment_id: assessment_id,
+        },
+        select: {
+          answer_id: true,
+          checkpoint_id: true,
+          assessment_id: true,
+        },
+      },
+    };
 
     if (topic_id) {
       // If topic_id is specified, calculate score for one topic
@@ -108,7 +124,22 @@ export class AssessmentScoreService {
         );
       }
 
-      const param = {
+      selectParam['CheckpointInTopic'] = {
+        // If topic_id is specified and valid then CheckpointInTopic is added
+        //   to select statement
+        where: {
+          topic_id,
+        },
+        select: {
+          checkpoint_id: true,
+        },
+      };
+    }
+
+    // Getting the ids of checkpoints which have are not disabled and are in
+    //   maturityIds and categoryIds
+    const checkpoints = await this.prisma.checkpoint.findMany({
+      where: {
         disabled: false,
         maturity_id: {
           in: maturityIdsList,
@@ -116,78 +147,9 @@ export class AssessmentScoreService {
         category_id: {
           in: categoryIdsList,
         },
-      };
-
-      const selectParam = {
-        maturity_id: true,
-        category_id: true,
-        weight: true,
-        CheckpointAndAnswersInAssessments: {
-          where: {
-            assessment_id: assessment_id,
-          },
-          select: {
-            answer_id: true,
-            assessment_id: true,
-          },
-        },
-        CheckpointInTopic: {
-          where: {
-            topic_id,
-          },
-          select: {
-            checkpoint_id: true,
-          },
-        },
-      };
-
-      // Getting the ids of checkpoints which have are not disabled and are
-      //   in maturityIds and categoryIds and are associated to topic with topic_id
-      checkpoints = await this.prisma.checkpoint.findMany({
-        where: {
-          disabled: false,
-          maturity_id: {
-            in: maturityIdsList,
-          },
-          category_id: {
-            in: categoryIdsList,
-          },
-        },
-        select: selectParam,
-      });
-    } else {
-      // If topic_id is not specified, calculate score for all topics
-
-      // Getting the ids of checkpoints which have are not disabled and are in
-      //   maturityIds and categoryIds
-      checkpoints = await this.prisma.checkpoint.findMany({
-        where: {
-          disabled: false,
-          maturity_id: {
-            in: maturityIdsList,
-          },
-          category_id: {
-            in: categoryIdsList,
-          },
-        },
-        select: {
-          checkpoint_id: true,
-          maturity_id: true,
-          category_id: true,
-          weight: true,
-          CheckpointAndAnswersInAssessments: {
-            where: {
-              assessment_id: assessment_id,
-            },
-            select: {
-              answer_id: true,
-              checkpoint_id: true,
-              assessment_id: true,
-            },
-          },
-        },
-      });
-    }
+      },
+      select: selectParam,
+    });
 
     if (checkpoints.length === 0) {
       return new BadRequestException(
@@ -271,13 +233,11 @@ export class AssessmentScoreService {
         !topic_id || // If topic_id is not specified, calculate score for all topics
         (checkpoint.CheckpointInTopic && // If topic_id is specified, calculate score for one topic
           checkpoint.CheckpointInTopic.length > 0 && // should be at least one checkpoint in topic
-          possibleAnswersDictionary
-            .keys()
-            .includes(
-              checkpoint.CheckpointAndAnswersInAssessments.map(
-                (answer) => answer.answer_id
-              )[0]
-            )) // Checkpoint asnwer has to be in possible answers
+          Object.keys(possibleAnswersDictionary).includes(
+            checkpoint.CheckpointAndAnswersInAssessments.map(
+              (answer) => answer.answer_id
+            )[0].toString()
+          )) // Checkpoint asnwer has to be in possible answers
       ) {
         calculateScorePerCatoryPerMaturity[specificMaturityIndex][
           specificCategoryIndex
