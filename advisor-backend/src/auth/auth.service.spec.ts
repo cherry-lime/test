@@ -6,11 +6,9 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import {
-  registerDto,
   userDto,
   UserWithoutPassword,
   userAuthenticationLog,
-  userAuthenticationReg,
   mockPrisma,
 } from '../prisma/mock/mockAuthService';
 import { JwtStrategy } from './jwt.strategy';
@@ -104,17 +102,17 @@ describe('AuthService', () => {
     expect(authService.login(userDto)).toBeDefined();
   });
 
-  it('Authentication registration should be defined', () => {
-    expect(authService.register(registerDto)).toBeDefined();
-  });
+  // it('Authentication registration should be defined', () => {
+  //   expect(authService.register(registerDto)).toBeDefined();
+  // });
 
-  describe('When registering', () => {
-    it('should return the correct AuthResponse type', async () => {
-      expect(typeof authService.register(registerDto)).toEqual(
-        typeof userAuthenticationReg
-      );
-    });
-  });
+  // describe('When registering', () => {
+  //   it('should return the correct AuthResponse type', async () => {
+  //     expect(typeof authService.register(registerDto)).toEqual(
+  //       typeof userAuthenticationReg
+  //     );
+  //   });
+  // });
 
   describe('When logging in', () => {
     it('should return an AuthResponse type', () => {

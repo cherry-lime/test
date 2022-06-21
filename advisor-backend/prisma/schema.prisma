@@ -16,7 +16,7 @@ model User {
   updated_at             DateTime                 @updatedAt
   username               String                   @unique
   user_id                Int                      @id @default(autoincrement())
-  role                   Role[]
+  role                   Role
   AssessmentParticipants AssessmentParticipants[]
   UserInTeam             UserInTeam[]
 
@@ -201,6 +201,3 @@ enum Role {
   ASSESSOR
   ADMIN
 }
-
-
-

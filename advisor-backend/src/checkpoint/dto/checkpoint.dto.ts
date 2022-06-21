@@ -8,11 +8,8 @@ export class CheckpointDto {
   checkpoint_name: string;
 
   @ApiProperty()
-
   checkpoint_description: string;
 
   @ApiProperty()
   weight: number;
-
-
 }
