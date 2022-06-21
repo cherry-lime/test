@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Link } from "@mui/icons-material";
-
+import { Link } from "react-router-dom";
 import { GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Button } from "@mui/material";
