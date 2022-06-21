@@ -14,7 +14,7 @@ export class TemplateDto {
   template_type: AssessmentType;
 
   @ApiProperty()
-  disabled: boolean;
+  enabled: boolean;
 
   @ApiProperty()
   weight_range_min: number;
