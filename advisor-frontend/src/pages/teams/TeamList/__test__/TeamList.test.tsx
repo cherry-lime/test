@@ -39,7 +39,7 @@ test("app rendering/navigating from user view to specific team", async () => {
   const buttonTeams = screen.getByTestId("user-teams");
   fireEvent.click(buttonTeams);
   expect(screen.getByText(/List of Teams/i)).toBeInTheDocument();
-  
+
   const buttonTeam2 = screen.getByTestId("team-4");
   fireEvent.click(buttonTeam2);
   expect(screen.getByText(/A Specific Team with id 4/i)).toBeInTheDocument();
