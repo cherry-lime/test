@@ -15,7 +15,7 @@ import { RootState } from "../../../app/store";
  */
 function UserInterface() {
   const { userID } = useSelector((state: RootState) => state.userData);
-  const pageTitle = `Home ${userID}`;
+  const pageTitle = `Home User ${userID}`;
 
   return (
     <PageLayout title={pageTitle} footer sidebarType={userTypes.USER}>
