@@ -1,14 +1,11 @@
-import { render, cleanup, screen, fireEvent } from "@testing-library/react";
-import { Provider, useDispatch, useSelector } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-import App from "../../App";
+import { cleanup } from "@testing-library/react";
 import { store } from "../store";
 import { setUserID, setUserRole } from "../userDataSlice";
 
 afterEach(cleanup);
 
 it("userRole change", () => {
-    // Fetch the default userRole value
+  // Fetch the default userRole value
   let state = store.getState().userData;
   const oldRole = state.userRole;
   // Change the userRole state
@@ -21,7 +18,7 @@ it("userRole change", () => {
 });
 
 it("userID change", () => {
-    // Fetch the default userID value
+  // Fetch the default userID value
   let state = store.getState().userData;
   const oldID = state.userID;
   // Change the userID state
@@ -29,6 +26,6 @@ it("userID change", () => {
   // Fetch new userID
   state = store.getState().userData;
   const newID = state.userID;
-  
+
   expect(oldID).not.toEqual(newID);
 });

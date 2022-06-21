@@ -58,10 +58,10 @@ describe("test suite of test cases", () => {
   test("testcase1", () => {
     render(
       <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
     );
     // expect(to be tested function or component).toBe(expected result of the component);
     // example:
