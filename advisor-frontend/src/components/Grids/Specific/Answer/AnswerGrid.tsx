@@ -1,11 +1,11 @@
 import * as React from "react";
+import { UseMutationResult } from "react-query";
 
 import {
   GridActionsCellItem,
   GridColumns,
   GridPreProcessEditCellProps,
   GridRowId,
-  GridRowModel,
   GridValueFormatterParams,
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
@@ -13,26 +13,21 @@ import { Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import GenericGrid from "../../Generic/GenericGrid";
-import { handleAdd, handleDelete, processRowUpdate } from "../handlers";
 
-// Define type for the rows in the grid
-type Row = {
-  id: number;
-  label: string;
-  value: number;
-  enabled: boolean;
-};
+import {
+  handleAdd,
+  handleDelete,
+  handleInit,
+  processRowUpdate,
+} from "../handlersNew";
 
-// Get row object with default values
-const getDefaultRow = () => {
-  const defaultRow = {
-    id: Date.now(),
-    label: "Label...",
-    value: 0,
-    enabled: false,
-  };
-  return defaultRow;
-};
+import {
+  AnswerRow,
+  useDeleteAnswer,
+  useGetAnswers,
+  usePatchAnswer,
+  usePostAnswer,
+} from "./AnswerAPI";
 
 type AnswerTypeGridProps = {
   theme: Theme;
@@ -41,18 +36,24 @@ type AnswerTypeGridProps = {
 
 export default function AnswerTypeGrid({
   theme,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   templateId,
 }: AnswerTypeGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+  const [rows, setRows] = React.useState<AnswerRow[]>([]);
 
-  // Fetch initial rows of the grid
+  // Answer query
+  const { status, data, error } = useGetAnswers(templateId);
+
+  // Answer mutations
+  const patchAnswer = usePatchAnswer();
+  const postAnswer = usePostAnswer(templateId);
+  const deleteAnswer = useDeleteAnswer();
+
+  // Called when "status" of answers query is changed
   React.useEffect(() => {
-    // TODO Replace this by API fetch
-    setRows(() => []);
-  }, []);
+    handleInit(setRows, status, data, error);
+  }, [status]);
 
-  // Called when the 'Order' column is edited
+  // Called when the 'Value' column is edited
   const preProcessEditValue = React.useCallback(
     (params: GridPreProcessEditCellProps) => {
       const { value } = params.props;
@@ -67,25 +68,30 @@ export default function AnswerTypeGrid({
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdate(setRows, newRow, oldRow, false),
+    async (newRow: AnswerRow, oldRow: AnswerRow) =>
+      processRowUpdate(
+        setRows,
+        patchAnswer as UseMutationResult,
+        newRow,
+        oldRow
+      ),
     []
   );
 
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, rowId);
+      handleDelete(setRows, deleteAnswer as UseMutationResult, rowId as number);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, getDefaultRow());
-  }, [rows]);
+    handleAdd(setRows, postAnswer as UseMutationResult);
+  }, []);
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColumns<AnswerRow>>(
     () => [
       {
         field: "label",
@@ -117,7 +123,7 @@ export default function AnswerTypeGrid({
         field: "actions",
         type: "actions",
         width: 100,
-        getActions: (params: { id: GridRowId; row: Row }) => [
+        getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
             icon={
               <Tooltip title="Delete">

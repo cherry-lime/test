@@ -8,6 +8,7 @@ export type MaturityRow = {
   name: string;
   order: number;
   templateId: number;
+  enabled: boolean;
 };
 
 type Maturity = {
@@ -23,6 +24,7 @@ function toRow(maturity: Maturity) {
     name: maturity.maturity_name,
     order: maturity.maturity_order,
     templateId: maturity.template_id,
+    enabled: true,
   } as MaturityRow;
 }
 
@@ -39,9 +41,7 @@ function fromRow(row: MaturityRow) {
 export function useGetMaturities(templateId: number) {
   return useQuery(["GET", "/template", templateId, "/maturity"], async () => {
     // Get response data from database
-    const { data } = await API.get(`/template/${templateId}/maturity`, {
-      withCredentials: true,
-    });
+    const { data } = await API.get(`/template/${templateId}/maturity`);
 
     // Convert data to rows
     const rows = data.map((maturity: Maturity) => toRow(maturity));

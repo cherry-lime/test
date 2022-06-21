@@ -40,10 +40,10 @@ type MaturityGridProps = {
 export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   const [rows, setRows] = React.useState<MaturityRow[]>([]);
 
-  // Topic query
+  // Maturity query
   const { status, data, error } = useGetMaturities(templateId);
 
-  // Topic mutations
+  // Maturity mutations
   const patchMaturity = usePatchMaturity();
   const postMaturity = usePostMaturity(templateId);
   const deleteMaturity = useDeleteMaturity();

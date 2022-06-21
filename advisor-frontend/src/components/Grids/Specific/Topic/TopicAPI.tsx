@@ -37,9 +37,7 @@ function fromRow(row: TopicRow) {
 export function useGetTopics(templateId: number) {
   return useQuery(["GET", "/template", templateId, "/topic"], async () => {
     // Get response data from database
-    const { data } = await API.get(`/template/${templateId}/topic`, {
-      withCredentials: true,
-    });
+    const { data } = await API.get(`/template/${templateId}/topic`);
 
     // Convert data to rows
     const rows = data.map((topic: Topic) => toRow(topic));

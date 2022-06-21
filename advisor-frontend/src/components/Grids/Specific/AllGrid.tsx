@@ -8,7 +8,7 @@ import TemplateGrid from "./Template/TemplateGrid";
 import CategoryGrid from "./Category/CategoryGrid";
 import TopicGrid from "./Topic/TopicGrid";
 import MaturityGrid from "./Maturity/MaturityGrid";
-import AnswerTypeGrid from "./AnswerType/AnswerTypeGrid";
+import AnswerTypeGrid from "./Answer/AnswerGrid";
 import SubareaGrid from "./Subarea/SubareaGrid";
 import CheckpointGrid from "./Checkpoint/CheckpointGrid";
 import INGTheme from "../../../Theme";
