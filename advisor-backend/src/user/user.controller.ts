@@ -30,7 +30,7 @@ export class UserController {
   })
   @Get('')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSESSOR)
+  @Roles(Role.ADMIN, Role.ASSESSOR, Role.USER)
   async findAll(): Promise<any> {
     return this.userService.findAll();
   }
@@ -43,7 +43,7 @@ export class UserController {
   @ApiResponse({ description: 'Found user', type: userResponse })
   @Get(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSESSOR)
+  @Roles(Role.ADMIN, Role.ASSESSOR, Role.USER)
   getUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getUser(id);
   }
