@@ -14,10 +14,12 @@ import ListOfIndividuals from "./pages/admin/ListOfIndividuals/ListOfIndividuals
 import Area from "./pages/admin/templates/Area/Area";
 import Template from "./pages/admin/templates/Template/Template";
 import Example from "./pages/ExamplePage";
+import GlobalStyles from "./GlobalStyles";
 
 function App() {
   return (
     <div className="App">
+      <GlobalStyles />
       <Link data-testid="home" to="/">
         Home
       </Link>

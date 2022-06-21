@@ -1,4 +1,9 @@
-import { TextField, ThemeOptions, ThemeProvider } from "@mui/material";
+import {
+  ClickAwayListener,
+  TextField,
+  ThemeOptions,
+  ThemeProvider,
+} from "@mui/material";
 import { useState } from "react";
 import PropTypes from "prop-types";
 /*
@@ -16,24 +21,35 @@ function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
   the value is updated when you are done entering and click outside the textfield
   */
   const initialState = text;
-  const [value, setValue] = useState(initialState);
-  const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+  const [, setValue] = useState(initialState);
+  const [intermediateValue, setIntermediateValue] = useState(initialState);
+
+  const handleSave = () => {
+    // here you save the new text
+    // that is contained in intermediateValue
+    setValue(intermediateValue);
   };
+
+  const handleModify = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIntermediateValue(event.target.value);
+  };
+
   return (
     <ThemeProvider theme={theme}>
-      <TextField
-        sx={{
-          backgroundColor: "white",
-          width: "inherit",
-        }}
-        variant="outlined"
-        multiline
-        rows={5}
-        size="small"
-        value={value}
-        onChange={doSomething}
-      />
+      <ClickAwayListener onClickAway={handleSave}>
+        <TextField
+          sx={{
+            backgroundColor: "white",
+            width: "inherit",
+          }}
+          variant="outlined"
+          multiline
+          rows={5}
+          size="small"
+          value={intermediateValue}
+          onChange={handleModify}
+        />
+      </ClickAwayListener>
     </ThemeProvider>
   );
 }

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "@mui/icons-material";
 
 import { GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
@@ -52,15 +53,6 @@ export default function AssessmentOngoingGrid({
     // TODO Replace this by API fetch
   }, []);
 
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
-    },
-    []
-  );
-
   // Called when the "Add" button is pressed below the grid
   const handleAdd = React.useCallback(() => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -91,14 +83,22 @@ export default function AssessmentOngoingGrid({
               type: "actions",
               width: 150,
               getActions: (params: { id: GridRowId }) => [
-                <Button variant="contained" onClick={handleVisit(params.id)}>
-                  <strong>Continue</strong>
-                </Button>,
+                <Link
+                  to={
+                    assessmentType === "INDIVIDUAL"
+                      ? `/user/self_evaluations/${params.id}`
+                      : `/teams/${teamId}/${params.id}`
+                  }
+                >
+                  <Button variant="contained">
+                    <strong>Continue</strong>
+                  </Button>
+                </Link>,
               ],
             },
           ]),
     ],
-    [handleVisit]
+    []
   );
 
   return (

@@ -28,7 +28,7 @@ export default function SidebarList({ userType }: SidebarListProps) {
         </ListItemButton>
       )}
       {userType.get("evaluation") && (
-        <ListItemButton component={Link} to={`/${userRole}/self_evaluations`}>
+        <ListItemButton component={Link} to="/user/self_evaluations">
           <ListItemIcon>
             <BarChartIcon color="info" />
           </ListItemIcon>
@@ -44,7 +44,7 @@ export default function SidebarList({ userType }: SidebarListProps) {
         </ListItemButton>
       )}
       {userType.get("template") && (
-        <ListItemButton component={Link} to={`/${userRole}`}>
+        <ListItemButton component={Link} to="/admin/templates">
           <ListItemIcon>
             <EditIcon color="info" style={{ color: "background" }} />
           </ListItemIcon>
