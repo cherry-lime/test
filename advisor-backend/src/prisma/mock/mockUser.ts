@@ -1,7 +1,10 @@
+import { Role } from '@prisma/client';
+
 // Mock users array
 export const userArray = [
   {
     user_id: 1,
+    user_name: 'test_user_name',
     password_hash: 'fdsfdsfds',
   },
   {
@@ -11,6 +14,20 @@ export const userArray = [
 ];
 // Mock single user
 export const aUser = userArray[0];
+
+// Mock users array
+export const userArray1 = [
+  {
+    user_id: 1,
+    username: 'test_username',
+    password: 'test_password_hash',
+    role: Role.USER,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+];
+// Mock single user
+export const aUser1 = userArray1[0];
 
 export const mockUser = {
   findMany: jest.fn().mockResolvedValue(userArray),

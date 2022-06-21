@@ -57,7 +57,7 @@ export class AssessmentController {
 
   /**
    * [GET] /assessment - get all assessments
-   * @returns AssessmentResponse[] List of all assessments
+   * @returns AssessmentDto List of all assessments
    */
   @Get()
   @ApiResponse({

@@ -84,7 +84,7 @@ export class TemplateService {
     updateTemplateDto: UpdateTemplateDto
   ): Promise<TemplateDto> {
     // Update template with id and data
-    return await this.prisma.template
+    const template = await this.prisma.template
       .update({
         where: {
           template_id: id,
@@ -103,6 +103,23 @@ export class TemplateService {
         }
         throw new InternalServerErrorException();
       });
+
+    if (updateTemplateDto.enabled) {
+      // Disable all other templates with same type
+      await this.prisma.template.updateMany({
+        where: {
+          template_type: template.template_type,
+          NOT: {
+            template_id: template.template_id,
+          },
+        },
+        data: {
+          enabled: false,
+        },
+      });
+    }
+
+    return template;
   }
 
   /**
@@ -129,6 +146,7 @@ export class TemplateService {
 
     delete template.template_id;
     delete template.template_name;
+    template.enabled = false;
 
     // While template is not created
     while (!newTemplate) {
