@@ -20,7 +20,9 @@ export class UserService {
    */
   async findAll(): Promise<any> {
     // Return all templates from prisma
-    return await this.prisma.user.findMany();
+    const users =  await this.prisma.user.findMany();
+    users.forEach((user) => delete user.password);
+    return users;
   }
 
   /**
