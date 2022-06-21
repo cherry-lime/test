@@ -1,6 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import { store } from "./app/store";
 
 // test('renders learn react link', () => {
 //   render(<App />);
@@ -10,9 +12,11 @@ import App from "./App";
 
 test("app rendering/navigating to user interface", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
 
   const button = screen.getByTestId("user");
@@ -22,9 +26,11 @@ test("app rendering/navigating to user interface", async () => {
 
 test("app rendering/navigating to admin interface", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("admin");
   fireEvent.click(button);
@@ -33,9 +39,11 @@ test("app rendering/navigating to admin interface", async () => {
 
 test("app rendering/navigating to assessor interface", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("assessor");
   fireEvent.click(button);
@@ -49,9 +57,11 @@ test("app rendering/navigating to assessor interface", async () => {
 describe("test suite of test cases", () => {
   test("testcase1", () => {
     render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
     );
     // expect(to be tested function or component).toBe(expected result of the component);
     // example:

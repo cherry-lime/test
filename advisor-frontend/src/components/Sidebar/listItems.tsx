@@ -7,60 +7,52 @@ import HomeIcon from "@mui/icons-material/Home";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EditIcon from "@mui/icons-material/Edit";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "../../app/store";
 
 type SidebarListProps = {
   userType: Map<string, boolean>;
 };
 
 export default function SidebarList({ userType }: SidebarListProps) {
+  const { userRole } = useSelector((state: RootState) => state.userData);
   return (
     <>
       {userType.get("home") && (
-        <Link to="/">
-          <ListItemButton>
-            <ListItemIcon>
-              <HomeIcon color="info" />
-            </ListItemIcon>
-            <ListItemText primary="Home" style={{ color: "background" }} />
-          </ListItemButton>
-        </Link>
+        <ListItemButton component={Link} to={`/${userRole}`}>
+          <ListItemIcon>
+            <HomeIcon color="info" />
+          </ListItemIcon>
+          <ListItemText primary="Home" style={{ color: "background" }} />
+        </ListItemButton>
       )}
       {userType.get("evaluation") && (
-        <Link to="/user/self_evaluations">
-          <ListItemButton>
-            <ListItemIcon>
-              <BarChartIcon color="info" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Evaluations"
-              style={{ color: "background" }}
-            />
-          </ListItemButton>
-        </Link>
+        <ListItemButton component={Link} to="/user/self_evaluations">
+          <ListItemIcon>
+            <BarChartIcon color="info" />
+          </ListItemIcon>
+          <ListItemText primary="Evaluations" style={{ color: "background" }} />
+        </ListItemButton>
       )}
       {userType.get("teams") && (
-        <Link to="/teams">
-          <ListItemButton>
-            <ListItemIcon>
-              <GroupsIcon color="info" />
-            </ListItemIcon>
-            <ListItemText primary="Teams" style={{ color: "background" }} />
-          </ListItemButton>
-        </Link>
+        <ListItemButton component={Link} to="/teams">
+          <ListItemIcon>
+            <GroupsIcon color="info" />
+          </ListItemIcon>
+          <ListItemText primary="Teams" style={{ color: "background" }} />
+        </ListItemButton>
       )}
       {userType.get("template") && (
-        <Link to="/admin/templates">
-          <ListItemButton>
-            <ListItemIcon>
-              <EditIcon color="info" />
-            </ListItemIcon>
-            <ListItemText primary="Templates" style={{ color: "background" }} />
-          </ListItemButton>
-        </Link>
+        <ListItemButton component={Link} to="/admin/templates">
+          <ListItemIcon>
+            <EditIcon color="info" style={{ color: "background" }} />
+          </ListItemIcon>
+          <ListItemText primary="Templates" />
+        </ListItemButton>
       )}
       {userType.get("settings") && (
-        <ListItemButton>
+        <ListItemButton component={Link} to="/">
           <ListItemIcon>
             <SettingsIcon color="info" />
           </ListItemIcon>
@@ -68,7 +60,7 @@ export default function SidebarList({ userType }: SidebarListProps) {
         </ListItemButton>
       )}
       {userType.get("signout") && (
-        <ListItemButton>
+        <ListItemButton component={Link} to="/">
           <ListItemIcon>
             <LogoutIcon color="info" />
           </ListItemIcon>

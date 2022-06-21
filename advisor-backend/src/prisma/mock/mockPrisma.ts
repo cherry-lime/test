@@ -5,11 +5,13 @@ import { mockMaturity } from './mockMaturity';
 import { mockTeam } from './mockTeam';
 import { mockTemplate } from './mockTemplate';
 import { mockUser } from './mockUser';
+import { mockUserInTeam } from './mockUserInTeam';
 import { mockSubarea } from './mockSubarea';
 
 export const mockPrisma = {
   template: mockTemplate,
   user: mockUser,
+  userInTeam: mockUserInTeam,
   assessment: mockAssessment,
   team: mockTeam,
   category: mockCategory,

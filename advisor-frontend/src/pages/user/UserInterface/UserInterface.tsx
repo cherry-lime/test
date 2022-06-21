@@ -1,4 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import EvaluationCard from "../../../components/PageCard/SpecificPageCards/EvaluationCard";
@@ -7,32 +8,31 @@ import ProgressCard from "../../../components/PageCard/SpecificPageCards/Progres
 import NotificationCard from "../../../components/PageCard/SpecificPageCards/NotificationCard";
 import IndividualCard from "../../../components/PageCard/SpecificPageCards/IndividualCard";
 import TemplateCard from "../../../components/PageCard/SpecificPageCards/TemplateCard";
+import { RootState } from "../../../app/store";
 
 /**
  * Home page visible to anyone with the user role
  */
 function UserInterface() {
-  const location = useLocation();
-  const data = location.state;
+  const { userID } = useSelector((state: RootState) => state.userData);
+  const pageTitle = `Home User ${userID}`;
 
   return (
-    <PageLayout title="User Home" footer sidebarType={userTypes.USER}>
-      <Link to="/user/self_evaluations" state={data} data-testid="user-evals">
+    <PageLayout title={pageTitle} footer sidebarType={userTypes.USER}>
+      <Link to="/user/self_evaluations" data-testid="user-evals">
         <EvaluationCard />
       </Link>
-      <Link to="/teams" state={data} data-testid="user-teams">
+      <Link to="/teams" data-testid="user-teams">
         <TeamCard />
       </Link>
       <Link
         to="/user/self_evaluations/:assessmentId"
-        state={data}
         data-testid="user-progress"
       >
         <ProgressCard />
       </Link>
       <Link
         to="/user/self_evaluations/:assessmentId"
-        state={data}
         data-testid="user-progress"
       >
         <NotificationCard />
@@ -40,7 +40,6 @@ function UserInterface() {
 
       <Link
         to="/user/self_evaluations/:assessmentId"
-        state={data}
         data-testid="user-progress"
       >
         <IndividualCard />{" "}
@@ -48,7 +47,6 @@ function UserInterface() {
 
       <Link
         to="/user/self_evaluations/:assessmentId"
-        state={data}
         data-testid="user-progress"
       >
         <TemplateCard />
