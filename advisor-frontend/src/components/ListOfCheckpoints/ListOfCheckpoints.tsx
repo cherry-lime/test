@@ -1,7 +1,13 @@
-import { Grid, Stack, Pagination, Card, Tab, Tabs, ThemeOptions } from "@mui/material";
+import {
+  Grid,
+  Stack,
+  Pagination,
+  Card,
+  Tab,
+  Tabs,
+  ThemeOptions,
+} from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
-import ButtonRegular from "../ButtonRegular/ButtonRegular";
 import Checkpoint from "../Checkpoint/Checkpoint";
 import Subarea from "../Subarea/Subarea";
 
@@ -10,11 +16,14 @@ import Subarea from "../Subarea/Subarea";
  * This should only be accessible to the user whose assement this belongs to
  */
 function ListOfCheckpoints({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentId,
   theme,
+  feedback,
 }: {
   assessmentId: string | undefined;
   theme: ThemeOptions;
+  feedback: boolean;
 }) {
   const assessmentItems = 12;
   const checkpointlist = [];
@@ -30,13 +39,16 @@ function ListOfCheckpoints({
 
   for (let i = 1; i < assessmentItems + 1; i += 1) {
     checkpointlist.push(
-      <Checkpoint
-        number={i}
-        theme={theme}
-        description="Lorem ipsum"
-        checkpointvalues={[0, 1, 2]}
-        checkpointlabels={["Yes", "No", "N/A"]}
-      />
+      <Grid item>
+        <Checkpoint
+          feedback={feedback}
+          number={i}
+          theme={theme}
+          description="Lorem ipsum"
+          checkpointvalues={[0, 1, 2]}
+          checkpointlabels={["Yes", "No", "N/A"]}
+        />
+      </Grid>
     );
   }
 
@@ -46,18 +58,17 @@ function ListOfCheckpoints({
   };
 
   return (
-    <div style={{width: "inherit", margin: "auto"}}>
-        <Grid container direction="column" alignItems="left">
+    <div style={{ width: "inherit", display: "contents" }}>
+      <Grid container direction="column" alignItems="left" spacing="20px">
         <Grid item>
           <Card
             sx={{
               backgroundColor: "white",
-              width: "20vw",
+              width: "inherit",
               borderRadius: "5px",
             }}
           >
-            <Stack direction="row" justifyContent="center" alignItems="center">
-              VIEW:
+            <Stack direction="row" justifyContent="left" alignItems="center">
               <Tabs value={value} onChange={handleChange} textColor="primary">
                 <Tab value="Single" label="Single" />
                 <Tab value="List" label="List" />
@@ -65,7 +76,6 @@ function ListOfCheckpoints({
             </Stack>
           </Card>
         </Grid>
-        <br />
         <Grid item>
           <Subarea
             theme={theme}
@@ -77,6 +87,7 @@ function ListOfCheckpoints({
         <Grid item>
           {value === "Single" && (
             <Checkpoint
+              feedback={feedback}
               number={page}
               theme={theme}
               description="Lorem ipsum"
@@ -84,29 +95,25 @@ function ListOfCheckpoints({
               checkpointlabels={["Yes", "No", "N/A"]}
             />
           )}
-          {value === "List" && <Grid item>{checkpointlist}</Grid>}
         </Grid>
-      </Grid>
-      <Grid container direction="column" alignItems="center">
-        <Grid item>
-          <Stack direction="row" spacing={2} alignItems="center">
-            {value === "Single" && (
-              <Pagination
-                onChange={handlePageChange}
-                count={assessmentItems}
-                shape="rounded"
-                color="primary"
-                page={page}
-              />
-            )}
-            <Link to={`/user/self_evaluations/feedback/${assessmentId}`} >
-              <ButtonRegular text="Finish Assessment" />
-            </Link>
-          </Stack>
+        {value === "List" && checkpointlist}
+        <Grid item container direction="column" alignItems="center">
+          <Grid item>
+            <Stack direction="row" spacing={2} alignItems="center">
+              {value === "Single" && (
+                <Pagination
+                  onChange={handlePageChange}
+                  count={assessmentItems}
+                  shape="rounded"
+                  color="primary"
+                  page={page}
+                />
+              )}
+            </Stack>
+          </Grid>
         </Grid>
       </Grid>
     </div>
-      
   );
 }
 

@@ -36,6 +36,7 @@ export default function Example() {
         <ButtonRegular text="Regular Button" />
         <ButtonInverted text="Inverted Button" />
         <Checkpoint
+          feedback={false}
           number={12}
           description="Checkpoint Description"
           checkpointlabels={["Yes", "No", "N/A", "Extra", "Extra2"]}

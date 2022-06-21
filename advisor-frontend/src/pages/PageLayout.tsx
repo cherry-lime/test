@@ -56,7 +56,7 @@ export default function PageLayout({
             sx={{
               bgcolor: "secondary.light",
               diplay: "flex",
-              justifyContent: "flex-start"
+              justifyContent: "flex-start",
             }}
           >
             {children}

@@ -24,12 +24,14 @@ function Checkpoint({
   checkpointlabels,
   checkpointvalues,
   theme,
+  feedback,
 }: {
   description: string;
   number: number;
   checkpointlabels: string[];
   checkpointvalues: number[];
   theme: ThemeOptions;
+  feedback: boolean;
 }) {
   /*
   initial value of the checkpoint set to empty string
@@ -37,7 +39,7 @@ function Checkpoint({
   set the value when clicking one of the radio-buttons
   */
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(checkpointvalues[0].toString());
 
   const handleClick = useCallback(
     (event) => {
@@ -62,6 +64,7 @@ function Checkpoint({
         control={<Radio color="primary" />}
         label={checkpointlabels[i]}
         value={checkpointvalues[i].toString()}
+        disabled={feedback}
       />
     );
   }
@@ -77,7 +80,7 @@ function Checkpoint({
     darkgrey when not active and ING orange when selected/clicked
     */
     <ThemeProvider theme={theme}>
-      <Card sx={{ width: "95%", alignSelf: "center" }}>
+      <Card sx={{ width: "inherit", alignSelf: "center" }}>
         <CardContent>
           <Typography
             sx={{
