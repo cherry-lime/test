@@ -145,12 +145,13 @@ export class AssessmentController {
    * @param assessment_id assessment_id
    * @returns scoreDto
    * @throws NotFoundException if assessment not found
-   * @throws InternalServerErrorException
    * @throws ForbiddenException if assessment type is INDIVIDUAL
    * @throws BadRequestException if assessment is not completed
    * @throws BadRequestException if no enabled maturities found associated to this template
    * @throws BadRequestException if no enabled categories found associated to this template
+   * @throws BadRequestException if topic not found or not enabled for this template
    * @throws BadRequestException if no enabled checkpoints found associated to this template
+   * @throws BadRequestException if no enabled possible answers found associated to this template
    */
   @Get(':assessment_id/score')
   @ApiResponse({
@@ -177,13 +178,13 @@ export class AssessmentController {
    * @param topic_id topic_id
    * @returns scorePerTopicDto
    * @throws NotFoundException if assessment not found
-   * @throws InternalServerErrorException
    * @throws ForbiddenException if assessment type is INDIVIDUAL
    * @throws BadRequestException if assessment is not completed
    * @throws BadRequestException if no enabled maturities found associated to this template
    * @throws BadRequestException if no enabled categories found associated to this template
    * @throws BadRequestException if topic not found or not enabled for this template
    * @throws BadRequestException if no enabled checkpoints found associated to this template
+   * @throws BadRequestException if no enabled possible answers found associated to this template
    */
   @Get(':assessment_id/score/:topic_id')
   @ApiResponse({
