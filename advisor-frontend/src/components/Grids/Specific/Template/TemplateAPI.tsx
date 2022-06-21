@@ -70,6 +70,8 @@ export function useGetTemplates(templateType: AssessmentType) {
     // Convert filtered data to rows
     const rows = dataFiltered.map((template: Template) => toRow(template));
 
+    console.log(rows);
+
     return rows as TemplateRow[];
   });
 }
