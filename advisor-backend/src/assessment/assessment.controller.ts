@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -18,6 +19,11 @@ import { AssessmentService } from './assessment.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { AssessmentDto } from './dto/assessment.dto';
+import { FeedbackDto } from './dto/feedback.dto';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('assessment')
 @Controller('assessment')
@@ -42,7 +48,7 @@ export class AssessmentController {
 
   /**
    * [GET] /assessment - get all assessments
-   * @returns AssessmentResponse[] List of all assessments
+   * @returns AssessmentDto List of all assessments
    */
   @Get()
   @ApiResponse({
@@ -107,5 +113,22 @@ export class AssessmentController {
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   complete(@Param('assessment_id', ParseIntPipe) id: number) {
     return this.assessmentService.complete(id);
+  }
+
+  /**
+   * [POST] /assessment/:id/feedback - Add feedback to assessment
+   * @param id assessment_id
+   * @returns updated Assessment object
+   */
+  @Post(':assessment_id/feedback')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ASSESSOR)
+  @ApiResponse({ description: 'Assessment', type: AssessmentDto })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
+  feedback(
+    @Param('assessment_id', ParseIntPipe) id: number,
+    @Body() feedbackDto: FeedbackDto
+  ) {
+    return this.assessmentService.feedback(id, feedbackDto);
   }
 }

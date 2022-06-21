@@ -17,7 +17,8 @@ import SubareaGrid from "./Subarea/SubareaGrid";
 import CheckpointGrid from "./Checkpoint/CheckpointGrid";
 import INGTheme from "../../../Theme";
 
-const API_URL = "https://tabackend.azurewebsites.net";
+const API_URL = "localhost:5000";
+// const API_URL = "https://tabackend.azurewebsites.net";
 
 export default function AllGrid() {
   const logout = useMutation(
