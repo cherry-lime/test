@@ -2,7 +2,6 @@ import { Grid, Stack, Pagination, Card, Tab, Tabs } from "@mui/material";
 import React from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import ButtonRegular from "../../components/ButtonRegular/ButtonRegular";
-import ButtonView from "../../components/ButtonView/ButtonView";
 import Checkpoint from "../../components/Checkpoint/Checkpoint";
 import userTypes from "../../components/Sidebar/listUsersTypes";
 import Subarea from "../../components/Subarea/Subarea";

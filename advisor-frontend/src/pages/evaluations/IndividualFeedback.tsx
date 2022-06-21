@@ -1,8 +1,7 @@
-import { Card, Grid, Pagination, Stack, Tab, Tabs } from "@mui/material";
+import { Card, Grid, Stack, Tab, Tabs } from "@mui/material";
 import React from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
-import Checkpoint from "../../components/Checkpoint/Checkpoint";
 import CheckpointGrid from "../../components/Grids/Specific/CheckpointGrid";
 import RecommendationGrid from "../../components/Grids/Specific/RecommendationGrid";
 import userTypes from "../../components/Sidebar/listUsersTypes";

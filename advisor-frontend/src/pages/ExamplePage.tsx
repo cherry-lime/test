@@ -11,7 +11,6 @@ import Textfield from "../components/Textfield/Textfield";
 import PageCard from "../components/PageCard/PageCard";
 import AllGrid from "../components/Grids/Specific/AllGrid";
 import Subarea from "../components/Subarea/Subarea";
-import ButtonView from "../components/ButtonView/ButtonView";
 
 //  coloring theme aligned with UI design
 const theme = createTheme({
@@ -61,7 +60,6 @@ export default function Example() {
         />
         <p />
       </Stack>
-      <ButtonView title="VIEW:" tabstring={["Single", "List"]} />{" "}
       <PageCard
         bodyText="This is a description for the home page card"
         headerText="Title"
