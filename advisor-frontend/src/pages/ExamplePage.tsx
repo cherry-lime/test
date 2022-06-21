@@ -61,7 +61,7 @@ export default function Example() {
         />
         <p />
       </Stack>
-      <ButtonView title="View:" />
+      <ButtonView title="VIEW:" tabstring={["Single", "List"]} />{" "}
       <PageCard
         bodyText="This is a description for the home page card"
         headerText="Title"
@@ -70,7 +70,6 @@ export default function Example() {
         image={testimageFigma}
         isImageLeft
       />
-
       <AllGrid />
     </PageLayout>
   );
