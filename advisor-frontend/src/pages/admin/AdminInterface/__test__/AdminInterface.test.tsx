@@ -2,12 +2,16 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import App from "../../../../App";
+import { Provider } from "react-redux";
+import { store } from "../../../../app/store";
 
 test("app rendering/navigating from admin interface to templates", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("admin");
   fireEvent.click(button);
@@ -20,9 +24,11 @@ test("app rendering/navigating from admin interface to templates", async () => {
 
 test("app rendering/navigating from admin interface to individuals", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("admin");
   fireEvent.click(button);
