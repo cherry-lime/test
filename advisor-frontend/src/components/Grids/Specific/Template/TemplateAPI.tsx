@@ -1,10 +1,9 @@
 import { useQuery, useMutation } from "react-query";
-import axios from "axios";
-import { GridRowId } from "@mui/x-data-grid";
-import { AssessmentType } from "../../../../types/AssessmentType";
 
-// const API_URL = "http://localhost:5000";
-const API_URL = "https://tabackend.azurewebsites.net";
+import { GridRowId } from "@mui/x-data-grid";
+
+import API from "../../../../API";
+import { AssessmentType } from "../../../../types/AssessmentType";
 
 export type TemplateRow = {
   id: GridRowId;
@@ -60,7 +59,7 @@ function fromRow(row: TemplateRow) {
 export function useGetTemplates(templateType: AssessmentType) {
   return useQuery(["GET", "/template", templateType], async () => {
     // Get response data from database
-    const { data } = await axios.get(`${API_URL}/template`);
+    const { data } = await API.get(`/template`);
 
     // Filter data on type of the templates
     const dataFiltered = data.filter(
@@ -70,8 +69,6 @@ export function useGetTemplates(templateType: AssessmentType) {
     // Convert filtered data to rows
     const rows = dataFiltered.map((template: Template) => toRow(template));
 
-    console.log(rows);
-
     return rows as TemplateRow[];
   });
 }
@@ -80,7 +77,7 @@ export function useGetTemplates(templateType: AssessmentType) {
 export function usePostTemplate(templateType: AssessmentType) {
   return useMutation(["POST", "/template"], async () => {
     // Get response data from database
-    const { data } = await axios.post(`${API_URL}/template`, {
+    const { data } = await API.post(`/template`, {
       template_type: templateType,
     });
 
@@ -95,7 +92,7 @@ export function useGetTemplate() {
     ["GET", "/template", "/{template_id}"],
     async (templateId) => {
       // Get data from database
-      const { data } = await axios.get(`${API_URL}/template/${templateId}`);
+      const { data } = await API.get(`/template/${templateId}`);
 
       return data as Template;
     }
@@ -111,8 +108,8 @@ export function usePatchTemplate() {
       const template = fromRow(row);
 
       // Get response data from database
-      const { data } = await axios.patch(
-        `${API_URL}/template/${template.template_id}`,
+      const { data } = await API.patch(
+        `/template/${template.template_id}`,
         template
       );
 
@@ -128,7 +125,7 @@ export function useDeleteTemplate() {
     ["DELETE", "/template", "/{template_id}"],
     async (templateId: number) => {
       // Get response data from database
-      const { data } = await axios.delete(`${API_URL}/template/${templateId}`);
+      const { data } = await API.delete(`/template/${templateId}`);
 
       // Convert data to row
       return toRow(data);
@@ -141,9 +138,7 @@ export function useDuplicateTemplate() {
   return useMutation(
     ["POST", "/template", "/{template_id}", "/clone"],
     async (templateId: number) => {
-      const { data } = await axios.post(
-        `${API_URL}/template/${templateId}/clone`
-      );
+      const { data } = await API.post(`/template/${templateId}/clone`);
 
       return toRow(data);
     }

@@ -1,14 +1,13 @@
 import { useQuery, useMutation } from "react-query";
-import axios from "axios";
 import { GridRowId } from "@mui/x-data-grid";
 
-// const API_URL = "http://localhost:5000";
-const API_URL = "https://tabackend.azurewebsites.net";
+import API from "../../../../API";
 
 export type TopicRow = {
   id: GridRowId;
   name: string;
   templateId: number;
+  enabled: boolean;
 };
 
 type Topic = {
@@ -22,6 +21,7 @@ function toRow(topic: Topic) {
     id: topic.topic_id,
     name: topic.topic_name,
     templateId: topic.template_id,
+    enabled: true,
   } as TopicRow;
 }
 
@@ -37,10 +37,9 @@ function fromRow(row: TopicRow) {
 export function useGetTopics(templateId: number) {
   return useQuery(["GET", "/template", templateId, "/topic"], async () => {
     // Get response data from database
-    const { data } = await axios.get(
-      `${API_URL}/template/${templateId}/topic`,
-      { withCredentials: true }
-    );
+    const { data } = await API.get(`/template/${templateId}/topic`, {
+      withCredentials: true,
+    });
 
     // Filter data on type of the templates
     const dataFiltered = data.filter(
@@ -58,9 +57,7 @@ export function useGetTopics(templateId: number) {
 export function usePostTopic(templateId: number) {
   return useMutation(["POST", "/template", templateId, "/topic"], async () => {
     // Get response data from database
-    const { data } = await axios.post(
-      `${API_URL}/template/${templateId}/topic`
-    );
+    const { data } = await API.post(`/template/${templateId}/topic`);
 
     // Convert data to row
     return toRow(data);
@@ -71,7 +68,7 @@ export function usePostTopic(templateId: number) {
 export function useGetTopic() {
   return useQuery(["GET", "/topic", "/{topic_id}"], async (topicId) => {
     // Get data from database
-    const { data } = await axios.get(`${API_URL}/topic/${topicId}`);
+    const { data } = await API.get(`/topic/${topicId}`);
 
     return data as Topic;
   });
@@ -86,10 +83,7 @@ export function usePatchTopic() {
       const topic = fromRow(row);
 
       // Get response data from database
-      const { data } = await axios.patch(
-        `${API_URL}/topic/${topic.topic_id}`,
-        topic
-      );
+      const { data } = await API.patch(`/topic/${topic.topic_id}`, topic);
 
       // Convert data to row
       return toRow(data);
@@ -103,7 +97,7 @@ export function useDeleteTopic() {
     ["DELETE", "/topic", "/{topic_id}"],
     async (topicId: number) => {
       // Get response data from database
-      const { data } = await axios.delete(`${API_URL}/topic/${topicId}`);
+      const { data } = await API.delete(`/topic/${topicId}`);
 
       // Convert data to row
       return toRow(data);
