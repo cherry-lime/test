@@ -129,3 +129,19 @@ export function handleDuplicate(
     },
   });
 }
+
+export function handleChange(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  patchMutation: UseMutationResult,
+  newRow: GridRowModel,
+  oldRow: GridRowModel
+) {
+  patchMutation.mutate(newRow, {
+    onSuccess: (changedRow: GridRowModel) => {
+      updateRow(setRows, changedRow, oldRow);
+    },
+    onError: (error: unknown) => {
+      processError(error);
+    },
+  });
+}

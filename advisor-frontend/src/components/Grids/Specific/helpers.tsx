@@ -71,6 +71,7 @@ export function updateRow(
     Object.prototype.hasOwnProperty.call(newRow, "order") &&
     newRow.order !== oldRow.order
   ) {
+    // Move the row to its new order
     moveRow(setRows, oldRow, newRow.order);
   } else {
     // Update rows state with new row

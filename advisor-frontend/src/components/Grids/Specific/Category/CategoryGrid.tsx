@@ -1,71 +1,60 @@
 import * as React from "react";
 import { BlockPicker, ColorResult } from "react-color";
+import { UseMutationResult } from "react-query";
 
 import {
   GridActionsCellItem,
   GridColumns,
   GridPreProcessEditCellProps,
   GridRowId,
-  GridRowModel,
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { IconButton, Tooltip } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
 import GenericGrid from "../../Generic/GenericGrid";
+
 import {
   handleAdd,
-  handleColor,
+  handleChange,
   handleDelete,
-  handleDuplicate,
-  handleMoveRows,
+  handleInit,
+  handleMove,
   preProcessEditOrder,
   processRowUpdate,
-  updateOrderRows,
-} from "../handlers";
+} from "../handlersNew";
 
-// Define type for the rows in the grid
-type Row = {
-  id: number;
-  order: number;
-  name: string;
-  color: string;
-  enabled: boolean;
-};
-
-// Generate new id based on time
-const generateId = () => Date.now();
-
-// Get row object with default values
-const getDefaultRow = (rows: Row[]) => {
-  const defaultRow = {
-    id: generateId(),
-    order: rows.length,
-    name: "Name...",
-    color: "#fff",
-    enabled: false,
-  };
-  return defaultRow;
-};
+import {
+  CategoryRow,
+  useDeleteCategory,
+  useGetCategories,
+  usePatchCategory,
+  usePostCategory,
+} from "./CategoryAPI";
 
 type CategoryGridProps = {
   theme: Theme;
   templateId: number;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+  const [rows, setRows] = React.useState<CategoryRow[]>([]);
 
-  // Fetch initial rows of the grid
+  // Category query
+  const { status, data, error } = useGetCategories(templateId);
+
+  // Category mutations
+  const patchCategory = usePatchCategory();
+  const postCategory = usePostCategory(templateId);
+  const deleteCategory = useDeleteCategory();
+
+  // Called when "status" of categories query is changed
   React.useEffect(() => {
-    // TODO Replace this by API fetch
-    setRows(() => []);
-  }, []);
+    handleInit(setRows, status, data, error);
+  }, [status]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
@@ -75,31 +64,47 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdate(setRows, newRow, oldRow, true),
+    async (newRow: CategoryRow, oldRow: CategoryRow) =>
+      processRowUpdate(
+        setRows,
+        patchCategory as UseMutationResult,
+        newRow,
+        oldRow
+      ),
     []
   );
 
   // Called when the "Upward" action is pressed
-  const handleUpward = React.useCallback(
-    (row: Row) => () => {
-      handleMoveRows(setRows, row, row.order - 1);
+  const handleUpwardDecorator = React.useCallback(
+    (row: CategoryRow) => () => {
+      handleMove(setRows, patchCategory as UseMutationResult, {
+        ...row,
+        order: row.order - 1,
+      });
     },
     []
   );
 
   // Called when the "Downward" action is pressed
-  const handleDownward = React.useCallback(
-    (row: Row) => () => {
-      handleMoveRows(setRows, row, row.order + 1);
+  const handleDownwardDecorator = React.useCallback(
+    (row: CategoryRow) => () => {
+      handleMove(setRows, patchCategory as UseMutationResult, {
+        ...row,
+        order: row.order + 1,
+      });
     },
     []
   );
 
   // Called when color picker registers a complete change
-  const handleColorDecorator = React.useCallback(
-    (color: ColorResult, row: Row) => {
-      handleColor(setRows, row, color);
+  const handleColorChange = React.useCallback(
+    (color: ColorResult, row: CategoryRow) => {
+      handleChange(
+        setRows,
+        patchCategory as UseMutationResult,
+        { ...row, color: color.hex },
+        row
+      );
     },
     []
   );
@@ -116,39 +121,34 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, rowId);
-      updateOrderRows(setRows);
-    },
-    []
-  );
-
-  // Called when the "Duplicate" action is pressed in the menu
-  const handleDuplicateDecorator = React.useCallback(
-    (row: GridRowModel) => () => {
-      handleDuplicate(setRows, row);
+      handleDelete(
+        setRows,
+        deleteCategory as UseMutationResult,
+        rowId as number
+      );
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, getDefaultRow(rows));
-  }, [rows]);
+    handleAdd(setRows, postCategory as UseMutationResult);
+  }, []);
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColumns<CategoryRow>>(
     () => [
       {
         field: "",
         width: 50,
-        renderCell: (params: { row: Row }) => (
+        renderCell: (params: { row: CategoryRow }) => (
           <div className="parent">
             <div className="child">
-              <IconButton onClick={handleUpward(params.row)}>
+              <IconButton onClick={handleUpwardDecorator(params.row)}>
                 <UpwardIcon />
               </IconButton>
             </div>
             <div className="child">
-              <IconButton onClick={handleDownward(params.row)}>
+              <IconButton onClick={handleDownwardDecorator(params.row)}>
                 <DownwardIcon />
               </IconButton>
             </div>
@@ -177,14 +177,14 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         headerName: "Color Theme",
         flex: 1,
         editable: false,
-        renderCell: (params: { row: Row }) => (
+        renderCell: (params: { row: CategoryRow }) => (
           <BlockPicker
             width="250px"
             colors={[]}
             triangle="hide"
             color={params.row.color}
             onChangeComplete={(color: ColorResult) =>
-              handleColorDecorator(color, params.row)
+              handleColorChange(color, params.row)
             }
             styles={{
               default: {
@@ -218,7 +218,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         field: "actions",
         type: "actions",
         width: 125,
-        getActions: (params: { id: GridRowId; row: Row }) => [
+        getActions: (params: { id: GridRowId; row: CategoryRow }) => [
           <GridActionsCellItem
             icon={
               <Tooltip title="Visit">
@@ -227,12 +227,6 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
             }
             label="Visit"
             onClick={handleVisit(params.id)}
-          />,
-          <GridActionsCellItem
-            icon={<FileCopyIcon />}
-            label="Duplicate"
-            onClick={handleDuplicateDecorator(params.row)}
-            showInMenu
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
@@ -244,12 +238,11 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       },
     ],
     [
-      handleUpward,
-      handleDownward,
+      handleUpwardDecorator,
+      handleDownwardDecorator,
       preProcessEditOrderDecorator,
-      handleColorDecorator,
+      handleColorChange,
       handleVisit,
-      handleDuplicateDecorator,
       handleDeleteDecorator,
     ]
   );
