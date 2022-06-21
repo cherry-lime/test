@@ -15,10 +15,12 @@ import ListOfTemplates from "./pages/admin/templates/ListOfTemplates/ListOfTempl
 import ListOfIndividuals from "./pages/admin/ListOfIndividuals/ListOfIndividuals";
 import Area from "./pages/admin/templates/Area/Area";
 import Template from "./pages/admin/templates/Template/Template";
+import AllGrid from "./components/Grids/Specific/AllGrid";
 
 function App() {
   return (
     <div className="App">
+      <AllGrid />
       <Link data-testid="home" to="/">
         Home
       </Link>

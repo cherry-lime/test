@@ -17,42 +17,42 @@ import SubareaGrid from "./Subarea/SubareaGrid";
 import CheckpointGrid from "./Checkpoint/CheckpointGrid";
 import INGTheme from "../../../Theme";
 
-const API_URL = "localhost:5000";
-// const API_URL = "https://tabackend.azurewebsites.net";
+// const API_URL = "http://localhost:5000";
+const API_URL = "https://tabackend.azurewebsites.net";
 
 export default function AllGrid() {
-  const logout = useMutation(
-    ["Logout Admin"],
-    () => axios.post(`${API_URL}/auth/logout`),
-    {
-      onSuccess: (data: any) => {
-        console.log(data);
-      },
-      onError: (error: any) => {
-        console.log(error);
-      },
-    }
-  );
+  // const logout = useMutation(
+  //   ["Logout Admin"],
+  //   () => axios.post(`${API_URL}/auth/logout`),
+  //   {
+  //     onSuccess: (data: any) => {
+  //       console.log(data);
+  //     },
+  //     onError: (error: any) => {
+  //       console.log(error);
+  //     },
+  //   }
+  // );
 
-  const login = useMutation(
-    ["Login Admin"],
-    () =>
-      axios.post(`${API_URL}/auth/login`, {
-        username: "usual_recognize",
-        password: "25c62d48-9178-48a8-97d5-5b182b1023dc",
-      }),
-    {
-      onSuccess: (data: any) => {
-        console.log(data);
-      },
-      onError: (error: any) => {
-        console.log(error);
-      },
-    }
-  );
+  // const login = useMutation(
+  //   ["Login Admin"],
+  //   () =>
+  //     axios.post(`${API_URL}/auth/login`, {
+  //       username: "usual_recognize",
+  //       password: "25c62d48-9178-48a8-97d5-5b182b1023dc",
+  //     }),
+  //   {
+  //     onSuccess: (data: any) => {
+  //       console.log(data);
+  //     },
+  //     onError: (error: any) => {
+  //       console.log(error);
+  //     },
+  //   }
+  // );
 
-  logout.mutate();
-  login.mutate();
+  // logout.mutate();
+  // login.mutate();
 
   const userId = 0;
   const userRole = "ASSESSOR";

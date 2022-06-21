@@ -3,8 +3,8 @@ import axios from "axios";
 import { GridRowId } from "@mui/x-data-grid";
 import { AssessmentType } from "../../../../types/AssessmentType";
 
-const API_URL = "localhost:5000";
-// const API_URL = "https://tabackend.azurewebsites.net";
+// const API_URL = "http://localhost:5000";
+const API_URL = "https://tabackend.azurewebsites.net";
 
 export type TemplateRow = {
   id: GridRowId;
