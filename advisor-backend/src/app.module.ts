@@ -14,6 +14,7 @@ import { SubareaModule } from './subarea/subarea.module';
 import { MaturityModule } from './maturity/maturity.module';
 import { TopicModule } from './topic/topic.module';
 import { AnswerModule } from './answer/answer.module';
+import { SaveModule } from './save/save.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AnswerModule } from './answer/answer.module';
     CheckpointModule,
     TopicModule,
     AnswerModule,
+    SaveModule,
   ],
   controllers: [AppController],
   providers: [AppService],

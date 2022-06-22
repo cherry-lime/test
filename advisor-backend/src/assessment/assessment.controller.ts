@@ -23,20 +23,20 @@ import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { AssessmentDto } from './dto/assessment.dto';
 import { FeedbackDto } from './dto/feedback.dto';
-import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
+import { SaveCheckpointDto } from '../save/dto/save-checkpoint.dto';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
-import { CheckpointService } from '../checkpoint/checkpoint.service';
+import { SaveService } from '../save/save.service';
 
 @ApiTags('assessment')
 @Controller('assessment')
 export class AssessmentController {
   constructor(
     private readonly assessmentService: AssessmentService,
-    private readonly checkpointService: CheckpointService
+    private readonly saveService: SaveService
   ) {}
 
   /**
@@ -168,7 +168,7 @@ export class AssessmentController {
       throw new ForbiddenException();
     }
 
-    return this.checkpointService.saveCheckpoint(assessment, saveCheckpointDto);
+    return this.saveService.saveCheckpoint(assessment, saveCheckpointDto);
   }
 
   /**
@@ -197,7 +197,7 @@ export class AssessmentController {
       throw new ForbiddenException();
     }
 
-    return this.checkpointService.getSavedCheckpoints(assessment);
+    return this.saveService.getSavedCheckpoints(assessment);
   }
 
   /**
