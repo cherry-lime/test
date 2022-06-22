@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { AssessmentType } from '@prisma/client';
+import { AssessmentType, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { FeedbackDto } from './dto/feedback.dto';
@@ -197,6 +197,39 @@ export class AssessmentService {
           throw new InternalServerErrorException();
         }
       });
+  }
+
+  /**
+   * Check if user is part of assessment
+   * @param assessment_id assessment_id
+   * @param user user
+   * @returns assessment if member, null otherwise
+   */
+  async userInAssessment(assessment_id: number, user: User) {
+    const assessment = await this.prisma.assessment.findUnique({
+      where: {
+        assessment_id,
+      },
+      include: {
+        AssessmentParticipants: true,
+      },
+    });
+
+    if (!assessment) {
+      return null;
+    }
+
+    const userInAssessment = assessment.AssessmentParticipants.find(
+      (participant) => {
+        return participant.user_id === user.user_id;
+      }
+    );
+
+    if (!userInAssessment) {
+      return null;
+    }
+
+    return assessment;
   }
 
   /**
