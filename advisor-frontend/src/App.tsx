@@ -17,12 +17,13 @@ import Area from "./pages/admin/templates/Area/Area";
 import Template from "./pages/admin/templates/Template/Template";
 import GlobalStyles from "./GlobalStyles";
 import SignIn from "./components/SignInUP/SignIn";
+import Chooserole from "./components/SignInUP/Chooserole";
 
 function App() {
   return (
     <div className="App">
       <GlobalStyles />
-      <Link data-testid="home" to="/">
+      <Link data-testid="home" to="/home">
         Home
       </Link>
       <Link to="/user" state="user" data-testid="user">
@@ -36,7 +37,9 @@ function App() {
       </Link>
       <Routes>
         <Route path="/login" element={<SignIn />} />
+        <Route path="/register" element={<Chooserole />}/>
         <Route path="/" element={<Navigate to="/login" />}/>
+        <Route path="/home" element={<Home />}/>
 
         <Route path="/user" element={<UserInterface />} />
         <Route path="/user/self_evaluations" element={<ListOfSelfEvals />} />
