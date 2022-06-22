@@ -35,8 +35,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       }
       sidebarType={userTypes[userRole]}
     >
-      <Grid container direction="column" alignItems="left" spacing="20px">
-        <Grid item>
+      <Grid sx={{padding: "20px"}} container direction="column" alignItems="left" spacing="20px">
           <Card
             sx={{
               backgroundColor: "white",
@@ -51,38 +50,32 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
               </Tabs>
             </Stack>
           </Card>
-        </Grid>
-        <Grid item>
+          <br />
           <Subarea
             theme={theme}
             title=""
             summary="Below you will find a list of items that you or your squad can review in order to start improving your testing maturity. This list is based on your answers and prioritized to maximize your testing maturity."
             description="TIP: only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
           />
-        </Grid>
+        <h2>Assessor Feedback</h2>
         {team && userRole === "ASSESSOR" && (
-          <Grid item>
-            <h2>Assessor Feedback</h2>
             <TextfieldEdit
               rows={5}
               theme={theme}
               text="assessor feedback here"
             />
-          </Grid>
         )}
+
         {team && userRole === "USER" && (
-          <Grid item>
-            <h2>Assessor Feedback</h2>
             <Textfield
               rows={5}
               columns="inherit"
               theme={theme}
               text="assessor feedback here"
             />
-          </Grid>
         )}
+        <br />
 
-        <Grid item>
           {value === "Recommendations" && (
             <RecommendationGrid
               theme={theme}
@@ -99,13 +92,10 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
               assessmentId={assessmentId}
             />
           )}
-        </Grid>
-        <Grid item>
           <Stack>
             <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />
             Download as PDF
           </Stack>
-        </Grid>
       </Grid>
     </PageLayout>
   );
