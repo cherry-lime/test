@@ -49,7 +49,7 @@ const getDefaultRow = (prevRows: Row[]) => {
 
 type MaturityGridProps = {
   theme: Theme;
-  templateId: number;
+  templateId: string | undefined;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

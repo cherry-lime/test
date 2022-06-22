@@ -39,13 +39,15 @@ model Checkpoint {
   @@unique([checkpoint_description, category_id])
 }
 
-model PossibleAnswers {
-  possible_answer_id                Int                                 @id @default(autoincrement())
-  answer                            String
-  answer_weight                     Float
+model Answer {
+  answer_id                         Int                                 @id @default(autoincrement())
+  answer_text                       String                              @default("New Answer")
+  answer_weight                     Float                               @default(0)
   Template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+
+  @@unique([answer_text, template_id])
 }
 
 model Maturity {
@@ -62,11 +64,13 @@ model Maturity {
 
 model Topic {
   topic_id          Int                 @id @default(autoincrement())
-  topic_name        String
+  topic_name        String              @default("New Topic")
   Template          Template            @relation(fields: [template_id], references: [template_id])
   template_id       Int
   CheckpointInTopic CheckpointInTopic[]
   Feedback          Feedback[]
+
+  @@unique([topic_name, template_id])
 }
 
 model CheckpointInTopic {
@@ -79,11 +83,13 @@ model CheckpointInTopic {
 }
 
 model Team {
-  team_id      Int          @id @default(autoincrement())
-  team_name    String
-  invite_token String       @db.Uuid
-  UserInTeam   UserInTeam[]
-  Assessment   Assessment[]
+  team_id         Int          @id @default(autoincrement())
+  team_name       String       @unique
+  invite_token    String       @unique @default(uuid()) @db.Uuid
+  team_country    String
+  team_department String
+  UserInTeam      UserInTeam[]
+  Assessment      Assessment[]
 }
 
 model UserInTeam {
@@ -102,11 +108,12 @@ model Assessment {
   assessment_name                   String                              @default("New Assessment")
   country_name                      String                              @default("")
   department_name                   String                              @default("")
+  feedback_text                     String                              @default("")
   created_at                        DateTime                            @default(now())
   updated_at                        DateTime                            @updatedAt
   completed_at                      DateTime?
   assessment_type                   AssessmentType
-  Template                          Template                            @relation(fields: [template_id], references: [template_id])
+  template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
   Team                              Team?                               @relation(fields: [team_id], references: [team_id])
   team_id                           Int?
@@ -127,16 +134,16 @@ model AssessmentParticipants {
 }
 
 model Template {
-  template_id       Int               @id @default(autoincrement())
-  template_name     String            @default("New Template")
+  template_id       Int            @id @default(autoincrement())
+  template_name     String         @default("New Template")
   template_type     AssessmentType
-  disabled          Boolean           @default(false)
-  weight_range_min  Int               @default(1)
-  weight_range_max  Int               @default(3)
-  score_formula     String            @default("sum(x)")
-  include_no_answer Boolean           @default(false)
+  enabled           Boolean        @default(false)
+  weight_range_min  Int            @default(1)
+  weight_range_max  Int            @default(3)
+  score_formula     String         @default("sum(x)")
+  include_no_answer Boolean        @default(false)
   Assessment        Assessment[]
-  PossibleAnswers   PossibleAnswers[]
+  Answers           Answer[]
   Topic             Topic[]
   Category          Category[]
 
@@ -170,12 +177,12 @@ model SubArea {
 }
 
 model CheckpointAndAnswersInAssessments {
-  assessment         Assessment      @relation(fields: [assessment_id], references: [assessment_id])
-  assessment_id      Int
-  checkpoint         Checkpoint      @relation(fields: [checkpoint_id], references: [checkpoint_id])
-  checkpoint_id      Int
-  answer             PossibleAnswers @relation(fields: [possible_answer_id], references: [possible_answer_id])
-  possible_answer_id Int
+  assessment    Assessment @relation(fields: [assessment_id], references: [assessment_id])
+  assessment_id Int
+  checkpoint    Checkpoint @relation(fields: [checkpoint_id], references: [checkpoint_id])
+  checkpoint_id Int
+  Answer        Answer     @relation(fields: [answer_id], references: [answer_id])
+  answer_id     Int
 
   @@id([assessment_id, checkpoint_id])
 }
