@@ -3,9 +3,15 @@ import { CategoryService } from './category.service';
 import { CategoryController } from './category.controller';
 import { SubareaService } from '../subarea/subarea.service';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
+import { TemplateService } from '../template/template.service';
 
 @Module({
   controllers: [CategoryController],
-  providers: [CategoryService, SubareaService, CheckpointService],
+  providers: [
+    CategoryService,
+    SubareaService,
+    CheckpointService,
+    TemplateService,
+  ],
 })
 export class CategoryModule {}
