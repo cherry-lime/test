@@ -10,6 +10,9 @@ export class TemplateDto {
   @ApiProperty()
   template_name: string;
 
+  @ApiProperty()
+  template_description: string;
+
   @ApiProperty({ enum: AssessmentType })
   template_type: AssessmentType;
 

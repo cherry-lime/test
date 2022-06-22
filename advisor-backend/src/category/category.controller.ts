@@ -31,7 +31,7 @@ export class CategoryController {
 
   /**
    * [GET] /category/:category_id - Get category by id
-   * @param id - Template id
+   * @param category_id - Template id
    * @returns CategoryDto
    */
   @Get(':category_id')
@@ -42,13 +42,13 @@ export class CategoryController {
   @ApiNotFoundResponse({
     description: 'Category not found',
   })
-  findOne(@Param('category_id', ParseIntPipe) id: number) {
-    return this.categoryService.findOne(id);
+  findOne(@Param('category_id', ParseIntPipe) category_id: number) {
+    return this.categoryService.findOne(category_id);
   }
 
   /**
    * [PATCH] /category/:category_id - Update category by id
-   * @param id - Template id
+   * @param category_id - Template id
    * @param updateCategoryDto - Template update information
    * @returns CategoryDto
    */
@@ -59,30 +59,30 @@ export class CategoryController {
     description: 'Order must be less than number of categories in template',
   })
   update(
-    @Param('category_id', ParseIntPipe) id: number,
+    @Param('category_id', ParseIntPipe) category_id: number,
     @Body() updateCategoryDto: UpdateCategoryDto
   ) {
-    return this.categoryService.update(id, updateCategoryDto);
+    return this.categoryService.update(category_id, updateCategoryDto);
   }
 
   /**
    * [DELETE] /category/:category_id - Delete category
-   * @param id - Category id
+   * @param category_id - Category id
    * @returns Deleted category
    */
   @Delete(':category_id')
   @ApiResponse({ description: 'Deleted category', type: CategoryDto })
   @ApiNotFoundResponse({ description: 'Category not found' })
-  delete(@Param('category_id', ParseIntPipe) id: number) {
-    return this.categoryService.delete(id);
+  delete(@Param('category_id', ParseIntPipe) category_id: number) {
+    return this.categoryService.delete(category_id);
   }
 
   /**
    * [GET] /category/:subarea_id/subarea - Get all subareas
-   * @param id category id
+   * @param category_id category id
    * @returns subareas
    */
-  @Get(':subarea_id/subarea')
+  @Get(':category_id/subarea')
   @ApiTags('subarea')
   @ApiResponse({
     description: 'The found subareas',
@@ -90,17 +90,17 @@ export class CategoryController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
-  findAllSubareas(@Param('subarea_id', ParseIntPipe) id: number) {
-    return this.subareaService.findAll(id);
+  findAllSubareas(@Param('category_id', ParseIntPipe) category_id: number) {
+    return this.subareaService.findAll(category_id);
   }
 
   /**
    * [POST] /category/:subarea_id/subarea - Create new subarea
-   * @param id category id
+   * @param category_id category id
    * @param subareaDto subarea data
    * @returns created subarea
    */
-  @Post(':subarea_id/subarea')
+  @Post(':category_id/subarea')
   @ApiTags('subarea')
   @ApiResponse({
     description: 'The created subarea',
@@ -108,7 +108,7 @@ export class CategoryController {
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
   @ApiConflictResponse({ description: 'Subarea with this name already exists' })
-  createSubarea(@Param('subarea_id', ParseIntPipe) id: number) {
-    return this.subareaService.create(id);
+  createSubarea(@Param('category_id', ParseIntPipe) category_id: number) {
+    return this.subareaService.create(category_id);
   }
 }

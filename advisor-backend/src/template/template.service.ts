@@ -29,21 +29,30 @@ export class TemplateService {
    * @returns Created template
    */
   async create(template_type: AssessmentType): Promise<TemplateDto> {
-    try {
-      return await this.prisma.template.create({
+    const templateCount = await this.prisma.template.count({
+      where: {
+        template_type,
+      },
+    });
+
+    const enabled = templateCount === 0;
+
+    return await this.prisma.template
+      .create({
         data: {
           template_type,
+          enabled,
         },
+      })
+      .catch((error) => {
+        if (error.code === 'P2002') {
+          throw new ConflictException(
+            'Template with this name and type already exists'
+          );
+        } else {
+          throw new InternalServerErrorException();
+        }
       });
-    } catch (error) {
-      if (error.code === 'P2002') {
-        throw new ConflictException(
-          'Template with this name and type already exists'
-        );
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
   }
 
   /**
