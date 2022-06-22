@@ -41,6 +41,7 @@ function ListOfCheckpoints({
     checkpointlist.push(
       <Grid item>
         <Checkpoint
+          area="Area Name"
           feedback={feedback}
           number={i}
           theme={theme}
@@ -87,6 +88,7 @@ function ListOfCheckpoints({
         <Grid item>
           {value === "Single" && (
             <Checkpoint
+              area="Area Name"
               feedback={feedback}
               number={page}
               theme={theme}

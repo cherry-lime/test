@@ -43,6 +43,7 @@ const theme = createTheme({
 it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 321 and 312 with 1=Yes, 2=No and 3=N/A", () => {
   const { getByText } = render(
     <Checkpoint
+      area="Area name"
       feedback={false}
       description="Checkpoint Description"
       number={1}

@@ -24,7 +24,7 @@ function Textfield({
       <TextField
         sx={{
           backgroundColor: "white",
-          width: columns,
+          width: columns
         }}
         color="secondary"
         variant="outlined"

@@ -14,7 +14,7 @@ default set to five
 the background color of the text is white
 text can be edited, after selection
 */
-function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
+function TextfieldEdit({ text, theme, rows }: { text: string; theme: ThemeOptions, rows: number }) {
   /*
   initial value of the textfield is set to the bodytext passed as parameter
   using the State Hook in React
@@ -44,7 +44,7 @@ function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
           }}
           variant="outlined"
           multiline
-          rows={5}
+          rows={rows}
           size="small"
           value={intermediateValue}
           onChange={handleModify}

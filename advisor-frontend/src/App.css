@@ -59,3 +59,6 @@ a:not(.buttonLink) {
 .buttonLink {
   text-decoration: none;
 }
+.css-148ub9x-MuiGrid-root {
+  width: inherit !important;
+}

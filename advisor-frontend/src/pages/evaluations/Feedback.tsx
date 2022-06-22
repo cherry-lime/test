@@ -60,7 +60,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         {!team && (
           <Grid item>
             <h2>Assessor Feedback</h2>
-            <TextfieldEdit theme={theme} text="assessor feedback here" />
+            <TextfieldEdit rows={5} theme={theme} text="assessor feedback here" />
           </Grid>
         )}
 

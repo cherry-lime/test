@@ -1,13 +1,14 @@
-import { Grid, Theme, Typography } from "@mui/material";
+import { Grid, Theme } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
-import TextField from "../../../components/Textfield/Textfield";
+import TextfieldEdit from "../../../components/TextfieldEdit/TextfieldEdit";
 import MemberGrid from "../../../components/Grids/Specific/MemberGrid";
 import AssessmentOngoingGrid from "../../../components/Grids/Specific/AssessmentOngoingGrid";
 import AssessmentCompletedGrid from "../../../components/Grids/Specific/AssessmentCompletedGrid";
 import { RootState } from "../../../app/store";
+// import Textfield from "../../../components/Textfield/Textfield";
 
 /**
  * Page providing team details
@@ -24,24 +25,32 @@ function Team({ theme }: { theme: Theme }) {
 
   return (
     <PageLayout title={`Team ${teamId}`} sidebarType={userTypes[userRole]}>
-      <Grid container direction="column" alignItems="left">
-        <strong> Team Information </strong>
-        <br />
+      <Grid sx={{width: "100vw"}} container direction="column" alignItems="left" xl="auto">
+        <Grid item> 
+        <h2> Team Information </h2>
+        </Grid>
         <Grid item>
-          <Typography variant="h6" fontWeight={600}>
+          <h3>
             Country
-          </Typography>
+          </h3>
         </Grid>
-        <TextField text="Netherlands" theme={theme} rows={1} columns="25ch" />
+        <Grid item xl="auto">
+        {userRole === "ASSESSOR" && <TextfieldEdit text="Netherlands" theme={theme} rows={1} />}
+        {/* {userRole === "USER" && <Textfield text="Netherlands" theme={theme} rows={1} columns="inherit" />} */}
+        </Grid>
         <br />
         <Grid item>
-          <Typography variant="h6" fontWeight={600}>
-            IT Area / Department
-          </Typography>
+          <h3> IT Area / Department </h3>
         </Grid>
-        <TextField text="Department A" theme={theme} rows={1} columns="25ch" />
+        <Grid item>
+        {/* {userRole === "ASSESSOR" && <TextfieldEdit text="Department A" theme={theme} rows={1} />}
+        {userRole === "USER" && <Textfield text="Department A" theme={theme} rows={1} columns="inherit" />} */}
+
+        </Grid>
+        {userRole === "ASSESSOR" && <TextfieldEdit text="Department A" theme={theme} rows={1} />}
+        {/* {userRole === "USER" && <Textfield text="Department A" theme={theme} rows={1} columns="inherit" />} */}
         <br />
-        <strong>Assessors</strong>
+        <h3>Assessors</h3>
 
         <MemberGrid
           theme={theme}
@@ -50,7 +59,7 @@ function Team({ theme }: { theme: Theme }) {
           teamId={tmId}
           forAssessors={false}
         />
-        <strong>Members</strong>
+        <h3>Members</h3>
         <MemberGrid
           theme={theme}
           userId={userId}
@@ -59,7 +68,7 @@ function Team({ theme }: { theme: Theme }) {
           forAssessors={false}
         />
 
-        <strong>Ongoing Evaluations (Team)</strong>
+        <h3>Ongoing Evaluations</h3>
         <AssessmentOngoingGrid
           theme={theme}
           userId={userId}
@@ -67,7 +76,7 @@ function Team({ theme }: { theme: Theme }) {
           assessmentType="TEAM"
         />
 
-        <strong>Completed Evaluations (Team)</strong>
+        <h3>Completed Evaluations</h3>
         <AssessmentCompletedGrid
           theme={theme}
           userId={userId}

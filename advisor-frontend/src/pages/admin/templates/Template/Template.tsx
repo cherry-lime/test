@@ -37,7 +37,7 @@ function Template({ theme }: { theme: Theme }) {
       >
         <h2> Feedback Textbox </h2>
 
-        <TextfieldEdit theme={theme} text="Get editable feedback text" />
+        <TextfieldEdit rows={5} theme={theme} text="Get editable feedback text" />
 
         <h2> Areas </h2>
 
@@ -46,7 +46,6 @@ function Template({ theme }: { theme: Theme }) {
           area, click on the arrow button.
         </p>
         <CategoryGrid theme={theme} templateId={templateId} />
-
         <h2>Topics </h2>
 
         <TopicGrid theme={theme} templateId={templateId} />
