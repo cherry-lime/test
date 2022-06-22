@@ -155,7 +155,7 @@ export class CheckpointService {
 
       if (updateCheckpointDto.order > order) {
         throw new BadRequestException(
-          'Order must be less than number of hcekpoints in the category'
+          'Order must be less than number of checkpoints in the category'
         );
       }
       // If new order is smaller than old order, increase order of all categories with between new and old order
