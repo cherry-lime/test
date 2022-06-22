@@ -59,10 +59,22 @@ export class AssessmentService {
       }
     }
 
+    const template = await this.prisma.template.findFirst({
+      where: {
+        template_type: createAssessmentDto.assessment_type,
+        enabled: true,
+      },
+    });
+
+    if (!template) {
+      throw new BadRequestException('No active templates found');
+    }
+
     return await this.prisma.assessment
       .create({
         data: {
           ...createAssessmentDto,
+          template_id: template.template_id,
           AssessmentParticipants: {
             create: users,
           },
