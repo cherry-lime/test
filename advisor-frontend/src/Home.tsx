@@ -25,8 +25,8 @@ function UserInterface() {
   const dispatch = useDispatch();
   return (
     <div className="App-header">
-      <h1>This is the home page with {userID}</h1>
-      <h2> I am {userRole}</h2>
+      <h1>This is the home page with ID: {userID}</h1>
+      <h2> I am role: {userRole}</h2>
       Hello World
       <Greetings name="This is a test to test a component" />
       <ExampleButton name="Buttontext" />
@@ -37,21 +37,19 @@ function UserInterface() {
       <button
         type="button"
         onClick={() => {
+          auth.mutate();
           login.mutate({
             username: "bent_respect_hurt",
             password: "58f1928f-3b0c-40e7-9e98-a4dc22908153",
           });
-          auth.mutate();
         }}
       >
         Login
       </button>
       <button type="button" onClick={() => auth.mutate()}>
-        {" "}
         Authenticate
       </button>
-      <button type="button" onClick={() => logout.mutate()}>
-        {" "}
+      <button type="button" onClick={() => {logout.mutate(); dispatch(resetUser())}}>
         Logout now
       </button>
       <button type="button" onClick={() => register.mutate({ role: "USER" })}>

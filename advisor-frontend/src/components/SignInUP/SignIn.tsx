@@ -12,10 +12,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
-import { useLoginTwo } from "../../app/loginAPI";
+import { authProfile, useLoginTwo } from "../../app/loginAPI";
 import { useState } from "react";
 
 const theme = createTheme();
+
 
 // Sign in functionality to be used later
 export default function SignIn() {
@@ -28,9 +29,11 @@ export default function SignIn() {
     // });
   };
   // Import login API calls
-  const login = useLoginTwo();
+  const login =  useLoginTwo();
+  const auth =  authProfile()
   const [inputUserName, setInputUserName] = useState("");
   const [inputPassword, setInputPassword] = useState("");
+
 
   return (
     <ThemeProvider theme={theme}>

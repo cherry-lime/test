@@ -42,12 +42,14 @@ export function authProfile() {
   });
 }
 export function useLoginTwo() {
+  const auth = authProfile();
   return useMutation(
     ["Login Admin"],
     (loginInfo: { username: string; password: string }) =>
       API.post(`/auth/login`, loginInfo),
     {
       onSuccess: (data: any) => {
+        auth.mutate();
         console.log(data);
       },
       onError: (error: any) => {
