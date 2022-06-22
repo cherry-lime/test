@@ -32,6 +32,7 @@ import AuthUser from '../common/decorators/auth-user.decorator';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { RecommendationDto } from '../feedback/dto/recommendation.dto';
 import { FeedbackService } from '../feedback/feedback.service';
+import { FeedbackQueryDto } from '../feedback/dto/feedback-query.dto';
 
 @ApiTags('assessment')
 @Controller('assessment')
@@ -212,7 +213,7 @@ export class AssessmentController {
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   async getRecommendations(
     @Param('assessment_id', ParseIntPipe) assessment_id: number,
-    @Query('topic_id', ParseIntPipe) topic_id: number,
+    @Query('topic_id', ParseIntPipe) { topic_id }: FeedbackQueryDto,
     @AuthUser() user: User
   ) {
     // Check if user in assessment

@@ -126,7 +126,7 @@ export class FeedbackService {
       (checkpoint) => checkpoint.checkpoint_id
     );
 
-    const checkpointsList = await this.prisma.checkpoint.findMany({
+    let checkpointsList = await this.prisma.checkpoint.findMany({
       where: {
         checkpoint_id: {
           in: checkpointIds,
@@ -139,11 +139,13 @@ export class FeedbackService {
       },
     });
 
-    checkpointsList.filter((checkpoint) => {
-      return checkpoint.CheckpointInTopic.some(
-        (checkpointInTopic) => checkpointInTopic.topic_id === topic_id
-      );
-    });
+    if (topic_id) {
+      checkpointsList = checkpointsList.filter((checkpoint) => {
+        return checkpoint.CheckpointInTopic.some(
+          (checkpointInTopic) => checkpointInTopic.topic_id === topic_id
+        );
+      });
+    }
 
     const checkpoints = {};
     checkpointsList.forEach((checkpoint) => {
