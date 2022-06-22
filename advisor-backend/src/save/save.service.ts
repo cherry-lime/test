@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
-import { SaveCheckpointDto } from '../assessment/dto/save-checkpoint.dto';
+import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
