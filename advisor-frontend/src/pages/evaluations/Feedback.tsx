@@ -28,6 +28,16 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     { order: 2, description: "bla", additionalInfo: "hello" },
   ];
 
+  const createPDF = () => {
+    const filename = `Feedback-${assessmentId}.pdf`;
+    const headers = [
+      { key: "order", display: "Priority" },
+      { key: "description", display: "Recommendation" },
+      { key: "additionalInfo", display: "Additional Info" },
+    ];
+    pdf({ data: recs, headers, filename });
+  };
+
   const [value, setValue] = useState("Recommendations");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -99,18 +109,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             assessmentId={assessmentId}
           />
         )}
-        <Button
-          variant="contained"
-          onClick={() => {
-            const filename = `Feedback-${assessmentId}.pdf`;
-            const headers = [
-              { key: "order", display: "Priority" },
-              { key: "description", display: "Recommendation" },
-              { key: "additionalInfo", display: "Additional Info" },
-            ];
-            pdf({ data: recs, headers, filename });
-          }}
-        >
+        <Button variant="contained" onClick={createPDF}>
           <Stack>
             <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />
             Download as PDF
