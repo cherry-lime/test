@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { SaveCheckpointDto } from '../assessment/dto/save-checkpoint.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
-import { TemplateService } from 'src/template/template.service';
+import { TemplateService } from '../template/template.service';
 @Injectable()
 export class CheckpointService {
   constructor(
