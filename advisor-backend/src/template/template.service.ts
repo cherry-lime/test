@@ -200,4 +200,18 @@ export class TemplateService {
         throw new InternalServerErrorException();
       });
   }
+
+  async checkWeightRange(template_id, weight) {
+    if (!weight) {
+      return true;
+    }
+
+    const template = await this.findOne(template_id).catch(() => {
+      throw new NotFoundException('Template not found');
+    });
+
+    return (
+      weight >= template.weight_range_min || weight <= template.weight_range_max
+    );
+  }
 }

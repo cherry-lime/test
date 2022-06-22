@@ -9,9 +9,13 @@ import {
 } from '@nestjs/common';
 import { SaveCheckpointDto } from '../assessment/dto/save-checkpoint.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
+import { TemplateService } from 'src/template/template.service';
 @Injectable()
 export class CheckpointService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly templateService: TemplateService
+  ) {}
   /**
    * Create checkpoint
    * @param category_id category id to which checkpoint belongs
@@ -127,23 +131,18 @@ export class CheckpointService {
       }
     }
 
-    // Check if weight is within template weight range if weight is set
-    if (updateCheckpointDto.weight) {
-      const template = await this.prisma.template.findUnique({
-        where: {
-          template_id: checkpoint.Category.template_id,
-        },
+    // Check if weight is valid
+    const isWeightCorrect = await this.templateService
+      .checkWeightRange(
+        checkpoint.Category.template_id,
+        updateCheckpointDto.weight
+      )
+      .catch((error) => {
+        throw new BadRequestException(error.message);
       });
 
-      // Throw error if weight is not within range
-      if (
-        updateCheckpointDto.weight < template.weight_range_min ||
-        updateCheckpointDto.weight > template.weight_range_max
-      ) {
-        throw new BadRequestException(
-          'Weight is not within template weight range'
-        );
-      }
+    if (!isWeightCorrect) {
+      throw new BadRequestException('Weight is outside of range');
     }
 
     // Update orders if order changed
@@ -278,6 +277,35 @@ export class CheckpointService {
     { assessment_id, template_id }: AssessmentDto,
     { checkpoint_id, answer_id }: SaveCheckpointDto
   ) {
+    const upsertData = {
+      where: {
+        assessment_id_checkpoint_id: {
+          assessment_id,
+          checkpoint_id,
+        },
+      },
+      update: {
+        answer_id,
+      },
+      create: {
+        assessment: {
+          connect: {
+            assessment_id,
+          },
+        },
+        checkpoint: {
+          connect: {
+            checkpoint_id,
+          },
+        },
+        Answer: {
+          connect: {
+            answer_id,
+          },
+        },
+      },
+    };
+
     // Save NA to checkpoint if no answer_id is provided
     if (!answer_id) {
       // Check if NA is allowed
@@ -293,39 +321,13 @@ export class CheckpointService {
         );
       }
 
-      return await this.saveNaAnswer(assessment_id, checkpoint_id);
+      upsertData.update.answer_id = null;
+      delete upsertData.create.Answer;
     }
 
     // Upsert checkpoint and answer
     await this.prisma.checkpointAndAnswersInAssessments
-      .upsert({
-        where: {
-          assessment_id_checkpoint_id: {
-            assessment_id,
-            checkpoint_id,
-          },
-        },
-        update: {
-          answer_id,
-        },
-        create: {
-          assessment: {
-            connect: {
-              assessment_id,
-            },
-          },
-          checkpoint: {
-            connect: {
-              checkpoint_id,
-            },
-          },
-          Answer: {
-            connect: {
-              answer_id,
-            },
-          },
-        },
-      })
+      .upsert(upsertData)
       .catch(() => {
         // Throw BadRequestException if anything doesn't exist
         throw new BadRequestException();
@@ -334,47 +336,6 @@ export class CheckpointService {
     return {
       msg: 'Checkpoint saved',
     };
-  }
-
-  /**
-   * Save NA answer to checkpoint
-   * @param assessment_id assessment_id
-   * @param checkpoint_id checkpoint_id
-   * @returns checkpoint saved
-   */
-  async saveNaAnswer(assessment_id, checkpoint_id) {
-    const saved =
-      await this.prisma.checkpointAndAnswersInAssessments.findUnique({
-        where: {
-          assessment_id_checkpoint_id: {
-            assessment_id,
-            checkpoint_id,
-          },
-        },
-      });
-
-    if (!saved) {
-      await this.prisma.checkpointAndAnswersInAssessments.create({
-        data: {
-          assessment_id,
-          checkpoint_id,
-        },
-      });
-    } else {
-      await this.prisma.checkpointAndAnswersInAssessments.update({
-        where: {
-          assessment_id_checkpoint_id: {
-            assessment_id,
-            checkpoint_id,
-          },
-        },
-        data: {
-          answer_id: null,
-        },
-      });
-    }
-
-    return { msg: 'Checkpoint saved' };
   }
 
   /**
