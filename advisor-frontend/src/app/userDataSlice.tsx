@@ -4,7 +4,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
  * Creates an interface to set the global state variables
  */
 export interface UserDataState {
-  value: number;
   userID: string;
   userRole: string;
 }
@@ -12,7 +11,6 @@ export interface UserDataState {
  * Initializes the global state variables
  */
 const initialState: UserDataState = {
-  value: 0,
   userID: "0000",
   userRole: "user",
 };
@@ -32,10 +30,15 @@ export const userDataSlice = createSlice({
     setUserRole: (state, action: PayloadAction<string>) => {
       state.userRole = action.payload;
     },
+    // Resets the userData back to initial
+    resetUser(state) {
+      state.userID = initialState.userID;
+      state.userRole = initialState.userRole;
+    }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUserID, setUserRole } = userDataSlice.actions;
+export const { setUserID, setUserRole, resetUser } = userDataSlice.actions;
 
 export default userDataSlice.reducer;

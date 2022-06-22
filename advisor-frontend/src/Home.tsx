@@ -5,7 +5,7 @@ import Greetings from "./components/SampleText/SampleText";
 import logo from "./logo.svg";
 import "./App.css";
 import { RootState } from "./app/store";
-import { setUserID } from "./app/userDataSlice";
+import { resetUser, setUserID } from "./app/userDataSlice";
 
 function UserInterface() {
   const { userID, userRole } = useSelector(
@@ -23,6 +23,7 @@ function UserInterface() {
         {" "}
         click to change ID
       </button>
+      <button type="button" onClick={()=> dispatch(resetUser())}> reset</button>
       <img src={logo} className="App-logo" alt="logo" />
       <p>
         Edit <code>src/App.tsx</code> and save to reload.
