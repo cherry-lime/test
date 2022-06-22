@@ -23,8 +23,7 @@ function UserInterface() {
         <ExampleButton name="GOTO User" />{" "}
       </Link>
       <ExampleButton name="Buttontext" />
-      <button type="button" onClick={() => dispatch(setUserID("u1948234"))}>
-        {" "}
+      <button type="button" onClick={() => dispatch(setUserID("u199999"))}>
         click to change ID
       </button>
       <img src={logo} className="App-logo" alt="logo" />

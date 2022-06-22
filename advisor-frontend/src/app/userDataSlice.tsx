@@ -4,7 +4,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
  * Creates an interface to set the global state variables
  */
 export interface UserDataState {
-  value: number;
   userID: string;
   userRole: string;
 }
@@ -12,7 +11,6 @@ export interface UserDataState {
  * Initializes the global state variables
  */
 const initialState: UserDataState = {
-  value: 0,
   userID: "0000",
   userRole: "user",
 };
