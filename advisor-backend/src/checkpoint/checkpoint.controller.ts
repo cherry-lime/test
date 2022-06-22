@@ -17,9 +17,9 @@ import {
 import { CheckpointService } from './checkpoint.service';
 import { UpdateCheckpointDto } from './dto/update-checkpoint.dto';
 import { CheckpointDto } from './dto/checkpoint.dto';
-import { RolesGuard } from 'src/common/guards/roles.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { Roles } from 'src/common/decorators/roles.decorator';
+import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 @ApiTags('checkpoint')
 @Controller('checkpoint')

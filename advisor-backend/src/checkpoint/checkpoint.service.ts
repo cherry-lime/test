@@ -1,5 +1,5 @@
 import { UpdateCheckpointDto } from './dto/update-checkpoint.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import {
   BadRequestException,
   ConflictException,
@@ -139,7 +139,7 @@ export class CheckpointService {
         updateCheckpointDto.weight > template.weight_range_max
       ) {
         throw new BadRequestException(
-          'weight is not within template weight range'
+          'Weight is not within template weight range'
         );
       }
     }
