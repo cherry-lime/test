@@ -21,11 +21,11 @@ import { SubareaDto } from '../subarea/dto/subarea.dto';
 import { CategoryService } from './category.service';
 import { CategoryDto } from './dto/category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CheckpointDto } from 'src/checkpoint/dto/checkpoint.dto';
-import { CheckpointService } from 'src/checkpoint/checkpoint.service';
+import { CheckpointDto } from '../checkpoint/dto/checkpoint.dto';
+import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/common/guards/roles.guard';
-import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 
 @ApiTags('category')
