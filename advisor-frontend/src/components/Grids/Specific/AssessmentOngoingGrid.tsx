@@ -29,10 +29,10 @@ const getDefaultRow = () => {
 
 type MemberGridProps = {
   theme: Theme;
-  userId: number;
+  userId: string | undefined;
   userRole: UserRole;
   // eslint-disable-next-line react/require-default-props
-  teamId?: number;
+  teamId?: string | undefined;
   assessmentType: AssessmentType;
 };
 

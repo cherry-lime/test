@@ -36,6 +36,7 @@ export default function Example() {
         <ButtonRegular text="Regular Button" />
         <ButtonInverted text="Inverted Button" />
         <Checkpoint
+          area="Area Name"
           feedback={false}
           number={12}
           description="Checkpoint Description"
@@ -50,6 +51,7 @@ export default function Example() {
           theme={theme}
         />
         <TextfieldEdit
+          rows={5}
           text="Here is some text that can be edited"
           theme={theme}
         />

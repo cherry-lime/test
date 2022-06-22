@@ -9,9 +9,9 @@ import { RootState } from "../../../app/store";
  * Page with the list of teams that the user or assessor is part of
  */
 function TeamList({ theme }: { theme: Theme }) {
-  const { userId } = useSelector((state: RootState) => state.userData);
-  // fetch user role
-  const userRole = "ASSESSOR";
+  const { userId, userRole } = useSelector(
+    (state: RootState) => state.userData
+  );
 
   return (
     <PageLayout title="Teams" sidebarType={userTypes[userRole]}>

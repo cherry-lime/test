@@ -11,8 +11,8 @@ import { RootState } from "../../../app/store";
  * Home page visible to anyone with the user role
  */
 function UserInterface() {
-  const { userID } = useSelector((state: RootState) => state.userData);
-  const pageTitle = `Home User ${userID}`;
+  const { userId } = useSelector((state: RootState) => state.userData);
+  const pageTitle = `Home User ${userId}`;
 
   return (
     <PageLayout title={pageTitle} footer sidebarType={userTypes.USER}>

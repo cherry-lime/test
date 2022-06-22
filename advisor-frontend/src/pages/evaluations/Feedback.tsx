@@ -1,6 +1,7 @@
 import { Card, Grid, Stack, Tab, Tabs, Theme } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import RecommendationGrid from "../../components/Grids/Specific/RecommendationGrid";
 import userTypes from "../../components/Sidebar/listUsersTypes";
@@ -8,6 +9,8 @@ import Subarea from "../../components/Subarea/Subarea";
 import PageLayout from "../PageLayout";
 import ListOfCheckpoints from "../../components/ListOfCheckpoints/ListOfCheckpoints";
 import TextfieldEdit from "../../components/TextfieldEdit/TextfieldEdit";
+import Textfield from "../../components/Textfield/Textfield";
+import { RootState } from "../../app/store";
 
 /**
  * Page with the feedback related to a self assessment
@@ -16,11 +19,11 @@ import TextfieldEdit from "../../components/TextfieldEdit/TextfieldEdit";
 function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   const { assessmentId } = useParams();
 
-  const userId = 0;
-  // fetch user role
-  const userRole = "USER";
+  const { userId, userRole } = useSelector(
+    (state: RootState) => state.userData
+  );
 
-  const [value, setValue] = React.useState("Recommendations");
+  const [value, setValue] = useState("Recommendations");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -57,11 +60,22 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             description="TIP: only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
           />
         </Grid>
-        {!team && (
+        {team && userRole === "ASSESSOR" && (
           <Grid item>
             <h2>Assessor Feedback</h2>
             <TextfieldEdit
               rows={5}
+              theme={theme}
+              text="assessor feedback here"
+            />
+          </Grid>
+        )}
+        {team && userRole === "USER" && (
+          <Grid item>
+            <h2>Assessor Feedback</h2>
+            <Textfield
+              rows={5}
+              columns="inherit"
               theme={theme}
               text="assessor feedback here"
             />
@@ -72,7 +86,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           {value === "Recommendations" && (
             <RecommendationGrid
               theme={theme}
-              assessmentId={0}
+              assessmentId="1"
               assessmentType="INDIVIDUAL"
               userId={userId}
               userRole={userRole}
