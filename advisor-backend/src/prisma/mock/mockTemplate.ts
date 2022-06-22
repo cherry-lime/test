@@ -1,3 +1,5 @@
+import { UpdateTemplateDto } from '../../template/dto/update-template.dto';
+
 export const aTemplate = {
   template_id: 1,
   template_name: 'test',
@@ -15,6 +17,14 @@ export const updateTemplate = {
   template_description: 'new_description',
   template_type: 'INDIVIDUAL',
   disabled: false,
+  weight_range_min: 1,
+  weight_range_max: 5,
+  include_no_answer: true,
+};
+
+export const updateTemplateDto: UpdateTemplateDto = {
+  template_name: 'new_name',
+  enabled: false,
   weight_range_min: 1,
   weight_range_max: 5,
   include_no_answer: true,

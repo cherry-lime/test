@@ -1,9 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TemplateController } from './template.controller';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { aTemplate, updateTemplate } from '../prisma/mock/mockTemplate';
+import {
+  aTemplate,
+  updateTemplate,
+  updateTemplateDto,
+} from '../prisma/mock/mockTemplate';
 import { TemplateService } from './template.service';
-import { updateTemplateDto } from './template.service.spec';
 import { CategoryService } from '../category/category.service';
 import { aCategory } from '../prisma/mock/mockCategory';
 import { aMaturity } from '../prisma/mock/mockMaturity';

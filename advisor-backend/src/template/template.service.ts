@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { AssessmentType, Template } from '@prisma/client';
+import { AssessmentType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';
