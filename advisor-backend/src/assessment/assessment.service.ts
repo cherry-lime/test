@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { AssessmentType } from '@prisma/client';
+import { AssessmentType, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { FeedbackDto } from './dto/feedback.dto';
@@ -84,6 +84,24 @@ export class AssessmentService {
    */
   async findAll() {
     return await this.prisma.assessment.findMany();
+  }
+
+  /**
+   * Find individual assessments for user
+   * @param user User
+   * @returns Individual assessments
+   */
+  async findUserAssessments(user: User) {
+    return await this.prisma.assessment.findMany({
+      where: {
+        AssessmentParticipants: {
+          some: {
+            user_id: user.user_id,
+          },
+        },
+        assessment_type: AssessmentType.INDIVIDUAL,
+      },
+    });
   }
 
   /**

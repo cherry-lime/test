@@ -118,6 +118,8 @@ model Assessment {
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
   @@unique([assessment_name, assessment_type, team_id])
+  @@index([assessment_type])
+  @@index([team_id])
 }
 
 model AssessmentParticipants {
