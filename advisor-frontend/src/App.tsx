@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import UserInterface from "./pages/user/UserInterface/UserInterface";
 import Home from "./Home";
@@ -16,6 +16,7 @@ import ListOfIndividuals from "./pages/admin/ListOfIndividuals/ListOfIndividuals
 import Area from "./pages/admin/templates/Area/Area";
 import Template from "./pages/admin/templates/Template/Template";
 import GlobalStyles from "./GlobalStyles";
+import SignIn from "./components/SignInUP/SignIn";
 
 function App() {
   return (
@@ -34,7 +35,8 @@ function App() {
         Admin
       </Link>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/" element={<Navigate to="/login" />}/>
 
         <Route path="/user" element={<UserInterface />} />
         <Route path="/user/self_evaluations" element={<ListOfSelfEvals />} />
