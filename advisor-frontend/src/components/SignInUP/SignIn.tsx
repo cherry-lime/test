@@ -12,6 +12,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
+import { useLoginTwo } from "../../app/loginAPI";
+import { useState } from "react";
 
 const theme = createTheme();
 
@@ -25,6 +27,10 @@ export default function SignIn() {
     //   password: data.get('password'),
     // });
   };
+  // Import login API calls
+  const login = useLoginTwo();
+  const [inputUserName, setInputUserName] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
 
   return (
     <ThemeProvider theme={theme}>
@@ -95,7 +101,10 @@ export default function SignIn() {
                 label="Username"
                 name="Username"
                 autoComplete="email"
-                sx={{ pt: 0 }}
+                value={inputUserName}
+                onChange={(e) => {
+                  setInputUserName(e.target.value)
+                }}
               />
               <TextField
                 margin="normal"
@@ -105,7 +114,10 @@ export default function SignIn() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                sx={{ pt: 0 }}
+                value={inputPassword}
+                onChange={(e) => {
+                  setInputPassword(e.target.value)
+                }}
               />
               {/* Buttons that log in and a button that goes to the sign up page */}
               <Grid container columns={2} spacing={0}>
@@ -115,6 +127,12 @@ export default function SignIn() {
                     type="submit"
                     variant="contained"
                     sx={{ p: 2, m: 2, ml: 7.5 }}
+                    onClick={() =>
+                      {login.mutate({
+                        username: inputUserName,
+                        password: inputPassword,
+                      })}
+                    }
                   >
                     Log In
                   </Button>
