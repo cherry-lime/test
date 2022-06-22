@@ -124,15 +124,21 @@ export class TemplateService {
 
   /**
    * Clone template
-   * @param id template_id
+   * @param template_id template_id
    * @returns Cloned template
    * @throws Template not found
    */
-  async clone(id: number): Promise<TemplateDto> {
+  async clone(template_id: number): Promise<TemplateDto> {
     // Get template by id from prisma
     const template = await this.prisma.template.findUnique({
       where: {
-        template_id: id,
+        template_id,
+      },
+      include: {
+        Category: true,
+        Answers: true,
+        Maturity: true,
+        Topic: true,
       },
     });
 
@@ -141,7 +147,92 @@ export class TemplateService {
       throw new NotFoundException('Template not found');
     }
 
-    let newTemplate: Template;
+    // Clone template
+    const newTemplate = await this.cloneTemplate(template);
+
+    // Throw error if failed
+    if (!newTemplate) {
+      throw new InternalServerErrorException();
+    }
+
+    const categoryMap = this.createMap(
+      template.Category,
+      newTemplate.Category,
+      'category'
+    );
+
+    const maturityMap = this.createMap(
+      template.Maturity,
+      newTemplate.Maturity,
+      'maturity'
+    );
+
+    const categoriesList = template.Category.map((c) => c.category_id);
+
+    const checkpoints = await this.prisma.checkpoint.findMany({
+      where: {
+        category_id: {
+          in: categoriesList,
+        },
+      },
+    });
+
+    const newCheckpoints = checkpoints.map((c) => {
+      c.category_id = categoryMap[c.category_id];
+      c.maturity_id = maturityMap[c.maturity_id];
+      delete c.checkpoint_id;
+      return c;
+    });
+
+    await this.prisma.checkpoint.createMany({
+      data: newCheckpoints,
+    });
+
+    const newSubareas = await this.prisma.subArea.findMany({
+      where: {
+        category_id: {
+          in: categoriesList,
+        },
+      },
+    });
+
+    const newSubareasWithCategory = newSubareas.map((s) => {
+      s.category_id = categoryMap[s.category_id];
+      delete s.subarea_id;
+      return s;
+    });
+
+    await this.prisma.subArea.createMany({
+      data: newSubareasWithCategory,
+    });
+
+    delete newTemplate.Category;
+    delete newTemplate.Maturity;
+    return newTemplate;
+  }
+
+  /**
+   * Clone the actual template itself
+   * @param template Template to clone
+   * @returns Cloned template
+   */
+  async cloneTemplate(template: any) {
+    const deleteIds = (a) => {
+      const temp = { ...a };
+      delete temp.template_id;
+      delete temp.category_id;
+      delete temp.answer_id;
+      delete temp.maturity_id;
+      delete temp.topic_id;
+      return temp;
+    };
+
+    const createCat = template.Category.map(deleteIds);
+    const createAns = template.Answers.map(deleteIds);
+    const createMat = template.Maturity.map(deleteIds);
+    const createTop = template.Topic.map(deleteIds);
+
+    let newTemplate;
     let template_name = template.template_name;
 
     delete template.template_id;
@@ -157,16 +248,54 @@ export class TemplateService {
         newTemplate = await this.prisma.template.create({
           data: {
             template_name,
-            ...template,
+            template_type: template.template_type,
+            weight_range_min: template.weight_range_min,
+            weight_range_max: template.weight_range_max,
+            enabled: template.enabled,
+            Category: {
+              create: createCat,
+            },
+            Answers: {
+              create: createAns,
+            },
+            Maturity: {
+              create: createMat,
+            },
+            Topic: {
+              create: createTop,
+            },
+          },
+          include: {
+            Category: true,
+            Maturity: true,
           },
         });
       } catch (error) {
         if (error.code !== 'P2002') {
-          throw new InternalServerErrorException();
+          return null;
         }
       }
     }
     return newTemplate;
+  }
+
+  /**
+   * Create map from old to new id
+   * @param oldEntity old entity
+   * @param newEntity new entity
+   * @param type type of entity
+   * @returns Map of old to new id
+   */
+  createMap(oldEntity, newEntity, type: string) {
+    const idString = `${type}_id`;
+    const nameString = `${type}_name`;
+    const map = {};
+    oldEntity.forEach((e) => {
+      map[e[idString]] = newEntity.find((n) => n[nameString] === e[nameString])[
+        idString
+      ];
+    });
+    return map;
   }
 
   /**
