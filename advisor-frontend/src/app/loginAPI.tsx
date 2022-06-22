@@ -1,19 +1,21 @@
 import axios from "axios";
 import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
+import { setUserRole, setUserID } from "./userDataSlice";
 
 const API = axios.create({
   withCredentials: true,
   baseURL: "https://tabackend.azurewebsites.net",
 });
 
-export function useLogin() {
+/**
+ *
+ * @returns
+ */
+export function userRegister() {
   return useMutation(
-    ["Login Admin"],
-    () =>
-      API.post(`/auth/login`, {
-        username: "birth_taken",
-        password: "994c801d-e32b-4281-9e83-f7937b4a1bff",
-      }),
+    ["Register new user"],
+    (userRole: { role: string }) => API.post(`/auth/register`, userRole),
     {
       onSuccess: (data: any) => {
         console.log(data);
@@ -24,10 +26,12 @@ export function useLogin() {
     }
   );
 }
+
 export function useLoginTwo() {
   return useMutation(
     ["Login Admin"],
-    (loginInfo: {username: string; password: string;}) => API.post(`/auth/login`, loginInfo),
+    (loginInfo: { username: string; password: string }) =>
+      API.post(`/auth/login`, loginInfo),
     {
       onSuccess: (data: any) => {
         console.log(data);
@@ -40,33 +44,30 @@ export function useLoginTwo() {
 }
 
 export function authProfile() {
-    return useMutation(
-        ["Auth profile"],
-        () => API.get(`/auth/profile`),
-        {
-            onSuccess: (data: any) => {
-                console.log(data);
-              },
-              onError: (error: any) => {
-                console.log(error);
-              },
-        }
-    )
+  const dispatch = useDispatch();
+  return useMutation(["Auth profile"], () => API.get(`/auth/profile`), {
+    onSuccess: (data: any) => {
+      
+      const response = data["data"];
+      dispatch(setUserRole(response["role"]));
+      dispatch(setUserID(response["user_id"]));
+      console.log(response);
+    },
+    onError: (error: any) => {
+      console.log(error);
+    },
+  });
 }
 
 export function userLogout() {
-    return useMutation(
-        ["User Logout"],
-        () => API.post(`/auth/logout`),
-        {
-            onSuccess: (data: any) => {
-                console.log(data);
-              },
-              onError: (error: any) => {
-                console.log(error);
-              },
-        }
-    )
+  return useMutation(["User Logout"], () => API.post(`/auth/logout`), {
+    onSuccess: (data: any) => {
+      console.log(data);
+    },
+    onError: (error: any) => {
+      console.log(error);
+    },
+  });
 }
 
 export default API;

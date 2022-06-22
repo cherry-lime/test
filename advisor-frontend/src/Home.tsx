@@ -6,14 +6,16 @@ import logo from "./logo.svg";
 import "./App.css";
 import { RootState } from "./app/store";
 import { resetUser, setUserID } from "./app/userDataSlice";
-import { authProfile, useLoginTwo, userLogout } from "./app/loginAPI";
+import { authProfile, useLoginTwo, userLogout, userRegister } from "./app/loginAPI";
 
 function UserInterface() {
   const { userID, userRole } = useSelector(
     (state: RootState) => state.userData
   );
+  // Import login API calls
   const login = useLoginTwo();
   const auth = authProfile();
+  const register = userRegister();
   const logout = userLogout();
   const dispatch = useDispatch();
   return (
@@ -41,6 +43,7 @@ function UserInterface() {
       </button>
       <button type="button" onClick={() => auth.mutate()}> Authenticate</button>
       <button type="button"onClick={() => logout.mutate()}> Logout now</button>
+      <button type="button" onClick={() => register.mutate({role: "USER"})}> Register new</button>
       <img src={logo} className="App-logo" alt="logo" />
       <p>
         Edit <code>src/App.tsx</code> and save to reload.
