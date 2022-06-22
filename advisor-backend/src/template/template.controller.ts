@@ -220,8 +220,7 @@ export class TemplateController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'))
   async findAllMaturities(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<MaturityDto[]> {
