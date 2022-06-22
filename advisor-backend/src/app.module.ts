@@ -5,11 +5,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
-<<<<<<< HEAD
 import { CheckpointModule } from './checkpoint/checkpoint.module';
-=======
 import { TeamsModule } from './teams/teams.module';
->>>>>>> master
 import { AssessmentModule } from './assessment/assessment.module';
 import { TemplateModule } from './template/template.module';
 import { CategoryModule } from './category/category.module';
@@ -30,12 +27,9 @@ import { AnswerModule } from './answer/answer.module';
     CategoryModule,
     SubareaModule,
     MaturityModule,
-<<<<<<< HEAD
     CheckpointModule,
-=======
     TopicModule,
     AnswerModule,
->>>>>>> master
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -58,6 +58,9 @@ export class CheckpointController {
     description: 'Order must be less than number of categories in template',
   })
   @ApiNotFoundResponse({ description: 'Maturity not found' })
+  @ApiBadRequestResponse({
+    description: 'Weight is not within template weight range',
+  })
   update(
     @Param('checkpoint_id', ParseIntPipe) id: number,
     @Body() updatecheckpointDto: UpdateCheckpointDto

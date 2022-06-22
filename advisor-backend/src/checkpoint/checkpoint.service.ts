@@ -42,9 +42,10 @@ export class CheckpointService {
           throw new ConflictException(
             'category with this name and type already exists'
           );
-        } else if (error.code === 'P2003') {
+        }
+        if (error.code === 'P2025') {
           // Throw error if category not found
-          throw new NotFoundException('category not found');
+          throw new NotFoundException('Category not found');
         }
         throw new InternalServerErrorException();
       });
@@ -56,7 +57,7 @@ export class CheckpointService {
    * @returns all checkpoints in category
    */
   async findAll(category_id: number) {
-    return await this.prisma.category.findMany({
+    return await this.prisma.checkpoint.findMany({
       where: {
         category_id,
       },
@@ -100,6 +101,9 @@ export class CheckpointService {
       where: {
         checkpoint_id,
       },
+      include: {
+        Category: true,
+      },
     });
 
     // Throw NotFoundException if checkpointnot found
@@ -118,6 +122,25 @@ export class CheckpointService {
       // Throw NotFoundException if maturity not found
       if (!maturity) {
         throw new NotFoundException('Maturity not found');
+      }
+    }
+
+    // Check if weight is within template weight range if weight is set
+    if (updateCheckpointDto.weight) {
+      const template = await this.prisma.template.findUnique({
+        where: {
+          template_id: checkpoint.Category.template_id,
+        },
+      });
+
+      // Throw error if weight is not within range
+      if (
+        updateCheckpointDto.weight < template.weight_range_min ||
+        updateCheckpointDto.weight > template.weight_range_max
+      ) {
+        throw new BadRequestException(
+          'weight is not within template weight range'
+        );
       }
     }
 
