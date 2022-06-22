@@ -87,9 +87,10 @@ export default function GenericGrid({
       <div
         style={{
           height: "650px",
-          width: "100%",
-          marginTop: "25px",
-          marginBottom: "100px",
+          width: "inherit",
+          marginTop: "10px",
+          marginBottom: "50px",
+          marginRight: "0px",
           borderRadius: "5px",
           backgroundColor: theme.palette.secondary.dark,
         }}

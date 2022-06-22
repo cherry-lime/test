@@ -1,12 +1,12 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -15,23 +15,17 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CheckpointService } from './checkpoint.service';
-import { CreateCheckpointDto } from './dto/create-checkpoint.dto';
 import { UpdateCheckpointDto } from './dto/update-checkpoint.dto';
 import { CheckpointDto } from './dto/checkpoint.dto';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 @ApiTags('checkpoint')
 @Controller('checkpoint')
 export class CheckpointController {
   constructor(private readonly checkpointService: CheckpointService) {}
 
-  @Post()
-  create(@Body() createCheckpointDto: CreateCheckpointDto) {
-    return this.checkpointService.create(createCheckpointDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.checkpointService.findAll();
-  }
   /**
    * [GET] /checkpoint/:checkpoint_id - Get checkpoint by id
    * @param id - Template id
@@ -56,10 +50,16 @@ export class CheckpointController {
    * @returns checkpointDto
    */
   @Patch(':checkpoint_id')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiResponse({ description: 'Updated checkpoint', type: CheckpointDto })
   @ApiNotFoundResponse({ description: 'checkpoint not found' })
   @ApiBadRequestResponse({
     description: 'Order must be less than number of categories in template',
+  })
+  @ApiNotFoundResponse({ description: 'Maturity not found' })
+  @ApiBadRequestResponse({
+    description: 'Weight is not within template weight range',
   })
   update(
     @Param('checkpoint_id', ParseIntPipe) id: number,
@@ -74,9 +74,11 @@ export class CheckpointController {
    * @returns Deleted checkpoint
    */
   @Delete(':checkpoint_id')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
   @ApiResponse({ description: 'Deleted checkpoint', type: CheckpointDto })
   @ApiNotFoundResponse({ description: 'checkpoint not found' })
   delete(@Param('checkpoint_id', ParseIntPipe) id: number) {
-    return this.checkpointService.remove(+id);
+    return this.checkpointService.delete(+id);
   }
 }

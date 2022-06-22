@@ -63,8 +63,8 @@ const getDefaultRow = (prevRows: Row[]) => {
 
 type CheckpointGridProps = {
   theme: Theme;
-  templateId: number;
-  categoryId: number;
+  templateId: string | undefined;
+  categoryId: string | undefined;
 };
 
 export default function CheckpointGrid({

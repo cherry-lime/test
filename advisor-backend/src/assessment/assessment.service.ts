@@ -59,10 +59,22 @@ export class AssessmentService {
       }
     }
 
+    const template = await this.prisma.template.findFirst({
+      where: {
+        template_type: createAssessmentDto.assessment_type,
+        enabled: true,
+      },
+    });
+
+    if (!template) {
+      throw new BadRequestException('No active templates found');
+    }
+
     return await this.prisma.assessment
       .create({
         data: {
           ...createAssessmentDto,
+          template_id: template.template_id,
           AssessmentParticipants: {
             create: users,
           },
@@ -84,6 +96,24 @@ export class AssessmentService {
    */
   async findAll() {
     return await this.prisma.assessment.findMany();
+  }
+
+  /**
+   * Find individual assessments for user
+   * @param user User
+   * @returns Individual assessments
+   */
+  async findUserAssessments(user: User) {
+    return await this.prisma.assessment.findMany({
+      where: {
+        AssessmentParticipants: {
+          some: {
+            user_id: user.user_id,
+          },
+        },
+        assessment_type: AssessmentType.INDIVIDUAL,
+      },
+    });
   }
 
   /**

@@ -1,12 +1,16 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import App from "../../../../App";
+import { store } from "../../../../app/store";
 
 test("app rendering/navigating from user interface to self-evals", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("user");
   fireEvent.click(button);
@@ -24,9 +28,11 @@ test("app rendering/navigating from user interface to self-evals", async () => {
 
 test("app rendering/navigating from user interface to feedback on self-eval", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("user");
   fireEvent.click(button);

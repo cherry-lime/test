@@ -25,15 +25,18 @@ model User {
 
 model Checkpoint {
   checkpoint_id                     Int                                 @id @default(autoincrement())
-  checkpoint_name                   String
-  checkpoint_description            String
-  weight                            Int
-  Maturity                          Maturity                            @relation(fields: [maturity_id], references: [maturity_id])
-  maturity_id                       Int
+  checkpoint_description            String                              @default("New Checkpoint")
+  checkpoint_additional_information String                              @default("")
+  order                             Int
+  weight                            Int                                 @default(1)
+  Maturity                          Maturity?                           @relation(fields: [maturity_id], references: [maturity_id])
+  maturity_id                       Int?
   Category                          Category                            @relation(fields: [category_id], references: [category_id])
   category_id                       Int
   CheckpointInTopic                 CheckpointInTopic[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+
+  @@unique([checkpoint_description, category_id])
 }
 
 model Answer {
@@ -118,6 +121,8 @@ model Assessment {
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
   @@unique([assessment_name, assessment_type, team_id])
+  @@index([assessment_type])
+  @@index([team_id])
 }
 
 model AssessmentParticipants {
@@ -131,18 +136,19 @@ model AssessmentParticipants {
 }
 
 model Template {
-  template_id       Int            @id @default(autoincrement())
-  template_name     String         @default("New Template")
-  template_type     AssessmentType
-  enabled           Boolean        @default(false)
-  weight_range_min  Int            @default(1)
-  weight_range_max  Int            @default(3)
-  score_formula     String         @default("sum(x)")
-  include_no_answer Boolean        @default(false)
-  Assessment        Assessment[]
-  Answers           Answer[]
-  Topic             Topic[]
-  Category          Category[]
+  template_id          Int            @id @default(autoincrement())
+  template_name        String         @default("New Template")
+  template_description String         @default("")
+  template_type        AssessmentType
+  enabled              Boolean        @default(false)
+  weight_range_min     Int            @default(1)
+  weight_range_max     Int            @default(3)
+  score_formula        String         @default("sum(x)")
+  include_no_answer    Boolean        @default(false)
+  Assessment           Assessment[]
+  Answers              Answer[]
+  Topic                Topic[]
+  Category             Category[]
 
   Maturity Maturity[]
   @@unique([template_name, template_type])

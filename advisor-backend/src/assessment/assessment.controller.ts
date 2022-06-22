@@ -12,6 +12,7 @@ import {
   Query,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiConflictResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -55,6 +56,9 @@ export class AssessmentController {
   @ApiNotFoundResponse({
     description: 'Team not found',
   })
+  @ApiBadRequestResponse({
+    description: 'No active templates found',
+  })
   create(@Body() createAssessmentDto: CreateAssessmentDto) {
     return this.assessmentService.create(createAssessmentDto);
   }
@@ -71,6 +75,22 @@ export class AssessmentController {
   })
   findAll() {
     return this.assessmentService.findAll();
+  }
+
+  /**
+   * [GET] /assessment/my - get my assessments
+   * @param user User
+   * @returns AssessmentDto[] List of all assessments
+   */
+  @Get('my')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    description: 'Found assessment of USER',
+    type: AssessmentDto,
+    isArray: true,
+  })
+  findUserAssessments(@AuthUser() user: User) {
+    return this.assessmentService.findUserAssessments(user);
   }
 
   /**
