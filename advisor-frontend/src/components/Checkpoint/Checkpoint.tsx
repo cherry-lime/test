@@ -96,7 +96,10 @@ function Checkpoint({
           >
             {number}
           </Typography>
-          <Typography sx={{ textAlign: "left", fontWeight:"bold" }} id="checkpointarea">
+          <Typography
+            sx={{ textAlign: "left", fontWeight: "bold" }}
+            id="checkpointarea"
+          >
             {`Area: ${area}`}
           </Typography>
           <Typography sx={{ textAlign: "left" }} id="checkpointnamelabel">

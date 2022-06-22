@@ -37,7 +37,11 @@ function Template({ theme }: { theme: Theme }) {
       >
         <h2> Feedback Textbox </h2>
 
-        <TextfieldEdit rows={5} theme={theme} text="Get editable feedback text" />
+        <TextfieldEdit
+          rows={5}
+          theme={theme}
+          text="Get editable feedback text"
+        />
 
         <h2> Areas </h2>
 

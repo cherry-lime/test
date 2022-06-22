@@ -25,31 +25,22 @@ function Team({ theme }: { theme: Theme }) {
 
   return (
     <PageLayout title={`Team ${teamId}`} sidebarType={userTypes[userRole]}>
-      <Grid sx={{width: "100vw"}} container direction="column" alignItems="left" xl="auto">
-        <Grid item> 
+      <Grid container direction="column" alignItems="left">
         <h2> Team Information </h2>
-        </Grid>
-        <Grid item>
-          <h3>
-            Country
-          </h3>
-        </Grid>
-        <Grid item xl="auto">
-        {userRole === "ASSESSOR" && <TextfieldEdit text="Netherlands" theme={theme} rows={1} />}
-        {/* {userRole === "USER" && <Textfield text="Netherlands" theme={theme} rows={1} columns="inherit" />} */}
-        </Grid>
-        <br />
-        <Grid item>
-          <h3> IT Area / Department </h3>
-        </Grid>
-        <Grid item>
-        {/* {userRole === "ASSESSOR" && <TextfieldEdit text="Department A" theme={theme} rows={1} />}
-        {userRole === "USER" && <Textfield text="Department A" theme={theme} rows={1} columns="inherit" />} */}
+        <h3> Country </h3>
 
-        </Grid>
-        {userRole === "ASSESSOR" && <TextfieldEdit text="Department A" theme={theme} rows={1} />}
+        {userRole === "ASSESSOR" && (
+          <TextfieldEdit text="Netherlands" theme={theme} rows={1} />
+        )}
+        {/* {userRole === "USER" && <Textfield text="Netherlands" theme={theme} rows={1} columns="inherit" />} */}
+
+        <h3> IT Area / Department </h3>
+
+        {userRole === "ASSESSOR" && (
+          <TextfieldEdit text="Department A" theme={theme} rows={1} />
+        )}
         {/* {userRole === "USER" && <Textfield text="Department A" theme={theme} rows={1} columns="inherit" />} */}
-        <br />
+
         <h3>Assessors</h3>
 
         <MemberGrid
