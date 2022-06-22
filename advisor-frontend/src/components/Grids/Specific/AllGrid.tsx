@@ -21,8 +21,8 @@ export function useLogin() {
     ["Login Admin"],
     () =>
       API.post(`/auth/login`, {
-        username: "birth_taken",
-        password: "994c801d-e32b-4281-9e83-f7937b4a1bff",
+        username: "symbol_enemy_throat",
+        password: "1ed4d82c-5ccd-447c-938e-d3c1efec1044",
       }),
     {
       onSuccess: (data: any) => {

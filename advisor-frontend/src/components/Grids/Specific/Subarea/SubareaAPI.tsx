@@ -87,7 +87,7 @@ export function usePatchSubarea() {
   return useMutation(
     ["PATCH", "/subarea", "/{subarea_id}"],
     async (row: SubareaRow) => {
-      // Convert row to category
+      // Convert row to subarea
       const subarea = fromRow(row);
 
       // Get response data from database
