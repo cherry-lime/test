@@ -6,7 +6,12 @@ import logo from "./logo.svg";
 import "./App.css";
 import { RootState } from "./app/store";
 import { resetUser, setUserID } from "./app/userDataSlice";
-import { authProfile, useLoginTwo, userLogout, userRegister } from "./app/loginAPI";
+import {
+  authProfile,
+  useLoginTwo,
+  userLogout,
+  userRegister,
+} from "./app/loginAPI";
 
 function UserInterface() {
   const { userID, userRole } = useSelector(
@@ -29,21 +34,29 @@ function UserInterface() {
         {" "}
         click to change ID
       </button>
-
       <button
         type="button"
-        onClick={() =>
+        onClick={() => {
           login.mutate({
-            username: "birth_taken",
-            password: "994c801d-e32b-4281-9e83-f7937b4a1bff",
-          })
-        }
+            username: "bent_respect_hurt",
+            password: "58f1928f-3b0c-40e7-9e98-a4dc22908153",
+          });
+          auth.mutate();
+        }}
       >
         Login
       </button>
-      <button type="button" onClick={() => auth.mutate()}> Authenticate</button>
-      <button type="button"onClick={() => logout.mutate()}> Logout now</button>
-      <button type="button" onClick={() => register.mutate({role: "USER"})}> Register new</button>
+      <button type="button" onClick={() => auth.mutate()}>
+        {" "}
+        Authenticate
+      </button>
+      <button type="button" onClick={() => logout.mutate()}>
+        {" "}
+        Logout now
+      </button>
+      <button type="button" onClick={() => register.mutate({ role: "USER" })}>
+        Register new
+      </button>
       <img src={logo} className="App-logo" alt="logo" />
       <p>
         Edit <code>src/App.tsx</code> and save to reload.

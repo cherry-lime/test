@@ -9,8 +9,8 @@ const API = axios.create({
 });
 
 /**
- *
- * @returns
+ * @params {role: "USERTYPE"} object that contains the body for the POST request
+ * @returns Object of login details for the user
  */
 export function userRegister() {
   return useMutation(
@@ -27,6 +27,20 @@ export function userRegister() {
   );
 }
 
+export function authProfile() {
+  const dispatch = useDispatch();
+  return useMutation(["Auth profile"], () => API.get(`/auth/profile`), {
+    onSuccess: (data: any) => {
+      const response = data["data"];
+      dispatch(setUserRole(response["role"]));
+      dispatch(setUserID(response["user_id"]));
+      console.log(response);
+    },
+    onError: (error: any) => {
+      console.log(error);
+    },
+  });
+}
 export function useLoginTwo() {
   return useMutation(
     ["Login Admin"],
@@ -41,22 +55,6 @@ export function useLoginTwo() {
       },
     }
   );
-}
-
-export function authProfile() {
-  const dispatch = useDispatch();
-  return useMutation(["Auth profile"], () => API.get(`/auth/profile`), {
-    onSuccess: (data: any) => {
-      
-      const response = data["data"];
-      dispatch(setUserRole(response["role"]));
-      dispatch(setUserID(response["user_id"]));
-      console.log(response);
-    },
-    onError: (error: any) => {
-      console.log(error);
-    },
-  });
 }
 
 export function userLogout() {
