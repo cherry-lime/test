@@ -59,10 +59,22 @@ export class AssessmentService {
       }
     }
 
+    const template = await this.prisma.template.findFirst({
+      where: {
+        template_type: createAssessmentDto.assessment_type,
+        enabled: true,
+      },
+    });
+
+    if (!template) {
+      throw new BadRequestException('No active templates found');
+    }
+
     return await this.prisma.assessment
       .create({
         data: {
           ...createAssessmentDto,
+          template_id: template.template_id,
           AssessmentParticipants: {
             create: users,
           },
@@ -215,6 +227,39 @@ export class AssessmentService {
           throw new InternalServerErrorException();
         }
       });
+  }
+
+  /**
+   * Check if user is part of assessment
+   * @param assessment_id assessment_id
+   * @param user user
+   * @returns assessment if member, null otherwise
+   */
+  async userInAssessment(assessment_id: number, user: User) {
+    const assessment = await this.prisma.assessment.findUnique({
+      where: {
+        assessment_id,
+      },
+      include: {
+        AssessmentParticipants: true,
+      },
+    });
+
+    if (!assessment) {
+      return null;
+    }
+
+    const userInAssessment = assessment.AssessmentParticipants.find(
+      (participant) => {
+        return participant.user_id === user.user_id;
+      }
+    );
+
+    if (!userInAssessment) {
+      return null;
+    }
+
+    return assessment;
   }
 
   /**
