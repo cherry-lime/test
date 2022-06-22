@@ -2,6 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, Max, Min } from 'class-validator';
 
 export class AnswerDto {
+  @ApiProperty()
+  @IsNumber()
+  answer_id: number;
+
   @ApiProperty({ default: 'New Answer' })
   answer_text: string;
 
@@ -12,5 +16,6 @@ export class AnswerDto {
   answer_weight: number;
 
   @ApiProperty()
+  @IsNumber()
   template_id: number;
 }
