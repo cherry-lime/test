@@ -36,14 +36,14 @@ export function useLogin() {
 }
 
 export default function AllGrid() {
-  const login = useLogin();
-  login.mutate();
+  // const login = useLogin();
+  // login.mutate();
 
   const userId = 0;
   const userRole = "ASSESSOR";
   const teamId = 0;
   const templateId = 4;
-  const categoryId = 0;
+  const categoryId = 1;
   const assessmentId = 0;
 
   return (
@@ -119,11 +119,7 @@ export default function AllGrid() {
       <strong>Answer Types</strong>
       <AnswerTypeGrid theme={INGTheme} templateId={templateId} />
       <strong>Subareas</strong>
-      <SubareaGrid
-        theme={INGTheme}
-        templateId={templateId}
-        categoryId={categoryId}
-      />
+      <SubareaGrid theme={INGTheme} categoryId={categoryId} />
       <strong>Checkpoints</strong>
       <CheckpointGrid
         theme={INGTheme}

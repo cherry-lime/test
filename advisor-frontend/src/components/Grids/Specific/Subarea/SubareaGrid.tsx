@@ -1,73 +1,57 @@
 import * as React from "react";
+import { UseMutationResult } from "react-query";
 
 import {
   GridActionsCellItem,
   GridColumns,
   GridPreProcessEditCellProps,
   GridRowId,
-  GridRowModel,
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import { IconButton } from "@mui/material";
 
 import GenericGrid from "../../Generic/GenericGrid";
+
 import {
   handleAdd,
   handleDelete,
-  handleDuplicate,
-  handleMoveRows,
+  handleInit,
+  handleMove,
   preProcessEditOrder,
   processRowUpdate,
-  updateOrderRows,
-} from "../handlers";
+} from "../handlersNew";
 
-// Define type for the rows in the grid
-type Row = {
-  id: number;
-  order: number;
-  name: string;
-  summary: string;
-  description: string;
-  enabled: boolean;
-};
-
-// Get row object with default values
-const getDefaultRow = (prevRows: Row[]) => {
-  const defaultRow = {
-    id: Date.now(),
-    order: prevRows.length,
-    name: "Name...",
-    summary: "Summary...",
-    description: "Description...",
-    enabled: false,
-  };
-  return defaultRow;
-};
+import {
+  SubareaRow,
+  usePatchSubarea,
+  usePostSubarea,
+  useDeleteSubarea,
+  useGetSubareas,
+} from "./SubareaAPI";
 
 type SubareaGridProps = {
   theme: Theme;
-  templateId: number;
   categoryId: number;
 };
 
-export default function SubareaGrid({
-  theme,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  templateId,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  categoryId,
-}: SubareaGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
+  const [rows, setRows] = React.useState<SubareaRow[]>([]);
 
-  // Fetch initial rows of the grid
+  // Subarea query
+  const { status, data, error } = useGetSubareas(categoryId);
+
+  // Subarea mutations
+  const patchSubarea = usePatchSubarea();
+  const postSubarea = usePostSubarea(categoryId);
+  const deleteSubarea = useDeleteSubarea();
+
+  // Called when "status" of subareas query is changed
   React.useEffect(() => {
-    // TODO Replace this by API fetch
-    setRows(() => []);
-  }, []);
+    handleInit(setRows, status, data, error);
+  }, [status]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
@@ -77,23 +61,34 @@ export default function SubareaGrid({
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdate(setRows, newRow, oldRow, true),
+    async (newRow: SubareaRow, oldRow: SubareaRow) =>
+      processRowUpdate(
+        setRows,
+        patchSubarea as UseMutationResult,
+        newRow,
+        oldRow
+      ),
     []
   );
 
   // Called when the "Upward" action is pressed
-  const handleUpward = React.useCallback(
-    (row: Row) => () => {
-      handleMoveRows(setRows, row, row.order - 1);
+  const handleUpwardDecorator = React.useCallback(
+    (row: SubareaRow) => () => {
+      handleMove(setRows, patchSubarea as UseMutationResult, {
+        ...row,
+        order: row.order - 1,
+      });
     },
     []
   );
 
   // Called when the "Downward" action is pressed
-  const handleDownward = React.useCallback(
-    (row: Row) => () => {
-      handleMoveRows(setRows, row, row.order + 1);
+  const handleDownwardDecorator = React.useCallback(
+    (row: SubareaRow) => () => {
+      handleMove(setRows, patchSubarea as UseMutationResult, {
+        ...row,
+        order: row.order + 1,
+      });
     },
     []
   );
@@ -101,39 +96,34 @@ export default function SubareaGrid({
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, rowId);
-      updateOrderRows(setRows);
-    },
-    []
-  );
-
-  // Called when the "Duplicate" action is pressed in the menu
-  const handleDuplicateDecorator = React.useCallback(
-    (row: GridRowModel) => () => {
-      handleDuplicate(setRows, row);
+      handleDelete(
+        setRows,
+        deleteSubarea as UseMutationResult,
+        rowId as number
+      );
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, getDefaultRow(rows));
-  }, [rows]);
+    handleAdd(setRows, postSubarea as UseMutationResult);
+  }, []);
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColumns<SubareaRow>>(
     () => [
       {
         field: "",
         width: 50,
-        renderCell: (params: { row: Row }) => (
+        renderCell: (params: { row: SubareaRow }) => (
           <div className="parent">
             <div className="child">
-              <IconButton onClick={handleUpward(params.row)}>
+              <IconButton onClick={handleUpwardDecorator(params.row)}>
                 <UpwardIcon />
               </IconButton>
             </div>
             <div className="child">
-              <IconButton onClick={handleDownward(params.row)}>
+              <IconButton onClick={handleDownwardDecorator(params.row)}>
                 <DownwardIcon />
               </IconButton>
             </div>
@@ -182,13 +172,7 @@ export default function SubareaGrid({
         field: "actions",
         type: "actions",
         width: 75,
-        getActions: (params: { id: GridRowId; row: Row }) => [
-          <GridActionsCellItem
-            icon={<FileCopyIcon />}
-            label="Duplicate"
-            onClick={handleDuplicateDecorator(params.row)}
-            showInMenu
-          />,
+        getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
@@ -199,10 +183,9 @@ export default function SubareaGrid({
       },
     ],
     [
-      handleUpward,
-      handleDownward,
+      handleUpwardDecorator,
+      handleDownwardDecorator,
       preProcessEditOrderDecorator,
-      handleDuplicateDecorator,
       handleDeleteDecorator,
     ]
   );
