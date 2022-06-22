@@ -53,8 +53,7 @@ export class TemplateController {
     isArray: true,
   })
   @Get('')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'))
   async findAll(): Promise<TemplateDto[]> {
     return this.templateService.findAll();
   }
@@ -85,8 +84,7 @@ export class TemplateController {
   @Get(':template_id')
   @ApiResponse({ description: 'Template', type: TemplateDto })
   @ApiNotFoundResponse()
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'))
   async findOne(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<TemplateDto> {
@@ -180,8 +178,7 @@ export class TemplateController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'))
   async findAllCategories(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<CategoryDto[]> {

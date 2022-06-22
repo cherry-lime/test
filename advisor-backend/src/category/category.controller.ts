@@ -47,8 +47,7 @@ export class CategoryController {
   @ApiNotFoundResponse({
     description: 'Category not found',
   })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'))
   findOne(@Param('category_id', ParseIntPipe) id: number) {
     return this.categoryService.findOne(id);
   }
@@ -101,8 +100,7 @@ export class CategoryController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'))
   findAllSubareas(@Param('subarea_id', ParseIntPipe) id: number) {
     return this.subareaService.findAll(id);
   }

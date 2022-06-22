@@ -31,8 +31,7 @@ export class MaturityController {
   @Get(':maturity_id')
   @ApiResponse({ description: 'Found maturity', type: MaturityDto })
   @ApiNotFoundResponse({ description: 'Maturity not found' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'))
   findOne(@Param('maturity_id', ParseIntPipe) id: number) {
     return this.maturityService.findOne(id);
   }

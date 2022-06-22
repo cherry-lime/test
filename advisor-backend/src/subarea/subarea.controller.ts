@@ -38,8 +38,7 @@ export class SubareaController {
     type: SubareaDto,
   })
   @ApiNotFoundResponse({ description: 'Subarea not found' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.subareaService.findOne(id);
   }
