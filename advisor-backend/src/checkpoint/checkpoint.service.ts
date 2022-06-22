@@ -7,8 +7,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { SaveCheckpointDto } from '../save/dto/save-checkpoint.dto';
-import { AssessmentDto } from '../assessment/dto/assessment.dto';
 import { TemplateService } from '../template/template.service';
 @Injectable()
 export class CheckpointService {
