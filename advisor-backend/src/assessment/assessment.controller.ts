@@ -11,6 +11,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiConflictResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -50,6 +51,9 @@ export class AssessmentController {
   })
   @ApiNotFoundResponse({
     description: 'Team not found',
+  })
+  @ApiBadRequestResponse({
+    description: 'No active templates found',
   })
   create(@Body() createAssessmentDto: CreateAssessmentDto) {
     return this.assessmentService.create(createAssessmentDto);
