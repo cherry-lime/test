@@ -42,11 +42,15 @@ export class CheckpointService {
       throw new NotFoundException('Category not found');
     }
 
-    const { maturity_id } = await this.prisma.maturity.findFirst({
+    const maturity = await this.prisma.maturity.findFirst({
       where: {
         template_id: category.Template.template_id,
       },
     });
+
+    if (!maturity) {
+      throw new NotFoundException('No maturities found');
+    }
 
     return await this.prisma.checkpoint
       .create({
@@ -58,7 +62,7 @@ export class CheckpointService {
           },
           Maturity: {
             connect: {
-              maturity_id,
+              maturity_id: maturity.maturity_id,
             },
           },
           order: order + 1,
