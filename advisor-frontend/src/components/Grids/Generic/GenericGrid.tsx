@@ -8,6 +8,7 @@ import {
   GridRowsProp,
   GridColumns,
   GridRowModel,
+  GridSortModel,
 } from "@mui/x-data-grid";
 import { styled, Theme, ThemeProvider } from "@mui/material/styles";
 import Button from "@mui/material/Button";
@@ -72,6 +73,8 @@ type GenericGridProps = {
     text: string;
     handler: () => void;
   };
+  // eslint-disable-next-line react/require-default-props
+  sortModel?: GridSortModel | undefined;
 };
 
 export default function GenericGrid({
@@ -81,6 +84,7 @@ export default function GenericGrid({
   processRowUpdate,
   hasToolbar,
   add,
+  sortModel,
 }: GenericGridProps) {
   return (
     <ThemeProvider theme={theme}>
@@ -97,6 +101,11 @@ export default function GenericGrid({
         <StyledGrid
           rows={rows}
           columns={columns}
+          initialState={{
+            sorting: {
+              sortModel,
+            },
+          }}
           experimentalFeatures={{ newEditingApi: true }}
           processRowUpdate={processRowUpdate}
           components={hasToolbar ? { Toolbar: GridToolbar } : {}}

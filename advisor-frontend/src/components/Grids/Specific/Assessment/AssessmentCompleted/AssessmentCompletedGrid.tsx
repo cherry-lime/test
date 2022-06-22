@@ -83,5 +83,13 @@ export default function AssessmentCompletedGrid({
     [handleVisit]
   );
 
-  return <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />;
+  return (
+    <GenericGrid
+      theme={theme}
+      rows={rows}
+      columns={columns}
+      hasToolbar
+      sortModel={[{ field: "completedDate", sort: "desc" }]}
+    />
+  );
 }

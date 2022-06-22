@@ -112,6 +112,7 @@ export default function AssessmentOngoingGrid({
               handler: handleAddDecorator,
             }
       }
+      sortModel={[{ field: "updatedDate", sort: "desc" }]}
     />
   );
 }

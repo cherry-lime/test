@@ -1,3 +1,5 @@
+import { useMutation } from "react-query";
+
 import TeamGrid from "./Team/TeamGrid";
 import MemberGrid from "./Member/MemberGrid";
 import AssessmentOngoingGrid from "./Assessment/AssessmentOngoing/AssessmentOngoingGrid";
@@ -12,8 +14,31 @@ import AnswerTypeGrid from "./Answer/AnswerGrid";
 import SubareaGrid from "./Subarea/SubareaGrid";
 import CheckpointGrid from "./Checkpoint/CheckpointGrid";
 import INGTheme from "../../../Theme";
+import API from "../../../API";
+
+export function useLogin() {
+  return useMutation(
+    ["Login Admin"],
+    () =>
+      API.post(`/auth/login`, {
+        username: "birth_taken",
+        password: "994c801d-e32b-4281-9e83-f7937b4a1bff",
+      }),
+    {
+      onSuccess: (data: any) => {
+        console.log(data);
+      },
+      onError: (error: any) => {
+        console.log(error);
+      },
+    }
+  );
+}
 
 export default function AllGrid() {
+  const login = useLogin();
+  login.mutate();
+
   const userId = 0;
   const userRole = "ASSESSOR";
   const teamId = 0;
