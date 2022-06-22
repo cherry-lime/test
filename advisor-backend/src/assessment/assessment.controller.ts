@@ -24,7 +24,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role, User } from '@prisma/client';
-import AuthUser from 'src/common/decorators/auth-user.decorator';
+import AuthUser from '../common/decorators/auth-user.decorator';
 
 @ApiTags('assessment')
 @Controller('assessment')
