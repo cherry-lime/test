@@ -15,6 +15,7 @@ import Area from "./pages/admin/templates/Area/Area";
 import Template from "./pages/admin/templates/Template/Template";
 import Example from "./pages/ExamplePage";
 import GlobalStyles from "./GlobalStyles";
+import INGTheme from "./Theme";
 
 function App() {
   return (
@@ -37,34 +38,49 @@ function App() {
         <Route path="/" element={<Home />} />
 
         <Route path="/user" element={<UserInterface />} />
-        <Route path="/user/self_evaluations" element={<ListOfSelfEvals />} />
+        <Route
+          path="/user/self_evaluations"
+          element={<ListOfSelfEvals theme={INGTheme} />}
+        />
         <Route
           path="/user/self_evaluations/:assessmentId"
-          element={<Evaluation team={false} />}
+          element={<Evaluation team={false} theme={INGTheme} />}
         />
         <Route
           path="/user/self_evaluations/feedback/:assessmentId"
-          element={<Feedback team={false} />}
+          element={<Feedback team={false} theme={INGTheme} />}
         />
 
-        <Route path="/teams" element={<TeamList />} />
-        <Route path="/teams/:teamId" element={<Team />} />
+        <Route path="/teams" element={<TeamList theme={INGTheme} />} />
+        <Route path="/teams/:teamId" element={<Team theme={INGTheme} />} />
         <Route
           path="/teams/:teamId/:assessmentId"
-          element={<Evaluation team />}
+          element={<Evaluation team theme={INGTheme} />}
         />
         <Route
           path="/teams/:teamId/feedback/:assessmentId"
-          element={<Feedback team />}
+          element={<Feedback team theme={INGTheme} />}
         />
 
         <Route path="/assessor" element={<AssessorInterface />} />
 
         <Route path="/admin" element={<AdminInterface />} />
-        <Route path="/admin/individuals" element={<ListOfIndividuals />} />
-        <Route path="/admin/templates" element={<ListOfTemplates />} />
-        <Route path="/admin/templates/:templateId" element={<Template />} />
-        <Route path="/admin/templates/:templateId/:areaId" element={<Area />} />
+        <Route
+          path="/admin/individuals"
+          element={<ListOfIndividuals theme={INGTheme} />}
+        />
+        <Route
+          path="/admin/templates"
+          element={<ListOfTemplates theme={INGTheme} />}
+        />
+        <Route
+          path="/admin/templates/:templateId"
+          element={<Template theme={INGTheme} />}
+        />
+        <Route
+          path="/admin/templates/:templateId/:areaId"
+          element={<Area theme={INGTheme} />}
+        />
         <Route path="/example" element={<Example />} />
       </Routes>
     </div>

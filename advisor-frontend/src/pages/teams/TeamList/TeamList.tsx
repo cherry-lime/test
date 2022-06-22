@@ -1,46 +1,22 @@
-import { Link, useLocation } from "react-router-dom";
-import { Grid } from "@mui/material";
-import ExampleButton from "../../../components/ExampleButton/ExampleButton";
+import { Grid, Theme } from "@mui/material";
+import { useSelector } from "react-redux";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import TeamGrid from "../../../components/Grids/Specific/TeamGrid";
-import INGTheme from "../../../Theme";
+import { RootState } from "../../../app/store";
+
 /**
  * Page with the list of teams that the user or assessor is part of
  */
-function TeamList() {
-  const location = useLocation();
-  const data = location.state;
-  const teamIds = [2, 4, 5];
-
-  const userId = 0;
-  const userRole = "USER";
+function TeamList({ theme }: { theme: Theme }) {
+  const { userId } = useSelector((state: RootState) => state.userData);
+  // fetch user role
+  const userRole = "ASSESSOR";
 
   return (
-    <PageLayout title="Teams" sidebarType={userTypes.USER}>
+    <PageLayout title="Teams" sidebarType={userTypes[userRole]}>
       <Grid container direction="column" alignItems="left" />
-      <TeamGrid theme={INGTheme} userId={userId} userRole={userRole} />
-      <div>
-        <h2> List of Teams </h2>
-
-        {data === "assessor" && <ExampleButton name="Create New Team" />}
-
-        <br />
-
-        {teamIds.map((teamId) => (
-          <div key={`t-${teamId}`}>
-            <Link
-              to={`/teams/${teamId}`}
-              state={data}
-              data-testid={`team-${teamId}`}
-            >
-              {" "}
-              Go to Team with id {teamId}{" "}
-            </Link>
-            <br />
-          </div>
-        ))}
-      </div>
+      <TeamGrid theme={theme} userId={userId} userRole={userRole} />
     </PageLayout>
   );
 }

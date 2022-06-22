@@ -1,16 +1,16 @@
+import { Theme } from "@mui/material";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import ButtonRegular from "../../components/ButtonRegular/ButtonRegular";
 import ListOfCheckpoints from "../../components/ListOfCheckpoints/ListOfCheckpoints";
 import userTypes from "../../components/Sidebar/listUsersTypes";
-import INGTheme from "../../Theme";
 import PageLayout from "../PageLayout";
 
 /**
  * Page with a self evaluation that can be filled in
  * This should only be accessible to the user whose assement this belongs to
  */
-function Evaluation({ team }: { team: boolean }) {
+function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   const { assessmentId, teamId } = useParams();
   const userRole = "USER";
 
@@ -21,7 +21,7 @@ function Evaluation({ team }: { team: boolean }) {
     >
       <ListOfCheckpoints
         feedback={false || (team && userRole === "USER")}
-        theme={INGTheme}
+        theme={theme}
         assessmentId={assessmentId}
       />
       <div
