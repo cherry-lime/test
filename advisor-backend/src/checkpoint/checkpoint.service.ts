@@ -1,5 +1,3 @@
-
-import { CreateCheckpointDto } from './dto/create-checkpoint.dto';
 import { UpdateCheckpointDto } from './dto/update-checkpoint.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
@@ -12,7 +10,7 @@ import {
 @Injectable()
 export class CheckpointService {
   constructor(private readonly prisma: PrismaService) {}
-   /**
+  /**
    * Create checkpoint
    * @param category_id category id to which checkpoint belongs
    * @param createcheckpointDto checkpoint data
@@ -20,35 +18,39 @@ export class CheckpointService {
    * @throws checkpoint with this name already exists
    * @throws category with id does not exist
    */
-    async create(category_id: number) {
-      const order = await this.prisma.checkpoint.count({
-        where: {
-          category_id,
-        },
-      });
-  
-      return await this.prisma.checkpoint
-        .create({
-          data: {
-            category_id,
-            order: order + 1,
+  async create(category_id: number) {
+    const order = await this.prisma.checkpoint.count({
+      where: {
+        category_id,
+      },
+    });
+
+    return await this.prisma.checkpoint
+      .create({
+        data: {
+          Category: {
+            connect: {
+              category_id,
+            },
           },
-        })
-        .catch((error) => {
-          if (error.code === 'P2002') {
-            // Throw error ïf name and type not unique
-            throw new ConflictException(
-              'category with this name and type already exists'
-            );
-          } else if (error.code === 'P2003') {
-            // Throw error if category not found
-            throw new NotFoundException('category not found');
-          }
-          throw new InternalServerErrorException();
-        });
-    }
-  
- /**
+          order: order + 1,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2002') {
+          // Throw error ïf name and type not unique
+          throw new ConflictException(
+            'category with this name and type already exists'
+          );
+        } else if (error.code === 'P2003') {
+          // Throw error if category not found
+          throw new NotFoundException('category not found');
+        }
+        throw new InternalServerErrorException();
+      });
+  }
+
+  /**
    * Find all checkpoints in category
    * @param category_id category id
    * @returns all checkpoints in category
@@ -83,14 +85,16 @@ export class CheckpointService {
     return checkpoint;
   }
 
-
   /**
    * Update checkpoint
    * @param checkpoint_id checkpoint id
    * @param updateCheckpointDto checkpoint data
    * @returns updated checkpoint
    */
-   async update(checkpoint_id: number, updateCheckpointDto: UpdateCheckpointDto) {
+  async update(
+    checkpoint_id: number,
+    updateCheckpointDto: UpdateCheckpointDto
+  ) {
     // Get checkpoint by id from prisma
     const checkpoint = await this.prisma.checkpoint.findUnique({
       where: {
@@ -101,6 +105,20 @@ export class CheckpointService {
     // Throw NotFoundException if checkpointnot found
     if (!checkpoint) {
       throw new NotFoundException('checkpoint not found');
+    }
+
+    // Check if maturity exists if maturity_id is set
+    if (updateCheckpointDto.maturity_id) {
+      const maturity = await this.prisma.maturity.findUnique({
+        where: {
+          maturity_id: updateCheckpointDto.maturity_id,
+        },
+      });
+
+      // Throw NotFoundException if maturity not found
+      if (!maturity) {
+        throw new NotFoundException('Maturity not found');
+      }
     }
 
     // Update orders if order changed
@@ -163,7 +181,9 @@ export class CheckpointService {
       .catch((error) => {
         if (error.code === 'P2002') {
           // Throw error ïf name not unique
-          throw new ConflictException('Checkpoint with this name already exists');
+          throw new ConflictException(
+            'Checkpoint with this name already exists'
+          );
         } else if (error.code === 'P2025') {
           // Throw error if category not found
           throw new NotFoundException('Category not found');
@@ -178,7 +198,7 @@ export class CheckpointService {
    * @returns deleted checkpoint
    * @throws checkpoint not found
    */
-   async delete(checkpoint_id: number) {
+  async delete(checkpoint_id: number) {
     // Get checkpoint by id from prisma
     const checkpoint = await this.prisma.checkpoint.findUnique({
       where: {
