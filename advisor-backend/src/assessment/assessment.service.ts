@@ -99,6 +99,24 @@ export class AssessmentService {
   }
 
   /**
+   * Find individual assessments for user
+   * @param user User
+   * @returns Individual assessments
+   */
+  async findUserAssessments(user: User) {
+    return await this.prisma.assessment.findMany({
+      where: {
+        AssessmentParticipants: {
+          some: {
+            user_id: user.user_id,
+          },
+        },
+        assessment_type: AssessmentType.INDIVIDUAL,
+      },
+    });
+  }
+
+  /**
    * Find assessment by id
    * @param id assessment_id
    * @returns Found assessment
