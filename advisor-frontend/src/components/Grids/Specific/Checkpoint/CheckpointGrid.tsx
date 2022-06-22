@@ -274,8 +274,18 @@ export default function CheckpointGrid({
         ),
       },
       {
+        field: "weight",
+        headerName: "Weight",
+        headerAlign: "center",
+        align: "center",
+        type: "number",
+        width: 75,
+        editable: true,
+      },
+      {
         field: "enabled",
         headerName: "Enabled",
+        headerAlign: "center",
         type: "boolean",
         width: 75,
         editable: true,
@@ -319,7 +329,7 @@ export default function CheckpointGrid({
       processRowUpdate={processRowUpdateDecorator}
       hasToolbar
       add={{
-        text: "CREATE CHECKPOINT",
+        text: `${console.log(rows)}`, // "CREATE CHECKPOINT",
         handler: handleAddDecorator,
       }}
     />
