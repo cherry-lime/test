@@ -26,9 +26,9 @@ import { FeedbackDto } from './dto/feedback.dto';
 import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '@prisma/client';
+import { User, Role } from '@prisma/client';
 import { Roles } from '../common/decorators/roles.decorator';
-import { Role } from '@prisma/client';
+
 import AuthUser from '../common/decorators/auth-user.decorator';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
 

@@ -6,7 +6,6 @@ export const aTemplate = {
   disabled: false,
   weight_range_min: 1,
   weight_range_max: 3,
-  score_formula: 'sum(x)',
   include_no_answer: false,
 };
 
@@ -18,7 +17,6 @@ export const updateTemplate = {
   disabled: false,
   weight_range_min: 1,
   weight_range_max: 5,
-  score_formula: 'avg(x)',
   include_no_answer: true,
 };
 
