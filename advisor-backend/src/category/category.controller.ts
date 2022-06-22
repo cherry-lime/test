@@ -7,6 +7,7 @@ import {
   Delete,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -20,13 +21,20 @@ import { SubareaDto } from '../subarea/dto/subarea.dto';
 import { CategoryService } from './category.service';
 import { CategoryDto } from './dto/category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CheckpointDto } from '../checkpoint/dto/checkpoint.dto';
+import { CheckpointService } from '../checkpoint/checkpoint.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('category')
 @Controller('category')
 export class CategoryController {
   constructor(
     private readonly categoryService: CategoryService,
-    private readonly subareaService: SubareaService
+    private readonly subareaService: SubareaService,
+    private readonly checkpointService: CheckpointService
   ) {}
 
   /**
@@ -110,5 +118,44 @@ export class CategoryController {
   @ApiConflictResponse({ description: 'Subarea with this name already exists' })
   createSubarea(@Param('category_id', ParseIntPipe) category_id: number) {
     return this.subareaService.create(category_id);
+  }
+
+  /**
+   * [GET] /category/:category_id/checkpoint - Get all checkpoints in category
+   * @param category_id category id
+   * @returns List of checkpoints in category
+   */
+  @Get(':category_id/checkpoint')
+  @ApiTags('checkpoint')
+  @ApiResponse({
+    description: 'Checpoints in category',
+    type: CheckpointDto,
+    isArray: true,
+  })
+  findCheckpoints(@Param('category_id', ParseIntPipe) category_id: number) {
+    return this.checkpointService.findAll(category_id);
+  }
+
+  /**
+   * [POST] /category/:category_id/checkpoint - Create new checkpoint
+   * @param category_id category id
+   * @returns Created checkpoint
+   * @throw Category not found
+   * @throw Checkpoint with name already exists
+   */
+  @Post(':category_id/checkpoint')
+  @ApiTags('checkpoint')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiResponse({
+    description: 'created checkpoint',
+    type: CheckpointDto,
+  })
+  @ApiNotFoundResponse({ description: 'Category not found' })
+  @ApiConflictResponse({
+    description: 'Category with this name already exists',
+  })
+  createCheckpoint(@Param('category_id', ParseIntPipe) category_id: number) {
+    return this.checkpointService.create(category_id);
   }
 }
