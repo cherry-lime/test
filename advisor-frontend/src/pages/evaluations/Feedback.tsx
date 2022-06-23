@@ -23,19 +23,68 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   const { userId, userRole } = useSelector(
     (state: RootState) => state.userData
   );
+  // hardcoded to test pdf generation
   const recs = [
     { order: 1, description: "bla", additionalInfo: "hello" },
     { order: 2, description: "bla", additionalInfo: "hello" },
   ];
+  // hardcoded to test pdf generation
+  const checkpoints = [
+    {
+      number: 1,
+      description:
+        "this is a checkpoint description this is supposed to be quite long in order to test how it will look like in a table, so i'm just writing random things in hopes that it will work properly and none of the text disappears or goes over another",
+      topics: "topic 1, topic 2",
+      answer: "yes",
+    },
+    {
+      number: 1,
+      description: "this is a checkpoint description",
+      topics: "topic 4",
+      answer: "no",
+    },
+  ];
 
   const createPDF = () => {
     const filename = `Feedback-${assessmentId}.pdf`;
-    const headers = [
-      { key: "order", display: "Priority" },
-      { key: "description", display: "Recommendation" },
-      { key: "additionalInfo", display: "Additional Info" },
+    const recsHeaders = ["Priority", "Recommendation", "Additional Info"];
+    const recsArray = recs.map((r) => [
+      r.order,
+      r.description,
+      r.additionalInfo,
+    ]);
+    const recsSections = [
+      { title: "", text: "here is the automated feedback" },
+      { title: "Assessor Feedback", text: "here is the assessor feedback" },
     ];
-    pdf({ data: recs, headers, filename });
+    const recsTable = {
+      title: "Recommendations",
+      sections: recsSections,
+      data: recsArray,
+      headers: recsHeaders,
+    };
+
+    const checkpointHeaders = ["Number", "Description", "Topics", "Answer"];
+    const checkArray = checkpoints.map((c) => [
+      c.number,
+      c.description,
+      c.topics,
+      c.answer,
+    ]);
+    const checkSections = [
+      { title: "Subarea", text: "here is the subarea description" },
+    ];
+    const checkAreaTable = {
+      title: "Checkpoints: Area Name",
+      sections: checkSections,
+      data: checkArray,
+      headers: checkpointHeaders,
+    };
+    pdf({
+      title: `Feedback for assessment ${assessmentId}`,
+      tables: [recsTable, checkAreaTable, checkAreaTable],
+      filename,
+    });
   };
 
   const [value, setValue] = useState("Recommendations");
