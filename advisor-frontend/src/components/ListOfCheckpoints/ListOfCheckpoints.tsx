@@ -90,7 +90,7 @@ function ListOfCheckpoints({
 
   const hardcodedCheckpoint1 = {
     checkpointId: 12,
-    description: "checkpoint description",
+    description: "Checkpoint description",
     area: hardcodedArea1,
     order: 1,
     topics: [hardcodedTopic1, hardcodedTopic2],
@@ -98,7 +98,7 @@ function ListOfCheckpoints({
 
   const hardcodedCheckpoint2 = {
     checkpointId: 2,
-    description: "another checkpoint description",
+    description: "Another checkpoint description",
     area: hardcodedArea2,
     order: 2,
     topics: [hardcodedTopic1],
@@ -180,6 +180,7 @@ function ListOfCheckpoints({
             <Checkpoint
               feedback={feedback}
               number={checkpoint.order}
+              topics={checkpoint.topics.map((topic) => topic.name)}
               theme={theme}
               description={checkpoint.description}
               checkpointvalues={answers.map((a) => a.answerId)}
