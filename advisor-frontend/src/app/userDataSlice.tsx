@@ -16,7 +16,7 @@ const initialState: UserDataState = {
   userID: "0000",
   userRole: "",
   userName: "",
-  userPassword: ""
+  userPassword: "",
 };
 
 /**
@@ -51,6 +51,7 @@ export const userDataSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUserID, setUserRole, resetUser, setUserName, setPassword } = userDataSlice.actions;
+export const { setUserID, setUserRole, resetUser, setUserName, setPassword } =
+  userDataSlice.actions;
 
 export default userDataSlice.reducer;

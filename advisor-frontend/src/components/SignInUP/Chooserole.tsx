@@ -118,7 +118,9 @@ export default function Chooserole() {
               type="submit"
               variant="contained"
               sx={{ p: 1, m: 2 }}
-              onClick={() => {userReg.mutate({role: userRole})}}
+              onClick={() => {
+                userReg.mutate({ role: userRole });
+              }}
             >
               Continue
             </Button>

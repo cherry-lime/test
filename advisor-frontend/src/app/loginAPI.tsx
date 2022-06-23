@@ -3,7 +3,12 @@ import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "./store";
-import { setUserRole, setUserID, setUserName, setPassword } from "./userDataSlice";
+import {
+  setUserRole,
+  setUserID,
+  setUserName,
+  setPassword,
+} from "./userDataSlice";
 
 // Defines the API address, used to send the requests to
 const API = axios.create({
@@ -17,10 +22,10 @@ const API = axios.create({
  */
 export function userRegister() {
   // Navigation hook, to be used after the user is logged in
-  const  navigate = useNavigate();
+  const navigate = useNavigate();
   // Make the global state variable functions available
   const dispatch = useDispatch();
-  return  useMutation(
+  return useMutation(
     ["Register new user"],
     (userRole: { role: string }) => API.post(`/auth/register`, userRole),
     {
@@ -88,9 +93,8 @@ export function useLoginTwo() {
   );
 }
 
-
 /**
- * API Call to logout the current user. 
+ * API Call to logout the current user.
  * Removes the cookie token and resets the session state
  */
 export function userLogout() {

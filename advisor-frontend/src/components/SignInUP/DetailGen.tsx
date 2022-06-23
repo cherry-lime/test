@@ -100,7 +100,9 @@ export default function DetailGen() {
                 sx={{ m: 2 }}
                 startAdornment={
                   <InputAdornment position="start">
-                    <IconButton onClick={() => navigator.clipboard.writeText(userName)}>
+                    <IconButton
+                      onClick={() => navigator.clipboard.writeText(userName)}
+                    >
                       <ContentCopyIcon />
                     </IconButton>
                   </InputAdornment>
@@ -116,7 +118,11 @@ export default function DetailGen() {
                 value={userPassword}
                 startAdornment={
                   <InputAdornment position="start">
-                    <IconButton onClick={() => navigator.clipboard.writeText(userPassword)}>
+                    <IconButton
+                      onClick={() =>
+                        navigator.clipboard.writeText(userPassword)
+                      }
+                    >
                       <ContentCopyIcon />
                     </IconButton>
                   </InputAdornment>
@@ -128,10 +134,12 @@ export default function DetailGen() {
               type="submit"
               variant="contained"
               sx={{ p: 1, m: 2 }}
-              onClick={() => login.mutate({
-                username: userName,
-                password: userPassword
-              })}
+              onClick={() =>
+                login.mutate({
+                  username: userName,
+                  password: userPassword,
+                })
+              }
             >
               Finish and Log in
             </Button>
