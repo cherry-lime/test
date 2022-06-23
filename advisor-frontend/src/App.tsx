@@ -1,5 +1,7 @@
 import { Link, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import UserInterface from "./pages/user/UserInterface/UserInterface";
 import Home from "./Home";
 import IndividualEvaluation from "./pages/evaluations/IndividualEvaluation";
@@ -18,8 +20,15 @@ import Template from "./pages/admin/templates/Template/Template";
 import GlobalStyles from "./GlobalStyles";
 import SignIn from "./components/SignInUP/SignIn";
 import Chooserole from "./components/SignInUP/Chooserole";
+import { RootState } from "./app/store";
+import { authProfile } from "./app/loginAPI";
 
 function App() {
+  // Import the global state variables that will be used throughout the session
+  const { userRole } = useSelector((state: RootState) => state.userData);
+  // Call authentication API on pageload once
+  const auth = authProfile();
+  useEffect(() => auth.mutate(), []);
   return (
     <div className="App">
       <GlobalStyles />
@@ -35,11 +44,23 @@ function App() {
       <Link to="/admin" state="admin" data-testid="admin">
         Admin
       </Link>
+      <Link to="/login" state="admin" data-testid="admin">
+        login
+      </Link>
       <Routes>
+        <Route
+          path="/"
+          element={
+            userRole !== "" ? (
+              <Navigate to={`/${userRole}`} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
         <Route path="/login" element={<SignIn />} />
-        <Route path="/register" element={<Chooserole />}/>
-        <Route path="/" element={<Navigate to="/login" />}/>
-        <Route path="/home" element={<Home />}/>
+        <Route path="/register" element={<Chooserole />} />
+        <Route path="/home" element={<Home />} />
 
         <Route path="/user" element={<UserInterface />} />
         <Route path="/user/self_evaluations" element={<ListOfSelfEvals />} />
