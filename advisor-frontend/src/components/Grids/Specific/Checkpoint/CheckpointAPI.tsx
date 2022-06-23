@@ -84,7 +84,7 @@ export function useGetCheckpoint() {
       // Get data from database
       const { data } = await API.get(`/checkpoint/${checkpointId}`);
 
-      return data as Checkpoint;
+      return toRow(data) as CheckpointRow;
     }
   );
 }

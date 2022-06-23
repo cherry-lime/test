@@ -30,14 +30,14 @@ export default function AssessmentCompletedGrid({
 
   // Assessment query
   const { status, data, error } =
-    assessmentType === "TEAM" && teamId
-      ? useGetMyTeamAssessments(false, teamId)
-      : useGetMyIndividualAssessments(false);
+    assessmentType === "TEAM" && teamId !== undefined
+      ? useGetMyTeamAssessments(true, teamId)
+      : useGetMyIndividualAssessments(true);
 
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data, error);
-  }, []);
+  }, [status]);
 
   // Called when the "Visit" action is pressed
   const handleVisit = React.useCallback(

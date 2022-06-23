@@ -67,7 +67,7 @@ export function useGetAnswer() {
     // Get data from database
     const { data } = await API.get(`/answer/${answerId}`);
 
-    return data as Answer;
+    return toRow(data) as AnswerRow;
   });
 }
 

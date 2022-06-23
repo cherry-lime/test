@@ -94,7 +94,7 @@ export function useGetTemplate() {
       // Get data from database
       const { data } = await API.get(`/template/${templateId}`);
 
-      return data as Template;
+      return toRow(data) as TemplateRow;
     }
   );
 }

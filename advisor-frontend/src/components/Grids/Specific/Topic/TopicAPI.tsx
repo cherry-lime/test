@@ -63,7 +63,7 @@ export function useGetTopic() {
     // Get data from database
     const { data } = await API.get(`/topic/${topicId}`);
 
-    return data as Topic;
+    return toRow(data) as TopicRow;
   });
 }
 

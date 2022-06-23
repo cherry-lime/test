@@ -1,7 +1,11 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
 
-import { GridColumns, GridRowId } from "@mui/x-data-grid";
+import {
+  GridColumns,
+  GridRowId,
+  GridValueFormatterParams,
+} from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Button } from "@mui/material";
 
@@ -36,20 +40,20 @@ export default function AssessmentOngoingGrid({
 
   // Assessment query
   const { status, data, error } =
-    assessmentType === "TEAM" && teamId
+    assessmentType === "TEAM" && teamId !== undefined
       ? useGetMyTeamAssessments(false, teamId)
       : useGetMyIndividualAssessments(false);
 
   // Assessment mutation
   const postAssessment =
-    assessmentType === "TEAM" && teamId
+    assessmentType === "TEAM" && teamId !== undefined
       ? usePostAssessment(assessmentType, teamId)
-      : usePostAssessment(assessmentType, 0);
+      : usePostAssessment(assessmentType);
 
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data, error);
-  }, []);
+  }, [status]);
 
   // Called when the "Visit" action is pressed
   const handleVisit = React.useCallback(
@@ -72,12 +76,16 @@ export default function AssessmentOngoingGrid({
         headerName: "Created",
         type: "dateTime",
         flex: 1,
+        valueFormatter: (params: GridValueFormatterParams<string>) =>
+          `${new Date(params.value)}`,
       },
       {
         field: "updatedAt",
         headerName: "Updated",
         type: "dateTime",
         flex: 1,
+        valueFormatter: (params: GridValueFormatterParams<string>) =>
+          `${new Date(params.value)}`,
       },
       ...(userRole === "USER" && assessmentType === "TEAM"
         ? []

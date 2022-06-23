@@ -77,7 +77,7 @@ export function useGetCategory() {
       // Get data from database
       const { data } = await API.get(`/category/${categoryId}`);
 
-      return data as Category;
+      return toRow(data) as CategoryRow;
     }
   );
 }

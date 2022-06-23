@@ -80,14 +80,18 @@ export function useGetAssessments() {
 
 // Get all my individual assessments from database
 export function useGetMyIndividualAssessments(isCompleted: boolean) {
-  return useQuery(["GET", "/assessment/my"], async () => {
+  return useQuery(["GET", "/assessment/my", isCompleted], async () => {
     // Get response data from database
     const { data } = await API.get(`/assessment/my`);
 
     // Filter data on whether it is completed
     const dataFiltered = isCompleted
-      ? data.filter((assessment: Assessment) => assessment !== null)
-      : data.filter((assessment: Assessment) => assessment === null);
+      ? data.filter(
+          (assessment: Assessment) => assessment.completed_at !== null
+        )
+      : data.filter(
+          (assessment: Assessment) => assessment.completed_at === null
+        );
 
     // Convert filtered data to rows
     const rows = dataFiltered.map((assessment: Assessment) =>
@@ -100,35 +104,49 @@ export function useGetMyIndividualAssessments(isCompleted: boolean) {
 
 // Get all my team assessments from database
 export function useGetMyTeamAssessments(isCompleted: boolean, teamId: number) {
-  return useQuery(["GET", "/teams", teamId, "/assessments"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/teams/${teamId}/assessments`);
+  return useQuery(
+    ["GET", "/teams", teamId, "/assessments", isCompleted],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/teams/${teamId}/assessments`);
 
-    // Filter data on whether it is completed
-    const dataFiltered = isCompleted
-      ? data.filter((assessment: Assessment) => assessment !== null)
-      : data.filter((assessment: Assessment) => assessment === null);
+      // Filter data on whether it is completed
+      const dataFiltered = isCompleted
+        ? data.filter(
+            (assessment: Assessment) => assessment.completed_at !== null
+          )
+        : data.filter(
+            (assessment: Assessment) => assessment.completed_at === null
+          );
 
-    // Convert filtered data to rows
-    const rows = dataFiltered.map((assessment: Assessment) =>
-      toRow(assessment)
-    );
+      // Convert filtered data to rows
+      const rows = dataFiltered.map((assessment: Assessment) =>
+        toRow(assessment)
+      );
 
-    return rows as AssessmentRow[];
-  });
+      return rows as AssessmentRow[];
+    }
+  );
 }
 
 // Post assessment to database
 export function usePostAssessment(
   assessmentType: AssessmentType,
-  teamId: number
+  teamId?: number
 ) {
   return useMutation(["POST", "/assessment"], async () => {
     // Get response data from database
-    const { data } = await API.post(`/assessment`, {
-      assessment_type: assessmentType,
-      team_id: teamId,
-    });
+    const { data } = await API.post(
+      `/assessment`,
+      teamId
+        ? {
+            assessment_type: assessmentType,
+            team_id: teamId,
+          }
+        : {
+            assessment_type: assessmentType,
+          }
+    );
 
     // Convert data to row
     return toRow(data);
