@@ -13,14 +13,17 @@ import IconButton from "@mui/material/IconButton";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import { userRegister } from "../../app/loginAPI";
 
 const theme = createTheme();
 export default function Chooserole() {
-  const [role, setRole] = React.useState("");
-
+  // Defines the role state to keep track of the selected role
+  const [userRole, setUserRole] = React.useState("");
   const handleChange = (event: SelectChangeEvent) => {
-    setRole(event.target.value as string);
+    setUserRole(event.target.value as string);
   };
+  // Imports the API hook for registering
+  const userReg = userRegister();
   return (
     <ThemeProvider theme={theme}>
       <div
@@ -103,7 +106,7 @@ export default function Chooserole() {
                 sx={{ m: 2, border: "orange" }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={role}
+                value={userRole}
                 onChange={handleChange}
               >
                 <MenuItem value="USER">User</MenuItem>
@@ -115,7 +118,7 @@ export default function Chooserole() {
               type="submit"
               variant="contained"
               sx={{ p: 1, m: 2 }}
-              onClick={() => console.log(role)}
+              onClick={() => {userReg.mutate({role: userRole})}}
             >
               Continue
             </Button>

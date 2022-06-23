@@ -20,13 +20,9 @@ const theme = createTheme();
 
 // Sign in functionality to be used later
 export default function SignIn() {
+  // Prevents the textfield to automatically refresh the page, after input
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
   };
   // Import login API calls
   const login = useLoginTwo();

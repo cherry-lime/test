@@ -3,8 +3,9 @@ import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "./store";
-import { setUserRole, setUserID } from "./userDataSlice";
+import { setUserRole, setUserID, setUserName, setPassword } from "./userDataSlice";
 
+// Defines the API address, used to send the requests to
 const API = axios.create({
   withCredentials: true,
   baseURL: "https://tabackend.azurewebsites.net",
@@ -15,12 +16,18 @@ const API = axios.create({
  * @returns Object of login details for the user
  */
 export function userRegister() {
-  return useMutation(
+  // Navigation hook, to be used after the user is logged in
+  const  navigate = useNavigate();
+  // Make the global state variable functions available
+  const dispatch = useDispatch();
+  return  useMutation(
     ["Register new user"],
     (userRole: { role: string }) => API.post(`/auth/register`, userRole),
     {
-      onSuccess: (data: any) => {
-        // TODO
+      onSuccess: async (data: any) => {
+        dispatch(setUserName(data.data.username));
+        dispatch(setPassword(data.data.password));
+        await navigate(`/signup/details`);
       },
       onError: (error: any) => {
         alert(error);
@@ -30,8 +37,8 @@ export function userRegister() {
 }
 
 /**
- * Authentication API call. Checks if the user is logged in and retrieves the userID and userRole.
- * Contains functionality to redirect the user to their homepage and adjust the global state values.
+ * Checks if the user is logged in and retrieves the userID and userRole.
+ * Contains functionality to redirect the user to their homepage and update the global state values.
  */
 export function authProfile() {
   const dispatch = useDispatch();
@@ -81,6 +88,11 @@ export function useLoginTwo() {
   );
 }
 
+
+/**
+ * API Call to logout the current user. 
+ * Removes the cookie token and resets the session state
+ */
 export function userLogout() {
   return useMutation(["User Logout"], () => API.post(`/auth/logout`), {
     onSuccess: (data: any) => {
