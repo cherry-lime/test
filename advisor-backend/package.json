@@ -1,4 +1,4 @@
-  {
+{
   "name": "advisor-backend",
   "version": "0.0.1",
   "description": "",
@@ -69,6 +69,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "28.1.1",
+    "mock-express-response": "^0.3.0",
     "prettier": "^2.3.2",
     "prisma": "^3.15.1",
     "source-map-support": "^0.5.20",

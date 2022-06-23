@@ -2,8 +2,11 @@ import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { userAuthenticationLog } from '../prisma/mock/mockAuthController';
+import { loginDto, mockLogin, mockLogout, mockUser, registerDto, userinfo } from '../prisma/mock/mockAuthController';
 const moduleMocker = new ModuleMocker(global);
+
+var ejs = require('ejs');
+var MockExpressResponse = require('mock-express-response');
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -22,8 +25,10 @@ describe('AuthController', () => {
       .useMocker((token) => {
         if (token === AuthService) {
           return {
-            register: jest.fn().mockResolvedValue(userAuthenticationLog),
-            login: jest.fn().mockResolvedValue(userAuthenticationLog),
+            register: jest.fn().mockResolvedValue(mockUser),
+            login: jest.fn().mockResolvedValue(mockLogin),
+            logout: jest.fn().mockResolvedValue(mockLogout),
+            getLoggedUser: jest.fn().mockResolvedValue(userinfo)
           };
         }
         if (typeof token === 'function') {
@@ -45,31 +50,40 @@ describe('AuthController', () => {
   });
 
   describe('register', () => {
-    // it('Should return the created user', async () => {
-    //   expect(authController.register(registerDto)).resolves.toBe(
-    //     userAuthenticationLog
-    //   );
-    // });
+    // Basic response
+    var response = new MockExpressResponse();
+    it('Should return the created user', async () => {
+      expect(authController.register(registerDto, response)).resolves.toBe(
+        mockUser
+      );
+    });
   });
 
-  //describe('login', () => {
-  //it('should return not found exception', async () => {
-  //  expect(authController.login(null))
-  //  .rejects.toThrowError(NotFoundException);
-  //})
-  //it('should return token and user information', async () => {
-  //expect(authController.login(mockUser, Response)).toBe(
-  //"login successful"//userAuthenticationLog
-  //);
-  //});
-  //});
+  describe('login', () => {
+    // Basic response
+    var response = new MockExpressResponse();
+    it('Should return a message showing a successful login', async () => {
+      expect(authController.login(loginDto, response)).resolves.toBe(
+        mockLogin
+      );
+    });
+  });
 
-  //describe('profile', () => {
-  //    it("Should return the user's profile", async () => {
-  //        expect(
-  //            await authController.getLoggedUser(userinfo)
-  //
-  //        )
-  //    })
-  //})
+  describe('logout', () => {
+    // Basic response
+    var response = new MockExpressResponse();
+    it('Should return a message showing a successful logout', async () => {
+      expect(authController.logout(response)).resolves.toBe(
+        mockLogout
+      );
+    });
+  });
+
+  describe('get a user', () => {
+    it('Should return user information', async () => {
+      expect(authController.getLoggedUser(userinfo)).resolves.toBe(
+        userinfo
+      );
+    });
+  });
 });
