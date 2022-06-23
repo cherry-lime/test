@@ -69,21 +69,14 @@ export default function AllGrid() {
       <strong>Ongoing Evaluations (Individual)</strong>
       <AssessmentOngoingGrid
         theme={INGTheme}
-        userId={userId}
         userRole={userRole}
         assessmentType="INDIVIDUAL"
       />
       <strong>Completed Evaluations (Individual)</strong>
-      <AssessmentCompletedGrid
-        theme={INGTheme}
-        userId={userId}
-        userRole={userRole}
-        assessmentType="INDIVIDUAL"
-      />
+      <AssessmentCompletedGrid theme={INGTheme} assessmentType="INDIVIDUAL" />
       <strong>Ongoing Evaluations (Team)</strong>
       <AssessmentOngoingGrid
         theme={INGTheme}
-        userId={userId}
         userRole={userRole}
         teamId={teamId}
         assessmentType="TEAM"
@@ -91,8 +84,6 @@ export default function AllGrid() {
       <strong>Completed Evaluations (Team)</strong>
       <AssessmentCompletedGrid
         theme={INGTheme}
-        userId={userId}
-        userRole={userRole}
         teamId={teamId}
         assessmentType="TEAM"
       />

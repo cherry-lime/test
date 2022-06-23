@@ -6,20 +6,16 @@ import { Button } from "@mui/material";
 
 import GenericGrid from "../../../Generic/GenericGrid";
 
-import { UserRole } from "../../../../../types/UserRole";
 import { AssessmentType } from "../../../../../types/AssessmentType";
+import {
+  AssessmentRow,
+  useGetMyIndividualAssessments,
+  useGetMyTeamAssessments,
+} from "../AssessmentAPI";
+import { handleInit } from "../../handlersNew";
 
-// Define type for the rows in the grid
-type Row = {
-  id: number;
-  createdDate: Date;
-  completedDate: Date;
-};
-
-type MemberGridProps = {
+type AssessmentCompletedGridProps = {
   theme: Theme;
-  userId: number;
-  userRole: UserRole;
   // eslint-disable-next-line react/require-default-props
   teamId?: number;
   assessmentType: AssessmentType;
@@ -27,23 +23,20 @@ type MemberGridProps = {
 
 export default function AssessmentCompletedGrid({
   theme,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  userId,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  userRole,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   teamId,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentType,
-}: MemberGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+}: AssessmentCompletedGridProps) {
+  const [rows, setRows] = React.useState<AssessmentRow[]>([]);
 
-  // Fetch initial rows of the grid
+  // Assessment query
+  const { status, data, error } =
+    assessmentType === "TEAM" && teamId
+      ? useGetMyTeamAssessments(false, teamId)
+      : useGetMyIndividualAssessments(false);
+
+  // Called when "status" of assessments query is changed
   React.useEffect(() => {
-    // TODO Replace this by API fetch
-    setRows(() => [
-      { id: 0, createdDate: new Date(), completedDate: new Date() },
-    ]);
+    handleInit(setRows, status, data, error);
   }, []);
 
   // Called when the "Visit" action is pressed
@@ -55,16 +48,16 @@ export default function AssessmentCompletedGrid({
     []
   );
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColumns<AssessmentRow>>(
     () => [
       {
-        field: "createdDate",
+        field: "createdAt",
         headerName: "Created",
         type: "dateTime",
         flex: 1,
       },
       {
-        field: "completedDate",
+        field: "completedAt",
         headerName: "Completed",
         type: "dateTime",
         flex: 1,
@@ -89,7 +82,7 @@ export default function AssessmentCompletedGrid({
       rows={rows}
       columns={columns}
       hasToolbar
-      sortModel={[{ field: "completedDate", sort: "desc" }]}
+      sortModel={[{ field: "completedAt", sort: "desc" }]}
     />
   );
 }

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { UseMutationResult } from "react-query";
 
 import { GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
@@ -8,28 +9,17 @@ import GenericGrid from "../../../Generic/GenericGrid";
 
 import { UserRole } from "../../../../../types/UserRole";
 import { AssessmentType } from "../../../../../types/AssessmentType";
-import { handleAdd } from "../../handlers";
+import { handleAdd, handleInit } from "../../handlersNew";
 
-// Define type for the rows in the grid
-type Row = {
-  id: number;
-  createdDate: Date;
-  updatedDate: Date;
-};
+import {
+  AssessmentRow,
+  useGetMyIndividualAssessments,
+  useGetMyTeamAssessments,
+  usePostAssessment,
+} from "../AssessmentAPI";
 
-// Get row object with default values
-const getDefaultRow = () => {
-  const defaultRow = {
-    id: Date.now(),
-    createdDate: new Date(),
-    updatedDate: new Date(),
-  };
-  return defaultRow;
-};
-
-type MemberGridProps = {
+type AssessmentOngoingGridProps = {
   theme: Theme;
-  userId: number;
   userRole: UserRole;
   // eslint-disable-next-line react/require-default-props
   teamId?: number;
@@ -38,18 +28,27 @@ type MemberGridProps = {
 
 export default function AssessmentOngoingGrid({
   theme,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  userId,
   userRole,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   teamId,
   assessmentType,
-}: MemberGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([getDefaultRow()]);
+}: AssessmentOngoingGridProps) {
+  const [rows, setRows] = React.useState<AssessmentRow[]>([]);
 
-  // Fetch initial rows of the grid
+  // Assessment query
+  const { status, data, error } =
+    assessmentType === "TEAM" && teamId
+      ? useGetMyTeamAssessments(false, teamId)
+      : useGetMyIndividualAssessments(false);
+
+  // Assessment mutation
+  const postAssessment =
+    assessmentType === "TEAM" && teamId
+      ? usePostAssessment(assessmentType, teamId)
+      : usePostAssessment(assessmentType, 0);
+
+  // Called when "status" of assessments query is changed
   React.useEffect(() => {
-    // TODO Replace this by API fetch
+    handleInit(setRows, status, data, error);
   }, []);
 
   // Called when the "Visit" action is pressed
@@ -63,19 +62,19 @@ export default function AssessmentOngoingGrid({
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, getDefaultRow());
-  }, [rows]);
+    handleAdd(setRows, postAssessment as UseMutationResult);
+  }, []);
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColumns<AssessmentRow>>(
     () => [
       {
-        field: "createdDate",
+        field: "createdAt",
         headerName: "Created",
         type: "dateTime",
         flex: 1,
       },
       {
-        field: "updatedDate",
+        field: "updatedAt",
         headerName: "Updated",
         type: "dateTime",
         flex: 1,
@@ -112,7 +111,7 @@ export default function AssessmentOngoingGrid({
               handler: handleAddDecorator,
             }
       }
-      sortModel={[{ field: "updatedDate", sort: "desc" }]}
+      sortModel={[{ field: "updatedAt", sort: "desc" }]}
     />
   );
 }

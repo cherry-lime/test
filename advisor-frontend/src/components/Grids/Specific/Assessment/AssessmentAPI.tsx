@@ -79,26 +79,40 @@ export function useGetAssessments() {
 }
 
 // Get all my individual assessments from database
-export function useGetMyIndividualAssessments() {
+export function useGetMyIndividualAssessments(isCompleted: boolean) {
   return useQuery(["GET", "/assessment/my"], async () => {
     // Get response data from database
     const { data } = await API.get(`/assessment/my`);
 
+    // Filter data on whether it is completed
+    const dataFiltered = isCompleted
+      ? data.filter((assessment: Assessment) => assessment !== null)
+      : data.filter((assessment: Assessment) => assessment === null);
+
     // Convert filtered data to rows
-    const rows = data.map((assessment: Assessment) => toRow(assessment));
+    const rows = dataFiltered.map((assessment: Assessment) =>
+      toRow(assessment)
+    );
 
     return rows as AssessmentRow[];
   });
 }
 
 // Get all my team assessments from database
-export function useGetMyTeamAssessments(teamId: number) {
+export function useGetMyTeamAssessments(isCompleted: boolean, teamId: number) {
   return useQuery(["GET", "/teams", teamId, "/assessments"], async () => {
     // Get response data from database
     const { data } = await API.get(`/teams/${teamId}/assessments`);
 
+    // Filter data on whether it is completed
+    const dataFiltered = isCompleted
+      ? data.filter((assessment: Assessment) => assessment !== null)
+      : data.filter((assessment: Assessment) => assessment === null);
+
     // Convert filtered data to rows
-    const rows = data.map((assessment: Assessment) => toRow(assessment));
+    const rows = dataFiltered.map((assessment: Assessment) =>
+      toRow(assessment)
+    );
 
     return rows as AssessmentRow[];
   });
