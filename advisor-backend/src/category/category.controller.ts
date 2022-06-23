@@ -97,7 +97,6 @@ export class CategoryController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
-  @Roles(Role.ASSESSOR)
   findAllSubareas(@Param('category_id', ParseIntPipe) category_id: number) {
     return this.subareaService.findAll(category_id);
   }
