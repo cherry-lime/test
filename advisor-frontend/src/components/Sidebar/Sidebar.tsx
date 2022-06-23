@@ -71,7 +71,10 @@ export default function Sidebar({ children, sidebarType }: SidebarProps) {
   };
   return (
     <ThemeProvider theme={INGTheme}>
-      <Grid sx={{ display: "flex", minHeight: "100vh" }} data-testid="SidebarTest">
+      <Grid
+        sx={{ display: "flex", minHeight: "100vh" }}
+        data-testid="SidebarTest"
+      >
         <CssBaseline />
         <Drawer
           variant="permanent"

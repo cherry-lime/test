@@ -49,7 +49,13 @@ function UserInterface() {
       <button type="button" onClick={() => auth.mutate()}>
         Authenticate
       </button>
-      <button type="button" onClick={() => {logout.mutate(); dispatch(resetUser())}}>
+      <button
+        type="button"
+        onClick={() => {
+          logout.mutate();
+          dispatch(resetUser());
+        }}
+      >
         Logout now
       </button>
       <button type="button" onClick={() => register.mutate({ role: "USER" })}>

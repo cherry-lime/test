@@ -61,7 +61,7 @@ function App() {
         />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Chooserole />} />
-        <Route path="/signup/details" element={<DetailGen />}/>
+        <Route path="/signup/details" element={<DetailGen />} />
         <Route path="/home" element={<Home />} />
 
         <Route path="/user" element={<UserInterface />} />

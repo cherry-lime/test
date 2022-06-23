@@ -20,11 +20,10 @@ export function userRegister() {
     (userRole: { role: string }) => API.post(`/auth/register`, userRole),
     {
       onSuccess: (data: any) => {
-        // TODO 
-
+        // TODO
       },
       onError: (error: any) => {
-        alert(error)
+        alert(error);
       },
     }
   );

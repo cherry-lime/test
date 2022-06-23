@@ -34,7 +34,7 @@ export const userDataSlice = createSlice({
     resetUser(state) {
       state.userID = initialState.userID;
       state.userRole = initialState.userRole;
-    }
+    },
   },
 });
 

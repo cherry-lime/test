@@ -35,7 +35,7 @@ it("assessor sidebar rendering without crash", () => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-        <PageLayout title="test" footer sidebarType={userTypes.ASSESSOR}>
+          <PageLayout title="test" footer sidebarType={userTypes.ASSESSOR}>
             testcase
           </PageLayout>
         </BrowserRouter>
@@ -57,7 +57,7 @@ it("admin sidebar rendering without crash", () => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-        <PageLayout title="test" footer sidebarType={userTypes.ADMIN}>
+          <PageLayout title="test" footer sidebarType={userTypes.ADMIN}>
             testcase
           </PageLayout>
         </BrowserRouter>
