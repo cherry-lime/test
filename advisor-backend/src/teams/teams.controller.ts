@@ -14,9 +14,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
-import { CreateTeamDto } from './dto/create-team.dto';
 import {
-  ApiConflictResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiResponse,
@@ -32,11 +30,15 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
+import { TeamsCRUDService } from './teams-crud.service';
 
 @ApiTags('teams')
 @Controller('teams')
 export class TeamsController {
-  constructor(private readonly teamsService: TeamsService) {}
+  constructor(
+    private readonly teamsService: TeamsService,
+    private readonly teamsCRUDService: TeamsCRUDService
+  ) {}
 
   /**
    * [GET] /teams/my-teams - get the teams of the user issuing the request
@@ -76,25 +78,22 @@ export class TeamsController {
   }
 
   /**
-   * [POST] /team/create - Create team given a createTeamDto
+   * [POST] /team/create - Create team with default team_name - "New Team",
+   *    team_country - "", team_department - ""
    * Allowed roles: ADMIN, ASSESSOR
-   * @param createTeamDto CreateTeamDto
    * @returns Team object
    */
   @Post('create')
   @ApiResponse({
-    description: 'Create team with given team name',
+    description:
+      'Create team with default team_name - "New Team", team_country - "", team_department - ""',
     type: Team,
   })
-  @ApiConflictResponse({ description: 'Team name already exists' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN, Role.ASSESSOR)
-  create(
-    @AuthUser() user: User,
-    @Body() createTeamDto: CreateTeamDto
-  ): Promise<Team> {
-    return this.teamsService.create(user.user_id, createTeamDto);
+  create(@AuthUser() user: User): Promise<Team> {
+    return this.teamsCRUDService.create(user.user_id);
   }
 
   /**
@@ -110,7 +109,7 @@ export class TeamsController {
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   findOne(@Param('team_id', ParseIntPipe) team_id: number): Promise<Team> {
-    return this.teamsService.findOne(team_id);
+    return this.teamsCRUDService.findOne(team_id);
   }
 
   /**
@@ -221,7 +220,6 @@ export class TeamsController {
    * @param updateTeamDto UpdateTeamDto
    * @returns an updated team object
    * @throws Team not found
-   * @throws Team name already exists
    * @throws Internal server error
    */
   @Patch(':team_id')
@@ -230,7 +228,6 @@ export class TeamsController {
     type: Team,
   })
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
-  @ApiConflictResponse({ description: 'Team name already exists' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN, Role.ASSESSOR)
@@ -238,7 +235,7 @@ export class TeamsController {
     @Param('team_id', ParseIntPipe) team_id: number,
     @Body() updateTeamDto: UpdateTeamDto
   ): Promise<Team> {
-    return this.teamsService.updateTeam(team_id, updateTeamDto);
+    return this.teamsCRUDService.updateTeam(team_id, updateTeamDto);
   }
 
   /**
@@ -280,5 +277,51 @@ export class TeamsController {
     }
 
     return this.teamsService.deleteTeam(team_id);
+  }
+
+  /**
+   * [DELETE] /team/:team_id/member/:user_id - Delete team member given a team_id and a user_id
+   * Allowed roles: ADMIN, ASSESSOR (if is part of the team)
+   * @param team_id team_id
+   * @param user_id user_id
+   * @returns the updated team member object
+   * @throws NotFoundException if team member not found
+   * @throws NotFoundException if Team with given team id not found or no
+   *            members are associated to the team
+   * @throws InternalServerErrorException
+   */
+  @Delete(':team_id/member/:user_id')
+  @ApiResponse({
+    description: 'Remove team member given a team_id and a user_id',
+    type: TeamMembers,
+  })
+  @ApiNotFoundResponse({
+    description: 'Team member with given user id not found',
+  })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(Role.ADMIN, Role.ASSESSOR)
+  async deleteTeamMember(
+    @AuthUser() user: User,
+    @Param('team_id', ParseIntPipe) team_id: number,
+    @Param('user_id', ParseIntPipe) user_id: number
+  ): Promise<TeamMembers> {
+    const isUserInTeam = await this.teamsService
+      .isUserInTeam(user.user_id, team_id)
+      .catch((error) => {
+        if (error instanceof NotFoundException) {
+          // Throw error if team with given team id not found
+          throw new NotFoundException('Team with given team id not found');
+        } else {
+          // Throw error if internal server error
+          throw new InternalServerErrorException();
+        }
+      });
+    if (!isUserInTeam && user.role !== 'ADMIN') {
+      // Throw error if user is not in team
+      throw new ForbiddenException('You are not part of this team');
+    }
+
+    return this.teamsService.removeTeamMember(team_id, user_id);
   }
 }

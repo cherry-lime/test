@@ -2,15 +2,12 @@ import { Test } from '@nestjs/testing';
 import { TeamsController } from './teams.controller';
 import { TeamsService } from './teams.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import {
-  aTeam,
-  mockCreateTeamBody,
-  aUpdateTeam,
-} from '../prisma/mock/mockTeam';
+import { aTeam, aUpdateTeam, aCreateTeam } from '../prisma/mock/mockTeam';
 import { aTeamMembers } from '../prisma/mock/mockTeamMembers';
 import { aAssessment } from '../prisma/mock/mockAssessment';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { aUser1 } from '../prisma/mock/mockUser';
+import { TeamsCRUDService } from './teams-crud.service';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -24,8 +21,6 @@ describe('TeamsController', () => {
       .useMocker((token) => {
         if (token === TeamsService) {
           return {
-            create: jest.fn().mockResolvedValue(aTeam),
-            findOne: jest.fn().mockResolvedValue(aTeam),
             findUnique: jest.fn().mockResolvedValue(aTeam),
             findTeamMembers: jest.fn().mockResolvedValue(aTeamMembers),
             addTeamMember: jest.fn().mockResolvedValue(aTeamMembers),
@@ -37,6 +32,15 @@ describe('TeamsController', () => {
             } as InviteTokenDto),
             deleteTeam: jest.fn().mockResolvedValue(aTeam),
             isUserInTeam: jest.fn().mockResolvedValue(true),
+          };
+        }
+        if (token === TeamsCRUDService) {
+          return {
+            create: jest.fn().mockResolvedValue(aCreateTeam),
+            findOne: jest.fn().mockResolvedValue(aTeam),
+            findUnique: jest.fn().mockResolvedValue(aTeam),
+            deleteTeam: jest.fn().mockResolvedValue(aTeam),
+            updateTeam: jest.fn().mockResolvedValue(aTeam),
           };
         }
         if (typeof token === 'function') {
@@ -58,9 +62,7 @@ describe('TeamsController', () => {
 
   describe('createTeam', () => {
     it('Should return the created team', async () => {
-      expect(teamController.create(aUser1, mockCreateTeamBody)).resolves.toBe(
-        aTeam
-      );
+      expect(teamController.create(aUser1)).resolves.toBe(aCreateTeam);
     });
   });
 
