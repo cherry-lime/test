@@ -35,7 +35,6 @@ export class SubareaController {
     type: SubareaDto,
   })
   @ApiNotFoundResponse({ description: 'Subarea not found' })
-  @Roles(Role.ASSESSOR)
   findOne(@Param('subarea_id', ParseIntPipe) id: number) {
     return this.subareaService.findOne(id);
   }
