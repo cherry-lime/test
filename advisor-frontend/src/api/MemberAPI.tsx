@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../../../../API";
+import API from "../API";
 
 export type UserRow = {
   id: GridRowId;

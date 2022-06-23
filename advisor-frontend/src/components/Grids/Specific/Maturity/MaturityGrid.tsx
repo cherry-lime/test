@@ -30,7 +30,7 @@ import {
   useGetMaturities,
   usePatchMaturity,
   usePostMaturity,
-} from "./MaturityAPI";
+} from "../../../../api/MaturityAPI";
 
 type MaturityGridProps = {
   theme: Theme;

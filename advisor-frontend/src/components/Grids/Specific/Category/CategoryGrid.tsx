@@ -33,7 +33,7 @@ import {
   useGetCategories,
   usePatchCategory,
   usePostCategory,
-} from "./CategoryAPI";
+} from "../../../../api/CategoryAPI";
 
 type CategoryGridProps = {
   theme: Theme;

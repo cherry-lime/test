@@ -20,7 +20,7 @@ import {
   useGetMyIndividualAssessments,
   useGetMyTeamAssessments,
   usePostAssessment,
-} from "../AssessmentAPI";
+} from "../../../../../api/AssessmentAPI";
 
 type AssessmentOngoingGridProps = {
   theme: Theme;

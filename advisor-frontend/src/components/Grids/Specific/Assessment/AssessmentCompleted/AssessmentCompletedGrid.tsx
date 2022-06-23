@@ -11,7 +11,7 @@ import {
   AssessmentRow,
   useGetMyIndividualAssessments,
   useGetMyTeamAssessments,
-} from "../AssessmentAPI";
+} from "../../../../../api/AssessmentAPI";
 import { handleInit } from "../../handlersNew";
 
 type AssessmentCompletedGridProps = {

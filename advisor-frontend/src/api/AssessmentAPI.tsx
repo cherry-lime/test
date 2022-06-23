@@ -2,8 +2,8 @@ import { useQuery, useMutation } from "react-query";
 
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../../../../API";
-import { AssessmentType } from "../../../../types/AssessmentType";
+import API from "../API";
+import { AssessmentType } from "../types/AssessmentType";
 
 export type AssessmentRow = {
   id: GridRowId;

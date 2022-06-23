@@ -17,7 +17,7 @@ import {
   useGetTemplates,
   usePatchTemplate,
   usePostTemplate,
-} from "./TemplateAPI";
+} from "../../../../api/TemplateAPI";
 import {
   handleAdd,
   handleDelete,
@@ -75,7 +75,7 @@ export default function TemplateGrid({
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete<number>(
+      handleDelete(
         setRows,
         deleteTemplate as UseMutationResult,
         rowId as number
@@ -87,7 +87,7 @@ export default function TemplateGrid({
   // Called when the "Duplicate" action is pressed in the menu
   const handleDuplicateDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDuplicate<number>(
+      handleDuplicate(
         setRows,
         duplicateTemplate as UseMutationResult,
         rowId as number

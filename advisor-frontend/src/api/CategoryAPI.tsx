@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../../../../API";
+import API from "../API";
 
 export type CategoryRow = {
   id: GridRowId;

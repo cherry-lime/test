@@ -27,7 +27,7 @@ import {
   useGetAnswers,
   usePatchAnswer,
   usePostAnswer,
-} from "./AnswerAPI";
+} from "../../../../api/AnswerAPI";
 
 type AnswerTypeGridProps = {
   theme: Theme;

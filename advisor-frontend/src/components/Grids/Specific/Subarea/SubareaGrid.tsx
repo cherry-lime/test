@@ -30,7 +30,7 @@ import {
   usePostSubarea,
   useDeleteSubarea,
   useGetSubareas,
-} from "./SubareaAPI";
+} from "../../../../api/SubareaAPI";
 
 type SubareaGridProps = {
   theme: Theme;
