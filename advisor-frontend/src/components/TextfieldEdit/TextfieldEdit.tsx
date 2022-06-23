@@ -31,7 +31,7 @@ function TextfieldEdit({
   const initialState = text;
   const [, setValue] = useState(initialState);
   const [intermediateValue, setIntermediateValue] = useState(initialState);
-
+  let multiline = false;
   const handleSave = () => {
     // here you save the new text
     // that is contained in intermediateValue
@@ -41,6 +41,17 @@ function TextfieldEdit({
   const handleModify = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIntermediateValue(event.target.value);
   };
+
+  /*
+  if the textfield has only one row then
+  multiline must be disabled,
+  e.g,. in country + IT department textfields
+  */
+  if (rows > 1) {
+    multiline = true;
+  } else {
+    multiline = false;
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -52,7 +63,7 @@ function TextfieldEdit({
             marginTop: "10px",
           }}
           variant="outlined"
-          multiline
+          multiline={multiline}
           rows={rows}
           size="small"
           value={intermediateValue}
@@ -70,6 +81,7 @@ Define proptypes for textfieldedit:
 TextfieldEdit.propTypes = {
   text: PropTypes.string.isRequired,
   theme: PropTypes.node.isRequired,
+  rows: PropTypes.number.isRequired,
 };
 
 export default TextfieldEdit;
