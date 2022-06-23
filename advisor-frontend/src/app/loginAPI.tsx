@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useMutation } from "react-query";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "./store";
 import { setUserRole, setUserID } from "./userDataSlice";
 
 const API = axios.create({
@@ -29,11 +31,19 @@ export function userRegister() {
 
 export function authProfile() {
   const dispatch = useDispatch();
+  // Import the global state variables that will be used throughout the session
+  const { userID, userRole } = useSelector(
+    (state: RootState) => state.userData
+  );
+  // Navigation hook, to be used after the user is logged in
+  const navigate = useNavigate();
+
   return useMutation(["Auth profile"], () => API.get(`/auth/profile`), {
-    onSuccess: (data: any) => {
+    onSuccess: async (data: any) => {
       const response = data["data"];
       dispatch(setUserRole(response["role"]));
       dispatch(setUserID(response["user_id"]));
+      await navigate(`/${userRole}`);
       console.log(response);
     },
     onError: (error: any) => {
@@ -43,6 +53,7 @@ export function authProfile() {
 }
 export function useLoginTwo() {
   const auth = authProfile();
+
   return useMutation(
     ["Login Admin"],
     (loginInfo: { username: string; password: string }) =>
@@ -50,6 +61,7 @@ export function useLoginTwo() {
     {
       onSuccess: (data: any) => {
         auth.mutate();
+
         console.log(data);
       },
       onError: (error: any) => {

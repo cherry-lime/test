@@ -12,11 +12,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
-import { authProfile, useLoginTwo } from "../../app/loginAPI";
 import { useState } from "react";
+import { authProfile, useLoginTwo } from "../../app/loginAPI";
+import { Link } from "react-router-dom";
 
 const theme = createTheme();
-
 
 // Sign in functionality to be used later
 export default function SignIn() {
@@ -29,11 +29,10 @@ export default function SignIn() {
     // });
   };
   // Import login API calls
-  const login =  useLoginTwo();
-  const auth =  authProfile()
+  const login = useLoginTwo();
+  // Create statehooks to store the login details in the textfields
   const [inputUserName, setInputUserName] = useState("");
   const [inputPassword, setInputPassword] = useState("");
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -106,7 +105,7 @@ export default function SignIn() {
                 autoComplete="email"
                 value={inputUserName}
                 onChange={(e) => {
-                  setInputUserName(e.target.value)
+                  setInputUserName(e.target.value);
                 }}
               />
               <TextField
@@ -119,7 +118,7 @@ export default function SignIn() {
                 autoComplete="current-password"
                 value={inputPassword}
                 onChange={(e) => {
-                  setInputPassword(e.target.value)
+                  setInputPassword(e.target.value);
                 }}
               />
               {/* Buttons that log in and a button that goes to the sign up page */}
@@ -130,25 +129,27 @@ export default function SignIn() {
                     type="submit"
                     variant="contained"
                     sx={{ p: 2, m: 2, ml: 7.5 }}
-                    onClick={() =>
-                      {login.mutate({
+                    onClick={() => {
+                      login.mutate({
                         username: inputUserName,
                         password: inputPassword,
-                      })}
-                    }
+                      });
+                    }}
                   >
                     Log In
                   </Button>
                 </Grid>
                 <Grid>
-                  <Button
-                    size="small"
-                    type="submit"
-                    variant="contained"
-                    sx={{ p: 2, m: 2 }}
-                  >
-                    Sign Up
-                  </Button>
+                  <Link to="/register">
+                    <Button
+                      size="small"
+                      type="submit"
+                      variant="contained"
+                      sx={{ p: 2, m: 2 }}
+                    >
+                      Sign Up
+                    </Button>
+                  </Link>
                 </Grid>
               </Grid>
             </Box>

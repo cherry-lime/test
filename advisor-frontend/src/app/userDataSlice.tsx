@@ -12,7 +12,7 @@ export interface UserDataState {
  */
 const initialState: UserDataState = {
   userID: "0000",
-  userRole: "user",
+  userRole: "",
 };
 
 /**
