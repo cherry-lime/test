@@ -245,14 +245,16 @@ export class AssessmentScoreService {
         calculateScorePerCatoryPerMaturity[specificMaturityIndex][
           specificCategoryIndex
         ][1] =
-          +(
+          (+(
             // Score per category per maturity
             possibleAnswersDictionary[
               checkpoint.CheckpointAndAnswersInAssessments.map(
                 (answer) => answer.answer_id
               )[0]
             ]
-          ) * checkpoint.weight;
+          ) *
+            checkpoint.weight) /
+          100;
       } else {
         calculateScorePerCatoryPerMaturity[specificMaturityIndex][
           specificCategoryIndex
