@@ -59,7 +59,7 @@ function App() {
           }
         />
         <Route path="/login" element={<SignIn />} />
-        <Route path="/register" element={<Chooserole />} />
+        <Route path="/signup" element={<Chooserole />} />
         <Route path="/home" element={<Home />} />
 
         <Route path="/user" element={<UserInterface />} />

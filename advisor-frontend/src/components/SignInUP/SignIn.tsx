@@ -140,7 +140,7 @@ export default function SignIn() {
                   </Button>
                 </Grid>
                 <Grid>
-                  <Link to="/register">
+                  <Link to="/signup">
                     <Button
                       size="small"
                       type="submit"
