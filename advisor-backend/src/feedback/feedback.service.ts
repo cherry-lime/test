@@ -3,6 +3,7 @@ import { Assessment, CheckpointAndAnswersInAssessments } from '@prisma/client';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { SaveService } from '../save/save.service';
 
 interface IData {
   feedback_text: string;
@@ -22,8 +23,9 @@ interface ISort {
 export class FeedbackService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly checkpointService: CheckpointService
-  ) {}
+    private readonly checkpointService: CheckpointService,
+    private readonly saveService: SaveService
+  ) { }
 
   async getRecommendations(
     { assessment_id, template_id }: Assessment,
@@ -31,7 +33,7 @@ export class FeedbackService {
   ) {
     // Get all saved answers for this assessment
     const answeredCheckpoints =
-      await this.checkpointService.getSavedCheckpoints({
+      await this.saveService.getSavedCheckpoints({
         assessment_id,
         template_id,
       } as AssessmentDto);
