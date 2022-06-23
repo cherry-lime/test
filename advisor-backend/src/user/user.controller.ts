@@ -1,17 +1,8 @@
-import {
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiNotFoundResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { UserService } from './user.service';
 import { Roles } from '../common/decorators/roles.decorator';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../common/guards/roles.guard';
 import { userResponse } from './dto/userResponse.dto';
 
 @ApiTags('user')
@@ -29,7 +20,6 @@ export class UserController {
     isArray: true,
   })
   @Get('')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   async findAll(): Promise<any> {
     return this.userService.findAll();
@@ -42,7 +32,6 @@ export class UserController {
    */
   @ApiResponse({ description: 'Found user', type: userResponse })
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   getUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getUser(id);
@@ -56,11 +45,8 @@ export class UserController {
   @Delete(':user_id')
   @ApiResponse({ description: 'Deleted user', type: userResponse })
   @ApiNotFoundResponse({ description: 'User not found' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
-  async delete(
-  @Param('user_id', ParseIntPipe) id: number
-  ): Promise<any> {
+  async delete(@Param('user_id', ParseIntPipe) id: number): Promise<any> {
     return this.userService.delete(id);
   }
 }

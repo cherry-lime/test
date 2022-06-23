@@ -7,7 +7,6 @@ import {
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
-  UseGuards,
   Delete,
   NotFoundException,
   InternalServerErrorException,
@@ -27,8 +26,6 @@ import { TeamMembers } from './dto/team-member.dto';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
@@ -45,7 +42,6 @@ export class TeamsController {
    * @throws {NotFoundException} team with given team id not found
    * @throws {InternalServerErrorException} internal server error
    */
-  @UseGuards(AuthGuard('jwt'))
   @Get('/my-teams/')
   @ApiResponse({ description: 'Get ', type: Team })
   @ApiNotFoundResponse({ description: 'user is not in any team' })
@@ -63,7 +59,6 @@ export class TeamsController {
    * @throws {NotFoundException} if team_id is not found
    * @throws {InternalServerErrorException} if error occurs
    */
-  @UseGuards(AuthGuard('jwt'))
   @Get('/:team_id/isUserInTeam')
   @ApiResponse({ description: 'Check if user is in team', type: Boolean })
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
@@ -88,7 +83,6 @@ export class TeamsController {
   })
   @ApiConflictResponse({ description: 'Team name already exists' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN, Role.ASSESSOR)
   create(
     @AuthUser() user: User,
@@ -120,7 +114,6 @@ export class TeamsController {
    * @param team_id team_id
    * @returns Team members object
    */
-  @UseGuards(AuthGuard('jwt'))
   @Get(':team_id/members')
   @ApiResponse({
     description: 'Get members of a team given a team id',
@@ -157,7 +150,6 @@ export class TeamsController {
    * @param invite_token invite_token
    * @returns Udated team members object
    */
-  @UseGuards(AuthGuard('jwt'))
   @Patch('join/:invite_token')
   @ApiResponse({
     description: 'Join team via invite_token',
@@ -232,7 +224,6 @@ export class TeamsController {
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
   @ApiConflictResponse({ description: 'Team name already exists' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN, Role.ASSESSOR)
   updateTeam(
     @Param('team_id', ParseIntPipe) team_id: number,
@@ -257,7 +248,6 @@ export class TeamsController {
     description: 'Delete team given a team_id',
     type: Team,
   })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN, Role.ASSESSOR)
   async deleteTeam(
     @AuthUser() user: User,

@@ -7,7 +7,6 @@ import {
   Delete,
   ParseIntPipe,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -23,8 +22,6 @@ import { CategoryDto } from './dto/category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CheckpointDto } from '../checkpoint/dto/checkpoint.dto';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 
@@ -50,7 +47,6 @@ export class CategoryController {
   @ApiNotFoundResponse({
     description: 'Category not found',
   })
-  @UseGuards(AuthGuard('jwt'))
   findOne(@Param('category_id', ParseIntPipe) category_id: number) {
     return this.categoryService.findOne(category_id);
   }
@@ -67,7 +63,6 @@ export class CategoryController {
   @ApiBadRequestResponse({
     description: 'Order must be less than number of categories in template',
   })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   update(
     @Param('category_id', ParseIntPipe) category_id: number,
@@ -84,7 +79,6 @@ export class CategoryController {
   @Delete(':category_id')
   @ApiResponse({ description: 'Deleted category', type: CategoryDto })
   @ApiNotFoundResponse({ description: 'Category not found' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   delete(@Param('category_id', ParseIntPipe) category_id: number) {
     return this.categoryService.delete(category_id);
@@ -103,7 +97,7 @@ export class CategoryController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
-  @UseGuards(AuthGuard('jwt'))
+  @Roles(Role.ASSESSOR)
   findAllSubareas(@Param('category_id', ParseIntPipe) category_id: number) {
     return this.subareaService.findAll(category_id);
   }
@@ -122,7 +116,6 @@ export class CategoryController {
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
   @ApiConflictResponse({ description: 'Subarea with this name already exists' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   createSubarea(@Param('category_id', ParseIntPipe) category_id: number) {
     return this.subareaService.create(category_id);
@@ -140,7 +133,6 @@ export class CategoryController {
     type: CheckpointDto,
     isArray: true,
   })
-  @UseGuards(AuthGuard('jwt'))
   findCheckpoints(@Param('category_id', ParseIntPipe) category_id: number) {
     return this.checkpointService.findAll(category_id);
   }
@@ -154,7 +146,6 @@ export class CategoryController {
    */
   @Post(':category_id/checkpoint')
   @ApiTags('checkpoint')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   @ApiResponse({
     description: 'created checkpoint',
