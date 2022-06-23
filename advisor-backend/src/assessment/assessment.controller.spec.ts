@@ -23,6 +23,7 @@ describe('AssessmentController', () => {
             update: jest.fn().mockResolvedValue(aAssessment),
             delete: jest.fn().mockResolvedValue(aAssessment),
             complete: jest.fn().mockResolvedValue(aAssessment),
+            userInAssessment: jest.fn().mockResolvedValue(true),
           };
         }
         if (typeof token === 'function') {
