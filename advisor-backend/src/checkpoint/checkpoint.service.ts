@@ -8,11 +8,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { TemplateService } from '../template/template.service';
+import { TopicService } from '../topic/topic.service';
 @Injectable()
 export class CheckpointService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly templateService: TemplateService
+    private readonly templateService: TemplateService,
+    private readonly topicService: TopicService
   ) {}
   /**
    * Create checkpoint
@@ -220,26 +222,34 @@ export class CheckpointService {
       }
     }
 
+    const updateData: any = {
+      where: {
+        checkpoint_id,
+      },
+      data: updateCheckpointDto,
+    };
+
+    // Update topics and upsert them
+    if (updateCheckpointDto.topics) {
+      await this.topicService.updateTopics(
+        checkpoint_id,
+        updateData,
+        updateCheckpointDto
+      );
+    }
+
     // Update checkpoint
-    return await this.prisma.checkpoint
-      .update({
-        where: {
-          checkpoint_id,
-        },
-        data: updateCheckpointDto,
-      })
-      .catch((error) => {
-        if (error.code === 'P2002') {
-          // Throw error ïf name not unique
-          throw new ConflictException(
-            'Checkpoint with this name already exists'
-          );
-        } else if (error.code === 'P2025') {
-          // Throw error if category not found
-          throw new NotFoundException('Category not found');
-        }
-        throw new InternalServerErrorException();
-      });
+    return await this.prisma.checkpoint.update(updateData).catch((error) => {
+      if (error.code === 'P2002') {
+        // Throw error ïf name not unique
+        throw new ConflictException('Checkpoint with this name already exists');
+      } else if (error.code === 'P2025') {
+        // Throw error if category not found
+        throw new NotFoundException('Category not found');
+      }
+      console.log(error);
+      throw new InternalServerErrorException();
+    });
   }
 
   /**
