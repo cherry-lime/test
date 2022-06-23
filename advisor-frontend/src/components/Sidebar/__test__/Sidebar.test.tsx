@@ -1,11 +1,20 @@
 import { render, cleanup, screen, fireEvent } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import userType from "../listUsersTypes";
+import { store } from "../../../app/store";
 
 afterEach(cleanup);
 
 it("user sidebar rendering without crash", () => {
-  render(<Sidebar sidebarType={userType.USER} />);
+  render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <Sidebar sidebarType={userType.USER} />
+      </BrowserRouter>
+    </Provider>
+  );
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Evaluations");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Teams");
@@ -15,7 +24,13 @@ it("user sidebar rendering without crash", () => {
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
 it("assessor sidebar rendering without crash", () => {
-  render(<Sidebar sidebarType={userType.ASSESSOR} />);
+  render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <Sidebar sidebarType={userType.ASSESSOR} />
+      </BrowserRouter>
+    </Provider>
+  );
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
   expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Evaluations");
   expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Templates");
@@ -25,7 +40,13 @@ it("assessor sidebar rendering without crash", () => {
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
 it("admin sidebar rendering without crash", () => {
-  render(<Sidebar sidebarType={userType.ADMIN} />);
+  render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <Sidebar sidebarType={userType.ADMIN} />{" "}
+      </BrowserRouter>
+    </Provider>
+  );
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
   expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Evaluations");
   expect(screen.getByTestId("Sidebar")).toHaveTextContent("Templates");

@@ -20,6 +20,7 @@ module.exports = {
   },
   ignorePatterns: ["src/react-app-env.d.ts"],
   rules: {
+    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"],
     "react/jsx-filename-extension": ["warn", { extensions: [".tsx"] }],
