@@ -2,7 +2,7 @@ import { useQuery, useMutation } from "react-query";
 
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../API";
+import API from "./_API";
 import { AssessmentType } from "../types/AssessmentType";
 
 export type TemplateRow = {
@@ -82,7 +82,7 @@ export function usePostTemplate(templateType: AssessmentType) {
     });
 
     // Convert data to row
-    return toRow(data);
+    return toRow(data) as TemplateRow;
   });
 }
 
@@ -114,7 +114,7 @@ export function usePatchTemplate() {
       );
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as TemplateRow;
     }
   );
 }
@@ -128,7 +128,7 @@ export function useDeleteTemplate() {
       const { data } = await API.delete(`/template/${templateId}`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as TemplateRow;
     }
   );
 }
@@ -140,7 +140,7 @@ export function useDuplicateTemplate() {
     async (templateId: number) => {
       const { data } = await API.post(`/template/${templateId}/clone`);
 
-      return toRow(data);
+      return toRow(data) as TemplateRow;
     }
   );
 }

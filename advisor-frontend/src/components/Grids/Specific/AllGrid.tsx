@@ -14,7 +14,7 @@ import AnswerTypeGrid from "./Answer/AnswerGrid";
 import SubareaGrid from "./Subarea/SubareaGrid";
 import CheckpointGrid from "./Checkpoint/CheckpointGrid";
 import INGTheme from "../../../Theme";
-import API from "../../../API";
+import API from "../../../api/_API";
 
 export function useLogin() {
   return useMutation(

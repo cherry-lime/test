@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../API";
+import API from "./_API";
 
 export type MaturityRow = {
   id: GridRowId;
@@ -59,7 +59,7 @@ export function usePostMaturity(templateId: number) {
       const { data } = await API.post(`/template/${templateId}/maturity`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as MaturityRow;
     }
   );
 }
@@ -72,7 +72,8 @@ export function useGetMaturity() {
       // Get data from database
       const { data } = await API.get(`/maturity/${maturityId}`);
 
-      return data as Maturity;
+      // Convert data to row
+      return toRow(data) as MaturityRow;
     }
   );
 }
@@ -92,7 +93,7 @@ export function usePatchMaturity() {
       );
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as MaturityRow;
     }
   );
 }
@@ -106,7 +107,7 @@ export function useDeleteMaturity() {
       const { data } = await API.delete(`/maturity/${maturityId}`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as MaturityRow;
     }
   );
 }

@@ -2,7 +2,7 @@ import { useQuery, useMutation } from "react-query";
 
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../API";
+import API from "./_API";
 import { AssessmentType } from "../types/AssessmentType";
 
 export type AssessmentRow = {
@@ -149,7 +149,7 @@ export function usePostAssessment(
     );
 
     // Convert data to row
-    return toRow(data);
+    return toRow(data) as AssessmentRow;
   });
 }
 
@@ -161,7 +161,7 @@ export function useGetAssessment() {
       // Get data from database
       const { data } = await API.get(`/assessment/${assessmentId}`);
 
-      return data as Assessment;
+      return toRow(data) as AssessmentRow;
     }
   );
 }
@@ -181,7 +181,7 @@ export function usePatchAssessment() {
       );
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as AssessmentRow;
     }
   );
 }
@@ -195,7 +195,7 @@ export function useDeleteAssessment() {
       const { data } = await API.delete(`/assessment/${assessmentId}`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as AssessmentRow;
     }
   );
 }

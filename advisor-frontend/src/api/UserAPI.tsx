@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../API";
+import API from "./_API";
 
 export type UserRow = {
   id: GridRowId;
@@ -29,7 +29,6 @@ function toRow(user: User) {
   } as UserRow;
 }
 
-/*
 // Get user with id from database
 export function useGetUser() {
   return useQuery(["GET", "/user", "/{id}"], async (userId) => {
@@ -39,7 +38,6 @@ export function useGetUser() {
     return data as User;
   });
 }
-*/
 
 // Get is user in team with team id from database
 export function useIsUserInTeam() {

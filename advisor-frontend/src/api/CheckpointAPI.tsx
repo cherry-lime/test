@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../API";
+import API from "./_API";
 
 export type CheckpointRow = {
   id: GridRowId;
@@ -71,7 +71,7 @@ export function usePostCheckpoint(categoryId: number) {
       const { data } = await API.post(`/category/${categoryId}/checkpoint`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as CheckpointRow;
     }
   );
 }
@@ -104,7 +104,7 @@ export function usePatchCheckpoint() {
       );
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as CheckpointRow;
     }
   );
 }
@@ -118,7 +118,7 @@ export function useDeleteCheckpoint() {
       const { data } = await API.delete(`/checkpoint/${checkpointId}`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as CheckpointRow;
     }
   );
 }

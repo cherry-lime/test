@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../API";
+import API from "./_API";
 
 export type CategoryRow = {
   id: GridRowId;
@@ -64,7 +64,7 @@ export function usePostCategory(templateId: number) {
       const { data } = await API.post(`/template/${templateId}/category`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as CategoryRow;
     }
   );
 }
@@ -97,7 +97,7 @@ export function usePatchCategory() {
       );
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as CategoryRow;
     }
   );
 }
@@ -111,7 +111,7 @@ export function useDeleteCategory() {
       const { data } = await API.delete(`/category/${categoryId}`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as CategoryRow;
     }
   );
 }

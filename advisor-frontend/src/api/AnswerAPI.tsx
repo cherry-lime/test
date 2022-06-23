@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../API";
+import API from "./_API";
 
 export type AnswerRow = {
   id: GridRowId;
@@ -46,6 +46,7 @@ export function useGetAnswers(templateId: number) {
     // Convert data to rows
     const rows = data.map((answer: Answer) => toRow(answer));
 
+    // Convert data to row
     return rows as AnswerRow[];
   });
 }
@@ -57,7 +58,7 @@ export function usePostAnswer(templateId: number) {
     const { data } = await API.post(`/template/${templateId}/answer`);
 
     // Convert data to row
-    return toRow(data);
+    return toRow(data) as AnswerRow;
   });
 }
 
@@ -83,7 +84,7 @@ export function usePatchAnswer() {
       const { data } = await API.patch(`/answer/${answer.answer_id}`, answer);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as AnswerRow;
     }
   );
 }
@@ -97,7 +98,7 @@ export function useDeleteAnswer() {
       const { data } = await API.delete(`/answer/${answerId}`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as AnswerRow;
     }
   );
 }

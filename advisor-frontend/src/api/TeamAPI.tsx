@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../API";
+import API from "./_API";
 
 export type TeamRow = {
   id: GridRowId;
@@ -58,7 +58,7 @@ export function useGetTeam() {
     // Get data from database
     const { data } = await API.get(`/teams/${teamId}`);
 
-    return data as Team;
+    return toRow(data) as TeamRow;
   });
 }
 

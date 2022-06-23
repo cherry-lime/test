@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "../API";
+import API from "./_API";
 
 export type SubareaRow = {
   id: GridRowId;
@@ -67,7 +67,7 @@ export function usePostSubarea(categoryId: number) {
       const { data } = await API.post(`/category/${categoryId}/subarea`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as SubareaRow;
     }
   );
 }
@@ -78,7 +78,8 @@ export function useGetSubarea() {
     // Get data from database
     const { data } = await API.get(`/subarea/${subareaId}`);
 
-    return data as Subarea;
+    // Covert data to row
+    return toRow(data) as SubareaRow;
   });
 }
 
@@ -97,7 +98,7 @@ export function usePatchSubarea() {
       );
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as SubareaRow;
     }
   );
 }
@@ -111,7 +112,7 @@ export function useDeleteSubarea() {
       const { data } = await API.delete(`/subarea/${subareaId}`);
 
       // Convert data to row
-      return toRow(data);
+      return toRow(data) as SubareaRow;
     }
   );
 }
