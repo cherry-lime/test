@@ -45,7 +45,7 @@ function App() {
       <Link to="/admin" state="admin" data-testid="admin">
         Admin
       </Link>
-      <Link to="/login" state="admin" data-testid="admin">
+      <Link to="/login" state="admin" data-testid="login">
         login
       </Link>
       <Routes>

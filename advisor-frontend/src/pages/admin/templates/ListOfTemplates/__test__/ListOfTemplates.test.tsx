@@ -1,15 +1,20 @@
 import { render, screen } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { store } from "../../../../../app/store";
 import ListOfTemplates from "../ListOfTemplates";
 
+const queryClient = new QueryClient();
+
 test("app render list of templates", async () => {
   render(
     <Provider store={store}>
-      <BrowserRouter>
-        <ListOfTemplates />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <ListOfTemplates />
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   );
   expect(screen.getByText(/Individual Templates/i)).toBeInTheDocument();

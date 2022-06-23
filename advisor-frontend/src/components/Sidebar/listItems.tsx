@@ -50,9 +50,9 @@ export default function SidebarList({ userType }: SidebarListProps) {
       {userType.get("template") && (
         <ListItemButton component={Link} to="/admin/templates">
           <ListItemIcon>
-            <EditIcon color="info" style={{ color: "background" }} />
+            <EditIcon color="info" />
           </ListItemIcon>
-          <ListItemText primary="Templates" />
+          <ListItemText primary="Templates" style={{ color: "background" }} />
         </ListItemButton>
       )}
       {userType.get("settings") && (
@@ -64,7 +64,14 @@ export default function SidebarList({ userType }: SidebarListProps) {
         </ListItemButton>
       )}
       {userType.get("signout") && (
-        <ListItemButton component={Link} to="/" onClick={() => {logout.mutate(); dispatch(resetUser())}}>
+        <ListItemButton
+          component={Link}
+          to="/"
+          onClick={() => {
+            logout.mutate();
+            dispatch(resetUser());
+          }}
+        >
           <ListItemIcon>
             <LogoutIcon color="info" />
           </ListItemIcon>

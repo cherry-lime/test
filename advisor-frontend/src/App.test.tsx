@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
@@ -9,13 +10,16 @@ import { store } from "./app/store";
 //   const linkElement = screen.getByText(/learn react/i);
 //   expect(linkElement).toBeInTheDocument();
 // });
+const queryClient = new QueryClient();
 
 test("app rendering/navigating to user interface", async () => {
   render(
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   );
 
@@ -29,9 +33,11 @@ test("app rendering/navigating to user interface", async () => {
 test("app rendering/navigating to admin interface", async () => {
   render(
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   );
   const button = screen.getByTestId("admin");
@@ -42,9 +48,11 @@ test("app rendering/navigating to admin interface", async () => {
 test("app rendering/navigating to assessor interface", async () => {
   render(
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   );
   const button = screen.getByTestId("assessor");
@@ -60,9 +68,11 @@ describe("test suite of test cases", () => {
   test("testcase1", () => {
     render(
       <Provider store={store}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </QueryClientProvider>
       </Provider>
     );
     // expect(to be tested function or component).toBe(expected result of the component);

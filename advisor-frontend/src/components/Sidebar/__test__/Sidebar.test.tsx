@@ -1,57 +1,76 @@
 import { render, cleanup, screen, fireEvent } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import Sidebar from "../Sidebar";
-import userType from "../listUsersTypes";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { store } from "../../../app/store";
+import PageLayout from "../../../pages/PageLayout";
+import userTypes from "../listUsersTypes";
+
+const queryClient = new QueryClient();
 
 afterEach(cleanup);
 
 it("user sidebar rendering without crash", () => {
   render(
     <Provider store={store}>
-      <BrowserRouter>
-        <Sidebar sidebarType={userType.USER} />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <PageLayout title="test" footer sidebarType={userTypes.USER}>
+            testcase
+          </PageLayout>
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   );
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Evaluations");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Teams");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Settings");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Sign Out");
-  expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Templates");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Home");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Evaluations");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Teams");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Settings");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Sign Out");
+  expect(screen.getByTestId("SidebarTest")).not.toHaveTextContent("Templates");
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
 it("assessor sidebar rendering without crash", () => {
   render(
     <Provider store={store}>
-      <BrowserRouter>
-        <Sidebar sidebarType={userType.ASSESSOR} />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+        <PageLayout title="test" footer sidebarType={userTypes.ASSESSOR}>
+            testcase
+          </PageLayout>
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   );
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
-  expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Evaluations");
-  expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Templates");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Teams");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Settings");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Sign Out");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Home");
+  expect(screen.getByTestId("SidebarTest")).not.toHaveTextContent(
+    "Evaluations"
+  );
+  expect(screen.getByTestId("SidebarTest")).not.toHaveTextContent("Templates");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Teams");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Settings");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Sign Out");
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
 it("admin sidebar rendering without crash", () => {
   render(
     <Provider store={store}>
-      <BrowserRouter>
-        <Sidebar sidebarType={userType.ADMIN} />{" "}
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+        <PageLayout title="test" footer sidebarType={userTypes.ADMIN}>
+            testcase
+          </PageLayout>
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   );
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Home");
-  expect(screen.getByTestId("Sidebar")).not.toHaveTextContent("Evaluations");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Templates");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Teams");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Settings");
-  expect(screen.getByTestId("Sidebar")).toHaveTextContent("Sign Out");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Home");
+  expect(screen.getByTestId("SidebarTest")).not.toHaveTextContent(
+    "Evaluations"
+  );
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Templates");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Teams");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Settings");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Sign Out");
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
