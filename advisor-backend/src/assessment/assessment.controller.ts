@@ -10,12 +10,14 @@ import {
   UseGuards,
   ForbiddenException,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -33,7 +35,6 @@ import AuthUser from '../common/decorators/auth-user.decorator';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { RecommendationDto } from '../feedback/dto/recommendation.dto';
 import { FeedbackService } from '../feedback/feedback.service';
-import { FeedbackQueryDto } from '../feedback/dto/feedback-query.dto';
 
 @ApiTags('assessment')
 @Controller('assessment')
@@ -59,8 +60,12 @@ export class AssessmentController {
   @ApiBadRequestResponse({
     description: 'No active templates found',
   })
-  create(@Body() createAssessmentDto: CreateAssessmentDto) {
-    return this.assessmentService.create(createAssessmentDto);
+  @UseGuards(AuthGuard('jwt'))
+  create(
+    @Body() createAssessmentDto: CreateAssessmentDto,
+    @AuthUser() user: User
+  ) {
+    return this.assessmentService.create(createAssessmentDto, user);
   }
 
   /**
@@ -231,10 +236,15 @@ export class AssessmentController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
+  @ApiQuery({
+    name: 'topic_id',
+    required: false,
+    type: Number,
+  })
   async getRecommendations(
     @Param('assessment_id', ParseIntPipe) assessment_id: number,
-    @Query('topic_id', ParseIntPipe) { topic_id }: FeedbackQueryDto,
-    @AuthUser() user: User
+    @AuthUser() user: User,
+    @Query('topic_id') topic_id?: number
   ) {
     // Check if user in assessment
     const assessment = await this.assessmentService.userInAssessment(
@@ -242,8 +252,8 @@ export class AssessmentController {
       user
     );
 
-    if (!assessment?.completed_at) {
-      throw new ForbiddenException();
+    if (!assessment) {
+      throw new NotFoundException('Assessment not found');
     }
 
     return this.feedbackService.getRecommendations(assessment, topic_id);

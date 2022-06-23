@@ -15,6 +15,7 @@ interface ISort {
   maturityOrder: number;
   categoryOrder: number;
   checkpointWeight: number;
+  topic_ids: number[];
 }
 
 @Injectable()
@@ -38,10 +39,7 @@ export class FeedbackService {
     answeredCheckpoints.filter((saved) => saved.answer_id);
 
     // Get all checkpoint ids of the saved answers
-    const checkpoints = await this.getCheckpointsObject(
-      answeredCheckpoints,
-      topic_id
-    );
+    const checkpoints = await this.getCheckpointsObject(answeredCheckpoints);
 
     // Get all answer ids of the saved answers
     const answers = await this.getAnswersObject(answeredCheckpoints);
@@ -50,6 +48,9 @@ export class FeedbackService {
     const list: ISort[] = answeredCheckpoints
       .map((saved) => {
         const checkpoint = checkpoints[saved.checkpoint_id];
+        const topic_ids = checkpoint.CheckpointInTopic.map(
+          (checkpointInTopic) => checkpointInTopic.topic_id
+        );
         const checkpointWeight = checkpoint.weight;
         const answerWeight = answers[saved.answer_id].answer_weight;
         const maturityOrder = checkpoint.Maturity.maturity_order;
@@ -63,18 +64,17 @@ export class FeedbackService {
           maturityOrder,
           categoryOrder,
           checkpointWeight,
+          topic_ids,
         };
       })
       // Filter out checkpoints that are fully completed
       .filter((item) => item.answerWeight < 100);
 
     // Sort answer by maturity order, answer score, category order, and weight
-    list.sort((a: ISort, b: ISort) => {
-      if (a.maturityOrder === b.maturityOrder) {
-        return this.compareAnswerWeight(a, b);
-      }
-      return a.maturityOrder - b.maturityOrder;
-    });
+    list.sort(this.compareMaturity.bind(this));
+
+    // Prioritize topic
+    list.sort(this.compareTopic(topic_id));
 
     // Return data as list of recommendations
     return list.map((item, index) => {
@@ -119,14 +119,13 @@ export class FeedbackService {
    * @returns Object with checkpoint_id as key and checkpoint as value
    */
   private async getCheckpointsObject(
-    answeredCheckpoints: CheckpointAndAnswersInAssessments[],
-    topic_id: number
+    answeredCheckpoints: CheckpointAndAnswersInAssessments[]
   ) {
     const checkpointIds = answeredCheckpoints.map(
       (checkpoint) => checkpoint.checkpoint_id
     );
 
-    let checkpointsList = await this.prisma.checkpoint.findMany({
+    const checkpointsList = await this.prisma.checkpoint.findMany({
       where: {
         checkpoint_id: {
           in: checkpointIds,
@@ -139,19 +138,45 @@ export class FeedbackService {
       },
     });
 
-    if (topic_id) {
-      checkpointsList = checkpointsList.filter((checkpoint) => {
-        return checkpoint.CheckpointInTopic.some(
-          (checkpointInTopic) => checkpointInTopic.topic_id === topic_id
-        );
-      });
-    }
-
     const checkpoints = {};
     checkpointsList.forEach((checkpoint) => {
       checkpoints[checkpoint.checkpoint_id] = checkpoint;
     });
     return checkpoints;
+  }
+
+  /**
+   * Function which creates compare topic, prioritise topic_id
+   * @param a Sort object
+   * @param b Sort object
+   * @returns -1 if topic id is found in a, 0 if equal and 1 if topic id is found in b
+   */
+  compareTopic(topic_id: number) {
+    return function (a: ISort, b: ISort) {
+      if (a.topic_ids.includes(topic_id)) {
+        if (b.topic_ids.includes(topic_id)) {
+          return 0;
+        }
+        return -1;
+      }
+      if (b.topic_ids.includes(topic_id)) {
+        return 1;
+      }
+      return 0;
+    };
+  }
+
+  /**
+   * Compare maturity order
+   * @param a Sort object
+   * @param b Sort object
+   * @returns compare by answer weight if equal, otherwise difference of maturity order
+   */
+  compareMaturity(a: ISort, b: ISort) {
+    if (a.maturityOrder === b.maturityOrder) {
+      return this.compareAnswerWeight(a, b);
+    }
+    return a.maturityOrder - b.maturityOrder;
   }
 
   /**
