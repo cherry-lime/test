@@ -70,6 +70,7 @@ Define proptypes for textfieldedit:
 TextfieldEdit.propTypes = {
   text: PropTypes.string.isRequired,
   theme: PropTypes.node.isRequired,
+  rows: PropTypes.number.isRequired,
 };
 
 export default TextfieldEdit;
