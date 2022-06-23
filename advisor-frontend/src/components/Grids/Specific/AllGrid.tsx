@@ -49,7 +49,7 @@ export default function AllGrid() {
   return (
     <div style={{ width: "100%" }}>
       <strong>Team Grid</strong>
-      <TeamGrid theme={INGTheme} userId={userId} userRole={userRole} />
+      <TeamGrid theme={INGTheme} userRole={userRole} />
       <strong>Assessor Grid</strong>
       <MemberGrid
         theme={INGTheme}

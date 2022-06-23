@@ -1,11 +1,7 @@
 import * as React from "react";
+import { UseMutationResult } from "react-query";
 
-import {
-  GridActionsCellItem,
-  GridColumns,
-  GridRowId,
-  GridRowModel,
-} from "@mui/x-data-grid";
+import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -14,42 +10,47 @@ import RemoveIcon from "@mui/icons-material/HighlightOff";
 import GenericGrid from "../../Generic/GenericGrid";
 
 import { UserRole } from "../../../../types/UserRole";
-import { handleAdd, handleDelete, processRowUpdate } from "../handlers";
 
-// Define type for the rows in the grid
-type Row = {
-  id: number;
-  name: string;
-};
+import {
+  handleAdd,
+  handleDelete,
+  handleInit,
+  processRowUpdate,
+} from "../handlersNew";
 
-// Get row object with default values
-const getDefaultRow = () => {
-  const defaultRow = {
-    id: Date.now(),
-    name: "New Team",
-  };
-  return defaultRow;
-};
+import {
+  TeamRow,
+  useDeleteTeam,
+  useGetMyTeams,
+  usePatchTeam,
+  usePostTeam,
+} from "../../../../api/TeamAPI";
 
 type TeamGridProps = {
   theme: Theme;
-  userId: number;
   userRole: UserRole;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+export default function TeamGrid({ theme, userRole }: TeamGridProps) {
+  const [rows, setRows] = React.useState<TeamRow[]>([]);
 
-  // Fetch initial rows of the grid
+  // Team query
+  const { status, data, error } = useGetMyTeams();
+
+  // Team mutations
+  const patchTeam = usePatchTeam();
+  const postTeam = usePostTeam();
+  const deleteTeam = useDeleteTeam();
+
+  // Called when "status" of teams query is changed
   React.useEffect(() => {
-    // TODO Replace this by API fetch
-  }, []);
+    handleInit(setRows, status, data, error);
+  }, [status]);
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    (newRow: GridRowModel, oldRow: GridRowModel) =>
-      processRowUpdate(setRows, newRow, oldRow, false),
+    async (newRow: TeamRow, oldRow: TeamRow) =>
+      processRowUpdate(setRows, patchTeam as UseMutationResult, newRow, oldRow),
     []
   );
 
@@ -65,17 +66,17 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, rowId);
+      handleDelete(setRows, deleteTeam as UseMutationResult, rowId as number);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, getDefaultRow());
-  }, [rows]);
+    handleAdd(setRows, postTeam as UseMutationResult);
+  }, []);
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColumns<TeamRow>>(
     () => [
       {
         field: "name",

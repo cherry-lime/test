@@ -41,14 +41,25 @@ function fromRow(row: TeamRow) {
 
 // Get all teams from database
 export function useGetMyTeams() {
-  return useQuery(["GET", "/teams", "/my-team"], async () => {
+  return useQuery(["GET", "/teams", "/my-teams"], async () => {
     // Get response data from database
-    const { data } = await API.get(`/teams/my-team`);
+    const { data } = await API.get(`/teams/my-teams`);
 
     // Convert data to rows
     const rows = data.map((team: Team) => toRow(team));
 
     return rows as TeamRow[];
+  });
+}
+
+// Post team to database
+export function usePostTeam() {
+  return useMutation(["POST", "/teams", "/create"], async () => {
+    // Get response data from database
+    const { data } = await API.post(`/teams/create`);
+
+    // Convert data to row
+    return toRow(data) as TeamRow;
   });
 }
 
