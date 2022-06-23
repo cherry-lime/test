@@ -4,11 +4,13 @@ import { AssessmentController } from './assessment.controller';
 import { TemplateService } from '../template/template.service';
 import { SaveService } from '../save/save.service';
 import { FeedbackService } from '../feedback/feedback.service';
+import { CheckpointService } from '../checkpoint/checkpoint.service';
 
 @Module({
   controllers: [AssessmentController],
   providers: [
     AssessmentService,
+    CheckpointService,
     SaveService,
     FeedbackService,
     TemplateService,
