@@ -21,7 +21,6 @@ main function returning a checkpoint component
 function Checkpoint({
   description,
   number,
-  area,
   checkpointlabels,
   checkpointvalues,
   theme,
@@ -29,7 +28,6 @@ function Checkpoint({
 }: {
   description: string;
   number: number;
-  area: string;
   checkpointlabels: string[];
   checkpointvalues: number[];
   theme: ThemeOptions;
@@ -95,12 +93,6 @@ function Checkpoint({
             id="checkpointnrlabel"
           >
             {number}
-          </Typography>
-          <Typography
-            sx={{ textAlign: "left", fontWeight: "bold" }}
-            id="checkpointarea"
-          >
-            {`Area: ${area}`}
           </Typography>
           <Typography sx={{ textAlign: "left" }} id="checkpointnamelabel">
             {description}

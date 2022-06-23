@@ -6,10 +6,44 @@ import {
   Tab,
   Tabs,
   ThemeOptions,
+  FormControl,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
-import React from "react";
+import React, { Dispatch, useState } from "react";
 import Checkpoint from "../Checkpoint/Checkpoint";
 import Subarea from "../Subarea/Subarea";
+
+type AssessmentCheckpoint = {
+  checkpointId: number;
+  description: string;
+  area: Area;
+  order: number;
+  topics: Topic[];
+};
+
+type Topic = {
+  topicId: number;
+  name: string;
+};
+
+type Area = {
+  areaId: number;
+  name: string;
+};
+
+type Answer = {
+  answerId: number;
+  text: string;
+};
+
+type AssessmentSubarea = {
+  subareaId: number;
+  name: string;
+  summary: string;
+  description: string;
+};
 
 /**
  * Page with a self evaluation that can be filled in
@@ -25,10 +59,6 @@ function ListOfCheckpoints({
   theme: ThemeOptions;
   feedback: boolean;
 }) {
-  const assessmentItems = 12;
-  const checkpointlist = [];
-  const subareaname = "Subarea Name";
-
   const [page, setPage] = React.useState(1);
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -37,30 +67,171 @@ function ListOfCheckpoints({
     setPage(value);
   };
 
-  for (let i = 1; i < assessmentItems + 1; i += 1) {
-    checkpointlist.push(
-      <Grid item>
-        <Checkpoint
-          area="Area Name"
-          feedback={feedback}
-          number={i}
-          theme={theme}
-          description="Lorem ipsum"
-          checkpointvalues={[0, 1, 2]}
-          checkpointlabels={["Yes", "No", "N/A"]}
-        />
-      </Grid>
-    );
-  }
-
   const [value, setValue] = React.useState("Single");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
+  // BEGINNING OF HARDCODED DATA USED TO TEST
+
+  const hardcodedArea1 = { areaId: 14, name: "Ready Work" };
+  const hardcodedArea2 = { areaId: 4, name: "Alignment" };
+
+  const hardcodedAreaList = [hardcodedArea1, hardcodedArea2];
+
+  const hardcodedTopic1 = { topicId: 15, name: "Risk Analysis" };
+  const hardcodedTopic2 = { topicId: 5, name: "Test Strategy" };
+
+  const hardcodedAnswerList = [
+    { text: "Yes", answerId: 1 },
+    { text: "No", answerId: 2 },
+    { text: "N/A", answerId: 3 },
+  ];
+
+  const hardcodedCheckpoint1 = {
+    checkpointId: 12,
+    description: "checkpoint description",
+    area: hardcodedArea1,
+    order: 1,
+    topics: [hardcodedTopic1, hardcodedTopic2],
+  };
+
+  const hardcodedCheckpoint2 = {
+    checkpointId: 2,
+    description: "another checkpoint description",
+    area: hardcodedArea2,
+    order: 2,
+    topics: [hardcodedTopic1],
+  };
+
+  const hardcodedSubarea1 = {
+    subareaId: 23,
+    name: "Subarea Name",
+    description: "Subarea Description",
+    summary: "Subarea Summary",
+  };
+
+  const hardcodedSubarea2 = {
+    subareaId: 10,
+    name: "Another Subarea Name",
+    description: "Subarea Description",
+    summary: "Subarea Summary",
+  };
+
+  const hardcodedSubareaList = [hardcodedSubarea1, hardcodedSubarea2];
+
+  // END OF HARDCODED DATA USED TO TEST
+
+  const [areaList, setAreaList]: [
+    Area[] | undefined,
+    Dispatch<Area[] | undefined>
+  ] = useState();
+
+  const [area, setArea]: [number | undefined, Dispatch<number | undefined>] =
+    useState();
+
+  const handleAreaChange = (event: SelectChangeEvent<number>) => {
+    setArea(Number(event.target.value));
+  };
+
+  const [checkpoints, setCheckpoints]: [
+    AssessmentCheckpoint[] | undefined,
+    Dispatch<AssessmentCheckpoint[] | undefined>
+  ] = useState();
+
+  const [answers, setAnswers]: [
+    Answer[] | undefined,
+    Dispatch<Answer[] | undefined>
+  ] = useState();
+
+  const [subareas, setSubareas]: [
+    AssessmentSubarea[] | undefined,
+    Dispatch<AssessmentSubarea[] | undefined>
+  ] = useState();
+
+  const [checkpointComponents, setCheckpointComponents]: Grid[] = useState();
+
+  const [subareaComponents, setSubareaComponents]: Grid[] = useState();
+
+  // first render: get the area and the answer list
+  React.useEffect(() => {
+    setAreaList(hardcodedAreaList);
+    setArea(hardcodedAreaList[0].areaId);
+    setAnswers(hardcodedAnswerList);
+  }, []);
+
+  React.useEffect(() => {
+    // get area checkpoints from API
+    // this if-else is purely for testing purposes
+    if (area === 14) {
+      setCheckpoints([hardcodedCheckpoint1]);
+    } else {
+      setCheckpoints([hardcodedCheckpoint1, hardcodedCheckpoint2]);
+    }
+    // get subareas from API
+    setSubareas(hardcodedSubareaList);
+  }, [area]);
+
+  React.useEffect(() => {
+    if (checkpoints !== undefined && answers !== undefined) {
+      return setCheckpointComponents(
+        checkpoints.map((checkpoint) => (
+          <Grid key={`checkpoint-card-${checkpoint.checkpointId}`} item>
+            <Checkpoint
+              feedback={feedback}
+              number={checkpoint.order}
+              theme={theme}
+              description={checkpoint.description}
+              checkpointvalues={answers.map((a) => a.answerId)}
+              checkpointlabels={answers.map((a) => a.text)}
+            />
+          </Grid>
+        ))
+      );
+    }
+    return undefined;
+  }, [checkpoints]);
+
+  React.useEffect(() => {
+    if (subareas !== undefined) {
+      setSubareaComponents(
+        subareas.map((subarea) => (
+          <Grid key={subarea.subareaId} item>
+            <Subarea
+              theme={theme}
+              title={subarea.name}
+              summary={subarea.summary}
+              description={subarea.description}
+            />
+          </Grid>
+        ))
+      );
+    }
+  }, [subareas]);
+
   return (
     <div style={{ width: "inherit", display: "contents" }}>
-      <Grid container direction="column" alignItems="left" spacing="20px">
+      <Grid
+        sx={{ width: "inherit" }}
+        container
+        direction="column"
+        alignItems="left"
+        spacing="20px"
+      >
+        {areaList !== undefined && area !== undefined && (
+          <Grid item sx={{ width: "inherit" }}>
+            <FormControl>
+              <Select value={area} onChange={handleAreaChange}>
+                {areaList.map((a) => (
+                  <MenuItem key={`menu-area-${a.areaId}`} value={a.areaId}>
+                    {a.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        )}
+
         <Grid item>
           <Card
             sx={{
@@ -77,43 +248,32 @@ function ListOfCheckpoints({
             </Stack>
           </Card>
         </Grid>
+        {subareaComponents !== undefined && subareaComponents}
         <Grid item>
-          <Subarea
-            theme={theme}
-            title={subareaname}
-            summary="Lorem ipsum"
-            description="Lorem ipsum 2"
-          />
+          {value === "Single" &&
+            checkpointComponents !== undefined &&
+            checkpointComponents[page - 1]}
         </Grid>
-        <Grid item>
-          {value === "Single" && (
-            <Checkpoint
-              area="Area Name"
-              feedback={feedback}
-              number={page}
-              theme={theme}
-              description="Lorem ipsum"
-              checkpointvalues={[0, 1, 2]}
-              checkpointlabels={["Yes", "No", "N/A"]}
-            />
-          )}
-        </Grid>
-        {value === "List" && checkpointlist}
-        <Grid item container direction="column" alignItems="center">
-          <Grid item>
-            <Stack direction="row" spacing={2} alignItems="center">
-              {value === "Single" && (
-                <Pagination
-                  onChange={handlePageChange}
-                  count={assessmentItems}
-                  shape="rounded"
-                  color="primary"
-                  page={page}
-                />
-              )}
-            </Stack>
+        {value === "List" &&
+          checkpointComponents !== undefined &&
+          checkpointComponents}
+        {checkpoints !== undefined && (
+          <Grid item container direction="column" alignItems="center">
+            <Grid item>
+              <Stack direction="row" spacing={2} alignItems="center">
+                {value === "Single" && (
+                  <Pagination
+                    onChange={handlePageChange}
+                    count={checkpoints.length}
+                    shape="rounded"
+                    color="primary"
+                    page={page}
+                  />
+                )}
+              </Stack>
+            </Grid>
           </Grid>
-        </Grid>
+        )}
       </Grid>
     </div>
   );
