@@ -13,8 +13,8 @@ import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
 import { useState } from "react";
-import { authProfile, useLoginTwo } from "../../app/loginAPI";
 import { Link } from "react-router-dom";
+import { useLoginTwo } from "../../app/loginAPI";
 
 const theme = createTheme();
 

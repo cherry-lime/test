@@ -22,6 +22,7 @@ import SignIn from "./components/SignInUP/SignIn";
 import Chooserole from "./components/SignInUP/Chooserole";
 import { RootState } from "./app/store";
 import { authProfile } from "./app/loginAPI";
+import DetailGen from "./components/SignInUP/DetailGen";
 
 function App() {
   // Import the global state variables that will be used throughout the session
@@ -60,6 +61,7 @@ function App() {
         />
         <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<Chooserole />} />
+        <Route path="/signup/details" element={<DetailGen />}/>
         <Route path="/home" element={<Home />} />
 
         <Route path="/user" element={<UserInterface />} />

@@ -29,20 +29,22 @@ export function userRegister() {
   );
 }
 
+/**
+ * Authentication API call. Checks if the user is logged in and retrieves the userID and userRole.
+ * Contains functionality to redirect the user to their homepage and adjust the global state values.
+ */
 export function authProfile() {
   const dispatch = useDispatch();
   // Import the global state variables that will be used throughout the session
-  const { userID, userRole } = useSelector(
-    (state: RootState) => state.userData
-  );
+  const { userRole } = useSelector((state: RootState) => state.userData);
   // Navigation hook, to be used after the user is logged in
   const navigate = useNavigate();
 
   return useMutation(["Auth profile"], () => API.get(`/auth/profile`), {
     onSuccess: async (data: any) => {
-      const response = data["data"];
-      dispatch(setUserRole(response["role"]));
-      dispatch(setUserID(response["user_id"]));
+      const response = data.data;
+      dispatch(setUserRole(response.role));
+      dispatch(setUserID(response.user_id));
       await navigate(`/${userRole}`);
       console.log(response);
     },
@@ -51,7 +53,14 @@ export function authProfile() {
     },
   });
 }
+/**
+ * Login API function that uses an object as specified in the backend API.
+ * @param username String value
+ * @param password String value
+ * @returns onError: display the error message received from the backend API.
+ */
 export function useLoginTwo() {
+  // Calls authentication API this way to avoid hook-in-hook issues
   const auth = authProfile();
 
   return useMutation(
@@ -61,10 +70,11 @@ export function useLoginTwo() {
     {
       onSuccess: (data: any) => {
         auth.mutate();
-
         console.log(data);
       },
       onError: (error: any) => {
+        // TODO: Display if login has failed.
+        alert(error.message);
         console.log(error);
       },
     }
