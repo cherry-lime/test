@@ -160,7 +160,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             assessmentId={assessmentId}
           />
         )}
-        <Button variant="contained" onClick={createPDF}>
+        <Button sx={{marginTop: "40px"}} variant="contained" onClick={createPDF}>
           <Stack>
             <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />
             Download as PDF
