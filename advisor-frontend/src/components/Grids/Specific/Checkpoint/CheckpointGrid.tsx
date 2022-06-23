@@ -329,7 +329,7 @@ export default function CheckpointGrid({
       processRowUpdate={processRowUpdateDecorator}
       hasToolbar
       add={{
-        text: `${console.log(rows)}`, // "CREATE CHECKPOINT",
+        text: "CREATE CHECKPOINT",
         handler: handleAddDecorator,
       }}
     />
