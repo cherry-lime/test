@@ -37,7 +37,6 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
         <Button
           onClick={handleViewChange}
           variant="contained"
-          text="See Recommendations"
         >
           {checkpointView ? "See Recommendations" : "Go back to checkpoints"}
         </Button>
