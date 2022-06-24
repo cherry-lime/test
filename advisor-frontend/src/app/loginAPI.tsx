@@ -34,6 +34,7 @@ export function userRegister() {
         await navigate(`/signup/details`);
       },
       onError: (error: any) => {
+        // eslint-disable-next-line no-alert
         alert(error);
       },
     }
@@ -80,11 +81,14 @@ export function useLoginTwo() {
     {
       onSuccess: (data: any) => {
         auth.mutate();
+        // eslint-disable-next-line no-console
         console.log(data);
       },
       onError: (error: any) => {
         // TODO: Display if login has failed.
+        // eslint-disable-next-line no-alert
         alert(error.message);
+        // eslint-disable-next-line no-console
         console.log(error);
       },
     }

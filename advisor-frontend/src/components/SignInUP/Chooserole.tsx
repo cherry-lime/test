@@ -68,7 +68,7 @@ export default function Chooserole() {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Our Tool"}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">Our Tool</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               TestING Advisor builds on an Excel-based tool by giving users
