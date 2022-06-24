@@ -25,70 +25,68 @@ function Team({ theme }: { theme: Theme }) {
 
   return (
     <PageLayout title={`Team ${teamId}`} sidebarType={userTypes[userRole]}>
-      <Grid container direction="column" alignItems="left">
-        <h2> Team Information </h2>
-        <h3> Country </h3>
+      <h2> Team Information </h2>
+      <h3> Country </h3>
 
-        {userRole === "ASSESSOR" && (
-          <TextfieldEdit text="Netherlands" theme={theme} rows={1} />
-        )}
-        {userRole === "USER" && (
-          <Textfield
-            text="Netherlands"
-            theme={theme}
-            rows={1}
-            columns="inherit"
-          />
-        )}
-
-        <h3> IT Area / Department </h3>
-
-        {userRole === "ASSESSOR" && (
-          <TextfieldEdit text="Department A" theme={theme} rows={1} />
-        )}
-        {userRole === "USER" && (
-          <Textfield
-            text="Department A"
-            theme={theme}
-            rows={1}
-            columns="inherit"
-          />
-        )}
-
-        <h3>Assessors</h3>
-
-        <MemberGrid
+      {userRole === "ASSESSOR" && (
+        <TextfieldEdit text="Netherlands" theme={theme} rows={1} />
+      )}
+      {userRole === "USER" && (
+        <Textfield
+          text="Netherlands"
           theme={theme}
-          userId={userId}
-          userRole={userRole}
-          teamId={tmId}
-          forAssessors
+          rows={1}
+          columns="inherit"
         />
-        <h3>Members</h3>
-        <MemberGrid
-          theme={theme}
-          userId={userId}
-          userRole={userRole}
-          teamId={tmId}
-          forAssessors={false}
-        />
+      )}
 
-        <h3>Ongoing Evaluations</h3>
-        <AssessmentOngoingGrid
-          theme={theme}
-          userId={userId}
-          userRole={userRole}
-          assessmentType="TEAM"
-        />
+      <h3> IT Area / Department </h3>
 
-        <h3>Completed Evaluations</h3>
-        <AssessmentCompletedGrid
+      {userRole === "ASSESSOR" && (
+        <TextfieldEdit text="Department A" theme={theme} rows={1} />
+      )}
+      {userRole === "USER" && (
+        <Textfield
+          text="Department A"
           theme={theme}
-          userId={userId}
-          userRole={userRole}
-          assessmentType="TEAM"
+          rows={1}
+          columns="inherit"
         />
-      </Grid>
+      )}
+
+      <h3>Assessors</h3>
+
+      <MemberGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        teamId={tmId}
+        forAssessors
+      />
+      <h3>Members</h3>
+      <MemberGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        teamId={tmId}
+        forAssessors={false}
+      />
+
+      <h3>Ongoing Evaluations</h3>
+      <AssessmentOngoingGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        assessmentType="TEAM"
+      />
+
+      <h3>Completed Evaluations</h3>
+      <AssessmentCompletedGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        assessmentType="TEAM"
+      />
     </PageLayout>
   );
 }
