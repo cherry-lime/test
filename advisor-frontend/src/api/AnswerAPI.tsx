@@ -3,7 +3,7 @@ import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
 
-export type AnswerRow = {
+export type AnswerAPP = {
   id: GridRowId;
   label: string;
   value: number;
@@ -11,30 +11,30 @@ export type AnswerRow = {
   enabled: boolean;
 };
 
-type Answer = {
+type AnswerAPI = {
   answer_id: number;
   answer_text: string;
   answer_weight: number;
   template_id: number;
 };
 
-function toRow(answer: Answer) {
+function answerToAPP(answerAPI: AnswerAPI) {
   return {
-    id: answer.answer_id,
-    label: answer.answer_text,
-    value: answer.answer_weight,
-    templateId: answer.template_id,
+    id: answerAPI.answer_id,
+    label: answerAPI.answer_text,
+    value: answerAPI.answer_weight,
+    templateId: answerAPI.template_id,
     enabled: true,
-  } as AnswerRow;
+  } as AnswerAPP;
 }
 
-function fromRow(row: AnswerRow) {
+function answerToAPI(answerAPP: AnswerAPP) {
   return {
-    answer_id: row.id,
-    answer_text: row.label,
-    answer_weight: row.value,
-    template_id: row.templateId,
-  } as Answer;
+    answer_id: answerAPP.id,
+    answer_text: answerAPP.label,
+    answer_weight: answerAPP.value,
+    template_id: answerAPP.templateId,
+  } as AnswerAPI;
 }
 
 // Get all answers from database
@@ -43,11 +43,13 @@ export function useGetAnswers(templateId: number) {
     // Get response data from database
     const { data } = await API.get(`/template/${templateId}/answer`);
 
-    // Convert data to rows
-    const rows = data.map((answer: Answer) => toRow(answer));
+    // Convert data to answersAPP
+    const answersAPP = data.map((answerAPI: AnswerAPI) =>
+      answerToAPP(answerAPI)
+    );
 
-    // Convert data to row
-    return rows as AnswerRow[];
+    // Convert data to answerAPP
+    return answersAPP as AnswerAPP[];
   });
 }
 
@@ -57,8 +59,8 @@ export function usePostAnswer(templateId: number) {
     // Get response data from database
     const { data } = await API.post(`/template/${templateId}/answer`);
 
-    // Convert data to row
-    return toRow(data) as AnswerRow;
+    // Convert data to answerAPP
+    return answerToAPP(data) as AnswerAPP;
   });
 }
 
@@ -68,7 +70,7 @@ export function useGetAnswer() {
     // Get data from database
     const { data } = await API.get(`/answer/${answerId}`);
 
-    return toRow(data) as AnswerRow;
+    return answerToAPP(data) as AnswerAPP;
   });
 }
 
@@ -76,15 +78,15 @@ export function useGetAnswer() {
 export function usePatchAnswer() {
   return useMutation(
     ["PATCH", "/answer", "/{answer_id}"],
-    async (row: AnswerRow) => {
-      // Convert row to template
-      const answer = fromRow(row);
+    async (answerAPP: AnswerAPP) => {
+      // Convert answerAPP to template
+      const answer = answerToAPI(answerAPP);
 
       // Get response data from database
       const { data } = await API.patch(`/answer/${answer.answer_id}`, answer);
 
-      // Convert data to row
-      return toRow(data) as AnswerRow;
+      // Convert data to answerAPP
+      return answerToAPP(data) as AnswerAPP;
     }
   );
 }
@@ -97,8 +99,8 @@ export function useDeleteAnswer() {
       // Get response data from database
       const { data } = await API.delete(`/answer/${answerId}`);
 
-      // Convert data to row
-      return toRow(data) as AnswerRow;
+      // Convert data to answerAPP
+      return answerToAPP(data) as AnswerAPP;
     }
   );
 }

@@ -3,7 +3,7 @@ import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
 
-export type CategoryRow = {
+export type CategoryAPP = {
   id: GridRowId;
   name: string;
   color: string;
@@ -12,7 +12,7 @@ export type CategoryRow = {
   templateId: number;
 };
 
-type Category = {
+type CategoryAPI = {
   category_id: number;
   category_name: string;
   color: string;
@@ -21,25 +21,25 @@ type Category = {
   template_id: number;
 };
 
-function toRow(category: Category) {
+function categoryToAPP(categoryAPI: CategoryAPI) {
   return {
-    id: category.category_id,
-    name: category.category_name,
-    color: category.color,
-    order: category.order,
+    id: categoryAPI.category_id,
+    name: categoryAPI.category_name,
+    color: categoryAPI.color,
+    order: categoryAPI.order,
     enabled: true,
-    templateId: category.template_id,
-  } as CategoryRow;
+    templateId: categoryAPI.template_id,
+  } as CategoryAPP;
 }
 
-function fromRow(row: CategoryRow) {
+function categoryToAPI(categoryAPP: CategoryAPP) {
   return {
-    category_id: row.id,
-    category_name: row.name,
-    color: row.color,
-    order: row.order,
-    template_id: row.templateId,
-  } as Category;
+    category_id: categoryAPP.id,
+    category_name: categoryAPP.name,
+    color: categoryAPP.color,
+    order: categoryAPP.order,
+    template_id: categoryAPP.templateId,
+  } as CategoryAPI;
 }
 
 // Get all categories from database
@@ -48,10 +48,12 @@ export function useGetCategories(templateId: number) {
     // Get response data from database
     const { data } = await API.get(`/template/${templateId}/category`);
 
-    // Convert data to rows
-    const rows = data.map((category: Category) => toRow(category));
+    // Convert data to categoriesAPP
+    const categoriesAPP = data.map((categoryAPI: CategoryAPI) =>
+      categoryToAPP(categoryAPI)
+    );
 
-    return rows as CategoryRow[];
+    return categoriesAPP as CategoryAPP[];
   });
 }
 
@@ -63,8 +65,8 @@ export function usePostCategory(templateId: number) {
       // Get response data from database
       const { data } = await API.post(`/template/${templateId}/category`);
 
-      // Convert data to row
-      return toRow(data) as CategoryRow;
+      // Convert data to categoryAPP
+      return categoryToAPP(data) as CategoryAPP;
     }
   );
 }
@@ -77,7 +79,7 @@ export function useGetCategory() {
       // Get data from database
       const { data } = await API.get(`/category/${categoryId}`);
 
-      return toRow(data) as CategoryRow;
+      return categoryToAPP(data) as CategoryAPP;
     }
   );
 }
@@ -86,18 +88,18 @@ export function useGetCategory() {
 export function usePatchCategory() {
   return useMutation(
     ["PATCH", "/category", "/{category_id}"],
-    async (row: CategoryRow) => {
-      // Convert row to template
-      const category = fromRow(row);
+    async (categoryAPP: CategoryAPP) => {
+      // Convert categoryAPP to template
+      const categoryAPI = categoryToAPI(categoryAPP);
 
       // Get response data from database
       const { data } = await API.patch(
-        `/category/${category.category_id}`,
-        category
+        `/category/${categoryAPI.category_id}`,
+        categoryAPI
       );
 
-      // Convert data to row
-      return toRow(data) as CategoryRow;
+      // Convert data to categoryAPP
+      return categoryToAPP(data) as CategoryAPP;
     }
   );
 }
@@ -110,8 +112,8 @@ export function useDeleteCategory() {
       // Get response data from database
       const { data } = await API.delete(`/category/${categoryId}`);
 
-      // Convert data to row
-      return toRow(data) as CategoryRow;
+      // Convert data to categoryAPP
+      return categoryToAPP(data) as CategoryAPP;
     }
   );
 }

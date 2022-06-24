@@ -12,7 +12,7 @@ import { handleDelete, handleInit } from "../handlersNew";
 import {
   useDeleteMemberTeam,
   useGetMembersTeam,
-  UserRow,
+  UserAPP,
 } from "../../../../api/UserAPI";
 
 type MemberGridProps = {
@@ -28,7 +28,7 @@ export default function MemberGrid({
   teamId,
   forAssessors,
 }: MemberGridProps) {
-  const [rows, setRows] = React.useState<UserRow[]>([]);
+  const [rows, setRows] = React.useState<UserAPP[]>([]);
 
   // Member query
   const { status, data, error } = useGetMembersTeam(teamId);
@@ -49,7 +49,7 @@ export default function MemberGrid({
     []
   );
 
-  const columns = React.useMemo<GridColumns<UserRow>>(
+  const columns = React.useMemo<GridColumns<UserAPP>>(
     () => [
       {
         field: "name",

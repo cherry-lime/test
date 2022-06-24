@@ -8,7 +8,7 @@ import GenericGrid from "../../../Generic/GenericGrid";
 
 import { AssessmentType } from "../../../../../types/AssessmentType";
 import {
-  AssessmentRow,
+  AssessmentAPP,
   useGetMyIndividualAssessments,
   useGetMyTeamAssessments,
 } from "../../../../../api/AssessmentAPI";
@@ -26,7 +26,7 @@ export default function AssessmentCompletedGrid({
   teamId,
   assessmentType,
 }: AssessmentCompletedGridProps) {
-  const [rows, setRows] = React.useState<AssessmentRow[]>([]);
+  const [rows, setRows] = React.useState<AssessmentAPP[]>([]);
 
   // Assessment query
   const { status, data, error } =
@@ -48,7 +48,7 @@ export default function AssessmentCompletedGrid({
     []
   );
 
-  const columns = React.useMemo<GridColumns<AssessmentRow>>(
+  const columns = React.useMemo<GridColumns<AssessmentAPP>>(
     () => [
       {
         field: "createdAt",

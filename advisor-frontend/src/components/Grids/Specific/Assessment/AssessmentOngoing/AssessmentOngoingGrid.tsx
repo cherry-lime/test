@@ -16,7 +16,7 @@ import { AssessmentType } from "../../../../../types/AssessmentType";
 import { handleAdd, handleInit } from "../../handlersNew";
 
 import {
-  AssessmentRow,
+  AssessmentAPP,
   useGetMyIndividualAssessments,
   useGetMyTeamAssessments,
   usePostAssessment,
@@ -36,7 +36,7 @@ export default function AssessmentOngoingGrid({
   teamId,
   assessmentType,
 }: AssessmentOngoingGridProps) {
-  const [rows, setRows] = React.useState<AssessmentRow[]>([]);
+  const [rows, setRows] = React.useState<AssessmentAPP[]>([]);
 
   // Assessment query
   const { status, data, error } =
@@ -69,7 +69,7 @@ export default function AssessmentOngoingGrid({
     handleAdd(setRows, postAssessment as UseMutationResult);
   }, []);
 
-  const columns = React.useMemo<GridColumns<AssessmentRow>>(
+  const columns = React.useMemo<GridColumns<AssessmentAPP>>(
     () => [
       {
         field: "createdAt",

@@ -3,7 +3,7 @@ import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
 
-export type TeamRow = {
+export type TeamAPP = {
   id: GridRowId;
   name: string;
   inviteToken: number;
@@ -11,7 +11,7 @@ export type TeamRow = {
   department: string;
 };
 
-type Team = {
+type TeamAPI = {
   team_id: number;
   team_name: string;
   invite_token: number;
@@ -19,24 +19,24 @@ type Team = {
   team_department: string;
 };
 
-function toRow(team: Team) {
+function teamToAPP(teamAPI: TeamAPI) {
   return {
-    id: team.team_id,
-    name: team.team_name,
-    inviteToken: team.invite_token,
-    country: team.team_country,
-    department: team.team_department,
-  } as TeamRow;
+    id: teamAPI.team_id,
+    name: teamAPI.team_name,
+    inviteToken: teamAPI.invite_token,
+    country: teamAPI.team_country,
+    department: teamAPI.team_department,
+  } as TeamAPP;
 }
 
-function fromRow(row: TeamRow) {
+function teamToAPI(teamAPP: TeamAPP) {
   return {
-    team_id: row.id,
-    team_name: row.name,
-    invite_token: row.inviteToken,
-    team_country: row.country,
-    team_department: row.department,
-  } as Team;
+    team_id: teamAPP.id,
+    team_name: teamAPP.name,
+    invite_token: teamAPP.inviteToken,
+    team_country: teamAPP.country,
+    team_department: teamAPP.department,
+  } as TeamAPI;
 }
 
 // Get all teams from database
@@ -45,10 +45,10 @@ export function useGetMyTeams() {
     // Get response data from database
     const { data } = await API.get(`/teams/my-teams`);
 
-    // Convert data to rows
-    const rows = data.map((team: Team) => toRow(team));
+    // Convert data to teamsAPP
+    const teamsAPP = data.map((teamAPI: TeamAPI) => teamToAPP(teamAPI));
 
-    return rows as TeamRow[];
+    return teamsAPP as TeamAPP[];
   });
 }
 
@@ -58,8 +58,8 @@ export function usePostTeam() {
     // Get response data from database
     const { data } = await API.post(`/teams/create`);
 
-    // Convert data to row
-    return toRow(data) as TeamRow;
+    // Convert data to teamAPP
+    return teamToAPP(data) as TeamAPP;
   });
 }
 
@@ -69,7 +69,7 @@ export function useGetTeam() {
     // Get data from database
     const { data } = await API.get(`/teams/${teamId}`);
 
-    return toRow(data) as TeamRow;
+    return teamToAPP(data) as TeamAPP;
   });
 }
 
@@ -77,15 +77,15 @@ export function useGetTeam() {
 export function usePatchTeam() {
   return useMutation(
     ["PATCH", "/teams", "/{team_id}"],
-    async (row: TeamRow) => {
-      // Convert row to team
-      const team = fromRow(row);
+    async (teamAPP: TeamAPP) => {
+      // Convert teamAPP to team
+      const teamAPI = teamToAPI(teamAPP);
 
       // Get response data from database
-      const { data } = await API.patch(`/teams/${team.team_id}`, team);
+      const { data } = await API.patch(`/teams/${teamAPI.team_id}`, teamAPI);
 
-      // Convert data to row
-      return toRow(data);
+      // Convert data to teamAPP
+      return teamToAPP(data);
     }
   );
 }
@@ -98,8 +98,8 @@ export function useDeleteTeam() {
       // Get response data from database
       const { data } = await API.delete(`/teams/${teamId}`);
 
-      // Convert data to row
-      return toRow(data);
+      // Convert data to teamAPP
+      return teamToAPP(data);
     }
   );
 }

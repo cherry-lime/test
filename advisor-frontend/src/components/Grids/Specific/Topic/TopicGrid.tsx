@@ -17,7 +17,7 @@ import {
 } from "../handlersNew";
 
 import {
-  TopicRow,
+  TopicAPP,
   useDeleteTopic,
   useGetTopics,
   usePatchTopic,
@@ -30,7 +30,7 @@ type TopicGridProps = {
 };
 
 export default function TopicGrid({ theme, templateId }: TopicGridProps) {
-  const [rows, setRows] = React.useState<TopicRow[]>([]);
+  const [rows, setRows] = React.useState<TopicAPP[]>([]);
 
   // Topic query
   const { status, data, error } = useGetTopics(templateId);
@@ -47,7 +47,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    async (newRow: TopicRow, oldRow: TopicRow) =>
+    async (newRow: TopicAPP, oldRow: TopicAPP) =>
       processRowUpdate(
         setRows,
         patchTopic as UseMutationResult,
@@ -79,7 +79,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
     handleAdd(setRows, postTopic as UseMutationResult);
   }, []);
 
-  const columns = React.useMemo<GridColumns<TopicRow>>(
+  const columns = React.useMemo<GridColumns<TopicAPP>>(
     () => [
       {
         field: "name",

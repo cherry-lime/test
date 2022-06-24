@@ -19,7 +19,7 @@ import {
 } from "../handlersNew";
 
 import {
-  TeamRow,
+  TeamAPP,
   useDeleteTeam,
   useGetMyTeams,
   usePatchTeam,
@@ -32,7 +32,7 @@ type TeamGridProps = {
 };
 
 export default function TeamGrid({ theme, userRole }: TeamGridProps) {
-  const [rows, setRows] = React.useState<TeamRow[]>([]);
+  const [rows, setRows] = React.useState<TeamAPP[]>([]);
 
   // Team query
   const { status, data, error } = useGetMyTeams();
@@ -49,7 +49,7 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    async (newRow: TeamRow, oldRow: TeamRow) =>
+    async (newRow: TeamAPP, oldRow: TeamAPP) =>
       processRowUpdate(setRows, patchTeam as UseMutationResult, newRow, oldRow),
     []
   );
@@ -76,7 +76,7 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
     handleAdd(setRows, postTeam as UseMutationResult);
   }, []);
 
-  const columns = React.useMemo<GridColumns<TeamRow>>(
+  const columns = React.useMemo<GridColumns<TeamAPP>>(
     () => [
       {
         field: "name",

@@ -25,7 +25,7 @@ import {
 } from "../handlersNew";
 
 import {
-  SubareaRow,
+  SubareaAPP,
   usePatchSubarea,
   usePostSubarea,
   useDeleteSubarea,
@@ -38,7 +38,7 @@ type SubareaGridProps = {
 };
 
 export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
-  const [rows, setRows] = React.useState<SubareaRow[]>([]);
+  const [rows, setRows] = React.useState<SubareaAPP[]>([]);
 
   // Subarea query
   const { status, data, error } = useGetSubareas(categoryId);
@@ -61,7 +61,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    async (newRow: SubareaRow, oldRow: SubareaRow) =>
+    async (newRow: SubareaAPP, oldRow: SubareaAPP) =>
       processRowUpdate(
         setRows,
         patchSubarea as UseMutationResult,
@@ -73,7 +73,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
 
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
-    (row: SubareaRow) => () => {
+    (row: SubareaAPP) => () => {
       handleMove(setRows, patchSubarea as UseMutationResult, {
         ...row,
         order: row.order - 1,
@@ -84,7 +84,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
 
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
-    (row: SubareaRow) => () => {
+    (row: SubareaAPP) => () => {
       handleMove(setRows, patchSubarea as UseMutationResult, {
         ...row,
         order: row.order + 1,
@@ -110,12 +110,12 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
     handleAdd(setRows, postSubarea as UseMutationResult);
   }, []);
 
-  const columns = React.useMemo<GridColumns<SubareaRow>>(
+  const columns = React.useMemo<GridColumns<SubareaAPP>>(
     () => [
       {
         field: "",
         width: 50,
-        renderCell: (params: { row: SubareaRow }) => (
+        renderCell: (params: { row: SubareaAPP }) => (
           <div className="parent">
             <div className="child">
               <IconButton onClick={handleUpwardDecorator(params.row)}>

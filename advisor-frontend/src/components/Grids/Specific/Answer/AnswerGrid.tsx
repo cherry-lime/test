@@ -22,7 +22,7 @@ import {
 } from "../handlersNew";
 
 import {
-  AnswerRow,
+  AnswerAPP,
   useDeleteAnswer,
   useGetAnswers,
   usePatchAnswer,
@@ -38,7 +38,7 @@ export default function AnswerTypeGrid({
   theme,
   templateId,
 }: AnswerTypeGridProps) {
-  const [rows, setRows] = React.useState<AnswerRow[]>([]);
+  const [rows, setRows] = React.useState<AnswerAPP[]>([]);
 
   // Answer query
   const { status, data, error } = useGetAnswers(templateId);
@@ -68,7 +68,7 @@ export default function AnswerTypeGrid({
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    async (newRow: AnswerRow, oldRow: AnswerRow) =>
+    async (newRow: AnswerAPP, oldRow: AnswerAPP) =>
       processRowUpdate(
         setRows,
         patchAnswer as UseMutationResult,
@@ -91,7 +91,7 @@ export default function AnswerTypeGrid({
     handleAdd(setRows, postAnswer as UseMutationResult);
   }, []);
 
-  const columns = React.useMemo<GridColumns<AnswerRow>>(
+  const columns = React.useMemo<GridColumns<AnswerAPP>>(
     () => [
       {
         field: "label",

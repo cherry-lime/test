@@ -5,7 +5,7 @@ import { GridRowId } from "@mui/x-data-grid";
 import API from "./_API";
 import { AssessmentType } from "../types/AssessmentType";
 
-export type AssessmentRow = {
+export type AssessmentAPP = {
   id: GridRowId;
   name: string;
   assessmentType: AssessmentType;
@@ -19,7 +19,7 @@ export type AssessmentRow = {
   teamId: number;
 };
 
-type Assessment = {
+type AssessmentAPI = {
   assessment_id: number;
   assessment_name: string;
   assessment_type: AssessmentType;
@@ -33,35 +33,35 @@ type Assessment = {
   team_id: number;
 };
 
-function toRow(assessment: Assessment) {
+function assessmentToAPP(assessmentAPI: AssessmentAPI) {
   return {
-    id: assessment.assessment_id,
-    name: assessment.assessment_name,
-    assessmentType: assessment.assessment_type,
-    countryName: assessment.country_name,
-    departmentName: assessment.department_name,
-    templateId: assessment.template_id,
-    feedbackText: assessment.feedback_text,
-    createdAt: assessment.created_at,
-    updatedAt: assessment.updated_at,
-    completedAt: assessment.completed_at,
-    teamId: assessment.team_id,
-  } as AssessmentRow;
+    id: assessmentAPI.assessment_id,
+    name: assessmentAPI.assessment_name,
+    assessmentType: assessmentAPI.assessment_type,
+    countryName: assessmentAPI.country_name,
+    departmentName: assessmentAPI.department_name,
+    templateId: assessmentAPI.template_id,
+    feedbackText: assessmentAPI.feedback_text,
+    createdAt: assessmentAPI.created_at,
+    updatedAt: assessmentAPI.updated_at,
+    completedAt: assessmentAPI.completed_at,
+    teamId: assessmentAPI.team_id,
+  } as AssessmentAPP;
 }
 
-function fromRow(row: AssessmentRow) {
+function assessmentToAPI(assessmentAPP: AssessmentAPP) {
   return {
-    assessment_id: row.id,
-    assessment_name: row.name,
-    assessment_type: row.assessmentType,
-    country_name: row.countryName,
-    department_name: row.departmentName,
-    template_id: row.templateId,
-    feedback_text: row.feedbackText,
-    created_at: row.createdAt,
-    updated_at: row.updatedAt,
-    completed_at: row.completedAt,
-    team_id: row.teamId,
+    assessment_id: assessmentAPP.id,
+    assessment_name: assessmentAPP.name,
+    assessment_type: assessmentAPP.assessmentType,
+    country_name: assessmentAPP.countryName,
+    department_name: assessmentAPP.departmentName,
+    template_id: assessmentAPP.templateId,
+    feedback_text: assessmentAPP.feedbackText,
+    created_at: assessmentAPP.createdAt,
+    updated_at: assessmentAPP.updatedAt,
+    completed_at: assessmentAPP.completedAt,
+    team_id: assessmentAPP.teamId,
   };
 }
 
@@ -71,10 +71,12 @@ export function useGetAssessments() {
     // Get response data from database
     const { data } = await API.get(`/assessment`);
 
-    // Convert filtered data to rows
-    const rows = data.map((assessment: Assessment) => toRow(assessment));
+    // Convert filtered data to assessmentsAPP
+    const assessmentsAPP = data.map((assessmentAPI: AssessmentAPI) =>
+      assessmentToAPP(assessmentAPI)
+    );
 
-    return rows as AssessmentRow[];
+    return assessmentsAPP as AssessmentAPP[];
   });
 }
 
@@ -87,18 +89,18 @@ export function useGetMyIndividualAssessments(isCompleted: boolean) {
     // Filter data on whether it is completed
     const dataFiltered = isCompleted
       ? data.filter(
-          (assessment: Assessment) => assessment.completed_at !== null
+          (assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at !== null
         )
       : data.filter(
-          (assessment: Assessment) => assessment.completed_at === null
+          (assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at === null
         );
 
-    // Convert filtered data to rows
-    const rows = dataFiltered.map((assessment: Assessment) =>
-      toRow(assessment)
+    // Convert filtered data to assessmentsAPP
+    const assessmentsAPP = dataFiltered.map((assessmentAPI: AssessmentAPI) =>
+      assessmentToAPP(assessmentAPI)
     );
 
-    return rows as AssessmentRow[];
+    return assessmentsAPP as AssessmentAPP[];
   });
 }
 
@@ -113,18 +115,20 @@ export function useGetMyTeamAssessments(isCompleted: boolean, teamId: number) {
       // Filter data on whether it is completed
       const dataFiltered = isCompleted
         ? data.filter(
-            (assessment: Assessment) => assessment.completed_at !== null
+            (assessmentAPI: AssessmentAPI) =>
+              assessmentAPI.completed_at !== null
           )
         : data.filter(
-            (assessment: Assessment) => assessment.completed_at === null
+            (assessmentAPI: AssessmentAPI) =>
+              assessmentAPI.completed_at === null
           );
 
-      // Convert filtered data to rows
-      const rows = dataFiltered.map((assessment: Assessment) =>
-        toRow(assessment)
+      // Convert filtered data to assessmentsAPP
+      const assessmentsAPP = dataFiltered.map((assessmentAPI: AssessmentAPI) =>
+        assessmentToAPP(assessmentAPI)
       );
 
-      return rows as AssessmentRow[];
+      return assessmentsAPP as AssessmentAPP[];
     }
   );
 }
@@ -148,8 +152,8 @@ export function usePostAssessment(
           }
     );
 
-    // Convert data to row
-    return toRow(data) as AssessmentRow;
+    // Convert data to assessmentAPP
+    return assessmentToAPP(data) as AssessmentAPP;
   });
 }
 
@@ -161,7 +165,7 @@ export function useGetAssessment() {
       // Get data from database
       const { data } = await API.get(`/assessment/${assessmentId}`);
 
-      return toRow(data) as AssessmentRow;
+      return assessmentToAPP(data) as AssessmentAPP;
     }
   );
 }
@@ -170,18 +174,18 @@ export function useGetAssessment() {
 export function usePatchAssessment() {
   return useMutation(
     ["PATCH", "/assessment", "/{assessment_id}"],
-    async (row: AssessmentRow) => {
-      // Convert row to assessment
-      const assessment = fromRow(row);
+    async (assessmentAPP: AssessmentAPP) => {
+      // Convert assessmentAPP to assessment
+      const assessmentAPI = assessmentToAPI(assessmentAPP);
 
       // Get response data from database
       const { data } = await API.patch(
-        `/assessment/${assessment.assessment_id}`,
-        assessment
+        `/assessment/${assessmentAPI.assessment_id}`,
+        assessmentAPI
       );
 
-      // Convert data to row
-      return toRow(data) as AssessmentRow;
+      // Convert data to assessmentAPP
+      return assessmentToAPP(data) as AssessmentAPP;
     }
   );
 }
@@ -194,8 +198,8 @@ export function useDeleteAssessment() {
       // Get response data from database
       const { data } = await API.delete(`/assessment/${assessmentId}`);
 
-      // Convert data to row
-      return toRow(data) as AssessmentRow;
+      // Convert data to assessmentAPP
+      return assessmentToAPP(data) as AssessmentAPP;
     }
   );
 }
@@ -208,8 +212,8 @@ export function usePostCompleteAssessment(assessmentId: number) {
       // Get response data from database
       const { data } = await API.post(`/assessment/${assessmentId}/complete`);
 
-      // Convert data to row
-      return toRow(data) as AssessmentRow;
+      // Convert data to assessmentAPP
+      return assessmentToAPP(data) as AssessmentAPP;
     }
   );
 }

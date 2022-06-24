@@ -3,7 +3,7 @@ import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
 
-export type UserRow = {
+export type UserAPP = {
   id: GridRowId;
   name: string;
   role: string;
@@ -11,7 +11,7 @@ export type UserRow = {
   updatedAt: string;
 };
 
-type User = {
+type UserAPI = {
   user_id: number;
   username: string;
   role: string;
@@ -19,14 +19,14 @@ type User = {
   updated_at: string;
 };
 
-function toRow(user: User) {
+function userToAPP(userAPI: UserAPI) {
   return {
-    id: user.user_id,
-    name: user.username,
-    role: user.role,
-    createdAt: user.created_at,
-    updatedAt: user.updated_at,
-  } as UserRow;
+    id: userAPI.user_id,
+    name: userAPI.username,
+    role: userAPI.role,
+    createdAt: userAPI.created_at,
+    updatedAt: userAPI.updated_at,
+  } as UserAPP;
 }
 
 // Get user with id from database
@@ -35,7 +35,7 @@ export function useGetUser() {
     // Get data from database
     const { data } = await API.get(`/user/${userId}`);
 
-    return data as User;
+    return userToAPP(data) as UserAPP;
   });
 }
 
@@ -55,10 +55,10 @@ export function useGetMembersTeam(teamId: number) {
     // Get data from database
     const { data } = await API.get(`/teams/${teamId}/members`);
 
-    // Convert data to rows
-    const rows = data.map((user: User) => toRow(user));
+    // Convert data to usersAPP
+    const usersAPP = data.map((userAPI: UserAPI) => userToAPP(userAPI));
 
-    return rows as UserRow[];
+    return usersAPP as UserAPP[];
   });
 }
 
@@ -70,8 +70,8 @@ export function useDeleteMemberTeam(teamId: number) {
       // Get response data from database
       const { data } = await API.delete(`/teams/${teamId}/members/${userId}`);
 
-      // Convert data to row
-      return toRow(data) as UserRow;
+      // Convert data to userAPP
+      return userToAPP(data) as UserAPP;
     }
   );
 }

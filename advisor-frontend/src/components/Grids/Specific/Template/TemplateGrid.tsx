@@ -11,7 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import GenericGrid from "../../Generic/GenericGrid";
 import { AssessmentType } from "../../../../types/AssessmentType";
 import {
-  TemplateRow,
+  TemplateAPP,
   useDeleteTemplate,
   useDuplicateTemplate,
   useGetTemplates,
@@ -35,7 +35,7 @@ export default function TemplateGrid({
   theme,
   templateType,
 }: TemplateGridProps) {
-  const [rows, setRows] = React.useState<TemplateRow[]>([]);
+  const [rows, setRows] = React.useState<TemplateAPP[]>([]);
 
   // Template query
   const { status, data, error } = useGetTemplates(templateType);
@@ -53,7 +53,7 @@ export default function TemplateGrid({
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    async (newRow: TemplateRow, oldRow: TemplateRow) =>
+    async (newRow: TemplateAPP, oldRow: TemplateAPP) =>
       processRowUpdate(
         setRows,
         patchTemplate as UseMutationResult,
@@ -101,7 +101,7 @@ export default function TemplateGrid({
     handleAdd(setRows, postTemplate as UseMutationResult);
   }, []);
 
-  const columns = React.useMemo<GridColumns<TemplateRow>>(
+  const columns = React.useMemo<GridColumns<TemplateAPP>>(
     () => [
       {
         field: "name",

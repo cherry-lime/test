@@ -5,7 +5,7 @@ import { GridRowId } from "@mui/x-data-grid";
 import API from "./_API";
 import { AssessmentType } from "../types/AssessmentType";
 
-export type TemplateRow = {
+export type TemplateAPP = {
   id: GridRowId;
   name: string;
   description: string;
@@ -17,9 +17,10 @@ export type TemplateRow = {
   includeNoAnswer: boolean;
 };
 
-type Template = {
+type TemplateAPI = {
   template_id: number;
   template_name: string;
+  template_description: string;
   template_type: AssessmentType;
   enabled: boolean;
   weight_range_min: number;
@@ -28,31 +29,31 @@ type Template = {
   include_no_answer: boolean;
 };
 
-function toRow(template: Template) {
+function templateToAPP(templateAPI: TemplateAPI) {
   return {
-    id: template.template_id,
-    name: template.template_name,
-    description: "Description",
-    templateType: template.template_type,
-    enabled: template.enabled,
-    weightRangeMin: template.weight_range_min,
-    weightRangeMax: template.weight_range_max,
-    scoreFormula: template.score_formula,
-    includeNoAnswer: template.include_no_answer,
-  } as TemplateRow;
+    id: templateAPI.template_id,
+    name: templateAPI.template_name,
+    description: templateAPI.template_description,
+    templateType: templateAPI.template_type,
+    enabled: templateAPI.enabled,
+    weightRangeMin: templateAPI.weight_range_min,
+    weightRangeMax: templateAPI.weight_range_max,
+    scoreFormula: templateAPI.score_formula,
+    includeNoAnswer: templateAPI.include_no_answer,
+  } as TemplateAPP;
 }
 
-function fromRow(row: TemplateRow) {
+function templateToAPI(templateAPP: TemplateAPP) {
   return {
-    template_id: row.id,
-    template_name: row.name,
-    template_type: row.templateType,
-    enabled: row.enabled,
-    weight_range_min: row.weightRangeMin,
-    weight_range_max: row.weightRangeMax,
-    score_formula: row.scoreFormula,
-    include_no_answer: row.includeNoAnswer,
-  } as Template;
+    template_id: templateAPP.id,
+    template_name: templateAPP.name,
+    template_type: templateAPP.templateType,
+    enabled: templateAPP.enabled,
+    weight_range_min: templateAPP.weightRangeMin,
+    weight_range_max: templateAPP.weightRangeMax,
+    score_formula: templateAPP.scoreFormula,
+    include_no_answer: templateAPP.includeNoAnswer,
+  } as TemplateAPI;
 }
 
 // Get all templates from database
@@ -63,13 +64,15 @@ export function useGetTemplates(templateType: AssessmentType) {
 
     // Filter data on type of the templates
     const dataFiltered = data.filter(
-      (template: Template) => template.template_type === templateType
+      (templateAPI: TemplateAPI) => templateAPI.template_type === templateType
     );
 
-    // Convert filtered data to rows
-    const rows = dataFiltered.map((template: Template) => toRow(template));
+    // Convert filtered data to templatesAPP
+    const templatesAPP = dataFiltered.map((templateAPI: TemplateAPI) =>
+      templateToAPP(templateAPI)
+    );
 
-    return rows as TemplateRow[];
+    return templatesAPP as TemplateAPP[];
   });
 }
 
@@ -81,8 +84,8 @@ export function usePostTemplate(templateType: AssessmentType) {
       template_type: templateType,
     });
 
-    // Convert data to row
-    return toRow(data) as TemplateRow;
+    // Convert data to templateAPP
+    return templateToAPP(data) as TemplateAPP;
   });
 }
 
@@ -94,7 +97,7 @@ export function useGetTemplate() {
       // Get data from database
       const { data } = await API.get(`/template/${templateId}`);
 
-      return toRow(data) as TemplateRow;
+      return templateToAPP(data) as TemplateAPP;
     }
   );
 }
@@ -103,18 +106,18 @@ export function useGetTemplate() {
 export function usePatchTemplate() {
   return useMutation(
     ["PATCH", "/template", "/{template_id}"],
-    async (row: TemplateRow) => {
-      // Convert row to template
-      const template = fromRow(row);
+    async (templateAPP: TemplateAPP) => {
+      // Convert templateAPP to templateAPI
+      const templateAPI = templateToAPI(templateAPP);
 
       // Get response data from database
       const { data } = await API.patch(
-        `/template/${template.template_id}`,
-        template
+        `/template/${templateAPI.template_id}`,
+        templateAPI
       );
 
-      // Convert data to row
-      return toRow(data) as TemplateRow;
+      // Convert data to templateAPP
+      return templateToAPP(data) as TemplateAPP;
     }
   );
 }
@@ -127,8 +130,8 @@ export function useDeleteTemplate() {
       // Get response data from database
       const { data } = await API.delete(`/template/${templateId}`);
 
-      // Convert data to row
-      return toRow(data) as TemplateRow;
+      // Convert data to templateAPP
+      return templateToAPP(data) as TemplateAPP;
     }
   );
 }
@@ -140,7 +143,7 @@ export function useDuplicateTemplate() {
     async (templateId: number) => {
       const { data } = await API.post(`/template/${templateId}/clone`);
 
-      return toRow(data) as TemplateRow;
+      return templateToAPP(data) as TemplateAPP;
     }
   );
 }

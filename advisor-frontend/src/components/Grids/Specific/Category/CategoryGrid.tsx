@@ -28,7 +28,7 @@ import {
 } from "../handlersNew";
 
 import {
-  CategoryRow,
+  CategoryAPP,
   useDeleteCategory,
   useGetCategories,
   usePatchCategory,
@@ -41,7 +41,7 @@ type CategoryGridProps = {
 };
 
 export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
-  const [rows, setRows] = React.useState<CategoryRow[]>([]);
+  const [rows, setRows] = React.useState<CategoryAPP[]>([]);
 
   // Category query
   const { status, data, error } = useGetCategories(templateId);
@@ -64,7 +64,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    async (newRow: CategoryRow, oldRow: CategoryRow) =>
+    async (newRow: CategoryAPP, oldRow: CategoryAPP) =>
       processRowUpdate(
         setRows,
         patchCategory as UseMutationResult,
@@ -76,7 +76,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
 
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
-    (row: CategoryRow) => () => {
+    (row: CategoryAPP) => () => {
       handleMove(setRows, patchCategory as UseMutationResult, {
         ...row,
         order: row.order - 1,
@@ -87,7 +87,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
 
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
-    (row: CategoryRow) => () => {
+    (row: CategoryAPP) => () => {
       handleMove(setRows, patchCategory as UseMutationResult, {
         ...row,
         order: row.order + 1,
@@ -98,7 +98,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
 
   // Called when color picker registers a complete change
   const handleColorChange = React.useCallback(
-    (color: ColorResult, row: CategoryRow) => {
+    (color: ColorResult, row: CategoryAPP) => {
       handleChange(
         setRows,
         patchCategory as UseMutationResult,
@@ -135,12 +135,12 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     handleAdd(setRows, postCategory as UseMutationResult);
   }, []);
 
-  const columns = React.useMemo<GridColumns<CategoryRow>>(
+  const columns = React.useMemo<GridColumns<CategoryAPP>>(
     () => [
       {
         field: "",
         width: 50,
-        renderCell: (params: { row: CategoryRow }) => (
+        renderCell: (params: { row: CategoryAPP }) => (
           <div className="parent">
             <div className="child">
               <IconButton onClick={handleUpwardDecorator(params.row)}>
@@ -177,7 +177,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         headerName: "Color Theme",
         flex: 1,
         editable: false,
-        renderCell: (params: { row: CategoryRow }) => (
+        renderCell: (params: { row: CategoryAPP }) => (
           <BlockPicker
             width="250px"
             colors={[]}
@@ -218,7 +218,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         field: "actions",
         type: "actions",
         width: 125,
-        getActions: (params: { id: GridRowId; row: CategoryRow }) => [
+        getActions: (params: { id: GridRowId; row: CategoryAPP }) => [
           <GridActionsCellItem
             icon={
               <Tooltip title="Visit">

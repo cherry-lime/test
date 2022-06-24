@@ -3,7 +3,7 @@ import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
 
-export type SubareaRow = {
+export type SubareaAPP = {
   id: GridRowId;
   name: string;
   order: number;
@@ -13,7 +13,7 @@ export type SubareaRow = {
   enabled: boolean;
 };
 
-type Subarea = {
+type SubareaAPI = {
   subarea_id: number;
   subarea_name: string;
   subarea_order: number;
@@ -22,27 +22,27 @@ type Subarea = {
   category_id: number;
 };
 
-function toRow(subarea: Subarea) {
+function subareaToAPP(subareaAPI: SubareaAPI) {
   return {
-    id: subarea.subarea_id,
-    name: subarea.subarea_name,
-    order: subarea.subarea_order,
-    description: subarea.subarea_description,
-    summary: subarea.subarea_summary,
-    categoryId: subarea.category_id,
+    id: subareaAPI.subarea_id,
+    name: subareaAPI.subarea_name,
+    order: subareaAPI.subarea_order,
+    description: subareaAPI.subarea_description,
+    summary: subareaAPI.subarea_summary,
+    categoryId: subareaAPI.category_id,
     enabled: true,
-  } as SubareaRow;
+  } as SubareaAPP;
 }
 
-function fromRow(row: SubareaRow) {
+function subareaToAPI(subareaAPP: SubareaAPP) {
   return {
-    subarea_id: row.id,
-    subarea_name: row.name,
-    subarea_order: row.order,
-    subarea_description: row.description,
-    subarea_summary: row.summary,
-    category_id: row.categoryId,
-  } as Subarea;
+    subarea_id: subareaAPP.id,
+    subarea_name: subareaAPP.name,
+    subarea_order: subareaAPP.order,
+    subarea_description: subareaAPP.description,
+    subarea_summary: subareaAPP.summary,
+    category_id: subareaAPP.categoryId,
+  } as SubareaAPI;
 }
 
 // Get all subareas from database
@@ -51,10 +51,12 @@ export function useGetSubareas(categoryId: number) {
     // Get response data from database
     const { data } = await API.get(`/category/${categoryId}/subarea`);
 
-    // Convert data to rows
-    const rows = data.map((subarea: Subarea) => toRow(subarea));
+    // Convert data to subareasAPP
+    const subareasAPP = data.map((subareaAPI: SubareaAPI) =>
+      subareaToAPP(subareaAPI)
+    );
 
-    return rows as SubareaRow[];
+    return subareasAPP as SubareaAPP[];
   });
 }
 
@@ -66,8 +68,8 @@ export function usePostSubarea(categoryId: number) {
       // Get response data from database
       const { data } = await API.post(`/category/${categoryId}/subarea`);
 
-      // Convert data to row
-      return toRow(data) as SubareaRow;
+      // Convert data to subareaAPP
+      return subareaToAPP(data) as SubareaAPP;
     }
   );
 }
@@ -78,8 +80,8 @@ export function useGetSubarea() {
     // Get data from database
     const { data } = await API.get(`/subarea/${subareaId}`);
 
-    // Covert data to row
-    return toRow(data) as SubareaRow;
+    // Covert data to subareaAPP
+    return subareaToAPP(data) as SubareaAPP;
   });
 }
 
@@ -87,18 +89,18 @@ export function useGetSubarea() {
 export function usePatchSubarea() {
   return useMutation(
     ["PATCH", "/subarea", "/{subarea_id}"],
-    async (row: SubareaRow) => {
-      // Convert row to subarea
-      const subarea = fromRow(row);
+    async (subareaAPP: SubareaAPP) => {
+      // Convert subareaAPP to subarea
+      const subareaAPI = subareaToAPI(subareaAPP);
 
       // Get response data from database
       const { data } = await API.patch(
-        `/subarea/${subarea.subarea_id}`,
-        subarea
+        `/subarea/${subareaAPI.subarea_id}`,
+        subareaAPI
       );
 
-      // Convert data to row
-      return toRow(data) as SubareaRow;
+      // Convert data to subareaAPP
+      return subareaToAPP(data) as SubareaAPP;
     }
   );
 }
@@ -111,8 +113,8 @@ export function useDeleteSubarea() {
       // Get response data from database
       const { data } = await API.delete(`/subarea/${subareaId}`);
 
-      // Convert data to row
-      return toRow(data) as SubareaRow;
+      // Convert data to subareaAPP
+      return subareaToAPP(data) as SubareaAPP;
     }
   );
 }

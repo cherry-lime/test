@@ -3,34 +3,34 @@ import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
 
-export type TopicRow = {
+export type TopicAPP = {
   id: GridRowId;
   name: string;
   templateId: number;
   enabled: boolean;
 };
 
-type Topic = {
+type TopicAPI = {
   topic_id: number;
   topic_name: string;
   template_id: number;
 };
 
-function toRow(topic: Topic) {
+function topicToAPP(topicAPI: TopicAPI) {
   return {
-    id: topic.topic_id,
-    name: topic.topic_name,
-    templateId: topic.template_id,
+    id: topicAPI.topic_id,
+    name: topicAPI.topic_name,
+    templateId: topicAPI.template_id,
     enabled: true,
-  } as TopicRow;
+  } as TopicAPP;
 }
 
-function fromRow(row: TopicRow) {
+function topicToAPI(topicAPP: TopicAPP) {
   return {
-    topic_id: row.id,
-    topic_name: row.name,
-    template_id: row.templateId,
-  } as Topic;
+    topic_id: topicAPP.id,
+    topic_name: topicAPP.name,
+    template_id: topicAPP.templateId,
+  } as TopicAPI;
 }
 
 // Get all topics from database
@@ -39,10 +39,10 @@ export function useGetTopics(templateId: number) {
     // Get response data from database
     const { data } = await API.get(`/template/${templateId}/topic`);
 
-    // Convert data to rows
-    const rows = data.map((topic: Topic) => toRow(topic));
+    // Convert data to topicsAPP
+    const topicsAPP = data.map((topicAPI: TopicAPI) => topicToAPP(topicAPI));
 
-    return rows as TopicRow[];
+    return topicsAPP as TopicAPP[];
   });
 }
 
@@ -52,8 +52,8 @@ export function usePostTopic(templateId: number) {
     // Get response data from database
     const { data } = await API.post(`/template/${templateId}/topic`);
 
-    // Convert data to row
-    return toRow(data) as TopicRow;
+    // Convert data to topicAPP
+    return topicToAPP(data) as TopicAPP;
   });
 }
 
@@ -63,7 +63,7 @@ export function useGetTopic() {
     // Get data from database
     const { data } = await API.get(`/topic/${topicId}`);
 
-    return toRow(data) as TopicRow;
+    return topicToAPP(data) as TopicAPP;
   });
 }
 
@@ -71,15 +71,15 @@ export function useGetTopic() {
 export function usePatchTopic() {
   return useMutation(
     ["PATCH", "/topic", "/{topic_id}"],
-    async (row: TopicRow) => {
-      // Convert row to template
-      const topic = fromRow(row);
+    async (topicAPP: TopicAPP) => {
+      // Convert topicAPP to template
+      const topicAPI = topicToAPI(topicAPP);
 
       // Get response data from database
-      const { data } = await API.patch(`/topic/${topic.topic_id}`, topic);
+      const { data } = await API.patch(`/topic/${topicAPI.topic_id}`, topicAPI);
 
-      // Convert data to row
-      return toRow(data) as TopicRow;
+      // Convert data to topicAPP
+      return topicToAPP(data) as TopicAPP;
     }
   );
 }
@@ -92,8 +92,8 @@ export function useDeleteTopic() {
       // Get response data from database
       const { data } = await API.delete(`/topic/${topicId}`);
 
-      // Convert data to row
-      return toRow(data) as TopicRow;
+      // Convert data to topicAPP
+      return topicToAPP(data) as TopicAPP;
     }
   );
 }
