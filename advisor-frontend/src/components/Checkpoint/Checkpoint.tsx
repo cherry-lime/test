@@ -96,9 +96,11 @@ function Checkpoint({
           >
             {number}
           </Typography>
-          <Typography sx={{ textAlign: "left" }} id="checkpoint-topics">
-            {`Topics: ${topics.join(", ")}`}
-          </Typography>
+          {topics !== undefined && (
+            <Typography sx={{ textAlign: "left" }} id="checkpoint-topics">
+              {`Topics: ${topics.join(", ")}`}
+            </Typography>
+          )}
           <Typography sx={{ textAlign: "left" }} id="checkpointnamelabel">
             {description}
           </Typography>

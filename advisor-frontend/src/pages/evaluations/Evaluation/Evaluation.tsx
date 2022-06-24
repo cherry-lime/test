@@ -2,11 +2,11 @@ import { Theme } from "@mui/material";
 import { useSelector } from "react-redux";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import ButtonRegular from "../../components/ButtonRegular/ButtonRegular";
-import ListOfCheckpoints from "../../components/ListOfCheckpoints/ListOfCheckpoints";
-import userTypes from "../../components/Sidebar/listUsersTypes";
-import PageLayout from "../PageLayout";
-import { RootState } from "../../app/store";
+import ButtonRegular from "../../../components/ButtonRegular/ButtonRegular";
+import ListOfCheckpoints from "../../../components/ListOfCheckpoints/ListOfCheckpoints";
+import userTypes from "../../../components/Sidebar/listUsersTypes";
+import PageLayout from "../../PageLayout";
+import { RootState } from "../../../app/store";
 
 /**
  * Page with a self evaluation that can be filled in
