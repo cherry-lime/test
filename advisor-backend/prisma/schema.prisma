@@ -29,8 +29,8 @@ model Checkpoint {
   checkpoint_additional_information String                              @default("")
   order                             Int
   weight                            Int                                 @default(1)
-  Maturity                          Maturity?                           @relation(fields: [maturity_id], references: [maturity_id])
-  maturity_id                       Int?
+  Maturity                          Maturity                            @relation(fields: [maturity_id], references: [maturity_id])
+  maturity_id                       Int
   Category                          Category                            @relation(fields: [category_id], references: [category_id])
   category_id                       Int
   CheckpointInTopic                 CheckpointInTopic[]
@@ -57,7 +57,6 @@ model Maturity {
   Template       Template     @relation(fields: [template_id], references: [template_id])
   template_id    Int
   Checkpoint     Checkpoint[]
-  Feedback       Feedback[]
 
   @@unique([maturity_name, template_id])
 }
@@ -68,7 +67,6 @@ model Topic {
   Template          Template            @relation(fields: [template_id], references: [template_id])
   template_id       Int
   CheckpointInTopic CheckpointInTopic[]
-  Feedback          Feedback[]
 
   @@unique([topic_name, template_id])
 }
@@ -84,10 +82,10 @@ model CheckpointInTopic {
 
 model Team {
   team_id         Int          @id @default(autoincrement())
-  team_name       String       @unique
+  team_name       String       @default("New Team")
   invite_token    String       @unique @default(uuid()) @db.Uuid
-  team_country    String
-  team_department String
+  team_country    String       @default("")
+  team_department String       @default("")
   UserInTeam      UserInTeam[]
   Assessment      Assessment[]
 }
@@ -143,7 +141,6 @@ model Template {
   enabled              Boolean        @default(false)
   weight_range_min     Int            @default(1)
   weight_range_max     Int            @default(3)
-  score_formula        String         @default("sum(x)")
   include_no_answer    Boolean        @default(false)
   Assessment           Assessment[]
   Answers              Answer[]
@@ -161,7 +158,6 @@ model Category {
   order         Int
   Template      Template     @relation(fields: [template_id], references: [template_id])
   template_id   Int
-  Feedback      Feedback[]
   Checkpoint    Checkpoint[]
   SubArea       SubArea[]
 
@@ -189,20 +185,6 @@ model CheckpointAndAnswersInAssessments {
 
   @@id([assessment_id, checkpoint_id])
   @@index([assessment_id])
-}
-
-model Feedback {
-  feedback_id   Int      @id @default(autoincrement())
-  feedback_name String
-  feedback_text String
-  Topic         Topic    @relation(fields: [topic_id], references: [topic_id])
-  topic_id      Int
-  Maturity      Maturity @relation(fields: [maturity_id], references: [maturity_id])
-  maturity_id   Int
-  answer_weight Float
-  Category      Category @relation(fields: [category_id], references: [category_id])
-  category_id   Int
-  weight_factor Int
 }
 
 enum AssessmentType {

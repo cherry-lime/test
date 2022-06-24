@@ -36,9 +36,9 @@ const getDefaultRow = () => {
 
 type MemberGridProps = {
   theme: Theme;
-  userId: number;
+  userId: string | undefined;
   userRole: UserRole;
-  teamId: number;
+  teamId: string | undefined;
   forAssessors: boolean; // Is the grid for assessors (true) or users (false)
 };
 
@@ -134,7 +134,7 @@ export default function MemberGrid({
       add={
         userRole === "ASSESSOR"
           ? {
-              text: forAssessors ? "ADD ASSESSOR" : "ADD MEMBER",
+              text: forAssessors ? "ADD NEW ASSESSOR" : "ADD NEW MEMBER",
               handler: handleAdd,
             }
           : undefined

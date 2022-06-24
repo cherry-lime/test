@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { store } from "../../../../../app/store";
+import Theme from "../../../../../Theme";
 import ListOfTemplates from "../ListOfTemplates";
 
 const queryClient = new QueryClient();
