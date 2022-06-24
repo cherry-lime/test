@@ -40,18 +40,30 @@ function MaturityToAPI(maturityAPP: MaturityAPP) {
 }
 
 // Get all maturities from database
-export function useGetMaturities(templateId: number) {
-  return useQuery(["GET", "/template", templateId, "/maturity"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/template/${templateId}/maturity`);
+export function useGetMaturities(templateId: number, enabledFilter?: boolean) {
+  return useQuery(
+    ["GET", "/template", templateId, "/maturity", enabledFilter],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/template/${templateId}/maturity`);
 
-    // Convert data to maturitiesAPP
-    const maturitiesAPP = data.map((maturityAPI: MaturityAPI) =>
-      MaturityToAPP(maturityAPI)
-    );
+      // Convert data to maturitiesAPP
+      const maturitiesAPP = data.map((maturityAPI: MaturityAPI) =>
+        MaturityToAPP(maturityAPI)
+      );
 
-    return maturitiesAPP as MaturityAPP[];
-  });
+      // If defined, filter on enabled/disabled
+      if (enabledFilter !== undefined) {
+        const maturitiesFilteredAPP = maturitiesAPP.filter(
+          (maturityAPP: MaturityAPP) => maturityAPP.enabled === enabledFilter
+        );
+
+        return maturitiesFilteredAPP as MaturityAPP[];
+      }
+
+      return maturitiesAPP as MaturityAPP[];
+    }
+  );
 }
 
 // Get maturity with id from database

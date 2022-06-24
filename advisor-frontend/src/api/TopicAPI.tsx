@@ -36,16 +36,28 @@ function topicToAPI(topicAPP: TopicAPP) {
 }
 
 // Get all topics from database
-export function useGetTopics(templateId: number) {
-  return useQuery(["GET", "/template", templateId, "/topic"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/template/${templateId}/topic`);
+export function useGetTopics(templateId: number, enabledFilter?: boolean) {
+  return useQuery(
+    ["GET", "/template", templateId, "/topic", enabledFilter],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/template/${templateId}/topic`);
 
-    // Convert data to topicsAPP
-    const topicsAPP = data.map((topicAPI: TopicAPI) => topicToAPP(topicAPI));
+      // Convert data to topicsAPP
+      const topicsAPP = data.map((topicAPI: TopicAPI) => topicToAPP(topicAPI));
 
-    return topicsAPP as TopicAPP[];
-  });
+      // If defined, filter on enabled/disabled
+      if (enabledFilter !== undefined) {
+        const topicsFilteredAPP = topicsAPP.filter(
+          (topicAPP: TopicAPP) => topicAPP.enabled === enabledFilter
+        );
+
+        return topicsFilteredAPP as TopicAPP[];
+      }
+
+      return topicsAPP as TopicAPP[];
+    }
+  );
 }
 
 // Get topic with id from database

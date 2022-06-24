@@ -57,23 +57,38 @@ function templateToAPI(templateAPP: TemplateAPP) {
 }
 
 // Get all templates from database
-export function useGetTemplates(templateType: AssessmentType) {
-  return useQuery(["GET", "/template", templateType], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/template`);
+export function useGetTemplates(
+  templateType: AssessmentType,
+  enabledFilter?: boolean
+) {
+  return useQuery(
+    ["GET", "/template", templateType, enabledFilter],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/template`);
 
-    // Filter data on type of the templates
-    const dataFiltered = data.filter(
-      (templateAPI: TemplateAPI) => templateAPI.template_type === templateType
-    );
+      // Filter data on type of the templates
+      const dataFiltered = data.filter(
+        (templateAPI: TemplateAPI) => templateAPI.template_type === templateType
+      );
 
-    // Convert filtered data to templatesAPP
-    const templatesAPP = dataFiltered.map((templateAPI: TemplateAPI) =>
-      templateToAPP(templateAPI)
-    );
+      // Convert filtered data to templatesAPP
+      const templatesAPP = dataFiltered.map((templateAPI: TemplateAPI) =>
+        templateToAPP(templateAPI)
+      );
 
-    return templatesAPP as TemplateAPP[];
-  });
+      // If defined, filter on enabled/disabled
+      if (enabledFilter !== undefined) {
+        const templatesFilteredAPP = templatesAPP.filter(
+          (templateAPP: TemplateAPP) => templateAPP.enabled === enabledFilter
+        );
+
+        return templatesFilteredAPP as TemplateAPP[];
+      }
+
+      return templatesAPP as TemplateAPP[];
+    }
+  );
 }
 
 // Get template with id from database

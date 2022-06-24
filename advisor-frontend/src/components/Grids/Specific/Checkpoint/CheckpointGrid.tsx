@@ -68,13 +68,13 @@ export default function CheckpointGrid({
     status: statusTopics,
     data: dataTopics,
     error: errorTopics,
-  } = useGetTopics(templateId);
+  } = useGetTopics(templateId, true);
 
   const {
     status: statusMaturities,
     data: dataMaturities,
     error: errorMaturities,
-  } = useGetMaturities(templateId);
+  } = useGetMaturities(templateId, true);
 
   // Checkpoint mutations
   const patchCheckpoint = usePatchCheckpoint();

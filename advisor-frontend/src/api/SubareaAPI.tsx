@@ -48,18 +48,30 @@ function subareaToAPI(subareaAPP: SubareaAPP) {
 }
 
 // Get all subareas from database
-export function useGetSubareas(categoryId: number) {
-  return useQuery(["GET", "/category", categoryId, "/subarea"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/category/${categoryId}/subarea`);
+export function useGetSubareas(categoryId: number, enabledFilter?: boolean) {
+  return useQuery(
+    ["GET", "/category", categoryId, "/subarea", enabledFilter],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/category/${categoryId}/subarea`);
 
-    // Convert data to subareasAPP
-    const subareasAPP = data.map((subareaAPI: SubareaAPI) =>
-      subareaToAPP(subareaAPI)
-    );
+      // Convert data to subareasAPP
+      const subareasAPP = data.map((subareaAPI: SubareaAPI) =>
+        subareaToAPP(subareaAPI)
+      );
 
-    return subareasAPP as SubareaAPP[];
-  });
+      // If defined, filter on enabled/disabled
+      if (enabledFilter !== undefined) {
+        const subareasFilteredAPP = subareasAPP.filter(
+          (subareaAPP: SubareaAPP) => subareaAPP.enabled === enabledFilter
+        );
+
+        return subareasFilteredAPP as SubareaAPP[];
+      }
+
+      return subareasAPP as SubareaAPP[];
+    }
+  );
 }
 
 // Get subarea with id from database

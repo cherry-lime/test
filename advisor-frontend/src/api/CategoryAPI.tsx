@@ -44,18 +44,30 @@ function categoryToAPI(categoryAPP: CategoryAPP) {
 }
 
 // Get all categories from database
-export function useGetCategories(templateId: number) {
-  return useQuery(["GET", "/template", templateId, "/category"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/template/${templateId}/category`);
+export function useGetCategories(templateId: number, enabledFilter?: boolean) {
+  return useQuery(
+    ["GET", "/template", templateId, "/category", enabledFilter],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/template/${templateId}/category`);
 
-    // Convert data to categoriesAPP
-    const categoriesAPP = data.map((categoryAPI: CategoryAPI) =>
-      categoryToAPP(categoryAPI)
-    );
+      // Convert data to categoriesAPP
+      const categoriesAPP = data.map((categoryAPI: CategoryAPI) =>
+        categoryToAPP(categoryAPI)
+      );
 
-    return categoriesAPP as CategoryAPP[];
-  });
+      // If defined, filter on enabled/disabled
+      if (enabledFilter !== undefined) {
+        const categoriesFilteredAPP = categoriesAPP.filter(
+          (categoryAPP: CategoryAPP) => categoryAPP.enabled !== enabledFilter
+        );
+
+        return categoriesFilteredAPP as CategoryAPP[];
+      }
+
+      return categoriesAPP as CategoryAPP[];
+    }
+  );
 }
 
 // Get category with id from database
