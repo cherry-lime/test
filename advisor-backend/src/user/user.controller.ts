@@ -1,9 +1,18 @@
-import { Controller, Delete, Get, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+} from '@nestjs/common';
 import { ApiNotFoundResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { UserService } from './user.service';
 import { Roles } from '../common/decorators/roles.decorator';
 import { userResponse } from './dto/userResponse.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -35,6 +44,25 @@ export class UserController {
   @Roles(Role.ADMIN)
   getUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getUser(id);
+  }
+
+  /**
+   * [PATCH] /user/:id - Update user
+   * @param id user_id
+   * @param updateUserDto Update user data
+   * @returns user object
+   */
+  @Patch(':id')
+  @Roles(Role.ADMIN)
+  @ApiResponse({
+    description: 'updated user',
+    type: userResponse,
+  })
+  updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    return this.userService.updateUser(id, updateUserDto);
   }
 
   /**
