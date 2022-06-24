@@ -29,8 +29,8 @@ model Checkpoint {
   checkpoint_additional_information String                              @default("")
   order                             Int
   weight                            Int                                 @default(1)
-  Maturity                          Maturity?                           @relation(fields: [maturity_id], references: [maturity_id])
-  maturity_id                       Int?
+  Maturity                          Maturity                            @relation(fields: [maturity_id], references: [maturity_id])
+  maturity_id                       Int
   Category                          Category                            @relation(fields: [category_id], references: [category_id])
   category_id                       Int
   CheckpointInTopic                 CheckpointInTopic[]
