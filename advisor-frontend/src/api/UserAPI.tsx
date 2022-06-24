@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
@@ -40,30 +40,38 @@ export function useGetUser() {
 }
 
 // Get is user in team with team id from database
-export function useIsUserInTeam() {
-  return useQuery(
-    ["GET", "/teams", "/{team_id}", "/isUserInTeam"],
-    async (teamId) => {
-      // Get data from database
-      const { data } = await API.get(`/teams/${teamId}/isUserInTeam`);
+export function useIsUserInTeam(teamId: number) {
+  return useQuery(["GET", "/teams", teamId, "/isUserInTeam"], async () => {
+    // Get data from database
+    const { data } = await API.get(`/teams/${teamId}/isUserInTeam`);
 
-      return data as boolean;
-    }
-  );
+    return data as boolean;
+  });
 }
 
-// Get is user in team with team id from database
-export function useGetMembersTeam() {
-  return useQuery(
-    ["GET", "/teams", "/{team_id}", "/members"],
-    async (teamId) => {
-      // Get data from database
-      const { data } = await API.get(`/teams/${teamId}/members`);
+// Get meembers of team with team id from database
+export function useGetMembersTeam(teamId: number) {
+  return useQuery(["GET", "/teams", teamId, "/members"], async () => {
+    // Get data from database
+    const { data } = await API.get(`/teams/${teamId}/members`);
 
-      // Convert data to rows
-      const rows = data.map((user: User) => toRow(user));
+    // Convert data to rows
+    const rows = data.map((user: User) => toRow(user));
 
-      return rows as UserRow[];
+    return rows as UserRow[];
+  });
+}
+
+// Delete user from team with team id from database
+export function useDeleteMemberTeam(teamId: number) {
+  return useMutation(
+    ["DELETE", "/teams", teamId, "/members", "/user_id"],
+    async (userId: number) => {
+      // Get response data from database
+      const { data } = await API.delete(`/teams/${teamId}/members/${userId}`);
+
+      // Convert data to row
+      return toRow(data) as UserRow;
     }
   );
 }
