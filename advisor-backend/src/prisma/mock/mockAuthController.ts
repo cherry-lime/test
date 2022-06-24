@@ -19,7 +19,7 @@ export const registerDto = {
 export const userinfo = {
   user_id: 1,
   username: 'discussion_believed_pleasant',
-  role: [Role.ASSESSOR], //, {USER}, "ADMIN"
+  role: Role.ASSESSOR, //, {USER}, "ADMIN"
   created_at: myStartDate,
   updated_at: myEndDate,
   password: '044498e8-6478-4184-b26f-d7b9be6a00d1',
