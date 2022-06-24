@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
+import { CheckpointModule } from './checkpoint/checkpoint.module';
 import { TeamsModule } from './teams/teams.module';
 import { AssessmentModule } from './assessment/assessment.module';
 import { TemplateModule } from './template/template.module';
@@ -13,6 +14,7 @@ import { SubareaModule } from './subarea/subarea.module';
 import { MaturityModule } from './maturity/maturity.module';
 import { TopicModule } from './topic/topic.module';
 import { AnswerModule } from './answer/answer.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 @Module({
   imports: [
@@ -26,8 +28,10 @@ import { AnswerModule } from './answer/answer.module';
     CategoryModule,
     SubareaModule,
     MaturityModule,
+    CheckpointModule,
     TopicModule,
     AnswerModule,
+    FeedbackModule,
   ],
   controllers: [AppController],
   providers: [AppService],

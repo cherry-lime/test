@@ -10,11 +10,13 @@ import { RootState } from "../../app/store";
  */
 function AssessorInterface() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { userId } = useSelector((state: RootState) => state.userData);
+  const { userId, userRole } = useSelector(
+    (state: RootState) => state.userData
+  );
   const pageTitle = `Assessor Home`;
 
   return (
-    <PageLayout title={pageTitle} footer sidebarType={userTypes.USER}>
+    <PageLayout title={pageTitle} footer sidebarType={userTypes[userRole]}>
       <Link to="/teams" data-testid="assessor-teams">
         <TeamCard />
       </Link>

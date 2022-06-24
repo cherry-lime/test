@@ -166,7 +166,11 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         )}
         {value === "Progress" && <ProgressEvaluationCard />}
 
-        <Button variant="contained" onClick={createPDF}>
+        <Button
+          sx={{ marginTop: "40px" }}
+          variant="contained"
+          onClick={createPDF}
+        >
           <Stack>
             <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />
             Download as PDF
