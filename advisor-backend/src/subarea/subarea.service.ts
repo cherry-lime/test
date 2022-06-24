@@ -98,6 +98,20 @@ export class SubareaService {
 
     // Update order if order is changed
     if (updateSubareaDto.order) {
+      // Get the max order in category
+      const maxOrder = await this.prisma.subArea.count({
+        where: {
+          category_id: subarea.category_id,
+        },
+      });
+
+      // Check if new order is valid
+      if (updateSubareaDto.order > maxOrder) {
+        throw new ConflictException(
+          'Order cannot be greater than amount of subareas'
+        );
+      }
+
       // If new order is lower, increment everything between new and old order
       if (updateSubareaDto.order < subarea.order) {
         await this.prisma.subArea.updateMany({
