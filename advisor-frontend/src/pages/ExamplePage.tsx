@@ -36,7 +36,7 @@ export default function Example() {
         <ButtonRegular text="Regular Button" />
         <ButtonInverted text="Inverted Button" />
         <Checkpoint
-          area="Area Name"
+          topics={["Ready Work"]}
           feedback={false}
           number={12}
           description="Checkpoint Description"
