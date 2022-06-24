@@ -57,7 +57,6 @@ export class AssessmentController {
   @ApiBadRequestResponse({
     description: 'No active templates found',
   })
-  @UseGuards(AuthGuard('jwt'))
   create(
     @Body() createAssessmentDto: CreateAssessmentDto,
     @AuthUser() user: User
@@ -257,7 +256,6 @@ export class AssessmentController {
 
   @Get(':assessment_id/feedback')
   @ApiTags('feedback')
-  @UseGuards(AuthGuard('jwt'))
   @ApiResponse({
     description: 'Recommendations',
     type: RecommendationDto,
