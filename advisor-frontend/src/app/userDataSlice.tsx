@@ -15,7 +15,7 @@ export interface UserDataState {
  */
 const initialState: UserDataState = {
   userId: "0000",
-  userRole: "",
+  userRole: "NONE",
   userName: "",
   userPassword: "",
 };

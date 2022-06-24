@@ -29,11 +29,20 @@ const admin = new Map<string, boolean>([
   ["template", true],
 ]);
 
+const none = new Map<string, boolean>([
+  ["home", true],
+  ["evaluation", false],
+  ["teams", false],
+  ["signout", true],
+  ["settings", false],
+  ["template", false],
+]);
 // Enum object where the different userTypes can be called through. Example: "userType.ADMIN"
 const userTypes = {
   ADMIN: admin,
   USER: user,
   ASSESSOR: assessor,
+  NONE: none,
 };
 
 export default userTypes;

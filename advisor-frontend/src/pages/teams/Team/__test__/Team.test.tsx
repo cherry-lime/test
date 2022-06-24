@@ -7,7 +7,6 @@ import Theme from "../../../../Theme";
 import Team from "../Team";
 
 const queryClient = new QueryClient();
-
 test("app rendering/navigating from assessor view to specific team evaluation", async () => {
   render(
     <Provider store={store}>
@@ -18,6 +17,7 @@ test("app rendering/navigating from assessor view to specific team evaluation", 
       </QueryClientProvider>
     </Provider>
   );
+
   expect(screen.getByText(/Team Information/i)).toBeInTheDocument();
   expect(screen.getByText(/Country/i)).toBeInTheDocument();
   expect(screen.getByText(/Members/i)).toBeInTheDocument();
