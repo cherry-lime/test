@@ -9,6 +9,7 @@ import { CreateUserDto } from '../auth/auth_dto/register-user.dto';
 import { User } from '../../node_modules/.prisma/client';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -20,7 +21,7 @@ export class UserService {
    */
   async findAll(): Promise<any> {
     // Return all templates from prisma
-    const users =  await this.prisma.user.findMany();
+    const users = await this.prisma.user.findMany();
     users.forEach((user) => delete user.password);
     return users;
   }
@@ -42,6 +43,30 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
+    delete user.password;
+    return user;
+  }
+
+  /**
+   * Update user
+   * @param id user_id
+   * @param data UpdateUserDto
+   * @returns Updated user
+   */
+  async updateUser(id: number, data: UpdateUserDto) {
+    const user = await this.prisma.user
+      .update({
+        where: {
+          user_id: id,
+        },
+        data,
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Team with given team id not found');
+        }
+        throw new InternalServerErrorException();
+      });
     delete user.password;
     return user;
   }
@@ -84,26 +109,26 @@ export class UserService {
     return userinfos;
   }
 
-    /**
+  /**
    * Delete user from user_id
    * @param id user_id
    * @returns Deleted user
    * @throws User not found
    */
-     async delete(id: number): Promise<any> {
-      // Delete template by id from prisma
-      return await this.prisma.user
-        .delete({
-          where: {
-            user_id: id,
-          },
-        })
-        .catch((error) => {
-          if (error.code === 'P2025') {
-            // Throw error if user not found
-            throw new NotFoundException('User not found');
-          }
-          throw new InternalServerErrorException();
-        });
-    }
+  async delete(id: number): Promise<any> {
+    // Delete template by id from prisma
+    return await this.prisma.user
+      .delete({
+        where: {
+          user_id: id,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          // Throw error if user not found
+          throw new NotFoundException('User not found');
+        }
+        throw new InternalServerErrorException();
+      });
+  }
 }
