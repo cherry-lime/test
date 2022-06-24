@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { TeamsController } from './teams.controller';
 import { TeamsService } from './teams.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { aTeam, aUpdateTeam, aCreateTeam } from '../prisma/mock/mockTeam';
+import { aTeam, aCreateTeam } from '../prisma/mock/mockTeam';
 import { aTeamMembers } from '../prisma/mock/mockTeamMembers';
 import { aAssessment } from '../prisma/mock/mockAssessment';
 import { InviteTokenDto } from './dto/invite-token.dto';
