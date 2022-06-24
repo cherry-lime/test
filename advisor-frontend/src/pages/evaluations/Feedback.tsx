@@ -12,6 +12,7 @@ import TextfieldEdit from "../../components/TextfieldEdit/TextfieldEdit";
 import Textfield from "../../components/Textfield/Textfield";
 import { RootState } from "../../app/store";
 import pdf from "./pdf";
+import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 
 /**
  * Page with the feedback related to a self assessment
@@ -117,22 +118,27 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             <Tabs value={value} onChange={handleChange} textColor="primary">
               <Tab value="Recommendations" label="Recommendations" />
               <Tab value="Checkpoints" label="Checkpoints" />
+              {userRole === "ASSESSOR" && (
+                <Tab value="Progress" label="Progress" />
+              )}
             </Tabs>
           </Stack>
         </Card>
         <br />
-        <Subarea
-          theme={theme}
-          title=""
-          summary="Below you will find a list of items that you or your squad can review in order to start improving your testing maturity. This list is based on your answers and prioritized to maximize your testing maturity."
-          description="TIP: only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
-        />
-        <h2>Assessor Feedback</h2>
-        {team && userRole === "ASSESSOR" && (
+        {value !== "Progress" && (
+          <Subarea
+            theme={theme}
+            title=""
+            summary="Below you will find a list of items that you or your squad can review in order to start improving your testing maturity. This list is based on your answers and prioritized to maximize your testing maturity."
+            description="TIP: only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
+          />
+        )}
+        {value !== "Progress" && <h2>Assessor Feedback</h2>}
+        {team && userRole === "ASSESSOR" && value !== "Progress" && (
           <TextfieldEdit rows={5} theme={theme} text="assessor feedback here" />
         )}
 
-        {team && userRole === "USER" && (
+        {team && userRole === "USER" && value !== "Progress" && (
           <Textfield
             rows={5}
             columns="inherit"
@@ -158,6 +164,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             assessmentId={assessmentId}
           />
         )}
+        {value === "Progress" && <ProgressEvaluationCard />}
+
         <Button variant="contained" onClick={createPDF}>
           <Stack>
             <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />
