@@ -54,20 +54,6 @@ export function useGetMaturities(templateId: number) {
   });
 }
 
-// Post maturity to database
-export function usePostMaturity(templateId: number) {
-  return useMutation(
-    ["POST", "/template", templateId, "/maturity"],
-    async () => {
-      // Get response data from database
-      const { data } = await API.post(`/template/${templateId}/maturity`);
-
-      // Convert data to maturityAPP
-      return MaturityToAPP(data) as MaturityAPP;
-    }
-  );
-}
-
 // Get maturity with id from database
 export function useGetMaturity() {
   return useQuery(
@@ -75,6 +61,20 @@ export function useGetMaturity() {
     async (maturityId) => {
       // Get data from database
       const { data } = await API.get(`/maturity/${maturityId}`);
+
+      // Convert data to maturityAPP
+      return MaturityToAPP(data) as MaturityAPP;
+    }
+  );
+}
+
+// Post maturity to database
+export function usePostMaturity(templateId: number) {
+  return useMutation(
+    ["POST", "/template", templateId, "/maturity"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.post(`/template/${templateId}/maturity`);
 
       // Convert data to maturityAPP
       return MaturityToAPP(data) as MaturityAPP;

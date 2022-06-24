@@ -76,19 +76,6 @@ export function useGetTemplates(templateType: AssessmentType) {
   });
 }
 
-// Post template to database
-export function usePostTemplate(templateType: AssessmentType) {
-  return useMutation(["POST", "/template"], async () => {
-    // Get response data from database
-    const { data } = await API.post(`/template`, {
-      template_type: templateType,
-    });
-
-    // Convert data to templateAPP
-    return templateToAPP(data) as TemplateAPP;
-  });
-}
-
 // Get template with id from database
 export function useGetTemplate() {
   return useQuery(
@@ -100,6 +87,19 @@ export function useGetTemplate() {
       return templateToAPP(data) as TemplateAPP;
     }
   );
+}
+
+// Post template to database
+export function usePostTemplate(templateType: AssessmentType) {
+  return useMutation(["POST", "/template"], async () => {
+    // Get response data from database
+    const { data } = await API.post(`/template`, {
+      template_type: templateType,
+    });
+
+    // Convert data to templateAPP
+    return templateToAPP(data) as TemplateAPP;
+  });
 }
 
 // Patch template in database

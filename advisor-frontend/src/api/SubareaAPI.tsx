@@ -62,6 +62,17 @@ export function useGetSubareas(categoryId: number) {
   });
 }
 
+// Get subarea with id from database
+export function useGetSubarea() {
+  return useQuery(["GET", "/subarea", "/{subarea_id}"], async (subareaId) => {
+    // Get data from database
+    const { data } = await API.get(`/subarea/${subareaId}`);
+
+    // Covert data to subareaAPP
+    return subareaToAPP(data) as SubareaAPP;
+  });
+}
+
 // Post subarea to database
 export function usePostSubarea(categoryId: number) {
   return useMutation(
@@ -74,17 +85,6 @@ export function usePostSubarea(categoryId: number) {
       return subareaToAPP(data) as SubareaAPP;
     }
   );
-}
-
-// Get subarea with id from database
-export function useGetSubarea() {
-  return useQuery(["GET", "/subarea", "/{subarea_id}"], async (subareaId) => {
-    // Get data from database
-    const { data } = await API.get(`/subarea/${subareaId}`);
-
-    // Covert data to subareaAPP
-    return subareaToAPP(data) as SubareaAPP;
-  });
 }
 
 // Patch subarea in database

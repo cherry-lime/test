@@ -52,6 +52,16 @@ export function useGetMyTeams() {
   });
 }
 
+// Get team with id from database
+export function useGetTeam() {
+  return useQuery(["GET", "/teams", "/{team_id}"], async (teamId) => {
+    // Get data from database
+    const { data } = await API.get(`/teams/${teamId}`);
+
+    return teamToAPP(data) as TeamAPP;
+  });
+}
+
 // Post team to database
 export function usePostTeam() {
   return useMutation(["POST", "/teams", "/create"], async () => {
@@ -59,16 +69,6 @@ export function usePostTeam() {
     const { data } = await API.post(`/teams/create`);
 
     // Convert data to teamAPP
-    return teamToAPP(data) as TeamAPP;
-  });
-}
-
-// Get team with id from database
-export function useGetTeam() {
-  return useQuery(["GET", "/teams", "/{team_id}"], async (teamId) => {
-    // Get data from database
-    const { data } = await API.get(`/teams/${teamId}`);
-
     return teamToAPP(data) as TeamAPP;
   });
 }

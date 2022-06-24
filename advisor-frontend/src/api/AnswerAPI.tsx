@@ -55,6 +55,16 @@ export function useGetAnswers(templateId: number) {
   });
 }
 
+// Get answer with id from database
+export function useGetAnswer() {
+  return useQuery(["GET", "/answer", "/answer_id}"], async (answerId) => {
+    // Get data from database
+    const { data } = await API.get(`/answer/${answerId}`);
+
+    return answerToAPP(data) as AnswerAPP;
+  });
+}
+
 // Post answer to database
 export function usePostAnswer(templateId: number) {
   return useMutation(["POST", "/template", templateId, "/answer"], async () => {
@@ -62,16 +72,6 @@ export function usePostAnswer(templateId: number) {
     const { data } = await API.post(`/template/${templateId}/answer`);
 
     // Convert data to answerAPP
-    return answerToAPP(data) as AnswerAPP;
-  });
-}
-
-// Get answer with id from database
-export function useGetAnswer() {
-  return useQuery(["GET", "/answer", "/answer_id}"], async (answerId) => {
-    // Get data from database
-    const { data } = await API.get(`/answer/${answerId}`);
-
     return answerToAPP(data) as AnswerAPP;
   });
 }

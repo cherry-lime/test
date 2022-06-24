@@ -58,6 +58,19 @@ export function useGetCategories(templateId: number) {
   });
 }
 
+// Get category with id from database
+export function useGetCategory() {
+  return useQuery(
+    ["GET", "/category", "/{category_id}"],
+    async (categoryId) => {
+      // Get data from database
+      const { data } = await API.get(`/category/${categoryId}`);
+
+      return categoryToAPP(data) as CategoryAPP;
+    }
+  );
+}
+
 // Post category to database
 export function usePostCategory(templateId: number) {
   return useMutation(
@@ -67,19 +80,6 @@ export function usePostCategory(templateId: number) {
       const { data } = await API.post(`/template/${templateId}/category`);
 
       // Convert data to categoryAPP
-      return categoryToAPP(data) as CategoryAPP;
-    }
-  );
-}
-
-// Get category with id from database
-export function useGetCategory() {
-  return useQuery(
-    ["GET", "/category", "/{category_id}"],
-    async (categoryId) => {
-      // Get data from database
-      const { data } = await API.get(`/category/${categoryId}`);
-
       return categoryToAPP(data) as CategoryAPP;
     }
   );

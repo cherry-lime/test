@@ -48,6 +48,16 @@ export function useGetTopics(templateId: number) {
   });
 }
 
+// Get topic with id from database
+export function useGetTopic() {
+  return useQuery(["GET", "/topic", "/{topic_id}"], async (topicId) => {
+    // Get data from database
+    const { data } = await API.get(`/topic/${topicId}`);
+
+    return topicToAPP(data) as TopicAPP;
+  });
+}
+
 // Post topic to database
 export function usePostTopic(templateId: number) {
   return useMutation(["POST", "/template", templateId, "/topic"], async () => {
@@ -55,16 +65,6 @@ export function usePostTopic(templateId: number) {
     const { data } = await API.post(`/template/${templateId}/topic`);
 
     // Convert data to topicAPP
-    return topicToAPP(data) as TopicAPP;
-  });
-}
-
-// Get topic with id from database
-export function useGetTopic() {
-  return useQuery(["GET", "/topic", "/{topic_id}"], async (topicId) => {
-    // Get data from database
-    const { data } = await API.get(`/topic/${topicId}`);
-
     return topicToAPP(data) as TopicAPP;
   });
 }

@@ -70,6 +70,19 @@ export function useGetCheckpoints(categoryId: number) {
   });
 }
 
+// Get checkpoint with id from database
+export function useGetCheckpoint() {
+  return useQuery(
+    ["GET", "/checkpoint", "/{checkpoint_id}"],
+    async (checkpointId) => {
+      // Get data from database
+      const { data } = await API.get(`/checkpoint/${checkpointId}`);
+
+      return checkpointToAPP(data) as CheckpointAPP;
+    }
+  );
+}
+
 // Post checkpoint to database
 export function usePostCheckpoint(categoryId: number) {
   return useMutation(
@@ -79,19 +92,6 @@ export function usePostCheckpoint(categoryId: number) {
       const { data } = await API.post(`/category/${categoryId}/checkpoint`);
 
       // Convert data to checkpointAPP
-      return checkpointToAPP(data) as CheckpointAPP;
-    }
-  );
-}
-
-// Get checkpoint with id from database
-export function useGetCheckpoint() {
-  return useQuery(
-    ["GET", "/checkpoint", "/{checkpoint_id}"],
-    async (checkpointId) => {
-      // Get data from database
-      const { data } = await API.get(`/checkpoint/${checkpointId}`);
-
       return checkpointToAPP(data) as CheckpointAPP;
     }
   );

@@ -183,6 +183,19 @@ export function useGetMyTeamAssessments(isCompleted: boolean, teamId: number) {
   );
 }
 
+// Get assessment with id from database
+export function useGetAssessment() {
+  return useQuery(
+    ["GET", "/assessment", "/{assessment_id}"],
+    async (assessmentId) => {
+      // Get data from database
+      const { data } = await API.get(`/assessment/${assessmentId}`);
+
+      return assessmentToAPP(data) as AssessmentAPP;
+    }
+  );
+}
+
 // Post assessment to database
 export function usePostAssessment(
   assessmentType: AssessmentType,
@@ -205,19 +218,6 @@ export function usePostAssessment(
     // Convert data to assessmentAPP
     return assessmentToAPP(data) as AssessmentAPP;
   });
-}
-
-// Get assessment with id from database
-export function useGetAssessment() {
-  return useQuery(
-    ["GET", "/assessment", "/{assessment_id}"],
-    async (assessmentId) => {
-      // Get data from database
-      const { data } = await API.get(`/assessment/${assessmentId}`);
-
-      return assessmentToAPP(data) as AssessmentAPP;
-    }
-  );
 }
 
 // Patch assessment in database
