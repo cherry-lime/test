@@ -1,9 +1,13 @@
-export const aTeamMembers = {
-  team_name: 'test_team_name',
-  team_members: [{ username: 'test_username', role: 'USER' }],
-};
+import { Role } from '@prisma/client';
 
-export const mockTeamMembers = {
-  findTeamMembers: jest.fn().mockResolvedValue(aTeamMembers),
-  addTeamMember: jest.fn().mockResolvedValue(aTeamMembers),
+export const aTeamMembers = {
+  team_members: [
+    {
+      user_id: 1,
+      username: 'test_user_name',
+      role: Role.ASSESSOR,
+      created_at: new Date(),
+      updated_at: new Date(),
+    },
+  ],
 };
