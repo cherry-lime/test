@@ -13,6 +13,7 @@ import GenericGrid from "../../../Generic/GenericGrid";
 
 import { UserRole } from "../../../../../types/UserRole";
 import { AssessmentType } from "../../../../../types/AssessmentType";
+
 import { handleAdd, handleInit } from "../../handlersNew";
 
 import {
@@ -77,7 +78,7 @@ export default function AssessmentOngoingGrid({
         type: "dateTime",
         flex: 1,
         valueFormatter: (params: GridValueFormatterParams<string>) =>
-          `${new Date(params.value)}`,
+          `${new Date(params.value).toLocaleString()}`,
       },
       {
         field: "updatedAt",
@@ -85,7 +86,7 @@ export default function AssessmentOngoingGrid({
         type: "dateTime",
         flex: 1,
         valueFormatter: (params: GridValueFormatterParams<string>) =>
-          `${new Date(params.value)}`,
+          `${new Date(params.value).toLocaleString()}`,
       },
       ...(userRole === "USER" && assessmentType === "TEAM"
         ? []

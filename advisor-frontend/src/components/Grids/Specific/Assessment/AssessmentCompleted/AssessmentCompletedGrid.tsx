@@ -1,18 +1,24 @@
 import * as React from "react";
 
-import { GridColumns, GridRowId } from "@mui/x-data-grid";
+import {
+  GridColumns,
+  GridRowId,
+  GridValueFormatterParams,
+} from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Button } from "@mui/material";
 
 import GenericGrid from "../../../Generic/GenericGrid";
 
 import { AssessmentType } from "../../../../../types/AssessmentType";
+
+import { handleInit } from "../../handlersNew";
+
 import {
   AssessmentAPP,
   useGetMyIndividualAssessments,
   useGetMyTeamAssessments,
 } from "../../../../../api/AssessmentAPI";
-import { handleInit } from "../../handlersNew";
 
 type AssessmentCompletedGridProps = {
   theme: Theme;
@@ -55,12 +61,16 @@ export default function AssessmentCompletedGrid({
         headerName: "Created",
         type: "dateTime",
         flex: 1,
+        valueFormatter: (params: GridValueFormatterParams<string>) =>
+          `${new Date(params.value).toLocaleString()}`,
       },
       {
         field: "completedAt",
         headerName: "Completed",
         type: "dateTime",
         flex: 1,
+        valueFormatter: (params: GridValueFormatterParams<string>) =>
+          `${new Date(params.value).toLocaleString()}`,
       },
       {
         field: "actions",
