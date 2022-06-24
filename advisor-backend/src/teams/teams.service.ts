@@ -1,14 +1,11 @@
 import {
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateTeamDto } from './dto/create-team.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Team } from './dto/team.dto';
 import { TeamMembers } from './dto/team-member.dto';
-import { UpdateTeamDto } from './dto/update-team.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
 import { User } from '@prisma/client';
 import { InviteTokenDto } from './dto/invite-token.dto';
@@ -18,41 +15,6 @@ export class TeamsService {
   constructor(private prisma: PrismaService) {}
 
   /**
-   * Create team object given a createTeamDto
-   * @param createTeamDto CreateTeamDto
-   * @param user_id id of user that is issuing the request
-   * @returns created team
-   * @throws Team name already exists
-   */
-  async create(user_id: number, createTeamDto: CreateTeamDto): Promise<Team> {
-    const team = await this.prisma.team
-      .create({
-        data: {
-          team_name: createTeamDto.team_name,
-          team_country: createTeamDto.team_country,
-          team_department: createTeamDto.team_department,
-          UserInTeam: {
-            create: [
-              {
-                user_id: user_id,
-              },
-            ],
-          },
-        },
-      })
-      .catch((error) => {
-        if (error.code === 'P2002') {
-          // Throw error if team name already exsits
-          throw new ConflictException('Team name already exists');
-        } else {
-          throw new InternalServerErrorException();
-        }
-      });
-
-    return team;
-  }
-
-  /**
    * Get team members object given a team id
    * @param id id of team
    * @param user user that is issuing the request
@@ -60,9 +22,6 @@ export class TeamsService {
    * @throws Team not found
    */
   async findTeamMembers(id: number): Promise<TeamMembers> {
-    // Response stored in teamMembers
-    const teamMembers = new TeamMembers();
-
     // Get team name and associated user ids from team with team_id from prisma
     const temp = await this.prisma.team
       .findUnique({
@@ -87,7 +46,6 @@ export class TeamsService {
       throw new NotFoundException('Team with given team id not found');
     }
 
-    teamMembers.team_name = temp.team_name;
     const teamMemberIds = temp.UserInTeam.map((a) => a.user_id);
 
     if (teamMemberIds.length === 0) {
@@ -95,23 +53,24 @@ export class TeamsService {
       throw new NotFoundException('No members are associated to the team');
     }
 
-    // Get team member usernames from team with team_member_ids from prisma
-    const teamMemberUsernames = await this.prisma.user.findMany({
+    // Get team member information from team with team_member_ids from prisma
+    const teamMembers = await this.prisma.user.findMany({
       where: {
         user_id: {
           in: teamMemberIds,
         },
       },
       select: {
+        user_id: true,
         username: true,
         role: true,
+        created_at: true,
+        updated_at: true,
       },
     });
 
-    teamMembers.team_members = teamMemberUsernames;
-
     // Return team
-    return teamMembers;
+    return { team_members: teamMembers };
   }
 
   /**
@@ -152,7 +111,6 @@ export class TeamsService {
         throw new InternalServerErrorException();
       });
 
-    // Response stored in teamMembers
     return await this.findTeamMembers(temp.team_id).catch((error) => {
       if (error === NotFoundException) {
         throw new NotFoundException(
@@ -191,65 +149,6 @@ export class TeamsService {
     }
 
     return assessments.Assessment;
-  }
-
-  /**
-   * Update team given a team id and UpdateTeamDto
-   * @param id id of team
-   * @param updateTeamDto UpdateTeamDto
-   * @returns updated team object
-   * @throws Team not found
-   * @throws Team name already exists
-   * @throws InternalServerErrorException
-   */
-  async updateTeam(id: number, updateTeamDto: UpdateTeamDto) {
-    return await this.prisma.team
-      .update({
-        where: {
-          team_id: id,
-        },
-        data: {
-          ...updateTeamDto,
-        },
-      })
-      .catch((error) => {
-        if (error.code === 'P2025') {
-          throw new NotFoundException('Team with given team id not found');
-        } else if (error.code === 'P2002') {
-          throw new ConflictException('Team name already exists');
-        } else {
-          throw new InternalServerErrorException();
-        }
-      });
-  }
-
-  /**
-   * Delete team given a team id
-   * @param id id of team
-   * @returns deleted team object
-   * @throws Team not found
-   * @throws InternalServerErrorException
-   */
-  async deleteTeam(id: number): Promise<Team> {
-    await this.prisma.userInTeam.deleteMany({
-      where: {
-        team_id: id,
-      },
-    });
-
-    return await this.prisma.team
-      .delete({
-        where: {
-          team_id: id,
-        },
-      })
-      .catch((error) => {
-        if (error.code === 'P2025') {
-          throw new NotFoundException('Team with given team id not found');
-        } else {
-          throw new InternalServerErrorException();
-        }
-      });
   }
 
   /**
@@ -308,33 +207,6 @@ export class TeamsService {
   }
 
   /**
-   * Get team object by team_id
-   * @param id team_id
-   * @returns team object corresponding to team_id
-   * @throws Team not found
-   */
-  async findOne(id: number): Promise<Team> {
-    // Get team by team_id from prisma
-    const team = await this.prisma.team
-      .findUnique({
-        where: {
-          team_id: id,
-        },
-      })
-      .catch(() => {
-        throw new InternalServerErrorException();
-      });
-
-    if (!team) {
-      // Throw error if team with given team id not found
-      throw new NotFoundException('Team with given team id not found');
-    }
-
-    // Return team
-    return team;
-  }
-
-  /**
    * Get invite_token of team given a team id
    * @param id id of team
    * @returns inviteTokenDto object corresponding to team_id
@@ -363,5 +235,48 @@ export class TeamsService {
     return {
       invite_token: invite_token.invite_token,
     } as InviteTokenDto;
+  }
+
+  /**
+   * Remove team member given a team id and a user id
+   * @param team_id id of team
+   * @param user_id id of user to be deleted
+   * @returns updated team member object
+   * @throws NotFoundException if team member not found
+   * @throws NotFoundException if Team with given team id not found or no
+   *            members are associated to the team
+   * @throws InternalServerErrorException
+   */
+  async removeTeamMember(
+    team_id: number,
+    user_id: number
+  ): Promise<TeamMembers> {
+    await this.prisma.userInTeam
+      .delete({
+        where: {
+          user_id_team_id: {
+            user_id,
+            team_id,
+          },
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Team member not found');
+        } else {
+          throw new InternalServerErrorException();
+        }
+      });
+
+    return await this.findTeamMembers(team_id).catch((error) => {
+      if (error === NotFoundException) {
+        throw new NotFoundException(
+          'Team with given team id not found or no \
+         members are associated to the team'
+        );
+      } else {
+        throw new InternalServerErrorException();
+      }
+    });
   }
 }

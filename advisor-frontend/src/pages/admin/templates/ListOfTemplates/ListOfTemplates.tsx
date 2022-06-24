@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
-import { FormControl, MenuItem, Select } from "@mui/material";
+import { FormControl, MenuItem, Select, Theme } from "@mui/material";
 import userType from "../../../../components/Sidebar/listUsersTypes";
-import Theme from "../../../../Theme";
 import PageLayout from "../../../PageLayout";
 import TemplateGrid from "../../../../components/Grids/Specific/TemplateGrid";
 
@@ -9,7 +8,7 @@ import TemplateGrid from "../../../../components/Grids/Specific/TemplateGrid";
  * Page containing the list of all existing templates
  * This should only be accessible to admins
  */
-function ListOfTemplates() {
+function ListOfTemplates({ theme }: { theme: Theme }) {
   const [activeIndividual, setActiveIndividual] = useState("123");
   const [activeTeam, setActiveTeam] = useState("abc");
   const individualTemplateList = ["123", "456", "789"];
@@ -49,7 +48,7 @@ function ListOfTemplates() {
           </Select>
         </FormControl>
 
-        <TemplateGrid theme={Theme} assessmentType="INDIVIDUAL" />
+        <TemplateGrid theme={theme} assessmentType="INDIVIDUAL" />
 
         <h2>Team Templates</h2>
         <p style={{ marginBottom: "0px" }}>
@@ -64,7 +63,7 @@ function ListOfTemplates() {
             ))}
           </Select>
         </FormControl>
-        <TemplateGrid theme={Theme} assessmentType="TEAM" />
+        <TemplateGrid theme={theme} assessmentType="TEAM" />
       </PageLayout>
     </div>
   );

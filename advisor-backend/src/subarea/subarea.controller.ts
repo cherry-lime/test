@@ -16,6 +16,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { SubareaDto } from './dto/subarea.dto';
+import { Roles } from '../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('subarea')
 @ApiTags('subarea')
@@ -50,6 +52,7 @@ export class SubareaController {
   })
   @ApiNotFoundResponse({ description: 'Subarea not found' })
   @ApiConflictResponse({ description: 'Subarea with this name already exists' })
+  @Roles(Role.ADMIN)
   update(
     @Param('subarea_id', ParseIntPipe) id: number,
     @Body() updateSubareaDto: UpdateSubareaDto
@@ -68,6 +71,7 @@ export class SubareaController {
     type: SubareaDto,
   })
   @ApiNotFoundResponse({ description: 'Subarea not found' })
+  @Roles(Role.ADMIN)
   delete(@Param('subarea_id', ParseIntPipe) id: number) {
     return this.subareaService.delete(id);
   }

@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  UseGuards,
   ForbiddenException,
   Query,
   NotFoundException,
@@ -27,18 +26,16 @@ import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { AssessmentDto } from './dto/assessment.dto';
 import { FeedbackDto } from './dto/feedback.dto';
-import { SaveCheckpointDto } from './dto/save-checkpoint.dto';
-import { RolesGuard } from '../common/guards/roles.guard';
-import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../common/decorators/roles.decorator';
 import { ScoreDto } from './dto/score.dto';
 import { ScorePerTopicDto } from './dto/score-per-topic.dto';
 import { AssessmentScoreService } from './assessment-score.service';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
-import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { RecommendationDto } from '../feedback/dto/recommendation.dto';
 import { FeedbackService } from '../feedback/feedback.service';
+import { SaveService } from '../save/save.service';
+import { SaveCheckpointDto } from '../save/dto/save-checkpoint.dto';
 
 @ApiTags('assessment')
 @Controller('assessment')
@@ -46,7 +43,7 @@ export class AssessmentController {
   constructor(
     private readonly assessmentService: AssessmentService,
     private readonly assessmentScoreService: AssessmentScoreService,
-    private readonly checkpointService: CheckpointService,
+    private readonly saveService: SaveService,
     private readonly feedbackService: FeedbackService
   ) {}
 
@@ -55,7 +52,7 @@ export class AssessmentController {
    * @param createAssessmentDto Assessment information
    * @returns created assessment
    */
-  @Post()
+  @Post('')
   @ApiConflictResponse({
     description: 'Assessment with this name and type already exists',
   })
@@ -65,7 +62,6 @@ export class AssessmentController {
   @ApiBadRequestResponse({
     description: 'No active templates found',
   })
-  @UseGuards(AuthGuard('jwt'))
   create(
     @Body() createAssessmentDto: CreateAssessmentDto,
     @AuthUser() user: User
@@ -83,6 +79,7 @@ export class AssessmentController {
     type: AssessmentDto,
     isArray: true,
   })
+  @Roles(Role.ADMIN)
   findAll() {
     return this.assessmentService.findAll();
   }
@@ -93,7 +90,6 @@ export class AssessmentController {
    * @returns AssessmentDto[] List of all assessments
    */
   @Get('my')
-  @UseGuards(AuthGuard('jwt'))
   @ApiResponse({
     description: 'Found assessment of USER',
     type: AssessmentDto,
@@ -111,7 +107,16 @@ export class AssessmentController {
   @Get(':assessment_id')
   @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
-  findOne(@Param('assessment_id', ParseIntPipe) id: number) {
+  async findOne(
+    @Param('assessment_id', ParseIntPipe) id: number,
+    @AuthUser() user: User
+  ) {
+    const assessment = await this.assessmentService.userInAssessment(id, user);
+
+    if (!assessment) {
+      throw new ForbiddenException();
+    }
+
     return this.assessmentService.findOne(id);
   }
 
@@ -127,10 +132,17 @@ export class AssessmentController {
   @ApiConflictResponse({
     description: 'Assessment with this name and type already exists',
   })
-  update(
+  async update(
     @Param('assessment_id', ParseIntPipe) id: number,
-    @Body() updateAssessmentDto: UpdateAssessmentDto
+    @Body() updateAssessmentDto: UpdateAssessmentDto,
+    @AuthUser() user: User
   ) {
+    const assessment = await this.assessmentService.userInAssessment(id, user);
+
+    if (!assessment) {
+      throw new ForbiddenException();
+    }
+
     return this.assessmentService.update(id, updateAssessmentDto);
   }
 
@@ -142,7 +154,16 @@ export class AssessmentController {
   @Delete(':assessment_id')
   @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
-  delete(@Param('assessment_id', ParseIntPipe) id: number) {
+  async delete(
+    @Param('assessment_id', ParseIntPipe) id: number,
+    @AuthUser() user: User
+  ) {
+    const assessment = await this.assessmentService.userInAssessment(id, user);
+
+    if (!assessment) {
+      throw new ForbiddenException();
+    }
+
     return this.assessmentService.delete(id);
   }
 
@@ -154,7 +175,16 @@ export class AssessmentController {
   @Post(':assessment_id/complete')
   @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
-  complete(@Param('assessment_id', ParseIntPipe) id: number) {
+  async complete(
+    @Param('assessment_id', ParseIntPipe) id: number,
+    @AuthUser() user: User
+  ) {
+    const assessment = await this.assessmentService.userInAssessment(id, user);
+
+    if (!assessment) {
+      throw new ForbiddenException();
+    }
+
     return this.assessmentService.complete(id);
   }
 
@@ -165,7 +195,6 @@ export class AssessmentController {
    * @returns Checkpoint saved
    */
   @Post(':assessment_id/save')
-  @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ description: 'Checkpoint saved' })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   async saveCheckpointAnswer(
@@ -183,7 +212,7 @@ export class AssessmentController {
       throw new ForbiddenException();
     }
 
-    return this.checkpointService.saveCheckpoint(assessment, saveCheckpointDto);
+    return this.saveService.saveCheckpoint(assessment, saveCheckpointDto);
   }
 
   /**
@@ -192,7 +221,6 @@ export class AssessmentController {
    * @returns Saved checkpoints
    */
   @Get(':assessment_id/save')
-  @UseGuards(AuthGuard('jwt'))
   @ApiResponse({
     description: 'Saved checkpoints',
     type: SaveCheckpointDto,
@@ -212,7 +240,7 @@ export class AssessmentController {
       throw new ForbiddenException();
     }
 
-    return this.checkpointService.getSavedCheckpoints(assessment);
+    return this.saveService.getSavedCheckpoints(assessment);
   }
 
   /**
@@ -221,8 +249,7 @@ export class AssessmentController {
    * @returns updated Assessment object
    */
   @Post(':assessment_id/feedback')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ASSESSOR)
+  @Roles(Role.ASSESSOR, Role.ADMIN)
   @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   feedback(
@@ -304,7 +331,6 @@ export class AssessmentController {
 
   @Get(':assessment_id/feedback')
   @ApiTags('feedback')
-  @UseGuards(AuthGuard('jwt'))
   @ApiResponse({
     description: 'Recommendations',
     type: RecommendationDto,

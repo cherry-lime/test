@@ -26,8 +26,5 @@ export class TemplateDto {
   weight_range_max: number;
 
   @ApiProperty()
-  score_formula: string;
-
-  @ApiProperty()
   include_no_answer: boolean;
 }

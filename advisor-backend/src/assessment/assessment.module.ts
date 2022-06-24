@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AssessmentService } from './assessment.service';
 import { AssessmentController } from './assessment.controller';
-import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { TemplateService } from '../template/template.service';
 import { FeedbackService } from '../feedback/feedback.service';
 import { AssessmentScoreService } from './assessment-score.service';
+import { SaveService } from '../save/save.service';
+import { CheckpointService } from '../checkpoint/checkpoint.service';
+import { TopicService } from '../topic/topic.service';
 
 @Module({
   controllers: [AssessmentController],
@@ -14,6 +16,9 @@ import { AssessmentScoreService } from './assessment-score.service';
     CheckpointService,
     FeedbackService,
     TemplateService,
+    SaveService,
+    CheckpointService,
+    TopicService,
   ],
 })
 export class AssessmentModule {}

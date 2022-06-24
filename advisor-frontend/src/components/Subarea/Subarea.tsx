@@ -26,7 +26,7 @@ function Subarea({
 }) {
   return (
     <ThemeProvider theme={theme}>
-      <Card sx={{ width: "95%", alignSelf: "center" }}>
+      <Card sx={{ width: "inherit", alignSelf: "center" }}>
         <CardContent>
           <Typography
             sx={{

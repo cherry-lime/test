@@ -1,13 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TemplateController } from './template.controller';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { aTemplate, updateTemplate } from '../prisma/mock/mockTemplate';
+import {
+  aTemplate,
+  updateTemplate,
+  updateTemplateDto,
+} from '../prisma/mock/mockTemplate';
 import { TemplateService } from './template.service';
-import { updateTemplateDto } from './template.service.spec';
 import { CategoryService } from '../category/category.service';
 import { aCategory } from '../prisma/mock/mockCategory';
 import { aMaturity } from '../prisma/mock/mockMaturity';
 import { MaturityService } from '../maturity/maturity.service';
+import { CloneTemplateService } from './clone-template.service';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -28,8 +32,12 @@ describe('TemplateController', () => {
             findOne: jest.fn().mockResolvedValue(aTemplate),
             update: jest.fn().mockResolvedValue(updateTemplate),
             findAll: jest.fn().mockResolvedValue([aTemplate]),
-            clone: jest.fn().mockResolvedValue(aTemplate),
             delete: jest.fn().mockResolvedValue(aTemplate),
+          };
+        }
+        if (token === CloneTemplateService) {
+          return {
+            clone: jest.fn().mockResolvedValue(aTemplate),
           };
         }
         if (token === CategoryService) {

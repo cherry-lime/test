@@ -9,6 +9,13 @@ const GlobalStyles = createGlobalStyle`
     margin-top: 10px;
     margin-bottom: 0px;
   }
+  h3 {
+    color: ${Theme.palette.text.secondary};
+    width: inherit;
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 0px;
+  }
   .MuiOutlinedInput-input { 
     background-color: white !important;
   }

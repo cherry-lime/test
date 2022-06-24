@@ -17,6 +17,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { MaturityDto } from './dto/maturity.dto';
+import { Roles } from '../common/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('maturity')
 @ApiTags('maturity')
@@ -40,6 +42,7 @@ export class MaturityController {
     description:
       'Maturity order must be less than number of maturities in template',
   })
+  @Roles(Role.ADMIN)
   update(
     @Param('maturity_id', ParseIntPipe) id: number,
     @Body() updateMaturityDto: UpdateMaturityDto
@@ -50,6 +53,7 @@ export class MaturityController {
   @Delete(':maturity_id')
   @ApiResponse({ description: 'Deleted maturity', type: MaturityDto })
   @ApiNotFoundResponse({ description: 'Maturity not found' })
+  @Roles(Role.ADMIN)
   delete(@Param('maturity_id', ParseIntPipe) id: number) {
     return this.maturityService.delete(id);
   }
