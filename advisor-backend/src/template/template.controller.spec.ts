@@ -11,6 +11,7 @@ import { CategoryService } from '../category/category.service';
 import { aCategory } from '../prisma/mock/mockCategory';
 import { aMaturity } from '../prisma/mock/mockMaturity';
 import { MaturityService } from '../maturity/maturity.service';
+import { CloneTemplateService } from './clone-template.service';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -31,8 +32,12 @@ describe('TemplateController', () => {
             findOne: jest.fn().mockResolvedValue(aTemplate),
             update: jest.fn().mockResolvedValue(updateTemplate),
             findAll: jest.fn().mockResolvedValue([aTemplate]),
-            clone: jest.fn().mockResolvedValue(aTemplate),
             delete: jest.fn().mockResolvedValue(aTemplate),
+          };
+        }
+        if (token === CloneTemplateService) {
+          return {
+            clone: jest.fn().mockResolvedValue(aTemplate),
           };
         }
         if (token === CategoryService) {
