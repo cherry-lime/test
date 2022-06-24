@@ -25,18 +25,17 @@ export class FeedbackService {
     private readonly prisma: PrismaService,
     private readonly checkpointService: CheckpointService,
     private readonly saveService: SaveService
-  ) { }
+  ) {}
 
   async getRecommendations(
     { assessment_id, template_id }: Assessment,
     topic_id: number
   ) {
     // Get all saved answers for this assessment
-    const answeredCheckpoints =
-      await this.saveService.getSavedCheckpoints({
-        assessment_id,
-        template_id,
-      } as AssessmentDto);
+    const answeredCheckpoints = await this.saveService.getSavedCheckpoints({
+      assessment_id,
+      template_id,
+    } as AssessmentDto);
 
     answeredCheckpoints.filter((saved) => saved.answer_id);
 
