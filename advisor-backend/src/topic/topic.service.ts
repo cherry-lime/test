@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { UpdateCheckpointDto } from '../checkpoint/dto/update-checkpoint.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateTopicDto } from './dto/update-topic.dto';
 
@@ -123,5 +124,32 @@ export class TopicService {
         }
         throw new InternalServerErrorException();
       });
+  }
+
+  async updateTopics(
+    checkpoint_id: number,
+    updateData: any,
+    updateCheckpointDto: UpdateCheckpointDto
+  ) {
+    await this.prisma.checkpointInTopic.deleteMany({
+      where: {
+        checkpoint_id,
+      },
+    });
+
+    updateData.data.CheckpointInTopic = {
+      connectOrCreate: updateCheckpointDto.topics.map((topic_id) => ({
+        where: {
+          topic_id_checkpoint_id: {
+            topic_id,
+            checkpoint_id,
+          },
+        },
+        create: {
+          topic_id,
+        },
+      })),
+    };
+    delete updateCheckpointDto.topics;
   }
 }
