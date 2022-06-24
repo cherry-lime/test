@@ -244,7 +244,7 @@ export class AssessmentController {
    * @returns updated Assessment object
    */
   @Post(':assessment_id/feedback')
-  @Roles(Role.ASSESSOR)
+  @Roles(Role.ASSESSOR, Role.ADMIN)
   @ApiResponse({ description: 'Assessment', type: AssessmentDto })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   feedback(
