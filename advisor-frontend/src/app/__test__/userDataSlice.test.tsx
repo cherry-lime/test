@@ -1,6 +1,6 @@
 import { cleanup } from "@testing-library/react";
 import { store } from "../store";
-import { setUserID, setUserRole } from "../userDataSlice";
+import { setUserId, setUserRole } from "../userDataSlice";
 
 afterEach(cleanup);
 
@@ -9,7 +9,7 @@ it("userRole change", () => {
   let state = store.getState().userData;
   const oldRole = state.userRole;
   // Change the userRole state
-  store.dispatch(setUserRole("new Role"));
+  store.dispatch(setUserRole("USER"));
   // Fetch new userRole
   state = store.getState().userData;
   const newRole = state.userRole;
@@ -20,12 +20,12 @@ it("userRole change", () => {
 it("userID change", () => {
   // Fetch the default userID value
   let state = store.getState().userData;
-  const oldID = state.userID;
+  const oldID = state.userId;
   // Change the userID state
-  store.dispatch(setUserID("u19283547"));
+  store.dispatch(setUserId("u19283547"));
   // Fetch new userID
   state = store.getState().userData;
-  const newID = state.userID;
+  const newID = state.userId;
 
   expect(oldID).not.toEqual(newID);
 });

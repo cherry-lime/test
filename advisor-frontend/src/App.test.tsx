@@ -49,7 +49,7 @@ test("app rendering/navigating to assessor interface", async () => {
   );
   const button = screen.getByTestId("assessor");
   fireEvent.click(button);
-  expect(screen.getByText(/assessor Interface here/i)).toBeInTheDocument();
+  expect(screen.getByText(/View your teams/i)).toBeInTheDocument();
 });
 
 // describe block = test suite

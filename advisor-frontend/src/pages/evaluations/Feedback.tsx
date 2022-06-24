@@ -1,5 +1,17 @@
-import { Card, Grid, Stack, Tab, Tabs, Theme, Button } from "@mui/material";
-import React, { useState } from "react";
+import {
+  Card,
+  Grid,
+  Stack,
+  Tab,
+  Tabs,
+  Theme,
+  Button,
+  SelectChangeEvent,
+  FormControl,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import React, { Dispatch, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
@@ -14,6 +26,11 @@ import { RootState } from "../../app/store";
 import pdf from "./pdf";
 import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 
+type Topic = {
+  topicId: number;
+  name: string;
+};
+
 /**
  * Page with the feedback related to a self assessment
  * This should only be accessible to the user whose assement this belongs to
@@ -24,6 +41,34 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   const { userId, userRole } = useSelector(
     (state: RootState) => state.userData
   );
+
+  // BEGINNING OF HARDCODED DATA USED TO TEST
+
+  const hardcodedTopic1 = { topicId: 14, name: "Risk Analysis" };
+  const hardcodedTopic2 = { topicId: 4, name: "Test Strategy" };
+
+  const hardcodedTopicList = [hardcodedTopic1, hardcodedTopic2];
+
+  // END OF HARDCODED DATA USED TO TEST
+
+  const [topicList, setTopicList]: [
+    Topic[] | undefined,
+    Dispatch<Topic[] | undefined>
+  ] = useState();
+
+  const [topic, setTopic]: [number | undefined, Dispatch<number | undefined>] =
+    useState();
+
+  const handleTopicChange = (event: SelectChangeEvent<number>) => {
+    setTopic(Number(event.target.value));
+  };
+
+  // first render: get the area list and set the area
+  React.useEffect(() => {
+    setTopicList(hardcodedTopicList);
+    setTopic(hardcodedTopicList[0].topicId);
+  }, []);
+
   // hardcoded to test pdf generation
   const recs = [
     { order: 1, description: "bla", additionalInfo: "hello" },
@@ -125,6 +170,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           </Stack>
         </Card>
         <br />
+
+        {/* this is not actually a subarea, it's the automated feedback */}
         {value !== "Progress" && (
           <Subarea
             theme={theme}
@@ -133,12 +180,16 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             description="TIP: only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
           />
         )}
-        {value !== "Progress" && <h2>Assessor Feedback</h2>}
-        {team && userRole === "ASSESSOR" && value !== "Progress" && (
+
+        <br />
+
+        {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
+
+        {team && userRole === "ASSESSOR" && value === "Recommendations" && (
           <TextfieldEdit rows={5} theme={theme} text="assessor feedback here" />
         )}
 
-        {team && userRole === "USER" && value !== "Progress" && (
+        {team && userRole === "USER" && value === "Recommendations" && (
           <Textfield
             rows={5}
             columns="inherit"
@@ -146,17 +197,35 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             text="assessor feedback here"
           />
         )}
+
+        <br />
+        {topicList !== undefined &&
+          topic !== undefined &&
+          value === "Recommendations" && (
+            <FormControl>
+              <Select value={topic} onChange={handleTopicChange}>
+                {topicList.map((t) => (
+                  <MenuItem key={`menu-topic-${t.topicId}`} value={t.topicId}>
+                    {t.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+
         <br />
 
-        {value === "Recommendations" && (
+        {value === "Recommendations" && topic !== undefined && (
           <RecommendationGrid
             theme={theme}
-            assessmentId="1"
+            assessmentId={assessmentId}
+            topicId={topic}
             assessmentType="INDIVIDUAL"
             userId={userId}
             userRole={userRole}
           />
         )}
+
         {value === "Checkpoints" && (
           <ListOfCheckpoints
             feedback
@@ -164,6 +233,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             assessmentId={assessmentId}
           />
         )}
+
         {value === "Progress" && <ProgressEvaluationCard />}
 
         <Button

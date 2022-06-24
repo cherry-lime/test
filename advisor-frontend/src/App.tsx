@@ -2,7 +2,7 @@ import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
 import UserInterface from "./pages/user/UserInterface/UserInterface";
 import Home from "./Home";
-import Evaluation from "./pages/evaluations/Evaluation";
+import Evaluation from "./pages/evaluations/Evaluation/Evaluation";
 import ListOfSelfEvals from "./pages/user/ListOfSelfEvals/ListOfSelfEvals";
 import Feedback from "./pages/evaluations/Feedback";
 import TeamList from "./pages/teams/TeamList/TeamList";
