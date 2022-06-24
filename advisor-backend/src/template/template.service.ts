@@ -29,21 +29,30 @@ export class TemplateService {
    * @returns Created template
    */
   async create(template_type: AssessmentType): Promise<TemplateDto> {
-    try {
-      return await this.prisma.template.create({
+    const templateCount = await this.prisma.template.count({
+      where: {
+        template_type,
+      },
+    });
+
+    const enabled = templateCount === 0;
+
+    return await this.prisma.template
+      .create({
         data: {
           template_type,
+          enabled,
         },
+      })
+      .catch((error) => {
+        if (error.code === 'P2002') {
+          throw new ConflictException(
+            'Template with this name and type already exists'
+          );
+        } else {
+          throw new InternalServerErrorException();
+        }
       });
-    } catch (error) {
-      if (error.code === 'P2002') {
-        throw new ConflictException(
-          'Template with this name and type already exists'
-        );
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
   }
 
   /**
@@ -84,7 +93,7 @@ export class TemplateService {
     updateTemplateDto: UpdateTemplateDto
   ): Promise<TemplateDto> {
     // Update template with id and data
-    return await this.prisma.template
+    const template = await this.prisma.template
       .update({
         where: {
           template_id: id,
@@ -103,6 +112,23 @@ export class TemplateService {
         }
         throw new InternalServerErrorException();
       });
+
+    if (updateTemplateDto.enabled) {
+      // Disable all other templates with same type
+      await this.prisma.template.updateMany({
+        where: {
+          template_type: template.template_type,
+          NOT: {
+            template_id: template.template_id,
+          },
+        },
+        data: {
+          enabled: false,
+        },
+      });
+    }
+
+    return template;
   }
 
   /**
@@ -129,6 +155,7 @@ export class TemplateService {
 
     delete template.template_id;
     delete template.template_name;
+    template.enabled = false;
 
     // While template is not created
     while (!newTemplate) {
@@ -172,5 +199,19 @@ export class TemplateService {
         }
         throw new InternalServerErrorException();
       });
+  }
+
+  async checkWeightRange(template_id, weight) {
+    if (!weight) {
+      return true;
+    }
+
+    const template = await this.findOne(template_id).catch(() => {
+      throw new NotFoundException('Template not found');
+    });
+
+    return (
+      weight >= template.weight_range_min || weight <= template.weight_range_max
+    );
   }
 }

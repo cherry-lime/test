@@ -1,37 +1,71 @@
-import { Link, useLocation } from "react-router-dom";
+import { useCallback, useState } from "react";
+import { FormControl, MenuItem, Select } from "@mui/material";
+import userType from "../../../../components/Sidebar/listUsersTypes";
+import Theme from "../../../../Theme";
+import PageLayout from "../../../PageLayout";
+import TemplateGrid from "../../../../components/Grids/Specific/TemplateGrid";
 
 /**
  * Page containing the list of all existing templates
  * This should only be accessible to admins
  */
 function ListOfTemplates() {
-  const location = useLocation();
-  const data = location.state;
-  const templateIds = [21, 32, 5];
+  const [activeIndividual, setActiveIndividual] = useState("123");
+  const [activeTeam, setActiveTeam] = useState("abc");
+  const individualTemplateList = ["123", "456", "789"];
+  const teamTemplateList = ["abc", "def", "ghi"];
+
+  const handleActiveIndividualChange = useCallback(
+    (event) => {
+      setActiveIndividual(event.target.value);
+    },
+    [activeIndividual]
+  );
+
+  const handleActiveTeamChange = useCallback(
+    (event) => {
+      setActiveTeam(event.target.value);
+    },
+    [activeTeam]
+  );
 
   return (
     <div>
-      <p> {data} view </p>
-      <Link to="/admin" state={data}>
-        {" "}
-        Go Back to Admin Interface{" "}
-      </Link>
-
-      <h2> List of Templates</h2>
-
-      {templateIds.map((templateId) => (
-        <div key={`templ-${templateId}`}>
-          <Link
-            to={`/admin/templates/${templateId}`}
-            state={data}
-            data-testid={`template-${templateId}`}
+      <PageLayout title="Templates" sidebarType={userType.ADMIN}>
+        <h2>Individual Templates</h2>
+        <p style={{ marginBottom: "0px" }}>
+          Active template for individual evaluations:
+        </p>
+        <FormControl sx={{ width: "inherit" }}>
+          <Select
+            value={activeIndividual}
+            onChange={handleActiveIndividualChange}
           >
-            {" "}
-            Template with id {templateId}{" "}
-          </Link>
-          <br />
-        </div>
-      ))}
+            {individualTemplateList.map((t) => (
+              <MenuItem key={t} value={t}>
+                {t}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TemplateGrid theme={Theme} assessmentType="INDIVIDUAL" />
+
+        <h2>Team Templates</h2>
+        <p style={{ marginBottom: "0px" }}>
+          Active template for team evaluations:
+        </p>
+        <FormControl sx={{ width: "inherit" }}>
+          <Select value={activeTeam} onChange={handleActiveTeamChange}>
+            {teamTemplateList.map((t) => (
+              <MenuItem key={t} value={t}>
+                {t}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <TemplateGrid theme={Theme} assessmentType="TEAM" />
+      </PageLayout>
     </div>
   );
 }

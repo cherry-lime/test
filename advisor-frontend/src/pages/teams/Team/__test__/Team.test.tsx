@@ -1,12 +1,16 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import App from "../../../../App";
+import { store } from "../../../../app/store";
 
 test("app rendering/navigating from assessor view to specific team evaluation", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("assessor");
   fireEvent.click(button);
@@ -24,9 +28,11 @@ test("app rendering/navigating from assessor view to specific team evaluation", 
 
 test("app rendering/navigating from user view to specific team evaluation", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("user");
   fireEvent.click(button);
@@ -37,14 +43,15 @@ test("app rendering/navigating from user view to specific team evaluation", asyn
   const buttonTeamEval = screen.getByTestId("team-eval-56");
   fireEvent.click(buttonTeamEval);
   expect(screen.getByText(/A Team Evaluation with id 56/i)).toBeInTheDocument();
-  expect(screen.getByText(/Evaluation cannot be edited/i)).toBeInTheDocument();
 });
 
 test("app rendering/navigating from assessor view to specific team evaluation", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("assessor");
   fireEvent.click(button);
@@ -57,14 +64,15 @@ test("app rendering/navigating from assessor view to specific team evaluation", 
   expect(
     screen.getByText(/A Team Evaluation with id 234/i)
   ).toBeInTheDocument();
-  expect(screen.getByText(/Evaluation can be edited/i)).toBeInTheDocument();
 });
 
 test("app rendering/navigating from user view to specific team evaluation", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("user");
   fireEvent.click(button);
@@ -75,14 +83,15 @@ test("app rendering/navigating from user view to specific team evaluation", asyn
   const buttonTeamEval = screen.getByTestId("team-eval-56");
   fireEvent.click(buttonTeamEval);
   expect(screen.getByText(/A Team Evaluation with id 56/i)).toBeInTheDocument();
-  expect(screen.getByText(/Evaluation cannot be edited/i)).toBeInTheDocument();
 });
 
 test("app rendering/navigating from assessor view to specific team feedback", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("assessor");
   fireEvent.click(button);
@@ -102,9 +111,11 @@ test("app rendering/navigating from assessor view to specific team feedback", as
 
 test("app rendering/navigating from user view to specific team evaluation", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("user");
   fireEvent.click(button);

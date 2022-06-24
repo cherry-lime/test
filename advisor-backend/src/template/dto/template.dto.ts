@@ -10,11 +10,14 @@ export class TemplateDto {
   @ApiProperty()
   template_name: string;
 
+  @ApiProperty()
+  template_description: string;
+
   @ApiProperty({ enum: AssessmentType })
   template_type: AssessmentType;
 
   @ApiProperty()
-  disabled: boolean;
+  enabled: boolean;
 
   @ApiProperty()
   weight_range_min: number;

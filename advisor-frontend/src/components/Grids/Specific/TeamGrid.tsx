@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 import {
   GridActionsCellItem,
@@ -61,15 +62,6 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
     []
   );
 
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
-    },
-    []
-  );
-
   // Called when the "Delete" action is pressed in the menu
   const handleDelete = React.useCallback(
     (rowId: GridRowId) => () => {
@@ -106,11 +98,12 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
           <GridActionsCellItem
             icon={
               <Tooltip title="Visit">
-                <ArrowForwardIcon />
+                <Link to={`/teams/${params.id}`}>
+                  <ArrowForwardIcon className="arrowIcon" />
+                </Link>
               </Tooltip>
             }
             label="Visit"
-            onClick={handleVisit(params.id)}
           />,
           <GridActionsCellItem
             icon={
@@ -124,7 +117,7 @@ export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
         ],
       },
     ],
-    [handleVisit, handleDelete]
+    [handleDelete]
   );
 
   return (

@@ -42,8 +42,8 @@ const getDefaultRow = () => {
 
 type SubareaGridProps = {
   theme: Theme;
-  templateId: number;
-  categoryId: number;
+  templateId: string | undefined;
+  categoryId: string | undefined;
 };
 
 export default function SubareaGrid({

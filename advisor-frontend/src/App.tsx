@@ -15,11 +15,12 @@ import ListOfTemplates from "./pages/admin/templates/ListOfTemplates/ListOfTempl
 import ListOfIndividuals from "./pages/admin/ListOfIndividuals/ListOfIndividuals";
 import Area from "./pages/admin/templates/Area/Area";
 import Template from "./pages/admin/templates/Template/Template";
-import AllPages from "./pages/AllPages";
+import GlobalStyles from "./GlobalStyles";
 
 function App() {
   return (
     <div className="App">
+      <GlobalStyles />
       <Link data-testid="home" to="/">
         Home
       </Link>
@@ -32,7 +33,6 @@ function App() {
       <Link to="/admin" state="admin" data-testid="admin">
         Admin
       </Link>
-      <AllPages />
       <Routes>
         <Route path="/" element={<Home />} />
 
