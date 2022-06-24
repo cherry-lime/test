@@ -13,7 +13,7 @@ test("app render list of templates", async () => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <ListOfTemplates />
+          <ListOfTemplates theme={Theme} />
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>

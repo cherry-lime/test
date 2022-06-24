@@ -6,7 +6,7 @@ import Greetings from "./components/SampleText/SampleText";
 import logo from "./logo.svg";
 import "./App.css";
 import { RootState } from "./app/store";
-import { resetUser, setUserID } from "./app/userDataSlice";
+import { resetUser, setUserId } from "./app/userDataSlice";
 import {
   authProfile,
   useLoginTwo,
@@ -26,7 +26,7 @@ function UserInterface() {
   const dispatch = useDispatch();
   return (
     <div className="App-header">
-      <h1>This is the home page with ID: {userID}</h1>
+      <h1>This is the home page with ID: {userId}</h1>
       <h2> I am role: {userRole}</h2>
       Hello World
       <Greetings name="This is a test to test a component" />

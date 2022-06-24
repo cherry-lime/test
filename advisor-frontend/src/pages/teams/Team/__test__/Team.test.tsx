@@ -1,3 +1,4 @@
+import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -12,7 +13,7 @@ test("app rendering/navigating from assessor view to specific team evaluation", 
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <App />
+          <Team theme={Theme} />
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>

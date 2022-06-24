@@ -5,6 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 import App from "../../../../App";
 import { store } from "../../../../app/store";
 
+const queryClient = new QueryClient();
+
 test("app rendering/navigating from user interface to self-evals", async () => {
   render(
     <Provider store={store}>
