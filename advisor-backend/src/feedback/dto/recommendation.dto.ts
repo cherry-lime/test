@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class RecommendationDto {
   @ApiProperty()
-  feedback_number: number;
+  order: number;
 
   @ApiProperty()
   feedback_text: string;
