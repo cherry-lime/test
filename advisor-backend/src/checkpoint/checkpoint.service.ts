@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { TemplateService } from '../template/template.service';
 import { TopicService } from '../topic/topic.service';
+import { Checkpoint } from '@prisma/client';
 @Injectable()
 export class CheckpointService {
   constructor(
@@ -16,6 +17,13 @@ export class CheckpointService {
     private readonly templateService: TemplateService,
     private readonly topicService: TopicService
   ) {}
+
+  formatTopics(checkpoint: any) {
+    checkpoint.topics = checkpoint.CheckpointInTopic.map((c) => c.topic_id);
+    delete checkpoint.CheckpointInTopic;
+    return checkpoint;
+  }
+
   /**
    * Create checkpoint
    * @param category_id category id to which checkpoint belongs
@@ -54,7 +62,7 @@ export class CheckpointService {
       throw new NotFoundException('No maturities found');
     }
 
-    return await this.prisma.checkpoint
+    const createdCheckpoint = await this.prisma.checkpoint
       .create({
         data: {
           Category: {
@@ -68,6 +76,9 @@ export class CheckpointService {
             },
           },
           order: order + 1,
+        },
+        include: {
+          CheckpointInTopic: true,
         },
       })
       .catch((error) => {
@@ -83,6 +94,7 @@ export class CheckpointService {
         }
         throw new InternalServerErrorException();
       });
+    return this.formatTopics(createdCheckpoint);
   }
 
   /**
@@ -91,11 +103,16 @@ export class CheckpointService {
    * @returns all checkpoints in category
    */
   async findAll(category_id: number) {
-    return await this.prisma.checkpoint.findMany({
+    const foundCheckpoints = await this.prisma.checkpoint.findMany({
       where: {
         category_id,
       },
+      include: {
+        CheckpointInTopic: true,
+      },
     });
+
+    return foundCheckpoints.map((c) => this.formatTopics(c));
   }
 
   /**
@@ -106,9 +123,12 @@ export class CheckpointService {
    */
   async findOne(checkpoint_id: number) {
     // Get checkpoint by id from prisma
-    const checkpoint = await this.prisma.checkpoint.findUnique({
+    const checkpoint: any = await this.prisma.checkpoint.findUnique({
       where: {
         checkpoint_id,
+      },
+      include: {
+        CheckpointInTopic: true,
       },
     });
 
@@ -117,7 +137,7 @@ export class CheckpointService {
       throw new NotFoundException('the checkpoint was not found');
     }
 
-    return checkpoint;
+    return this.formatTopics(checkpoint);
   }
 
   /**
@@ -227,6 +247,9 @@ export class CheckpointService {
         checkpoint_id,
       },
       data: updateCheckpointDto,
+      include: {
+        CheckpointInTopic: true,
+      },
     };
 
     // Update topics and upsert them
@@ -239,17 +262,23 @@ export class CheckpointService {
     }
 
     // Update checkpoint
-    return await this.prisma.checkpoint.update(updateData).catch((error) => {
-      if (error.code === 'P2002') {
-        // Throw error ïf name not unique
-        throw new ConflictException('Checkpoint with this name already exists');
-      } else if (error.code === 'P2025') {
-        // Throw error if category not found
-        throw new NotFoundException('Category not found');
-      }
-      console.log(error);
-      throw new InternalServerErrorException();
-    });
+    const updatedCheckpoint = await this.prisma.checkpoint
+      .update(updateData)
+      .catch((error) => {
+        if (error.code === 'P2002') {
+          // Throw error ïf name not unique
+          throw new ConflictException(
+            'Checkpoint with this name already exists'
+          );
+        } else if (error.code === 'P2025') {
+          // Throw error if category not found
+          throw new NotFoundException('Category not found');
+        }
+        console.log(error);
+        throw new InternalServerErrorException();
+      });
+
+    return this.formatTopics(updatedCheckpoint);
   }
 
   /**
@@ -287,10 +316,13 @@ export class CheckpointService {
     });
 
     // Delete checkpoint
-    return await this.prisma.checkpoint
+    const deletedCheckpoint = await this.prisma.checkpoint
       .delete({
         where: {
           checkpoint_id,
+        },
+        include: {
+          CheckpointInTopic: true,
         },
       })
       .catch((error) => {
@@ -300,5 +332,13 @@ export class CheckpointService {
         }
         throw new InternalServerErrorException();
       });
+
+    await this.prisma.checkpointInTopic.deleteMany({
+      where: {
+        checkpoint_id,
+      },
+    });
+
+    return this.formatTopics(deletedCheckpoint);
   }
 }
