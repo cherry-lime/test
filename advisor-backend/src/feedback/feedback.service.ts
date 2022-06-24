@@ -4,6 +4,7 @@ import { AssessmentDto } from '../assessment/dto/assessment.dto';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { SaveService } from '../save/save.service';
+import { RecommendationDto } from './dto/recommendation.dto';
 
 interface IData {
   feedback_text: string;
@@ -25,18 +26,17 @@ export class FeedbackService {
     private readonly prisma: PrismaService,
     private readonly checkpointService: CheckpointService,
     private readonly saveService: SaveService
-  ) { }
+  ) {}
 
   async getRecommendations(
     { assessment_id, template_id }: Assessment,
     topic_id: number
   ) {
     // Get all saved answers for this assessment
-    const answeredCheckpoints =
-      await this.saveService.getSavedCheckpoints({
-        assessment_id,
-        template_id,
-      } as AssessmentDto);
+    const answeredCheckpoints = await this.saveService.getSavedCheckpoints({
+      assessment_id,
+      template_id,
+    } as AssessmentDto);
 
     answeredCheckpoints.filter((saved) => saved.answer_id);
 
@@ -59,7 +59,7 @@ export class FeedbackService {
         const categoryOrder = checkpoint.Category.category_order;
         return {
           data: {
-            feedback_text: checkpoint.checkpoint_name,
+            feedback_text: checkpoint.checkpoint_description,
             feedback_additional_information: checkpoint.checkpoint_description,
           },
           answerWeight,
@@ -83,7 +83,7 @@ export class FeedbackService {
       return {
         ...item.data,
         order: ++index,
-      };
+      } as RecommendationDto;
     });
   }
 
