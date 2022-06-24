@@ -70,12 +70,8 @@ export function usePatchUser() {
       // Convert userAPP to userAPI
       const userAPI = userToAPI(userAPP);
 
-      console.log(userAPI);
-
       // Get data from database
       const { data } = await API.patch(`/user/${userAPI.user_id}`, userAPI);
-
-      console.log(data);
 
       return userToAPP(data) as UserAPP;
     }

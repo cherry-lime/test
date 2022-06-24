@@ -91,8 +91,25 @@ function checkpointToAPI(checkpointAPP: CheckpointAPP) {
 
 export type RecommendationAPP = {
   id: GridRowId;
+  order: number;
   description: string;
+  additionalInfo: string;
 };
+
+type RecommendationAPI = {
+  order: number;
+  feedback_text: string;
+  feedback_additional_information: string;
+};
+
+function recommendationToAPP(recommendationAPI: RecommendationAPI) {
+  return {
+    id: recommendationAPI.order,
+    order: recommendationAPI.order,
+    description: recommendationAPI.feedback_text,
+    additionalInfo: recommendationAPI.feedback_additional_information,
+  } as RecommendationAPP;
+}
 
 // Get all assessments from database
 export function useGetAssessments() {
@@ -305,15 +322,26 @@ export function usePostFeedbackAssessment(assessmentId: number) {
 }
 
 // Get feedback of assessment from database
-export function useGetFeedbackAssessment(assessmentId: number) {
+export function useGetFeedbackAssessment(
+  assessmentId: number,
+  topicId: number
+) {
   return useMutation(
-    ["GET", "/assessment", assessmentId, "/feedback"],
+    ["GET", "/assessment", assessmentId, "/feedback", topicId],
     async () => {
       // Get response data from database
-      const { data } = await API.get(`/assessment/${assessmentId}/feedback`);
+      const { data } = await API.get(`/assessment/${assessmentId}/feedback`, {
+        params: { topic_id: topicId },
+      });
+
+      // Convert data to recommendationAPP
+      const recommendationsAPP = data.map(
+        (recommendationAPI: RecommendationAPI) =>
+          recommendationToAPP(recommendationAPI)
+      );
 
       // Return response
-      return data;
+      return recommendationsAPP as RecommendationAPP[];
     }
   );
 }

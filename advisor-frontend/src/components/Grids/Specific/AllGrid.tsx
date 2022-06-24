@@ -44,7 +44,7 @@ export default function AllGrid() {
   const teamId = 1;
   const templateId = 4;
   const categoryId = 1;
-  const assessmentId = 0;
+  const assessmentId = 3;
 
   return (
     <div style={{ width: "100%" }}>
@@ -89,9 +89,7 @@ export default function AllGrid() {
       <RecommendationGrid
         theme={INGTheme}
         assessmentId={assessmentId}
-        assessmentType="TEAM"
-        userId={userId}
-        userRole={userRole}
+        topicId={userId}
       />
       <strong>Individuals</strong>
       <IndividualGrid theme={INGTheme} />
