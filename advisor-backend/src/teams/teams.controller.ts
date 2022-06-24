@@ -1,8 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
   Patch,
   Param,
   ParseIntPipe,
@@ -23,22 +21,17 @@ import {
 import { Team } from './dto/team.dto';
 import { TeamMembers } from './dto/team-member.dto';
 import { InviteTokenDto } from './dto/invite-token.dto';
-import { UpdateTeamDto } from './dto/update-team.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
-import { TeamsCRUDService } from './teams-crud.service';
 
 @ApiTags('teams')
 @Controller('teams')
 export class TeamsController {
-  constructor(
-    private readonly teamsService: TeamsService,
-    private readonly teamsCRUDService: TeamsCRUDService
-  ) {}
+  constructor(private readonly teamsService: TeamsService) {}
 
   /**
    * [GET] /teams/my-teams - get the teams of the user issuing the request
@@ -70,46 +63,28 @@ export class TeamsController {
   @ApiResponse({ description: 'Check if user is in team', type: Boolean })
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  checkIfUserIsInTeam(
+  async checkIfUserIsInTeam(
     @AuthUser() user: User,
+    @Param('user_id', ParseIntPipe) user_id: number,
     @Param('team_id', ParseIntPipe) team_id: number
   ): Promise<boolean> {
-    return this.teamsService.isUserInTeam(user.user_id, team_id);
-  }
+    const isUserInTeam = await this.teamsService
+      .isUserInTeam(user.user_id, team_id)
+      .catch((error) => {
+        if (error instanceof NotFoundException) {
+          // Throw error if team with given team id not found
+          throw new NotFoundException('Team with given team id not found');
+        } else {
+          // Throw error if internal server error
+          throw new InternalServerErrorException();
+        }
+      });
+    if (!isUserInTeam && user.role !== 'ADMIN') {
+      // Throw error if user is not in team
+      throw new ForbiddenException('You are not part of this team');
+    }
 
-  /**
-   * [POST] /team/create - Create team with default team_name - "New Team",
-   *    team_country - "", team_department - ""
-   * Allowed roles: ADMIN, ASSESSOR
-   * @returns Team object
-   */
-  @Post('create')
-  @ApiResponse({
-    description:
-      'Create team with default team_name - "New Team", team_country - "", team_department - ""',
-    type: Team,
-  })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSESSOR)
-  create(@AuthUser() user: User): Promise<Team> {
-    return this.teamsCRUDService.create(user.user_id);
-  }
-
-  /**
-   * [GET] /team/:team_id - Get team by team id
-   * @param team_id team_id
-   * @returns Team object
-   */
-  @Get(':team_id')
-  @ApiResponse({
-    description: 'Find team by team id',
-    type: Team,
-  })
-  @ApiNotFoundResponse({ description: 'Team with given team id not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  findOne(@Param('team_id', ParseIntPipe) team_id: number): Promise<Team> {
-    return this.teamsCRUDService.findOne(team_id);
+    return this.teamsService.isUserInTeam(user_id, team_id);
   }
 
   /**
@@ -180,6 +155,7 @@ export class TeamsController {
    * @returns invite_token
    * @throws Team not found
    */
+  @UseGuards(AuthGuard('jwt'))
   @Get(':team_id/invite_token')
   @ApiResponse({
     description: 'Get invite token of a team',
@@ -187,79 +163,10 @@ export class TeamsController {
   })
   @ApiNotFoundResponse({ description: 'Team with given team id not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  getInviteToken(
-    @Param('team_id', ParseIntPipe) team_id: number
-  ): Promise<InviteTokenDto> {
-    return this.teamsService.getInviteToken(team_id);
-  }
-
-  /**
-   * [GET] /team/:team_id/assessments - Get assessments of a team given a team id
-   * @param id team_id
-   * @returns assessments
-   * @throws Team not found
-   */
-  @Get(':team_id/assessments')
-  @ApiResponse({
-    description: 'Get assessments of a team given a team id',
-    type: AssessmentDto,
-    isArray: true,
-  })
-  @ApiNotFoundResponse({ description: 'Team with given team id not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  getTeamAssessments(
-    @Param('team_id', ParseIntPipe) team_id: number
-  ): Promise<AssessmentDto[]> {
-    return this.teamsService.getAssessments(team_id);
-  }
-
-  /**
-   * [PATCH] /team/:team_id - Update team given a team_id and an updateTeamDto
-   * Allowed roles: ADMIN, ASSESSOR
-   * @param team_id team_id
-   * @param updateTeamDto UpdateTeamDto
-   * @returns an updated team object
-   * @throws Team not found
-   * @throws Internal server error
-   */
-  @Patch(':team_id')
-  @ApiResponse({
-    description: 'Update team given a team_id and an updateTeamDto',
-    type: Team,
-  })
-  @ApiNotFoundResponse({ description: 'Team with given team id not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSESSOR)
-  updateTeam(
-    @Param('team_id', ParseIntPipe) team_id: number,
-    @Body() updateTeamDto: UpdateTeamDto
-  ): Promise<Team> {
-    return this.teamsCRUDService.updateTeam(team_id, updateTeamDto);
-  }
-
-  /**
-   * [DELETE] /team/:team_id - Delete team given a team_id
-   * Allowed roles: ADMIN, ASSESSOR (if is part of the team)
-   * @param team_id team_id
-   * @returns the deleted team object
-   * @throws Team not found
-   * @throws Internal server error
-   * @throws assessor is not part of the team
-   */
-  @Delete(':team_id')
-  @ApiNotFoundResponse({ description: 'Team with given team id not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  @ApiResponse({
-    description: 'Delete team given a team_id',
-    type: Team,
-  })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(Role.ADMIN, Role.ASSESSOR)
-  async deleteTeam(
+  async getInviteToken(
     @AuthUser() user: User,
     @Param('team_id', ParseIntPipe) team_id: number
-  ): Promise<Team> {
+  ): Promise<InviteTokenDto> {
     const isUserInTeam = await this.teamsService
       .isUserInTeam(user.user_id, team_id)
       .catch((error) => {
@@ -276,7 +183,45 @@ export class TeamsController {
       throw new ForbiddenException('You are not part of this team');
     }
 
-    return this.teamsService.deleteTeam(team_id);
+    return this.teamsService.getInviteToken(team_id);
+  }
+
+  /**
+   * [GET] /team/:team_id/assessments - Get assessments of a team given a team id
+   * @param id team_id
+   * @returns assessments
+   * @throws Team not found
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':team_id/assessments')
+  @ApiResponse({
+    description: 'Get assessments of a team given a team id',
+    type: AssessmentDto,
+    isArray: true,
+  })
+  @ApiNotFoundResponse({ description: 'Team with given team id not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  async getTeamAssessments(
+    @AuthUser() user: User,
+    @Param('team_id', ParseIntPipe) team_id: number
+  ): Promise<AssessmentDto[]> {
+    const isUserInTeam = await this.teamsService
+      .isUserInTeam(user.user_id, team_id)
+      .catch((error) => {
+        if (error instanceof NotFoundException) {
+          // Throw error if team with given team id not found
+          throw new NotFoundException('Team with given team id not found');
+        } else {
+          // Throw error if internal server error
+          throw new InternalServerErrorException();
+        }
+      });
+    if (!isUserInTeam && user.role !== 'ADMIN') {
+      // Throw error if user is not in team
+      throw new ForbiddenException('You are not part of this team');
+    }
+
+    return this.teamsService.getAssessments(team_id);
   }
 
   /**

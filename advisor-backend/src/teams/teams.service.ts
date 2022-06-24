@@ -152,36 +152,6 @@ export class TeamsService {
   }
 
   /**
-   * Delete team given a team id
-   * @param id id of team
-   * @returns deleted team object
-   * @throws Team not found
-   * @throws InternalServerErrorException
-   */
-  async deleteTeam(id: number): Promise<Team> {
-    await this.prisma.userInTeam.deleteMany({
-      where: {
-        team_id: id,
-      },
-    });
-
-    return await this.prisma.team
-      .delete({
-        where: {
-          team_id: id,
-        },
-      })
-      .catch((error) => {
-        if (error.code === 'P2025') {
-          throw new NotFoundException('Team with given team id not found');
-        } else {
-          console.log(error);
-          throw new InternalServerErrorException();
-        }
-      });
-  }
-
-  /**
    * Check whether user is in team given a user id and a unique team identifier
    * @param id id of the user
    * @param team_id id of the team
