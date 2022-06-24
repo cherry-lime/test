@@ -14,7 +14,7 @@ export interface UserDataState {
  * Initializes the global state variables
  */
 const initialState: UserDataState = {
-  userID: "0000",
+  userId: "0000",
   userRole: "",
   userName: "",
   userPassword: "",
@@ -37,7 +37,7 @@ export const userDataSlice = createSlice({
     },
     // Resets the userData back to initial
     resetUser(state) {
-      state.userID = initialState.userID;
+      state.userId = initialState.userId;
       state.userRole = initialState.userRole;
     },
     // Save the new userName in the session state
@@ -52,7 +52,7 @@ export const userDataSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUserID, setUserRole, resetUser, setUserName, setPassword } =
+export const { setUserId, setUserRole, resetUser, setUserName, setPassword } =
   userDataSlice.actions;
 
 export default userDataSlice.reducer;

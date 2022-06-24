@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "./store";
 import {
   setUserRole,
-  setUserID,
+  setUserId,
   setUserName,
   setPassword,
 } from "./userDataSlice";
@@ -42,7 +42,7 @@ export function userRegister() {
 }
 
 /**
- * Checks if the user is logged in and retrieves the userID and userRole.
+ * Checks if the user is logged in and retrieves the userId and userRole.
  * Contains functionality to redirect the user to their homepage and update the global state values.
  */
 export function authProfile() {
@@ -56,7 +56,7 @@ export function authProfile() {
     onSuccess: async (data: any) => {
       const response = data.data;
       dispatch(setUserRole(response.role));
-      dispatch(setUserID(response.user_id));
+      dispatch(setUserId(response.user_id));
       await navigate(`/${userRole}`);
       console.log(response);
     },
