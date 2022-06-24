@@ -1,9 +1,9 @@
 import { Controller, Post, Body, Get, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from './auth_dto/login-user.dto';
+import { LoginDto } from './dto/login-user.dto';
 import AuthUser from '../common/decorators/auth-user.decorator';
 import { User } from '.prisma/client';
-import { CreateUserDto } from './auth_dto/register-user.dto';
+import { CreateUserDto } from './dto/register-user.dto';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
