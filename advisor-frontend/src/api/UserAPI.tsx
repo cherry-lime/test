@@ -29,6 +29,16 @@ function userToAPP(userAPI: UserAPI) {
   } as UserAPP;
 }
 
+function userToAPI(userAPP: UserAPP) {
+  return {
+    user_id: userAPP.id,
+    username: userAPP.name,
+    role: userAPP.role,
+    created_at: userAPP.createdAt,
+    updated_at: userAPP.updatedAt,
+  };
+}
+
 // Get all users from database
 export function useGetUsers() {
   return useQuery(["GET", "/user"], async () => {
@@ -52,9 +62,29 @@ export function useGetUser() {
   });
 }
 
+// Patch user with id in database
+export function usePatchUser() {
+  return useMutation(
+    ["DELETE", "/user", "/{user_id}"],
+    async (userAPP: UserAPP) => {
+      // Convert userAPP to userAPI
+      const userAPI = userToAPI(userAPP);
+
+      console.log(userAPI);
+
+      // Get data from database
+      const { data } = await API.patch(`/user/${userAPI.user_id}`, userAPI);
+
+      console.log(data);
+
+      return userToAPP(data) as UserAPP;
+    }
+  );
+}
+
 // Delete user with id from database
 export function useDeleteUser() {
-  return useQuery(["DELETE", "/user", "/{user_id}"], async (userId) => {
+  return useMutation(["DELETE", "/user", "/{user_id}"], async (userId) => {
     // Get data from database
     const { data } = await API.delete(`/user/${userId}`);
 
@@ -79,7 +109,9 @@ export function useGetMembersTeam(teamId: number) {
     const { data } = await API.get(`/teams/${teamId}/members`);
 
     // Convert data to usersAPP
-    const usersAPP = data.map((userAPI: UserAPI) => userToAPP(userAPI));
+    const usersAPP = data.team_members.map((userAPI: UserAPI) =>
+      userToAPP(userAPI)
+    );
 
     return usersAPP as UserAPP[];
   });

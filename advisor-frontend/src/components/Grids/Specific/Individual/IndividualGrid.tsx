@@ -1,4 +1,5 @@
 import * as React from "react";
+import { UseMutationResult } from "react-query";
 
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
@@ -12,7 +13,12 @@ import {
 import RemoveIcon from "@mui/icons-material/HighlightOff";
 
 import GenericGrid from "../../Generic/GenericGrid";
-import { handleDelete } from "../handlers";
+import { handleChange, handleDelete, handleInit } from "../handlersNew";
+import {
+  useDeleteUser,
+  useGetUsers,
+  usePatchUser,
+} from "../../../../api/UserAPI";
 
 // Define type for the rows in the grid
 type Row = {
@@ -30,27 +36,27 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
   const roles = ["USER", "ASSESSOR", "ADMIN"];
 
-  // Fetch initial rows of the grid
+  // User query
+  const { status, data, error } = useGetUsers();
+
+  // User mutations
+  const patchUser = usePatchUser();
+  const deleteUser = useDeleteUser();
+
+  // Called when "status" of user query is changed
   React.useEffect(() => {
-    // TODO Replace this by API fetch
-  }, []);
+    handleInit(setRows, status, data, error);
+  }, [status]);
 
   // Called when maturity level changes
   const handleRoleChange = React.useCallback(
     (row: Row, event: SelectChangeEvent<string>) => {
-      setRows((prevRows) => {
-        const role = event.target.value;
-
-        // Change role of this row
-        const newRows = prevRows.map((prevRow) =>
-          prevRow.id === row.id ? { ...prevRow, role } : prevRow
-        );
-
-        // Update row in database with role
-        // TODO
-
-        return newRows;
-      });
+      handleChange(
+        setRows,
+        patchUser as UseMutationResult,
+        { ...row, role: event.target.value },
+        row
+      );
     },
     []
   );
@@ -58,7 +64,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, rowId);
+      handleDelete(setRows, deleteUser as UseMutationResult, rowId as number);
     },
     []
   );
@@ -113,5 +119,13 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
     [handleRoleChange, handleDeleteDecorator]
   );
 
-  return <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />;
+  return (
+    <GenericGrid
+      theme={theme}
+      rows={rows}
+      columns={columns}
+      hasToolbar
+      sortModel={[{ field: "name", sort: "asc" }]}
+    />
+  );
 }
