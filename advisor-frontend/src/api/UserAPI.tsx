@@ -29,11 +29,34 @@ function userToAPP(userAPI: UserAPI) {
   } as UserAPP;
 }
 
+// Get all users from database
+export function useGetUsers() {
+  return useQuery(["GET", "/user"], async () => {
+    // Get data from database
+    const { data } = await API.get(`/user`);
+
+    // Convert data to usersAPP
+    const usersAPP = data.map((userAPI: UserAPI) => userToAPP(userAPI));
+
+    return usersAPP as UserAPP[];
+  });
+}
+
 // Get user with id from database
 export function useGetUser() {
-  return useQuery(["GET", "/user", "/{id}"], async (userId) => {
+  return useQuery(["GET", "/user", "/{user_id}"], async (userId) => {
     // Get data from database
     const { data } = await API.get(`/user/${userId}`);
+
+    return userToAPP(data) as UserAPP;
+  });
+}
+
+// Delete user with id from database
+export function useDeleteUser() {
+  return useQuery(["DELETE", "/user", "/{user_id}"], async (userId) => {
+    // Get data from database
+    const { data } = await API.delete(`/user/${userId}`);
 
     return userToAPP(data) as UserAPP;
   });

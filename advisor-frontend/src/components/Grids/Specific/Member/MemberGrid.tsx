@@ -8,7 +8,9 @@ import RemoveIcon from "@mui/icons-material/HighlightOff";
 
 import GenericGrid from "../../Generic/GenericGrid";
 import { UserRole } from "../../../../types/UserRole";
+
 import { handleDelete, handleInit } from "../handlersNew";
+
 import {
   useDeleteMemberTeam,
   useGetMembersTeam,

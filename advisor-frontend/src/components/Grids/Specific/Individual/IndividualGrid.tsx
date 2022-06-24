@@ -27,9 +27,7 @@ type IndividualGridProps = {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function IndividualGrid({ theme }: IndividualGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([
-    { id: 0, name: "Alice", role: "ADMIN" },
-  ]);
+  const [rows, setRows] = React.useState<Row[]>([]);
   const roles = ["USER", "ASSESSOR", "ADMIN"];
 
   // Fetch initial rows of the grid

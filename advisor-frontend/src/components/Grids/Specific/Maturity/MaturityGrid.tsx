@@ -25,7 +25,7 @@ import {
 } from "../handlersNew";
 
 import {
-  MaturityRow,
+  MaturityAPP,
   useDeleteMaturity,
   useGetMaturities,
   usePatchMaturity,
@@ -38,7 +38,7 @@ type MaturityGridProps = {
 };
 
 export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
-  const [rows, setRows] = React.useState<MaturityRow[]>([]);
+  const [rows, setRows] = React.useState<MaturityAPP[]>([]);
 
   // Maturity query
   const { status, data, error } = useGetMaturities(templateId);
@@ -61,7 +61,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    async (newRow: MaturityRow, oldRow: MaturityRow) =>
+    async (newRow: MaturityAPP, oldRow: MaturityAPP) =>
       processRowUpdate(
         setRows,
         patchMaturity as UseMutationResult,
@@ -73,7 +73,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
 
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
-    (row: MaturityRow) => () => {
+    (row: MaturityAPP) => () => {
       handleMove(setRows, patchMaturity as UseMutationResult, {
         ...row,
         order: row.order - 1,
@@ -84,7 +84,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
 
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
-    (row: MaturityRow) => () => {
+    (row: MaturityAPP) => () => {
       handleMove(setRows, patchMaturity as UseMutationResult, {
         ...row,
         order: row.order + 1,
@@ -110,12 +110,12 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     handleAdd(setRows, postMaturity as UseMutationResult);
   }, []);
 
-  const columns = React.useMemo<GridColumns<MaturityRow>>(
+  const columns = React.useMemo<GridColumns<MaturityAPP>>(
     () => [
       {
         field: "",
         width: 50,
-        renderCell: (params: { row: MaturityRow }) => (
+        renderCell: (params: { row: MaturityAPP }) => (
           <div className="parent">
             <div className="child">
               <IconButton onClick={handleUpwardDecorator(params.row)}>

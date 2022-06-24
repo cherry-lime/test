@@ -3,7 +3,7 @@ import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
 
-export type MaturityRow = {
+export type MaturityAPP = {
   id: GridRowId;
   name: string;
   order: number;
@@ -11,30 +11,30 @@ export type MaturityRow = {
   enabled: boolean;
 };
 
-type Maturity = {
+type MaturityAPI = {
   maturity_id: number;
   maturity_name: string;
   maturity_order: number;
   template_id: number;
 };
 
-function MaturityToAPP(maturityAPI: Maturity) {
+function MaturityToAPP(maturityAPI: MaturityAPI) {
   return {
     id: maturityAPI.maturity_id,
     name: maturityAPI.maturity_name,
     order: maturityAPI.maturity_order,
     templateId: maturityAPI.template_id,
     enabled: true,
-  } as MaturityRow;
+  } as MaturityAPP;
 }
 
-function MaturityToAPI(maturityAPP: MaturityRow) {
+function MaturityToAPI(maturityAPP: MaturityAPP) {
   return {
     maturity_id: maturityAPP.id,
     maturity_name: maturityAPP.name,
     maturity_order: maturityAPP.order,
     template_id: maturityAPP.templateId,
-  } as Maturity;
+  } as MaturityAPI;
 }
 
 // Get all maturities from database
@@ -44,11 +44,11 @@ export function useGetMaturities(templateId: number) {
     const { data } = await API.get(`/template/${templateId}/maturity`);
 
     // Convert data to maturitiesAPP
-    const maturitiesAPP = data.map((maturityAPI: Maturity) =>
+    const maturitiesAPP = data.map((maturityAPI: MaturityAPI) =>
       MaturityToAPP(maturityAPI)
     );
 
-    return maturitiesAPP as MaturityRow[];
+    return maturitiesAPP as MaturityAPP[];
   });
 }
 
@@ -61,7 +61,7 @@ export function usePostMaturity(templateId: number) {
       const { data } = await API.post(`/template/${templateId}/maturity`);
 
       // Convert data to maturityAPP
-      return MaturityToAPP(data) as MaturityRow;
+      return MaturityToAPP(data) as MaturityAPP;
     }
   );
 }
@@ -75,7 +75,7 @@ export function useGetMaturity() {
       const { data } = await API.get(`/maturity/${maturityId}`);
 
       // Convert data to maturityAPP
-      return MaturityToAPP(data) as MaturityRow;
+      return MaturityToAPP(data) as MaturityAPP;
     }
   );
 }
@@ -84,7 +84,7 @@ export function useGetMaturity() {
 export function usePatchMaturity() {
   return useMutation(
     ["PATCH", "/maturity", "/{maturity_id}"],
-    async (maturityAPP: MaturityRow) => {
+    async (maturityAPP: MaturityAPP) => {
       // Convert maturityAPP to template
       const maturityAPI = MaturityToAPI(maturityAPP);
 
@@ -95,7 +95,7 @@ export function usePatchMaturity() {
       );
 
       // Convert data to maturityAPP
-      return MaturityToAPP(data) as MaturityRow;
+      return MaturityToAPP(data) as MaturityAPP;
     }
   );
 }
@@ -109,7 +109,7 @@ export function useDeleteMaturity() {
       const { data } = await API.delete(`/maturity/${maturityId}`);
 
       // Convert data to maturityAPP
-      return MaturityToAPP(data) as MaturityRow;
+      return MaturityToAPP(data) as MaturityAPP;
     }
   );
 }

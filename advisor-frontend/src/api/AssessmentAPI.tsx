@@ -65,6 +65,35 @@ function assessmentToAPI(assessmentAPP: AssessmentAPP) {
   };
 }
 
+export type CheckpointAPP = {
+  checkpointId: number;
+  answerId: number;
+};
+
+type CheckpointAPI = {
+  checkpoint_id: number;
+  answer_id: number;
+};
+
+function checkpointToAPP(checkpointAPI: CheckpointAPI) {
+  return {
+    checkpointId: checkpointAPI.checkpoint_id,
+    answerId: checkpointAPI.answer_id,
+  } as CheckpointAPP;
+}
+
+function checkpointToAPI(checkpointAPP: CheckpointAPP) {
+  return {
+    checkpoint_id: checkpointAPP.checkpointId,
+    answer_id: checkpointAPP.answerId,
+  } as CheckpointAPI;
+}
+
+export type RecommendationAPP = {
+  id: GridRowId;
+  description: string;
+};
+
 // Get all assessments from database
 export function useGetAssessments() {
   return useQuery(["GET", "/assessment"], async () => {
@@ -222,9 +251,14 @@ export function usePostCompleteAssessment(assessmentId: number) {
 export function usePostSaveAssessment(assessmentId: number) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/save"],
-    async () => {
+    async (checkpointAPP: CheckpointAPP) => {
+      const checkpointAPI = checkpointToAPI(checkpointAPP);
+
       // Get response data from database
-      const { data } = await API.post(`/assessment/${assessmentId}/save`);
+      const { data } = await API.post(
+        `/assessment/${assessmentId}/save`,
+        checkpointAPI
+      );
 
       // Return response
       return data;
@@ -240,8 +274,13 @@ export function useGetSaveAssessment(assessmentId: number) {
       // Get response data from database
       const { data } = await API.get(`/assessment/${assessmentId}/save`);
 
+      // Convert data to checkpointsAPP
+      const checkpointsAPP = data.map((checkpointAPI: CheckpointAPI) =>
+        checkpointToAPP(checkpointAPI)
+      );
+
       // Return response
-      return data;
+      return checkpointsAPP as CheckpointAPP[];
     }
   );
 }
@@ -250,12 +289,17 @@ export function useGetSaveAssessment(assessmentId: number) {
 export function usePostFeedbackAssessment(assessmentId: number) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/feedback"],
-    async () => {
+    async (feedbackText: string) => {
       // Get response data from database
-      const { data } = await API.post(`/assessment/${assessmentId}/feedback`);
+      const { data } = await API.post(`/assessment/${assessmentId}/feedback`, {
+        feedback_text: feedbackText,
+      });
+
+      // Convert data to assessmentAPP
+      const assessmentAPP = assessmentToAPP(data);
 
       // Return response
-      return data;
+      return assessmentAPP as AssessmentAPP;
     }
   );
 }

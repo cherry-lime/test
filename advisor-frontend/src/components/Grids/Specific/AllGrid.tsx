@@ -53,7 +53,6 @@ export default function AllGrid() {
       <strong>Assessor Grid</strong>
       <MemberGrid
         theme={INGTheme}
-        userId={userId}
         userRole="USER"
         teamId={teamId}
         forAssessors
@@ -61,7 +60,6 @@ export default function AllGrid() {
       <strong>Member Grid</strong>
       <MemberGrid
         theme={INGTheme}
-        userId={userId}
         userRole="USER"
         teamId={teamId}
         forAssessors={false}
