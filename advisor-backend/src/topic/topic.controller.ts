@@ -6,7 +6,6 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  UseGuards,
 } from '@nestjs/common';
 import { TopicService } from './topic.service';
 import { UpdateTopicDto } from './dto/update-topic.dto';
@@ -17,10 +16,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { TopicDto } from './dto/topic.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
-import { RolesGuard } from '../common/guards/roles.guard';
 
 @Controller('topic')
 @ApiTags('topic')
@@ -34,9 +31,8 @@ export class TopicController {
    * @throws Topic not found
    */
   @Get(':topic_id')
-  @UseGuards(AuthGuard('jwt'))
   @ApiResponse({
-    description: 'Created topic',
+    description: 'Found topic',
     type: TopicDto,
   })
   @ApiNotFoundResponse({ description: 'Topic not found' })
@@ -53,7 +49,6 @@ export class TopicController {
    * @throws Topic with this name already exists
    */
   @Patch(':topic_id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   @ApiResponse({
     description: 'Created topic',
@@ -75,7 +70,6 @@ export class TopicController {
    * @throws Topic not found
    */
   @Delete(':topic_id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   @ApiResponse({
     description: 'Deleted topic',

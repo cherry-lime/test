@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 
 // Mock users array
 export const userArray = [
@@ -14,6 +14,15 @@ export const userArray = [
 ];
 // Mock single user
 export const aUser = userArray[0];
+
+export const aFullUser: User = {
+  username: 'test_user_name',
+  password: 'fdsfdsfds',
+  user_id: 1,
+  created_at: new Date(),
+  updated_at: new Date(),
+  role: Role.USER,
+};
 
 // Mock users array
 export const userArray1 = [

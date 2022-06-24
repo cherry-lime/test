@@ -3,6 +3,7 @@ import { aAssessment } from '../prisma/mock/mockAssessment';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { AssessmentController } from './assessment.controller';
 import { AssessmentService } from './assessment.service';
+import { aFullUser1 } from '../prisma/mock/mockAuthService';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -22,6 +23,7 @@ describe('AssessmentController', () => {
             update: jest.fn().mockResolvedValue(aAssessment),
             delete: jest.fn().mockResolvedValue(aAssessment),
             complete: jest.fn().mockResolvedValue(aAssessment),
+            userInAssessment: jest.fn().mockResolvedValue(true),
           };
         }
         if (typeof token === 'function') {
@@ -44,7 +46,7 @@ describe('AssessmentController', () => {
 
   describe('create', () => {
     it('Should return the created assessment', async () => {
-      expect(assessmentController.create(aAssessment)).resolves.toBe(
+      expect(assessmentController.create(aAssessment, undefined)).resolves.toBe(
         aAssessment
       );
     });
@@ -58,27 +60,33 @@ describe('AssessmentController', () => {
 
   describe('findOne', () => {
     it('Should return the assessment', async () => {
-      expect(assessmentController.findOne(1)).resolves.toBe(aAssessment);
-    });
-  });
-
-  describe('update', () => {
-    it('Should return the updated assessment', async () => {
-      expect(assessmentController.update(1, aAssessment)).resolves.toBe(
+      expect(assessmentController.findOne(1, aFullUser1)).resolves.toBe(
         aAssessment
       );
     });
   });
 
+  describe('update', () => {
+    it('Should return the updated assessment', async () => {
+      expect(
+        assessmentController.update(1, aAssessment, aFullUser1)
+      ).resolves.toBe(aAssessment);
+    });
+  });
+
   describe('delete', () => {
     it('Should return the deleted assessment', async () => {
-      expect(assessmentController.delete(1)).resolves.toBe(aAssessment);
+      expect(assessmentController.delete(1, aFullUser1)).resolves.toBe(
+        aAssessment
+      );
     });
   });
 
   describe('complete', () => {
     it('Should return the completed assessment', async () => {
-      expect(assessmentController.complete(1)).resolves.toBe(aAssessment);
+      expect(assessmentController.complete(1, aFullUser1)).resolves.toBe(
+        aAssessment
+      );
     });
   });
 });
