@@ -199,3 +199,73 @@ export function useDeleteAssessment() {
     }
   );
 }
+
+// Complete assessment in database
+export function usePostCompleteAssessment(assessmentId: number) {
+  return useMutation(
+    ["POST", "/assessment", assessmentId, "/complete"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.post(`/assessment/${assessmentId}/complete`);
+
+      // Convert data to row
+      return toRow(data) as AssessmentRow;
+    }
+  );
+}
+
+// Save assessment checkpoint in database
+export function usePostSaveAssessment(assessmentId: number) {
+  return useMutation(
+    ["POST", "/assessment", assessmentId, "/save"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.post(`/assessment/${assessmentId}/save`);
+
+      // Return response
+      return data;
+    }
+  );
+}
+
+// Get saved assessment checkpoints from database
+export function useGetSaveAssessment(assessmentId: number) {
+  return useMutation(
+    ["GET", "/assessment", assessmentId, "/save"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/assessment/${assessmentId}/save`);
+
+      // Return response
+      return data;
+    }
+  );
+}
+
+// Post feedback of assessment to database
+export function usePostFeedbackAssessment(assessmentId: number) {
+  return useMutation(
+    ["POST", "/assessment", assessmentId, "/feedback"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.post(`/assessment/${assessmentId}/feedback`);
+
+      // Return response
+      return data;
+    }
+  );
+}
+
+// Get feedback of assessment from database
+export function useGetFeedbackAssessment(assessmentId: number) {
+  return useMutation(
+    ["GET", "/assessment", assessmentId, "/feedback"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/assessment/${assessmentId}/feedback`);
+
+      // Return response
+      return data;
+    }
+  );
+}
