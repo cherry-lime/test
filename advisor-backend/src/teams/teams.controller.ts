@@ -5,7 +5,6 @@ import {
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
-  UseGuards,
   Delete,
   NotFoundException,
   InternalServerErrorException,
@@ -22,8 +21,6 @@ import { Team } from './dto/team.dto';
 import { TeamMembers } from './dto/team-member.dto';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
@@ -40,7 +37,6 @@ export class TeamsController {
    * @throws {NotFoundException} team with given team id not found
    * @throws {InternalServerErrorException} internal server error
    */
-  @UseGuards(AuthGuard('jwt'))
   @Get('/my-teams/')
   @ApiResponse({ description: 'Get ', type: Team })
   @ApiNotFoundResponse({ description: 'user is not in any team' })
@@ -50,51 +46,12 @@ export class TeamsController {
   }
 
   /**
-   * [GET] /teams/:team_id/isUserInTeam - check whether user
-   *                       issuing the request is in the team
-   * @param team_id team_id
-   * @param user_id user_id
-   * @returns true if user is in team, false otherwise
-   * @throws {NotFoundException} if team_id is not found
-   * @throws {InternalServerErrorException} if error occurs
-   */
-  @UseGuards(AuthGuard('jwt'))
-  @Get('/:team_id/isUserInTeam')
-  @ApiResponse({ description: 'Check if user is in team', type: Boolean })
-  @ApiNotFoundResponse({ description: 'Team with given team id not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  async checkIfUserIsInTeam(
-    @AuthUser() user: User,
-    @Param('user_id', ParseIntPipe) user_id: number,
-    @Param('team_id', ParseIntPipe) team_id: number
-  ): Promise<boolean> {
-    const isUserInTeam = await this.teamsService
-      .isUserInTeam(user.user_id, team_id)
-      .catch((error) => {
-        if (error instanceof NotFoundException) {
-          // Throw error if team with given team id not found
-          throw new NotFoundException('Team with given team id not found');
-        } else {
-          // Throw error if internal server error
-          throw new InternalServerErrorException();
-        }
-      });
-    if (!isUserInTeam && user.role !== 'ADMIN') {
-      // Throw error if user is not in team
-      throw new ForbiddenException('You are not part of this team');
-    }
-
-    return this.teamsService.isUserInTeam(user_id, team_id);
-  }
-
-  /**
    * [GET] /team/:team_id/members - Get members of a team given a team id
    * Permission: ADMIN, ASSESSOR (if is part of the team),
    *             USER (if is part of the team)
    * @param team_id team_id
    * @returns Team members object
    */
-  @UseGuards(AuthGuard('jwt'))
   @Get(':team_id/members')
   @ApiResponse({
     description: 'Get members of a team given a team id',
@@ -131,7 +88,6 @@ export class TeamsController {
    * @param invite_token invite_token
    * @returns Udated team members object
    */
-  @UseGuards(AuthGuard('jwt'))
   @Patch('join/:invite_token')
   @ApiResponse({
     description: 'Join team via invite_token',
@@ -155,7 +111,6 @@ export class TeamsController {
    * @returns invite_token
    * @throws Team not found
    */
-  @UseGuards(AuthGuard('jwt'))
   @Get(':team_id/invite_token')
   @ApiResponse({
     description: 'Get invite token of a team',
@@ -192,7 +147,6 @@ export class TeamsController {
    * @returns assessments
    * @throws Team not found
    */
-  @UseGuards(AuthGuard('jwt'))
   @Get(':team_id/assessments')
   @ApiResponse({
     description: 'Get assessments of a team given a team id',
@@ -244,7 +198,6 @@ export class TeamsController {
     description: 'Team member with given user id not found',
   })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN, Role.ASSESSOR)
   async deleteTeamMember(
     @AuthUser() user: User,

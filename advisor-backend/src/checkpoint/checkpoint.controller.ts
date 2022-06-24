@@ -6,7 +6,6 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -17,8 +16,6 @@ import {
 import { CheckpointService } from './checkpoint.service';
 import { UpdateCheckpointDto } from './dto/update-checkpoint.dto';
 import { CheckpointDto } from './dto/checkpoint.dto';
-import { RolesGuard } from '../common/guards/roles.guard';
-import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 @ApiTags('checkpoint')
@@ -50,7 +47,6 @@ export class CheckpointController {
    * @returns checkpointDto
    */
   @Patch(':checkpoint_id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   @ApiResponse({ description: 'Updated checkpoint', type: CheckpointDto })
   @ApiNotFoundResponse({ description: 'checkpoint not found' })
@@ -74,7 +70,6 @@ export class CheckpointController {
    * @returns Deleted checkpoint
    */
   @Delete(':checkpoint_id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   @ApiResponse({ description: 'Deleted checkpoint', type: CheckpointDto })
   @ApiNotFoundResponse({ description: 'checkpoint not found' })
