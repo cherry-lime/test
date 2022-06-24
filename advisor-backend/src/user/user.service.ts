@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   /**
    * Get user object by id
@@ -32,16 +32,42 @@ export class UserService {
     }
 
     delete user.password;
+
     return user;
   }
 
   async createUser(data: CreateUserDto): Promise<User> {
     // generate random usernames
     const randomWords = require('random-words');
-    const new_username = randomWords({ min: 2, max: 3, join: '_' });
+    const new_username = randomWords({
+      min: 2,
+      max: 3,
+      join: '_'
+    });
 
+    const username = await this.prisma.user
+      .findUnique({
+        where: {
+          username: new_username
+        },
+      }).catch(() => {
+        throw new InternalServerErrorException();
+      });
+
+    if (!username) {
+      throw new NotFoundException('user not found');
+    }
+
+    // generate a uuidv4
     const myuuid = uuidv4();
-    const hashedPassword = await bcrypt.hash(myuuid, 10);
+
+    // hash a password with a salt
+    const salt = 10;
+    const hashedPassword = await bcrypt
+      .hash(
+        myuuid,
+        salt
+      );
 
     const user = await this.prisma.user
       .create({
@@ -53,17 +79,20 @@ export class UserService {
       })
       .catch((error) => {
         if (error.code === 'P2002') {
-          // Throw error if username already exsits
+          // Throw error if username already exists
           throw new ConflictException('Username already exists');
         } else {
           throw new InternalServerErrorException();
         }
       });
 
+    // clone the created user
     const userinfos: User = { ...user };
+
+    // modify the password variable to the uuidv4
     userinfos.password = myuuid;
 
-    //delete user.password_hash;
+    // return the modified user
     return userinfos;
   }
 }
