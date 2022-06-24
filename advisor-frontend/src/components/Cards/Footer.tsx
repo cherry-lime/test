@@ -10,12 +10,12 @@ function Copyright() {
   return (
     <Typography
       variant="body2"
-      style={{ color: "background", fontWeight: "bold" }}
+      style={{ color: "background", fontWeight: "bold", display: "flex" }}
     >
       {"Copyright © "}
       <Link color="inherit" href="https://tue.nl">
         TU/e
-      </Link>{" "}
+      </Link>
       {new Date().getFullYear()}.
     </Typography>
   );

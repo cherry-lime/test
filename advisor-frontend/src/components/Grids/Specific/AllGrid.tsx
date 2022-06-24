@@ -14,12 +14,12 @@ import CheckpointGrid from "./CheckpointGrid";
 import INGTheme from "../../../Theme";
 
 export default function AllGrid() {
-  const userId = 0;
+  const userId = "0";
   const userRole = "ASSESSOR";
-  const teamId = 0;
+  const teamId = "0";
   const templateId = "0";
   const categoryId = "0";
-  const assessmentId = 0;
+  const assessmentId = "0";
 
   return (
     <div style={{ width: "100%" }}>
@@ -73,6 +73,7 @@ export default function AllGrid() {
       />
       <strong>Recommendations</strong>
       <RecommendationGrid
+        topicId={1}
         theme={INGTheme}
         assessmentId={assessmentId}
         assessmentType="TEAM"

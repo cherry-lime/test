@@ -33,9 +33,10 @@ type Row = {
 
 type RecommendationGridProps = {
   theme: Theme;
-  assessmentId: number;
+  assessmentId: string | undefined;
+  topicId: number;
   assessmentType: AssessmentType;
-  userId: number;
+  userId: string | undefined;
   userRole: UserRole;
 };
 
@@ -43,6 +44,8 @@ export default function RecommendationGrid({
   theme,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  topicId,
   assessmentType,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   userId,

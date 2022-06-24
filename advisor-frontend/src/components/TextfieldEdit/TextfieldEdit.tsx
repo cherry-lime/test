@@ -14,7 +14,15 @@ default set to five
 the background color of the text is white
 text can be edited, after selection
 */
-function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
+function TextfieldEdit({
+  text,
+  theme,
+  rows,
+}: {
+  text: string;
+  theme: ThemeOptions;
+  rows: number;
+}) {
   /*
   initial value of the textfield is set to the bodytext passed as parameter
   using the State Hook in React
@@ -23,7 +31,7 @@ function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
   const initialState = text;
   const [, setValue] = useState(initialState);
   const [intermediateValue, setIntermediateValue] = useState(initialState);
-
+  let multiline = false;
   const handleSave = () => {
     // here you save the new text
     // that is contained in intermediateValue
@@ -34,6 +42,17 @@ function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
     setIntermediateValue(event.target.value);
   };
 
+  /*
+  if the textfield has only one row then
+  multiline must be disabled,
+  e.g,. in country + IT department textfields
+  */
+  if (rows > 1) {
+    multiline = true;
+  } else {
+    multiline = false;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <ClickAwayListener onClickAway={handleSave}>
@@ -41,10 +60,11 @@ function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
           sx={{
             backgroundColor: "white",
             width: "inherit",
+            marginTop: "10px",
           }}
           variant="outlined"
-          multiline
-          rows={5}
+          multiline={multiline}
+          rows={rows}
           size="small"
           value={intermediateValue}
           onChange={handleModify}
@@ -61,6 +81,7 @@ Define proptypes for textfieldedit:
 TextfieldEdit.propTypes = {
   text: PropTypes.string.isRequired,
   theme: PropTypes.node.isRequired,
+  rows: PropTypes.number.isRequired,
 };
 
 export default TextfieldEdit;
