@@ -247,7 +247,9 @@ export class AssessmentController {
    */
   @Get(':assessment_id/score')
   @ApiResponse({
-    description: 'Score for all topics',
+    description:
+      'Score for all topics (if score is -1, this means that there are no \
+         checkpoints related to this maturity category pair)',
     type: ScoreDto,
   })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
@@ -255,12 +257,8 @@ export class AssessmentController {
     description: 'Individual assessment cannot be scored',
   })
   @ApiInternalServerErrorResponse()
-  async getScore(
-    @Param('assessment_id', ParseIntPipe) id: number
-  ): Promise<ScoreDto> {
-    return {
-      scores: await this.assessmentScoreService.getScore(id, null),
-    } as ScoreDto;
+  async getScore(@Param('assessment_id', ParseIntPipe) id: number) {
+    return this.assessmentScoreService.getScore(id, null);
   }
 
   /**
@@ -280,7 +278,10 @@ export class AssessmentController {
    */
   @Get(':assessment_id/score/:topic_id')
   @ApiResponse({
-    description: 'Score for a specific topics',
+    description:
+      'Score for a specific topics (if score is -1, this means that there are no \
+      checkpoints related to this maturity category pair \
+      (for the selected topic))',
     type: ScorePerTopicDto,
   })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
@@ -294,7 +295,10 @@ export class AssessmentController {
   ): Promise<ScorePerTopicDto> {
     return {
       topic_id: topicId,
-      scores: await this.assessmentScoreService.getScore(id, topicId),
+      ...((await this.assessmentScoreService.getScore(
+        id,
+        topicId
+      )) as ScoreDto),
     } as ScorePerTopicDto;
   }
 

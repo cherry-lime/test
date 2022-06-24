@@ -1,15 +1,57 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ScorePerTopicDto {
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   topic_id: number;
 
   @ApiProperty({
     example: [
-      [100, 50, 75],
-      [0, 13, 6.5],
-      [50, 31.5, 40.75],
+      {
+        maturity_id: 1,
+        category_id: 1,
+        score: 100,
+      },
+      {
+        maturity_id: 1,
+        category_id: 2,
+        score: 100,
+      },
+      {
+        maturity_id: 2,
+        category_id: 1,
+        score: 100,
+      },
+      {
+        maturity_id: 2,
+        category_id: 2,
+        score: 50,
+      },
     ],
   })
-  scores: number[][];
+  scores: [
+    {
+      maturity_id: number;
+      category_id: number;
+      score: number;
+    }
+  ];
+
+  @ApiProperty({
+    example: {
+      '1': 100,
+      '2': 75,
+    },
+  })
+  maturity_total: Record<string, number>;
+
+  @ApiProperty({
+    example: {
+      '1': 100,
+      '2': 75,
+    },
+  })
+  category_total: Record<string, number>;
+
+  @ApiProperty({ example: 87.5 })
+  total: number;
 }

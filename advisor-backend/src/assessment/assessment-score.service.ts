@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { AssessmentType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { ScoreDto } from './dto/score.dto';
 
 @Injectable()
 export class AssessmentScoreService {
@@ -181,7 +182,7 @@ export class AssessmentScoreService {
       categoryIdsList,
       checkpoints,
       topic_id
-    ) as number[][];
+    ) as ScoreDto;
   }
 
   calculateScores(
@@ -322,6 +323,35 @@ export class AssessmentScoreService {
     scores[maturityIdsList.length][categoryIdsList.length] =
       sum / nrMaturitiesAndCategoriesWithOverallScore;
 
-    return scores as number[][];
+    const output = {
+      scores: [],
+      maturity_total: {},
+      category_total: {},
+      total: 0,
+    };
+
+    for (let i = 0; i < maturityIdsList.length; i++) {
+      for (let j = 0; j < categoryIdsList.length; j++) {
+        output.scores.push({
+          maturity_id: maturityIdsList[i],
+          category_id: categoryIdsList[j],
+          score: scores[i][j],
+        });
+      }
+    }
+
+    for (let i = 0; i < categoryIdsList.length; i++) {
+      output.category_total[categoryIdsList[i].toString()] =
+        scores[maturityIdsList.length][i];
+    }
+
+    for (let i = 0; i < maturityIdsList.length; i++) {
+      output.maturity_total[maturityIdsList[i].toString()] =
+        scores[i][categoryIdsList.length];
+    }
+
+    output.total = scores[maturityIdsList.length][categoryIdsList.length];
+
+    return output;
   }
 }
