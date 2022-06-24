@@ -149,9 +149,9 @@ function ListOfCheckpoints({
     Dispatch<AssessmentSubarea[] | undefined>
   ] = useState();
 
-  const [checkpointComponents, setCheckpointComponents] = useState<Grid[]>();
+  const [checkpointComponents, setCheckpointComponents] = useState<typeof Grid[]>();
 
-  const [subareaComponents, setSubareaComponents] = useState<Grid[]>();
+  const [subareaComponents, setSubareaComponents] = useState<typeof Grid[]>();
 
   // first render: get the area and the answer list
   React.useEffect(() => {
