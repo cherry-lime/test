@@ -20,10 +20,7 @@ test("app rendering/navigating from assessor view to specific team evaluation", 
   fireEvent.click(buttonTeam2);
   const buttonTeamEval = screen.getByTestId("team-eval-234");
   fireEvent.click(buttonTeamEval);
-  expect(
-    screen.getByText(/A Team Evaluation with id 234/i)
-  ).toBeInTheDocument();
-  expect(screen.getByText(/Evaluation can be edited/i)).toBeInTheDocument();
+  expect(screen.getByText(/Team Evaluation/i)).toBeInTheDocument();
 });
 
 test("app rendering/navigating from user view to specific team evaluation", async () => {
@@ -42,7 +39,7 @@ test("app rendering/navigating from user view to specific team evaluation", asyn
   fireEvent.click(buttonTeam2);
   const buttonTeamEval = screen.getByTestId("team-eval-56");
   fireEvent.click(buttonTeamEval);
-  expect(screen.getByText(/A Team Evaluation with id 56/i)).toBeInTheDocument();
+  expect(screen.getByText(/Team Evaluation/i)).toBeInTheDocument();
 });
 
 test("app rendering/navigating from assessor view to specific team evaluation", async () => {
@@ -61,9 +58,7 @@ test("app rendering/navigating from assessor view to specific team evaluation", 
   fireEvent.click(buttonTeam2);
   const buttonTeamEval = screen.getByTestId("team-eval-234");
   fireEvent.click(buttonTeamEval);
-  expect(
-    screen.getByText(/A Team Evaluation with id 234/i)
-  ).toBeInTheDocument();
+  expect(screen.getByText(/Team Evaluation/i)).toBeInTheDocument();
 });
 
 test("app rendering/navigating from user view to specific team evaluation", async () => {
@@ -82,7 +77,7 @@ test("app rendering/navigating from user view to specific team evaluation", asyn
   fireEvent.click(buttonTeam2);
   const buttonTeamEval = screen.getByTestId("team-eval-56");
   fireEvent.click(buttonTeamEval);
-  expect(screen.getByText(/A Team Evaluation with id 56/i)).toBeInTheDocument();
+  expect(screen.getByText(/Team Evaluation/i)).toBeInTheDocument();
 });
 
 test("app rendering/navigating from assessor view to specific team feedback", async () => {
@@ -101,12 +96,7 @@ test("app rendering/navigating from assessor view to specific team feedback", as
   fireEvent.click(buttonTeam2);
   const buttonTeamEval = screen.getByTestId("team-feedback-123");
   fireEvent.click(buttonTeamEval);
-  expect(
-    screen.getByText(/A Team Evaluation Feedback for assessment with id 123/i)
-  ).toBeInTheDocument();
-  expect(
-    screen.getByText(/Evaluation Feedback can be edited/i)
-  ).toBeInTheDocument();
+  expect(screen.getByText(/Team Evaluation Feedback/i)).toBeInTheDocument();
 });
 
 test("app rendering/navigating from user view to specific team evaluation", async () => {
@@ -125,9 +115,7 @@ test("app rendering/navigating from user view to specific team evaluation", asyn
   fireEvent.click(buttonTeam2);
   const buttonTeamEval = screen.getByTestId("team-feedback-555");
   fireEvent.click(buttonTeamEval);
-  expect(
-    screen.getByText(/A Team Evaluation Feedback for assessment with id 555/i)
-  ).toBeInTheDocument();
+  expect(screen.getByText(/Team Evaluation Feedback/i)).toBeInTheDocument();
 });
 
 // describe block = test suite

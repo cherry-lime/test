@@ -17,7 +17,6 @@ test("app rendering/navigating from assessor view to specific team", async () =>
   const buttonTeams = screen.getByTestId("assessor-teams");
   fireEvent.click(buttonTeams);
   expect(screen.getByText(/List of Teams/i)).toBeInTheDocument();
-  expect(screen.getByText(/assessor view/i)).toBeInTheDocument();
 
   const buttonTeam2 = screen.getByTestId("team-2");
   fireEvent.click(buttonTeam2);

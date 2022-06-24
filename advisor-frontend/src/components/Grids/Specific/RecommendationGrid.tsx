@@ -33,9 +33,9 @@ type Row = {
 
 type RecommendationGridProps = {
   theme: Theme;
-  assessmentId: number;
+  assessmentId: string | undefined;
   assessmentType: AssessmentType;
-  userId: number;
+  userId: string | undefined;
   userRole: UserRole;
 };
 

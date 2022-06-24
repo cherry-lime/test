@@ -2,13 +2,14 @@ import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { store } from "../../../../../app/store";
+import Theme from "../../../../../Theme";
 import ListOfTemplates from "../ListOfTemplates";
 
 test("app render list of templates", async () => {
   render(
     <Provider store={store}>
       <BrowserRouter>
-        <ListOfTemplates />
+        <ListOfTemplates theme={Theme} />
       </BrowserRouter>
     </Provider>
   );

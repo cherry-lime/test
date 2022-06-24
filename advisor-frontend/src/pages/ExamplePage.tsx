@@ -36,6 +36,8 @@ export default function Example() {
         <ButtonRegular text="Regular Button" />
         <ButtonInverted text="Inverted Button" />
         <Checkpoint
+          area="Area Name"
+          feedback={false}
           number={12}
           description="Checkpoint Description"
           checkpointlabels={["Yes", "No", "N/A", "Extra", "Extra2"]}
@@ -49,12 +51,15 @@ export default function Example() {
           theme={theme}
         />
         <TextfieldEdit
+          rows={5}
           text="Here is some text that can be edited"
           theme={theme}
         />
         <Textfield
           text="Here is some text that can not be edited"
           theme={theme}
+          rows={5}
+          columns="50ch"
         />
         <p />
       </Stack>
@@ -66,7 +71,6 @@ export default function Example() {
         image={testimageFigma}
         isImageLeft
       />
-
       <AllGrid />
     </PageLayout>
   );

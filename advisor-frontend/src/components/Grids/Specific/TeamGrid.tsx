@@ -38,13 +38,15 @@ const getDefaultRow = () => {
 
 type TeamGridProps = {
   theme: Theme;
-  userId: number;
+  userId: string | undefined;
   userRole: UserRole;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function TeamGrid({ theme, userId, userRole }: TeamGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+  const [rows, setRows] = React.useState<Row[]>([
+    { id: 123, name: "Random Team" },
+  ]);
 
   // Fetch initial rows of the grid
   React.useEffect(() => {
