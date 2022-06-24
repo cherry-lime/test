@@ -33,7 +33,7 @@ export default function MemberGrid({
   const [rows, setRows] = React.useState<UserAPP[]>([]);
 
   // Member query
-  const { status, data, error } = useGetMembersTeam(teamId);
+  const { status, data, error } = useGetMembersTeam(teamId, userRole);
 
   // Member mutation
   const deleteMember = useDeleteMemberTeam(teamId);

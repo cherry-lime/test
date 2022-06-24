@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
+import { UserRole } from "../types/UserRole";
 
 export type UserAPP = {
   id: GridRowId;
@@ -40,13 +41,22 @@ function userToAPI(userAPP: UserAPP) {
 }
 
 // Get all users from database
-export function useGetUsers() {
+export function useGetUsers(roleFilter?: UserRole) {
   return useQuery(["GET", "/user"], async () => {
     // Get data from database
     const { data } = await API.get(`/user`);
 
     // Convert data to usersAPP
     const usersAPP = data.map((userAPI: UserAPI) => userToAPP(userAPI));
+
+    // If defined, filter on user role
+    if (roleFilter !== undefined) {
+      const usersFilteredAPP = usersAPP.filter(
+        (userAPP: UserAPP) => userAPP.role === roleFilter
+      );
+
+      return usersFilteredAPP as UserAPP[];
+    }
 
     return usersAPP as UserAPP[];
   });
@@ -99,7 +109,7 @@ export function useIsUserInTeam(teamId: number) {
 }
 
 // Get meembers of team with team id from database
-export function useGetMembersTeam(teamId: number) {
+export function useGetMembersTeam(teamId: number, roleFilter?: UserRole) {
   return useQuery(["GET", "/teams", teamId, "/members"], async () => {
     // Get data from database
     const { data } = await API.get(`/teams/${teamId}/members`);
@@ -108,6 +118,15 @@ export function useGetMembersTeam(teamId: number) {
     const usersAPP = data.team_members.map((userAPI: UserAPI) =>
       userToAPP(userAPI)
     );
+
+    // If defined, filter on user role
+    if (roleFilter !== undefined) {
+      const usersFilteredAPP = usersAPP.filter(
+        (userAPP: UserAPP) => userAPP.role === roleFilter
+      );
+
+      return usersFilteredAPP as UserAPP[];
+    }
 
     return usersAPP as UserAPP[];
   });
