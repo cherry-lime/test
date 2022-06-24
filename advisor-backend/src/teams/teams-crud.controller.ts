@@ -29,7 +29,7 @@ import { TeamsCRUDService } from './teams-crud.service';
 import { TeamsService } from './teams.service';
 
 @ApiTags('teams')
-@Controller('teams-CRUD')
+@Controller('teams')
 export class TeamsCRUDController {
   constructor(
     private readonly teamsService: TeamsService,

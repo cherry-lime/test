@@ -20,9 +20,6 @@ export class TeamsCRUDService {
     const team = await this.prisma.team
       .create({
         data: {
-          team_name: 'New Team',
-          team_country: '',
-          team_department: '',
           UserInTeam: {
             create: [
               {
