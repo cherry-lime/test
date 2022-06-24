@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { AssessmentType, Template } from '@prisma/client';
+import { AssessmentType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';
@@ -129,53 +129,6 @@ export class TemplateService {
     }
 
     return template;
-  }
-
-  /**
-   * Clone template
-   * @param id template_id
-   * @returns Cloned template
-   * @throws Template not found
-   */
-  async clone(id: number): Promise<TemplateDto> {
-    // Get template by id from prisma
-    const template = await this.prisma.template.findUnique({
-      where: {
-        template_id: id,
-      },
-    });
-
-    // Throw error if template not found
-    if (!template) {
-      throw new NotFoundException('Template not found');
-    }
-
-    let newTemplate: Template;
-    let template_name = template.template_name;
-
-    delete template.template_id;
-    delete template.template_name;
-    template.enabled = false;
-
-    // While template is not created
-    while (!newTemplate) {
-      // Update name with copy
-      template_name = `${template_name} (Copy)`;
-      try {
-        // Try to create new template from original template
-        newTemplate = await this.prisma.template.create({
-          data: {
-            template_name,
-            ...template,
-          },
-        });
-      } catch (error) {
-        if (error.code !== 'P2002') {
-          throw new InternalServerErrorException();
-        }
-      }
-    }
-    return newTemplate;
   }
 
   /**

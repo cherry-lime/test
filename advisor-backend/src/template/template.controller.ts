@@ -28,6 +28,7 @@ import { AnswerDto } from '../answer/dto/answer.dto';
 import { AnswerService } from '../answer/answer.service';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
+import { CloneTemplateService } from './clone-template.service';
 
 @Controller('template')
 @ApiTags('template')
@@ -37,7 +38,8 @@ export class TemplateController {
     private readonly categoryService: CategoryService,
     private readonly maturityService: MaturityService,
     private readonly topicService: TopicService,
-    private readonly answerService: AnswerService
+    private readonly answerService: AnswerService,
+    private readonly cloneTemplateService: CloneTemplateService
   ) {}
 
   /**
@@ -133,7 +135,7 @@ export class TemplateController {
   async clone(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<TemplateDto> {
-    return this.templateService.clone(id);
+    return this.cloneTemplateService.clone(id);
   }
 
   /**
