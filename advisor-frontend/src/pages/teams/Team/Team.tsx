@@ -1,4 +1,4 @@
-import { Grid, Theme } from "@mui/material";
+import { Theme } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PageLayout from "../../PageLayout";
