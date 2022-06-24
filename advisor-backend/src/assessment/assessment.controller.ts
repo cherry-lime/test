@@ -8,12 +8,15 @@ import {
   Delete,
   ParseIntPipe,
   ForbiddenException,
+  Query,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -27,13 +30,16 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
+import { RecommendationDto } from '../feedback/dto/recommendation.dto';
+import { FeedbackService } from '../feedback/feedback.service';
 
 @ApiTags('assessment')
 @Controller('assessment')
 export class AssessmentController {
   constructor(
     private readonly assessmentService: AssessmentService,
-    private readonly checkpointService: CheckpointService
+    private readonly checkpointService: CheckpointService,
+    private readonly feedbackService: FeedbackService
   ) {}
 
   /**
@@ -51,8 +57,12 @@ export class AssessmentController {
   @ApiBadRequestResponse({
     description: 'No active templates found',
   })
-  create(@Body() createAssessmentDto: CreateAssessmentDto) {
-    return this.assessmentService.create(createAssessmentDto);
+  @UseGuards(AuthGuard('jwt'))
+  create(
+    @Body() createAssessmentDto: CreateAssessmentDto,
+    @AuthUser() user: User
+  ) {
+    return this.assessmentService.create(createAssessmentDto, user);
   }
 
   /**
@@ -243,5 +253,37 @@ export class AssessmentController {
     @Body() feedbackDto: FeedbackDto
   ) {
     return this.assessmentService.feedback(id, feedbackDto);
+  }
+
+  @Get(':assessment_id/feedback')
+  @ApiTags('feedback')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiResponse({
+    description: 'Recommendations',
+    type: RecommendationDto,
+    isArray: true,
+  })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
+  @ApiQuery({
+    name: 'topic_id',
+    required: false,
+    type: Number,
+  })
+  async getRecommendations(
+    @Param('assessment_id', ParseIntPipe) assessment_id: number,
+    @AuthUser() user: User,
+    @Query('topic_id') topic_id?: number
+  ) {
+    // Check if user in assessment
+    const assessment = await this.assessmentService.userInAssessment(
+      assessment_id,
+      user
+    );
+
+    if (!assessment) {
+      throw new NotFoundException('Assessment not found');
+    }
+
+    return this.feedbackService.getRecommendations(assessment, topic_id);
   }
 }

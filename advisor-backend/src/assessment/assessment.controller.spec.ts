@@ -46,7 +46,7 @@ describe('AssessmentController', () => {
 
   describe('create', () => {
     it('Should return the created assessment', async () => {
-      expect(assessmentController.create(aAssessment)).resolves.toBe(
+      expect(assessmentController.create(aAssessment, undefined)).resolves.toBe(
         aAssessment
       );
     });
