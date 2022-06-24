@@ -34,10 +34,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
           width: "inherit",
         }}
       >
-        <Button
-          onClick={handleViewChange}
-          variant="contained"
-        >
+        <Button onClick={handleViewChange} variant="contained">
           {checkpointView ? "See Recommendations" : "Go back to checkpoints"}
         </Button>
       </div>
