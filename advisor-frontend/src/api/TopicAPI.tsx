@@ -14,6 +14,7 @@ type TopicAPI = {
   topic_id: number;
   topic_name: string;
   template_id: number;
+  disabled: boolean;
 };
 
 function topicToAPP(topicAPI: TopicAPI) {
@@ -21,7 +22,7 @@ function topicToAPP(topicAPI: TopicAPI) {
     id: topicAPI.topic_id,
     name: topicAPI.topic_name,
     templateId: topicAPI.template_id,
-    enabled: true,
+    enabled: !topicAPI.disabled,
   } as TopicAPP;
 }
 
@@ -30,6 +31,7 @@ function topicToAPI(topicAPP: TopicAPP) {
     topic_id: topicAPP.id,
     topic_name: topicAPP.name,
     template_id: topicAPP.templateId,
+    disabled: !topicAPP.enabled,
   } as TopicAPI;
 }
 

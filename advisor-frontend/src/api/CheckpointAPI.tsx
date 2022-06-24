@@ -22,6 +22,7 @@ type Checkpoint = {
   order: string;
   maturity_id: number;
   category_id: number;
+  disabled: boolean;
 };
 
 function checkpointToAPP(checkpointAPI: Checkpoint) {
@@ -33,7 +34,7 @@ function checkpointToAPP(checkpointAPI: Checkpoint) {
     order: checkpointAPI.order,
     categoryId: checkpointAPI.category_id,
     maturityId: checkpointAPI.maturity_id,
-    enabled: true,
+    enabled: !checkpointAPI.disabled,
   } as CheckpointRow;
 }
 
@@ -46,6 +47,7 @@ function checkpointToAPI(checkpointAPP: CheckpointRow) {
     order: checkpointAPP.order,
     category_id: checkpointAPP.categoryId,
     maturity_id: checkpointAPP.maturityId,
+    disabled: !checkpointAPP.enabled,
   } as Checkpoint;
 }
 

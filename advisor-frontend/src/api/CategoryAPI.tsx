@@ -17,7 +17,7 @@ type CategoryAPI = {
   category_name: string;
   color: string;
   order: number;
-  enabled: boolean;
+  disabled: boolean;
   template_id: number;
 };
 
@@ -27,7 +27,7 @@ function categoryToAPP(categoryAPI: CategoryAPI) {
     name: categoryAPI.category_name,
     color: categoryAPI.color,
     order: categoryAPI.order,
-    enabled: true,
+    enabled: !categoryAPI.disabled,
     templateId: categoryAPI.template_id,
   } as CategoryAPP;
 }
@@ -39,6 +39,7 @@ function categoryToAPI(categoryAPP: CategoryAPP) {
     color: categoryAPP.color,
     order: categoryAPP.order,
     template_id: categoryAPP.templateId,
+    disabled: !categoryAPP.enabled,
   } as CategoryAPI;
 }
 

@@ -16,6 +16,7 @@ type MaturityAPI = {
   maturity_name: string;
   maturity_order: number;
   template_id: number;
+  disabled: boolean;
 };
 
 function MaturityToAPP(maturityAPI: MaturityAPI) {
@@ -24,7 +25,7 @@ function MaturityToAPP(maturityAPI: MaturityAPI) {
     name: maturityAPI.maturity_name,
     order: maturityAPI.maturity_order,
     templateId: maturityAPI.template_id,
-    enabled: true,
+    enabled: !maturityAPI.disabled,
   } as MaturityAPP;
 }
 
@@ -34,6 +35,7 @@ function MaturityToAPI(maturityAPP: MaturityAPP) {
     maturity_name: maturityAPP.name,
     maturity_order: maturityAPP.order,
     template_id: maturityAPP.templateId,
+    disabled: !maturityAPP.enabled,
   } as MaturityAPI;
 }
 

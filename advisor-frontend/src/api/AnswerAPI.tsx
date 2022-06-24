@@ -16,6 +16,7 @@ type AnswerAPI = {
   answer_text: string;
   answer_weight: number;
   template_id: number;
+  disabled: boolean;
 };
 
 function answerToAPP(answerAPI: AnswerAPI) {
@@ -24,7 +25,7 @@ function answerToAPP(answerAPI: AnswerAPI) {
     label: answerAPI.answer_text,
     value: answerAPI.answer_weight,
     templateId: answerAPI.template_id,
-    enabled: true,
+    enabled: !answerAPI.disabled,
   } as AnswerAPP;
 }
 
@@ -34,6 +35,7 @@ function answerToAPI(answerAPP: AnswerAPP) {
     answer_text: answerAPP.label,
     answer_weight: answerAPP.value,
     template_id: answerAPP.templateId,
+    disabled: !answerAPP.enabled,
   } as AnswerAPI;
 }
 

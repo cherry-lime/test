@@ -20,6 +20,7 @@ type SubareaAPI = {
   subarea_description: string;
   subarea_summary: string;
   category_id: number;
+  disabled: boolean;
 };
 
 function subareaToAPP(subareaAPI: SubareaAPI) {
@@ -30,7 +31,7 @@ function subareaToAPP(subareaAPI: SubareaAPI) {
     description: subareaAPI.subarea_description,
     summary: subareaAPI.subarea_summary,
     categoryId: subareaAPI.category_id,
-    enabled: true,
+    enabled: !subareaAPI.disabled,
   } as SubareaAPP;
 }
 
@@ -42,6 +43,7 @@ function subareaToAPI(subareaAPP: SubareaAPP) {
     subarea_description: subareaAPP.description,
     subarea_summary: subareaAPP.summary,
     category_id: subareaAPP.categoryId,
+    disabled: !subareaAPP.enabled,
   } as SubareaAPI;
 }
 

@@ -42,8 +42,8 @@ export default function AllGrid() {
   const userId = 0;
   const userRole = "ASSESSOR";
   const teamId = 1;
-  const templateId = 4;
-  const categoryId = 1;
+  const templateId = 1;
+  const categoryId = 2;
   const assessmentId = 3;
 
   return (
