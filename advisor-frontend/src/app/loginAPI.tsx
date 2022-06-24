@@ -46,9 +46,8 @@ export function userRegister() {
  * Contains functionality to redirect the user to their homepage and update the global state values.
  */
 export function authProfile() {
+  // Import the Slice functions to access the Redux functions
   const dispatch = useDispatch();
-  // Import the global state variables that will be used throughout the session
-  const { userRole } = useSelector((state: RootState) => state.userData);
   // Navigation hook, to be used after the user is logged in
   const navigate = useNavigate();
 
