@@ -24,6 +24,7 @@ import TextfieldEdit from "../../components/TextfieldEdit/TextfieldEdit";
 import Textfield from "../../components/Textfield/Textfield";
 import { RootState } from "../../app/store";
 import pdf from "./pdf";
+import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 
 type Topic = {
   topicId: number;
@@ -162,25 +163,33 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             <Tabs value={value} onChange={handleChange} textColor="primary">
               <Tab value="Recommendations" label="Recommendations" />
               <Tab value="Checkpoints" label="Checkpoints" />
+              {userRole === "ASSESSOR" && (
+                <Tab value="Progress" label="Progress" />
+              )}
             </Tabs>
           </Stack>
         </Card>
         <br />
+
         {/* this is not actually a subarea, it's the automated feedback */}
-        <Subarea
-          theme={theme}
-          title=""
-          summary="Below you will find a list of items that you or your squad can review in order to start improving your testing maturity. This list is based on your answers and prioritized to maximize your testing maturity."
-          description="TIP: only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
-        />
+        {value !== "Progress" && (
+          <Subarea
+            theme={theme}
+            title=""
+            summary="Below you will find a list of items that you or your squad can review in order to start improving your testing maturity. This list is based on your answers and prioritized to maximize your testing maturity."
+            description="TIP: only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
+          />
+        )}
 
-        {team && <h2>Assessor Feedback</h2>}
+        <br />
 
-        {team && userRole === "ASSESSOR" && (
+        {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
+
+        {team && userRole === "ASSESSOR" && value === "Recommendations" && (
           <TextfieldEdit rows={5} theme={theme} text="assessor feedback here" />
         )}
 
-        {team && userRole === "USER" && (
+        {team && userRole === "USER" && value === "Recommendations" && (
           <Textfield
             rows={5}
             columns="inherit"
@@ -188,18 +197,21 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             text="assessor feedback here"
           />
         )}
+
         <br />
-        {topicList !== undefined && topic !== undefined && (
-          <FormControl>
-            <Select value={topic} onChange={handleTopicChange}>
-              {topicList.map((t) => (
-                <MenuItem key={`menu-topic-${t.topicId}`} value={t.topicId}>
-                  {t.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
+        {topicList !== undefined &&
+          topic !== undefined &&
+          value === "Recommendations" && (
+            <FormControl>
+              <Select value={topic} onChange={handleTopicChange}>
+                {topicList.map((t) => (
+                  <MenuItem key={`menu-topic-${t.topicId}`} value={t.topicId}>
+                    {t.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
 
         <br />
 
@@ -213,6 +225,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             userRole={userRole}
           />
         )}
+
         {value === "Checkpoints" && (
           <ListOfCheckpoints
             feedback
@@ -220,6 +233,9 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             assessmentId={assessmentId}
           />
         )}
+
+        {value === "Progress" && <ProgressEvaluationCard />}
+
         <Button
           sx={{ marginTop: "40px" }}
           variant="contained"
