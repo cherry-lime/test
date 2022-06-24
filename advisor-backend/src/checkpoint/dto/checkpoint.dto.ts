@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Min } from 'class-validator';
 
 export class CheckpointDto {
   @ApiProperty({ default: 1 })
@@ -14,6 +15,7 @@ export class CheckpointDto {
   weight: number;
 
   @ApiProperty({ default: 1 })
+  @Min(1)
   order: number;
 
   @ApiProperty({ default: false })
