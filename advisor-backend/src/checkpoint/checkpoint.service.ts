@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { TemplateService } from '../template/template.service';
 import { TopicService } from '../topic/topic.service';
-import { Checkpoint } from '@prisma/client';
+
 @Injectable()
 export class CheckpointService {
   constructor(
