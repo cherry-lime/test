@@ -17,6 +17,9 @@ export class CheckpointDto {
   order: number;
 
   @ApiProperty()
+  disabled: boolean;
+
+  @ApiProperty()
   maturity_id: number;
 
   @ApiProperty()
