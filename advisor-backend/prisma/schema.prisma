@@ -84,10 +84,10 @@ model CheckpointInTopic {
 
 model Team {
   team_id         Int          @id @default(autoincrement())
-  team_name       String       @unique
+  team_name       String       @default("New Team")
   invite_token    String       @unique @default(uuid()) @db.Uuid
-  team_country    String
-  team_department String
+  team_country    String       @default("")
+  team_department String       @default("")
   UserInTeam      UserInTeam[]
   Assessment      Assessment[]
 }
