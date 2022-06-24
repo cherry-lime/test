@@ -175,6 +175,7 @@ model SubArea {
   subarea_summary     String   @default("")
   subarea_description String   @default("")
   disabled            Boolean  @default(false)
+  order               Int
   Category            Category @relation(fields: [category_id], references: [category_id])
   category_id         Int
 

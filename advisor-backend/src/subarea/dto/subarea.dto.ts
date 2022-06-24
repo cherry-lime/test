@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Min } from 'class-validator';
 
 export class SubareaDto {
   @ApiProperty({ default: 1 })
@@ -18,4 +19,8 @@ export class SubareaDto {
 
   @ApiProperty({ default: false })
   disabled: boolean;
+
+  @ApiProperty({ default: 1 })
+  @Min(1)
+  order: number;
 }

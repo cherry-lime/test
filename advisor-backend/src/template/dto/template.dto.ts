@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AssessmentType } from '@prisma/client';
-import { IsBoolean, IsEnum, IsInt, Min } from 'class-validator';
+import { IsBoolean, IsEnum, Min } from 'class-validator';
 /**
  * Response with template information
  */
