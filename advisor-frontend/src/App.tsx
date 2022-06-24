@@ -53,7 +53,7 @@ function App() {
         <Route
           path="/"
           element={
-            userRole !== "" ? (
+            userRole !== "NONE" ? (
               <Navigate to={`/${userRole}`} />
             ) : (
               <Navigate to="/login" />

@@ -57,7 +57,7 @@ export function authProfile() {
       const response = data.data;
       dispatch(setUserRole(response.role));
       dispatch(setUserId(response.user_id));
-      await navigate(`/${userRole}`);
+      navigate(`/`);
       console.log(response);
     },
     onError: (error: any) => {
