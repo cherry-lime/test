@@ -40,7 +40,7 @@ import {
   handleMove,
   preProcessEditOrder,
   processRowUpdate,
-} from "../handlersNew";
+} from "../handlers";
 
 type CheckpointGridProps = {
   theme: Theme;

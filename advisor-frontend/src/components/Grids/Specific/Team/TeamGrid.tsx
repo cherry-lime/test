@@ -16,7 +16,7 @@ import {
   handleDelete,
   handleInit,
   processRowUpdate,
-} from "../handlersNew";
+} from "../handlers";
 
 import {
   TeamAPP,

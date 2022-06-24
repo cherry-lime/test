@@ -12,7 +12,7 @@ import GenericGrid from "../../../Generic/GenericGrid";
 
 import { AssessmentType } from "../../../../../types/AssessmentType";
 
-import { handleInit } from "../../handlersNew";
+import { handleInit } from "../../handlers";
 
 import {
   AssessmentAPP,

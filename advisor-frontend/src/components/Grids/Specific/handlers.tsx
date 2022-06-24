@@ -1,106 +1,12 @@
 import * as React from "react";
-import { ColorResult } from "react-color";
-import {
-  GridPreProcessEditCellProps,
-  GridRowId,
-  GridRowModel,
-} from "@mui/x-data-grid";
+import { UseMutationResult } from "react-query";
 
-// Generate new id based on time
-const generateId = () => Date.now();
+import { GridPreProcessEditCellProps, GridRowModel } from "@mui/x-data-grid";
 
-export function handleAdd(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  defaultRow: GridRowModel
-) {
-  setRows((prevRows) => {
-    // Create new row with default content and generated id
-    const newRow = { ...defaultRow, id: generateId() };
+import { initRows, addRow, deleteRow, updateRow, moveRow } from "./helpers";
 
-    // Update rows state with added row
-    return [...prevRows, newRow];
-  });
-}
-
-export function handleDelete(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  rowId: GridRowId
-) {
-  setRows((prevRows) => {
-    // Filter row with rowId from state
-    const newRows = prevRows.filter((row) => row.id !== rowId);
-
-    // Update rows state with deleted row
-    return newRows;
-  });
-}
-
-export function handleDuplicate(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  row: GridRowModel
-) {
-  setRows((prevRows) => {
-    // Create new row with duplicated content and generated id
-    const newRow = { ...row, id: generateId(), order: prevRows.length };
-
-    // Update rows state with duplicated row
-    return [...prevRows, newRow];
-  });
-}
-
-export function handleColor(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  row: GridRowModel,
-  color: ColorResult
-) {
-  setRows((prevRows) => {
-    // Change color of this row
-    const newRows = prevRows.map((prevRow) =>
-      prevRow.id === row.id ? { ...prevRow, color: color.hex } : prevRow
-    );
-
-    // Update row in rows state with color
-    return newRows;
-  });
-}
-
-export function updateOrderRows(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>
-) {
-  setRows((prevRows) => {
-    // Map each row's order to its index
-    const newRows = prevRows.map((prevRow, index) => ({
-      ...prevRow,
-      order: index,
-    }));
-
-    // Update rows state with new orders
-    return newRows;
-  });
-}
-
-export function handleMoveRows(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  row: GridRowModel,
-  index: number
-) {
-  setRows((prevRows) => {
-    // If index is invalid, keep previous rows
-    if (index < 0 || index >= prevRows.length) {
-      return prevRows;
-    }
-
-    // Remove row from previous rows
-    const newRows = prevRows.filter((prevRow) => prevRow.id !== row.id);
-
-    // Insert row at index
-    newRows.splice(index, 0, row);
-
-    // Update rows state with moved rows
-    return newRows;
-  });
-
-  updateOrderRows(setRows);
+function processError(error: unknown) {
+  console.log(error);
 }
 
 export function preProcessEditOrder(
@@ -110,16 +16,36 @@ export function preProcessEditOrder(
   const { value } = params.props;
 
   // If order is below 0, above row length, or null: reject
-  const hasError = value < 0 || value >= rows.length || value === null;
+  const hasError = value < 1 || value > rows.length || value === null;
 
   return { ...params.props, error: hasError };
 }
 
-export function processRowUpdate(
+export function handleInit(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  status: "error" | "idle" | "loading" | "success",
+  data: GridRowModel[] | undefined,
+  error: unknown
+) {
+  switch (status) {
+    case "error":
+      processError(error);
+      break;
+    case "success":
+      if (data) {
+        initRows(setRows, data);
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+export async function processRowUpdate(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  patchMutation: UseMutationResult,
   newRow: GridRowModel,
-  oldRow: GridRowModel,
-  isOrder: boolean
+  oldRow: GridRowModel
 ) {
   // If row has not changed
   if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
@@ -127,23 +53,95 @@ export function processRowUpdate(
     return oldRow;
   }
 
-  // If this grid is ordered
-  if (isOrder) {
-    // If the 'Order' value has changed
-    if (newRow.order !== oldRow.order) {
-      // Move rows
-      handleMoveRows(setRows, oldRow, newRow.order);
+  // Mutate may throw error
+  try {
+    // Mutate new row to API
+    await patchMutation.mutateAsync(newRow);
 
-      // Update internal state
-      return newRow;
-    }
+    // Update row state with new row
+    updateRow(setRows, newRow, oldRow);
+
+    // Update internal state
+    return newRow;
+  } catch (error) {
+    processError(error);
+
+    // Keep internal state
+    return oldRow;
   }
+}
 
-  // Update row change in state
-  setRows((prevRows) =>
-    prevRows.map((prevRow) => (prevRow.id === newRow.id ? newRow : prevRow))
-  );
+export function handleMove(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  patchMutation: UseMutationResult,
+  row: GridRowModel
+) {
+  patchMutation.mutate(row, {
+    onSuccess: (movedRow: GridRowModel) => {
+      moveRow(setRows, movedRow, movedRow.order);
+    },
+    onError: (error: unknown) => {
+      processError(error);
+    },
+  });
+}
 
-  // Update internal state
-  return newRow;
+export function handleAdd(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  addMutation: UseMutationResult
+) {
+  addMutation.mutate(undefined, {
+    onSuccess: (addedRow: GridRowModel) => {
+      addRow(setRows, addedRow);
+    },
+    onError: (error: unknown) => {
+      processError(error);
+    },
+  });
+}
+
+export function handleDelete(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  deleteMutation: UseMutationResult,
+  rowId: number
+) {
+  deleteMutation.mutate(rowId, {
+    onSuccess: (deletedRow: GridRowModel) => {
+      deleteRow(setRows, deletedRow);
+    },
+    onError: (error: unknown) => {
+      processError(error);
+    },
+  });
+}
+
+export function handleDuplicate(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  duplicateMutation: UseMutationResult,
+  row: GridRowModel
+) {
+  duplicateMutation.mutate(row, {
+    onSuccess: (duplicatedRow: GridRowModel) => {
+      addRow(setRows, duplicatedRow);
+    },
+    onError: (error: unknown) => {
+      processError(error);
+    },
+  });
+}
+
+export function handleChange(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  patchMutation: UseMutationResult,
+  newRow: GridRowModel,
+  oldRow: GridRowModel
+) {
+  patchMutation.mutate(newRow, {
+    onSuccess: (changedRow: GridRowModel) => {
+      updateRow(setRows, changedRow, oldRow);
+    },
+    onError: (error: unknown) => {
+      processError(error);
+    },
+  });
 }

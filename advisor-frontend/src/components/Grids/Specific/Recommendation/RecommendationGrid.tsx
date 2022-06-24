@@ -5,7 +5,7 @@ import { Theme } from "@mui/material/styles";
 
 import GenericGrid from "../../Generic/GenericGrid";
 
-import { handleInit } from "../handlersNew";
+import { handleInit } from "../handlers";
 
 import {
   RecommendationAPP,

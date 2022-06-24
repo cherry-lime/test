@@ -22,7 +22,7 @@ import {
   handleMove,
   preProcessEditOrder,
   processRowUpdate,
-} from "../handlersNew";
+} from "../handlers";
 
 import {
   MaturityAPP,

@@ -14,7 +14,7 @@ import GenericGrid from "../../../Generic/GenericGrid";
 import { UserRole } from "../../../../../types/UserRole";
 import { AssessmentType } from "../../../../../types/AssessmentType";
 
-import { handleAdd, handleInit } from "../../handlersNew";
+import { handleAdd, handleInit } from "../../handlers";
 
 import {
   AssessmentAPP,

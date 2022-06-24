@@ -26,7 +26,7 @@ import {
   handleDuplicate,
   handleInit,
   processRowUpdate,
-} from "../handlersNew";
+} from "../handlers";
 
 type TemplateGridProps = {
   theme: Theme;
