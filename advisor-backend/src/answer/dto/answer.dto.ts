@@ -18,4 +18,7 @@ export class AnswerDto {
   @ApiProperty()
   @IsNumber()
   template_id: number;
+
+  @ApiProperty({ default: false })
+  disabled: boolean;
 }

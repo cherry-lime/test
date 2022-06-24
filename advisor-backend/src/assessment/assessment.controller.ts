@@ -14,6 +14,7 @@ import {
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
+  ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiQuery,
@@ -26,6 +27,9 @@ import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { AssessmentDto } from './dto/assessment.dto';
 import { FeedbackDto } from './dto/feedback.dto';
 import { Roles } from '../common/decorators/roles.decorator';
+import { ScoreDto } from './dto/score.dto';
+import { ScorePerTopicDto } from './dto/score-per-topic.dto';
+import { AssessmentScoreService } from './assessment-score.service';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
 import { RecommendationDto } from '../feedback/dto/recommendation.dto';
@@ -38,6 +42,7 @@ import { SaveCheckpointDto } from '../save/dto/save-checkpoint.dto';
 export class AssessmentController {
   constructor(
     private readonly assessmentService: AssessmentService,
+    private readonly assessmentScoreService: AssessmentScoreService,
     private readonly saveService: SaveService,
     private readonly feedbackService: FeedbackService
   ) {}
@@ -252,6 +257,76 @@ export class AssessmentController {
     @Body() feedbackDto: FeedbackDto
   ) {
     return this.assessmentService.feedback(id, feedbackDto);
+  }
+
+  /**
+   * [GET] /assessment/{assessment_id}/score - get score for all topics
+   * @param assessment_id assessment_id
+   * @returns scoreDto
+   * @throws NotFoundException if assessment not found
+   * @throws ForbiddenException if assessment type is INDIVIDUAL
+   * @throws BadRequestException if assessment is not completed
+   * @throws BadRequestException if no enabled maturities found associated to this template
+   * @throws BadRequestException if no enabled categories found associated to this template
+   * @throws BadRequestException if topic not found or not enabled for this template
+   * @throws BadRequestException if no enabled checkpoints found associated to this template
+   * @throws BadRequestException if no enabled possible answers found associated to this template
+   */
+  @Get(':assessment_id/score')
+  @ApiResponse({
+    description:
+      'Score for all topics (if score is -1, this means that there are no \
+         checkpoints related to this maturity category pair)',
+    type: ScoreDto,
+  })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
+  @ApiBadRequestResponse({
+    description: 'Individual assessment cannot be scored',
+  })
+  @ApiInternalServerErrorResponse()
+  async getScore(@Param('assessment_id', ParseIntPipe) id: number) {
+    return this.assessmentScoreService.getScore(id, null);
+  }
+
+  /**
+   * [GET] /assessment/{assessment_id}/score/{topic_id} -
+   *                                            get score per specific topic
+   * @param assessment_id assessment_id
+   * @param topic_id topic_id
+   * @returns scorePerTopicDto
+   * @throws NotFoundException if assessment not found
+   * @throws ForbiddenException if assessment type is INDIVIDUAL
+   * @throws BadRequestException if assessment is not completed
+   * @throws BadRequestException if no enabled maturities found associated to this template
+   * @throws BadRequestException if no enabled categories found associated to this template
+   * @throws BadRequestException if topic not found or not enabled for this template
+   * @throws BadRequestException if no enabled checkpoints found associated to this template
+   * @throws BadRequestException if no enabled possible answers found associated to this template
+   */
+  @Get(':assessment_id/score/:topic_id')
+  @ApiResponse({
+    description:
+      'Score for a specific topics (if score is -1, this means that there are no \
+      checkpoints related to this maturity category pair \
+      (for the selected topic))',
+    type: ScorePerTopicDto,
+  })
+  @ApiNotFoundResponse({ description: 'Assessment not found' })
+  @ApiBadRequestResponse({
+    description: 'Individual assessment cannot be scored',
+  })
+  @ApiInternalServerErrorResponse()
+  async getScorePerTopic(
+    @Param('assessment_id', ParseIntPipe) id: number,
+    @Param('topic_id', ParseIntPipe) topicId: number
+  ): Promise<ScorePerTopicDto> {
+    return {
+      topic_id: topicId,
+      ...((await this.assessmentScoreService.getScore(
+        id,
+        topicId
+      )) as ScoreDto),
+    } as ScorePerTopicDto;
   }
 
   @Get(':assessment_id/feedback')

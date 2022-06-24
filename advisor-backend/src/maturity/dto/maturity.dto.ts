@@ -12,6 +12,9 @@ export class MaturityDto {
   @Min(1)
   maturity_order: number;
 
+  @ApiProperty({ default: false })
+  disabled: boolean;
+
   @ApiProperty({ default: 1 })
   template_id: number;
 }

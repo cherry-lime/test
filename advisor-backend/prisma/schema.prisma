@@ -29,6 +29,7 @@ model Checkpoint {
   checkpoint_additional_information String                              @default("")
   order                             Int
   weight                            Int                                 @default(1)
+  disabled                          Boolean                             @default(false)
   Maturity                          Maturity                            @relation(fields: [maturity_id], references: [maturity_id])
   maturity_id                       Int
   Category                          Category                            @relation(fields: [category_id], references: [category_id])
@@ -45,6 +46,7 @@ model Answer {
   answer_weight                     Float                               @default(0)
   Template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
+  disabled                          Boolean                             @default(false)
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
   @@unique([answer_text, template_id])
@@ -56,6 +58,7 @@ model Maturity {
   maturity_order Int
   Template       Template     @relation(fields: [template_id], references: [template_id])
   template_id    Int
+  disabled       Boolean      @default(false)
   Checkpoint     Checkpoint[]
 
   @@unique([maturity_name, template_id])
@@ -66,6 +69,7 @@ model Topic {
   topic_name        String              @default("New Topic")
   Template          Template            @relation(fields: [template_id], references: [template_id])
   template_id       Int
+  disabled          Boolean             @default(false)
   CheckpointInTopic CheckpointInTopic[]
 
   @@unique([topic_name, template_id])
@@ -158,6 +162,7 @@ model Category {
   order         Int
   Template      Template     @relation(fields: [template_id], references: [template_id])
   template_id   Int
+  disabled      Boolean      @default(false)
   Checkpoint    Checkpoint[]
   SubArea       SubArea[]
 
