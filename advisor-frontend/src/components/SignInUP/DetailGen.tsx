@@ -15,9 +15,18 @@ import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
+import { useLoginTwo } from "../../app/loginAPI";
 
 const theme = createTheme();
 export default function DetailGen() {
+  // Make global state variables accessible
+  const { userPassword, userName } = useSelector(
+    (state: RootState) => state.userData
+  );
+  // Make Login API call available
+  const login = useLoginTwo();
   return (
     <ThemeProvider theme={theme}>
       <div // ING background image
@@ -86,34 +95,51 @@ export default function DetailGen() {
               <InputLabel htmlFor="Username">Username</InputLabel>
               <OutlinedInput
                 id="username"
-                inputProps={{ readOnly: true }}
+                value={userName}
+                readOnly
+                sx={{ m: 2 }}
                 startAdornment={
                   <InputAdornment position="start">
-                    <IconButton>
-                      <ContentCopyIcon />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              <InputLabel htmlFor="Username">Password</InputLabel>
-              <OutlinedInput
-                inputProps={{ readOnly: true }}
-                id="username"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <IconButton>
+                    <IconButton
+                      onClick={() => navigator.clipboard.writeText(userName)}
+                    >
                       <ContentCopyIcon />
                     </IconButton>
                   </InputAdornment>
                 }
               />
             </FormControl>
-
+            <FormControl variant="standard">
+              <InputLabel htmlFor="Username">Password</InputLabel>
+              <OutlinedInput
+                readOnly
+                sx={{ m: 2 }}
+                id="password"
+                value={userPassword}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <IconButton
+                      onClick={() =>
+                        navigator.clipboard.writeText(userPassword)
+                      }
+                    >
+                      <ContentCopyIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
             <Button
               size="medium"
               type="submit"
               variant="contained"
               sx={{ p: 1, m: 2 }}
+              onClick={() =>
+                login.mutate({
+                  username: userName,
+                  password: userPassword,
+                })
+              }
             >
               Finish and Log in
             </Button>

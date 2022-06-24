@@ -10,12 +10,20 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import { userRegister } from "../../app/loginAPI";
 
 const theme = createTheme();
 export default function Chooserole() {
+  // Defines the role state to keep track of the selected role
+  const [userRole, setUserRole] = React.useState("");
+  const handleChange = (event: SelectChangeEvent) => {
+    setUserRole(event.target.value as string);
+  };
+  // Imports the API hook for registering
+  const userReg = userRegister();
   return (
     <ThemeProvider theme={theme}>
       <div
@@ -98,10 +106,11 @@ export default function Chooserole() {
                 sx={{ m: 2, border: "orange" }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
+                value={userRole}
+                onChange={handleChange}
               >
-                <MenuItem value={10}>User</MenuItem>
-                <MenuItem value={20}>Assessor</MenuItem>
-                <MenuItem value={30}>Adminstrator</MenuItem>
+                <MenuItem value="USER">User</MenuItem>
+                <MenuItem value="ASSESSOR">Assessor</MenuItem>
               </Select>
             </FormControl>
             <Button
@@ -109,6 +118,9 @@ export default function Chooserole() {
               type="submit"
               variant="contained"
               sx={{ p: 1, m: 2 }}
+              onClick={() => {
+                userReg.mutate({ role: userRole });
+              }}
             >
               Continue
             </Button>
