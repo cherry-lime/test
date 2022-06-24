@@ -24,4 +24,7 @@ export class CheckpointDto {
 
   @ApiProperty()
   category_id: number;
+
+  @ApiProperty()
+  topics?: number[];
 }
