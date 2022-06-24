@@ -16,7 +16,7 @@ function AssessorInterface() {
   const pageTitle = `Assessor Home`;
 
   return (
-    <PageLayout title={pageTitle} footer sidebarType={userTypes.ASSESSOR}>
+    <PageLayout title={pageTitle} footer sidebarType={userTypes[userRole]}>
       <Link to="/teams" data-testid="assessor-teams">
         <TeamCard />
       </Link>
