@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
 import axios from "axios";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
