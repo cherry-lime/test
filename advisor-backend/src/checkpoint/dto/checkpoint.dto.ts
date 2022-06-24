@@ -5,11 +5,20 @@ export class CheckpointDto {
   checkpoint_id: number;
 
   @ApiProperty()
-  checkpoint_name: string;
-
-  @ApiProperty()
   checkpoint_description: string;
 
   @ApiProperty()
+  checkpoint_additional_information: string;
+
+  @ApiProperty()
   weight: number;
+
+  @ApiProperty()
+  order: number;
+
+  @ApiProperty()
+  maturity_id: number;
+
+  @ApiProperty()
+  category_id: number;
 }

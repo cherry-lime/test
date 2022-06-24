@@ -25,15 +25,18 @@ model User {
 
 model Checkpoint {
   checkpoint_id                     Int                                 @id @default(autoincrement())
-  checkpoint_name                   String
-  checkpoint_description            String
-  weight                            Int
-  Maturity                          Maturity                            @relation(fields: [maturity_id], references: [maturity_id])
-  maturity_id                       Int
+  checkpoint_description            String                              @default("New Checkpoint")
+  checkpoint_additional_information String                              @default("")
+  order                             Int
+  weight                            Int                                 @default(1)
+  Maturity                          Maturity?                           @relation(fields: [maturity_id], references: [maturity_id])
+  maturity_id                       Int?
   Category                          Category                            @relation(fields: [category_id], references: [category_id])
   category_id                       Int
   CheckpointInTopic                 CheckpointInTopic[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+
+  @@unique([checkpoint_description, category_id])
 }
 
 model Answer {
