@@ -65,28 +65,32 @@ function assessmentToAPI(assessmentAPP: AssessmentAPP) {
   };
 }
 
-export type CheckpointAPP = {
+export type AssessmentCheckpointAPP = {
   checkpointId: number;
   answerId: number;
 };
 
-type CheckpointAPI = {
+type AssessmentCheckpointAPI = {
   checkpoint_id: number;
   answer_id: number;
 };
 
-function checkpointToAPP(checkpointAPI: CheckpointAPI) {
+function assessmentCheckpointToAPP(
+  assessmentCheckpointAPI: AssessmentCheckpointAPI
+) {
   return {
-    checkpointId: checkpointAPI.checkpoint_id,
-    answerId: checkpointAPI.answer_id,
-  } as CheckpointAPP;
+    checkpointId: assessmentCheckpointAPI.checkpoint_id,
+    answerId: assessmentCheckpointAPI.answer_id,
+  } as AssessmentCheckpointAPP;
 }
 
-function checkpointToAPI(checkpointAPP: CheckpointAPP) {
+function assessmentCheckpointToAPI(
+  assessmentCheckpointAPP: AssessmentCheckpointAPP
+) {
   return {
-    checkpoint_id: checkpointAPP.checkpointId,
-    answer_id: checkpointAPP.answerId,
-  } as CheckpointAPI;
+    checkpoint_id: assessmentCheckpointAPP.checkpointId,
+    answer_id: assessmentCheckpointAPP.answerId,
+  } as AssessmentCheckpointAPI;
 }
 
 export type RecommendationAPP = {
@@ -268,13 +272,15 @@ export function usePostCompleteAssessment(assessmentId: number) {
 export function usePostSaveAssessment(assessmentId: number) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/save"],
-    async (checkpointAPP: CheckpointAPP) => {
-      const checkpointAPI = checkpointToAPI(checkpointAPP);
+    async (assessmentCheckpointAPP: AssessmentCheckpointAPP) => {
+      const assessmentCheckpointAPI = assessmentCheckpointToAPI(
+        assessmentCheckpointAPP
+      );
 
       // Get response data from database
       const { data } = await API.post(
         `/assessment/${assessmentId}/save`,
-        checkpointAPI
+        assessmentCheckpointAPI
       );
 
       // Return response
@@ -292,12 +298,13 @@ export function useGetSaveAssessment(assessmentId: number) {
       const { data } = await API.get(`/assessment/${assessmentId}/save`);
 
       // Convert data to checkpointsAPP
-      const checkpointsAPP = data.map((checkpointAPI: CheckpointAPI) =>
-        checkpointToAPP(checkpointAPI)
+      const checkpointsAPP = data.map(
+        (assessmentCheckpointAPI: AssessmentCheckpointAPI) =>
+          assessmentCheckpointToAPP(assessmentCheckpointAPI)
       );
 
       // Return response
-      return checkpointsAPP as CheckpointAPP[];
+      return checkpointsAPP as AssessmentCheckpointAPP[];
     }
   );
 }

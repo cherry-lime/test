@@ -3,42 +3,45 @@ import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
 
-export type CheckpointRow = {
+export type CheckpointAPP = {
   id: GridRowId;
   description: string;
   additionalInfo: number;
-  weight: string;
-  order: string;
+  weight: number;
+  order: number;
   categoryId: number;
   maturityId: number;
+  topics: number[];
   enabled: boolean;
 };
 
-type Checkpoint = {
+type CheckpointAPI = {
   checkpoint_id: number;
   checkpoint_description: string;
   checkpoint_additional_information: number;
-  weight: string;
-  order: string;
-  maturity_id: number;
+  weight: number;
+  order: number;
   category_id: number;
+  maturity_id: number;
+  topics: number[];
   disabled: boolean;
 };
 
-function checkpointToAPP(checkpointAPI: Checkpoint) {
+function checkpointToAPP(checkpointAPI: CheckpointAPI) {
   return {
     id: checkpointAPI.checkpoint_id,
     description: checkpointAPI.checkpoint_description,
     additionalInfo: checkpointAPI.checkpoint_additional_information,
-    weight: checkpointAPI.checkpoint_description,
+    weight: checkpointAPI.weight,
     order: checkpointAPI.order,
     categoryId: checkpointAPI.category_id,
     maturityId: checkpointAPI.maturity_id,
+    topics: checkpointAPI.topics,
     enabled: !checkpointAPI.disabled,
-  } as CheckpointRow;
+  } as CheckpointAPP;
 }
 
-function checkpointToAPI(checkpointAPP: CheckpointRow) {
+function checkpointToAPI(checkpointAPP: CheckpointAPP) {
   return {
     checkpoint_id: checkpointAPP.id,
     checkpoint_description: checkpointAPP.description,
@@ -47,8 +50,9 @@ function checkpointToAPI(checkpointAPP: CheckpointRow) {
     order: checkpointAPP.order,
     category_id: checkpointAPP.categoryId,
     maturity_id: checkpointAPP.maturityId,
+    topics: checkpointAPP.topics,
     disabled: !checkpointAPP.enabled,
-  } as Checkpoint;
+  } as CheckpointAPI;
 }
 
 // Get all checkpoints from database
@@ -58,11 +62,11 @@ export function useGetCheckpoints(categoryId: number) {
     const { data } = await API.get(`/category/${categoryId}/checkpoint`);
 
     // Convert data to checkpointsAPP
-    const checkpointsAPP = data.map((checkpointAPI: Checkpoint) =>
+    const checkpointsAPP = data.map((checkpointAPI: CheckpointAPI) =>
       checkpointToAPP(checkpointAPI)
     );
 
-    return checkpointsAPP as CheckpointRow[];
+    return checkpointsAPP as CheckpointAPP[];
   });
 }
 
@@ -75,7 +79,7 @@ export function usePostCheckpoint(categoryId: number) {
       const { data } = await API.post(`/category/${categoryId}/checkpoint`);
 
       // Convert data to checkpointAPP
-      return checkpointToAPP(data) as CheckpointRow;
+      return checkpointToAPP(data) as CheckpointAPP;
     }
   );
 }
@@ -88,7 +92,7 @@ export function useGetCheckpoint() {
       // Get data from database
       const { data } = await API.get(`/checkpoint/${checkpointId}`);
 
-      return checkpointToAPP(data) as CheckpointRow;
+      return checkpointToAPP(data) as CheckpointAPP;
     }
   );
 }
@@ -97,7 +101,7 @@ export function useGetCheckpoint() {
 export function usePatchCheckpoint() {
   return useMutation(
     ["PATCH", "/checkpoint", "/{checkpoint_id}"],
-    async (checkpointAPP: CheckpointRow) => {
+    async (checkpointAPP: CheckpointAPP) => {
       // Convert checkpointAPP to checkpoint
       const checkpointAPI = checkpointToAPI(checkpointAPP);
 
@@ -108,7 +112,7 @@ export function usePatchCheckpoint() {
       );
 
       // Convert data to checkpointAPP
-      return checkpointToAPP(data) as CheckpointRow;
+      return checkpointToAPP(data) as CheckpointAPP;
     }
   );
 }
@@ -122,7 +126,7 @@ export function useDeleteCheckpoint() {
       const { data } = await API.delete(`/checkpoint/${checkpointId}`);
 
       // Convert data to checkpointAPP
-      return checkpointToAPP(data) as CheckpointRow;
+      return checkpointToAPP(data) as CheckpointAPP;
     }
   );
 }
