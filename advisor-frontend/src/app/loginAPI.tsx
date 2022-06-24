@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useMutation } from "react-query";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "./store";
 import {
   setUserRole,
   setUserId,
