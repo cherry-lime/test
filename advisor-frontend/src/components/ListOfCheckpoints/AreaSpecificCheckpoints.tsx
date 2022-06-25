@@ -170,8 +170,6 @@ function AreaSpecificCheckpoints({
     return undefined;
   }, [checkpointList]);
 
-  const [checkpoints, setCheckpoints] = useState<AssessmentCheckpoint[]>();
-
   React.useEffect(() => {
     if (subareaList !== undefined) {
       setSubareaComponents(
@@ -211,14 +209,14 @@ function AreaSpecificCheckpoints({
       {value === "List" &&
         checkpointComponents !== undefined &&
         checkpointComponents}
-      {checkpoints !== undefined && (
+      {checkpointList !== undefined && (
         <Grid item container direction="column" alignItems="center">
           <Grid item>
             <Stack direction="row" spacing={2} alignItems="center">
               {value === "Single" && (
                 <Pagination
                   onChange={handlePageChange}
-                  count={checkpoints.length}
+                  count={checkpointList.length}
                   shape="rounded"
                   color="primary"
                   page={page}
