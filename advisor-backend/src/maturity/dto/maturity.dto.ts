@@ -10,7 +10,7 @@ export class MaturityDto {
 
   @ApiProperty({ default: 1 })
   @Min(1)
-  maturity_order: number;
+  order: number;
 
   @ApiProperty({ default: false })
   disabled: boolean;

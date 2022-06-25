@@ -96,8 +96,10 @@ export class SubareaService {
       throw new NotFoundException('Subarea not found');
     }
 
+    const newOrder = updateSubareaDto.order;
+
     // Update order if order is changed
-    if (updateSubareaDto.order) {
+    if (newOrder) {
       // Get the max order in category
       const maxOrder = await this.prisma.subArea.count({
         where: {
@@ -106,49 +108,14 @@ export class SubareaService {
       });
 
       // Check if new order is valid
-      if (updateSubareaDto.order > maxOrder) {
+      if (newOrder > maxOrder) {
         throw new ConflictException(
           'Order cannot be greater than amount of subareas'
         );
       }
-
-      // If new order is lower, increment everything between new and old order
-      if (updateSubareaDto.order < subarea.order) {
-        await this.prisma.subArea.updateMany({
-          where: {
-            category_id: subarea.category_id,
-            order: {
-              gte: updateSubareaDto.order,
-              lte: subarea.order,
-            },
-          },
-          data: {
-            order: {
-              increment: 1,
-            },
-          },
-        });
-      } else if (updateSubareaDto.order > subarea.order) {
-        // If new order is higher, decrement everything between old and new order
-        await this.prisma.subArea.updateMany({
-          where: {
-            category_id: subarea.category_id,
-            order: {
-              gte: subarea.order,
-              lte: updateSubareaDto.order,
-            },
-          },
-          data: {
-            order: {
-              decrement: 1,
-            },
-          },
-        });
-      }
     }
 
-    // Update subarea
-    return await this.prisma.subArea
+    const updatedSubarea = await this.prisma.subArea
       .update({
         where: {
           subarea_id,
@@ -161,6 +128,48 @@ export class SubareaService {
         }
         throw new InternalServerErrorException();
       });
+
+    // If new order is lower, increment everything between new and old order
+    if (newOrder && newOrder < subarea.order) {
+      await this.prisma.subArea.updateMany({
+        where: {
+          category_id: subarea.category_id,
+          subarea_id: {
+            not: subarea.subarea_id,
+          },
+          order: {
+            gte: updateSubareaDto.order,
+            lte: subarea.order,
+          },
+        },
+        data: {
+          order: {
+            increment: 1,
+          },
+        },
+      });
+    } else if (newOrder && newOrder > subarea.order) {
+      // If new order is higher, decrement everything between old and new order
+      await this.prisma.subArea.updateMany({
+        where: {
+          category_id: subarea.category_id,
+          subarea_id: {
+            not: subarea.subarea_id,
+          },
+          order: {
+            gte: subarea.order,
+            lte: updateSubareaDto.order,
+          },
+        },
+        data: {
+          order: {
+            decrement: 1,
+          },
+        },
+      });
+    }
+
+    return updatedSubarea;
   }
 
   /**

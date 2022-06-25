@@ -193,8 +193,10 @@ export class CheckpointService {
       throw new BadRequestException('Weight is outside of range');
     }
 
+    const newOrder = updateCheckpointDto.order;
+
     // Update orders if order changed
-    if (updateCheckpointDto.order) {
+    if (newOrder) {
       // Check if order is valid (not more than number of categories in template)
       const order = await this.prisma.checkpoint.count({
         where: {
@@ -207,39 +209,6 @@ export class CheckpointService {
           'Order must be less than number of checkpoints in the category'
         );
       }
-      // If new order is smaller than old order, increase order of all categories with between new and old order
-      if (updateCheckpointDto.order < checkpoint.order) {
-        await this.prisma.checkpoint.updateMany({
-          where: {
-            category_id: checkpoint.category_id,
-            order: {
-              gte: updateCheckpointDto.order,
-              lte: checkpoint.order,
-            },
-          },
-          data: {
-            order: {
-              increment: 1,
-            },
-          },
-        });
-      } else if (updateCheckpointDto.order > checkpoint.order) {
-        // If new order is bigger than old order, decrease order of all categories with between old and new order
-        await this.prisma.checkpoint.updateMany({
-          where: {
-            category_id: checkpoint.category_id,
-            order: {
-              gte: checkpoint.order,
-              lte: updateCheckpointDto.order,
-            },
-          },
-          data: {
-            order: {
-              decrement: 1,
-            },
-          },
-        });
-      }
     }
 
     const updateData: any = {
@@ -251,15 +220,6 @@ export class CheckpointService {
         CheckpointInTopic: true,
       },
     };
-
-    // Update topics and upsert them
-    if (updateCheckpointDto.topics) {
-      await this.topicService.updateTopics(
-        checkpoint_id,
-        updateData,
-        updateCheckpointDto
-      );
-    }
 
     // Update checkpoint
     const updatedCheckpoint = await this.prisma.checkpoint
@@ -277,6 +237,55 @@ export class CheckpointService {
         console.log(error);
         throw new InternalServerErrorException();
       });
+
+    // If new order is smaller than old order, increase order of all categories with between new and old order
+    if (newOrder && newOrder < checkpoint.order) {
+      await this.prisma.checkpoint.updateMany({
+        where: {
+          category_id: checkpoint.category_id,
+          checkpoint_id: {
+            not: checkpoint.checkpoint_id,
+          },
+          order: {
+            gte: updateCheckpointDto.order,
+            lte: checkpoint.order,
+          },
+        },
+        data: {
+          order: {
+            increment: 1,
+          },
+        },
+      });
+    } else if (newOrder && newOrder > checkpoint.order) {
+      // If new order is bigger than old order, decrease order of all categories with between old and new order
+      await this.prisma.checkpoint.updateMany({
+        where: {
+          category_id: checkpoint.category_id,
+          checkpoint_id: {
+            not: checkpoint.checkpoint_id,
+          },
+          order: {
+            gte: checkpoint.order,
+            lte: updateCheckpointDto.order,
+          },
+        },
+        data: {
+          order: {
+            decrement: 1,
+          },
+        },
+      });
+    }
+
+    // Update topics and upsert them
+    if (updateCheckpointDto.topics) {
+      await this.topicService.updateTopics(
+        checkpoint_id,
+        updateData,
+        updateCheckpointDto
+      );
+    }
 
     return this.formatTopics(updatedCheckpoint);
   }
@@ -325,11 +334,7 @@ export class CheckpointService {
           CheckpointInTopic: true,
         },
       })
-      .catch((error) => {
-        // Throw error if checkpoint not found
-        if (error.code === 'P2025') {
-          throw new NotFoundException('checkpoint was not found');
-        }
+      .catch(() => {
         throw new InternalServerErrorException();
       });
 

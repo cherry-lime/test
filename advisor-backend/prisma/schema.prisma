@@ -53,13 +53,13 @@ model Answer {
 }
 
 model Maturity {
-  maturity_id    Int          @id @default(autoincrement())
-  maturity_name  String       @default("New Maturity")
-  maturity_order Int
-  Template       Template     @relation(fields: [template_id], references: [template_id])
-  template_id    Int
-  disabled       Boolean      @default(false)
-  Checkpoint     Checkpoint[]
+  maturity_id   Int          @id @default(autoincrement())
+  maturity_name String       @default("New Maturity")
+  order         Int
+  Template      Template     @relation(fields: [template_id], references: [template_id])
+  template_id   Int
+  disabled      Boolean      @default(false)
+  Checkpoint    Checkpoint[]
 
   @@unique([maturity_name, template_id])
 }
