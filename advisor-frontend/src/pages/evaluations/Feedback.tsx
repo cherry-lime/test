@@ -13,6 +13,7 @@ import { RootState } from "../../app/store";
 import pdf from "./pdf";
 import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
+import { AssessmentAPP, useGetAssessment, usePostFeedbackAssessment } from "../../api/AssessmentAPI";
 
 /**
  * Page with the feedback related to a self assessment
@@ -92,6 +93,39 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     setValue(newValue);
   };
 
+  const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
+  const assessmentResponse = useGetAssessment(Number(assessmentId));
+
+  React.useEffect(() => {
+    switch (assessmentResponse.status) {
+      case "error":
+        // eslint-disable-next-line no-console
+        console.log(assessmentResponse.error);
+        break;
+      case "success":
+        if (assessmentResponse.data) {
+          setAssessmentInfo(assessmentResponse.data);
+        }
+        break;
+      default:
+        break;
+    }
+  }, [assessmentResponse.status, assessmentResponse.data]);
+
+  const postFeedback = usePostFeedbackAssessment(Number(assessmentId));
+
+  const changeFeedback = (newFeedback: string) => {
+    postFeedback.mutate(newFeedback, {
+      onSuccess: (newAssessmentInfo: AssessmentAPP) => {
+        setAssessmentInfo(newAssessmentInfo);
+      },
+      onError: (e: unknown) => {
+        // eslint-disable-next-line no-console
+        console.log(e);
+      },
+    });
+  };
+
   return (
     <PageLayout
       title={
@@ -129,16 +163,16 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
       {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
 
-      {/* {team && userRole === "ASSESSOR" && value === "Recommendations" && (
-        <TextfieldEdit rows={5} theme={theme} text="assessor feedback here" />
-      )} */}
+      {team && userRole === "ASSESSOR" && value === "Recommendations" && assessmentInfo && (
+        <TextfieldEdit rows={5} theme={theme} text={assessmentInfo.feedbackText} handleSave={changeFeedback} />
+      )}
 
-      {team && userRole === "USER" && value === "Recommendations" && (
+      {team && userRole === "USER" && value === "Recommendations" && assessmentInfo && (
         <Textfield
           rows={5}
           columns="inherit"
           theme={theme}
-          text="assessor feedback here"
+          text={assessmentInfo.feedbackText}
         />
       )}
 
