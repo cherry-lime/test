@@ -1,5 +1,6 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
+import { Link } from "react-router-dom";
 
 import {
   GridColumns,
@@ -56,15 +57,6 @@ export default function AssessmentOngoingGrid({
     handleInit(setRows, status, data, error);
   }, [status]);
 
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
-    },
-    []
-  );
-
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postAssessment as UseMutationResult);
@@ -96,14 +88,22 @@ export default function AssessmentOngoingGrid({
               type: "actions",
               width: 150,
               getActions: (params: { id: GridRowId }) => [
-                <Button variant="contained" onClick={handleVisit(params.id)}>
-                  <strong>Continue</strong>
-                </Button>,
+                <Link
+                  to={
+                    assessmentType === "INDIVIDUAL"
+                      ? `/user/self_evaluations/${params.id}`
+                      : `/teams/${teamId}/${params.id}`
+                  }
+                >
+                  <Button variant="contained">
+                    <strong>Continue</strong>
+                  </Button>
+                </Link>,
               ],
             },
           ]),
     ],
-    [handleVisit]
+    []
   );
 
   return (

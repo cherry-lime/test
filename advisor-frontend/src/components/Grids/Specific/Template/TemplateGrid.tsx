@@ -7,6 +7,7 @@ import { Tooltip } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Link } from "react-router-dom";
 
 import GenericGrid from "../../Generic/GenericGrid";
 import { AssessmentType } from "../../../../types/AssessmentType";
@@ -65,15 +66,6 @@ export default function TemplateGrid({
     []
   );
 
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
-    },
-    []
-  );
-
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
@@ -127,11 +119,15 @@ export default function TemplateGrid({
           <GridActionsCellItem
             icon={
               <Tooltip title="Visit">
-                <ArrowForwardIcon />
+                <Link
+                  to={`/admin/templates/${params.id}`}
+                  data-testid={`template-${params.id}`}
+                >
+                  <ArrowForwardIcon className="arrowIcon" />
+                </Link>
               </Tooltip>
             }
             label="Visit"
-            onClick={handleVisit(params.id)}
           />,
           <GridActionsCellItem
             icon={<FileCopyIcon />}
@@ -148,7 +144,7 @@ export default function TemplateGrid({
         ],
       },
     ],
-    [handleVisit, handleDuplicateDecorator, handleDeleteDecorator]
+    [handleDuplicateDecorator, handleDeleteDecorator]
   );
 
   return (

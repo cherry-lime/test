@@ -1,5 +1,6 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
+import { Link } from "react-router-dom";
 
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
@@ -54,15 +55,6 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
     []
   );
 
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
-    },
-    []
-  );
-
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
@@ -93,11 +85,12 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
           <GridActionsCellItem
             icon={
               <Tooltip title="Visit">
-                <ArrowForwardIcon />
+                <Link to={`/teams/${params.id}`}>
+                  <ArrowForwardIcon className="arrowIcon" />
+                </Link>
               </Tooltip>
             }
             label="Visit"
-            onClick={handleVisit(params.id)}
           />,
           <GridActionsCellItem
             icon={
@@ -111,7 +104,7 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
         ],
       },
     ],
-    [handleVisit, handleDeleteDecorator]
+    [handleDeleteDecorator]
   );
 
   return (
