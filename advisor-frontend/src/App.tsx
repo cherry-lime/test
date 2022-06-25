@@ -1,6 +1,6 @@
+import { useEffect } from "react";
 import { Link, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import UserInterface from "./pages/user/UserInterface/UserInterface";
 import Home from "./Home";
@@ -27,9 +27,11 @@ import DetailGen from "./components/SignInUP/DetailGen";
 function App() {
   // Import the global state variables that will be used throughout the session
   const { userRole } = useSelector((state: RootState) => state.userData);
+
   // Call authentication API on pageload once
   const auth = authProfile();
   useEffect(() => auth.mutate(), []);
+
   return (
     <div className="App">
       <GlobalStyles />

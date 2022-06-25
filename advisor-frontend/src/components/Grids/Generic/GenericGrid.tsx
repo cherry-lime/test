@@ -12,6 +12,7 @@ import {
 } from "@mui/x-data-grid";
 import { styled, Theme, ThemeProvider } from "@mui/material/styles";
 import Button from "@mui/material/Button";
+import ErrorPopup, { RefObject } from "../../ErrorPopup/ErrorPopup";
 
 const StyledGrid = styled(DataGrid)(({ theme }) => ({
   // Style even rows
@@ -61,6 +62,7 @@ type GenericGridProps = {
   theme: Theme;
   rows: GridRowsProp;
   columns: GridColumns;
+  ref: React.RefObject<RefObject>;
   // eslint-disable-next-line react/require-default-props
   processRowUpdate?: (
     newRow: GridRowModel,
@@ -81,6 +83,7 @@ export default function GenericGrid({
   theme,
   rows,
   columns,
+  ref,
   processRowUpdate,
   hasToolbar,
   add,
@@ -138,6 +141,7 @@ export default function GenericGrid({
             <strong>+ {add.text}</strong>
           </Button>
         )}
+        <ErrorPopup ref={ref} />
       </div>
     </ThemeProvider>
   );

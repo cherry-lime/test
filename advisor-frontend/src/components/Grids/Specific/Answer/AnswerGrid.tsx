@@ -14,12 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import GenericGrid from "../../Generic/GenericGrid";
 
-import {
-  handleAdd,
-  handleDelete,
-  handleInit,
-  processRowUpdate,
-} from "../handlers";
+import Handlers from "../handlers";
 
 import {
   AnswerAPP,
@@ -28,6 +23,7 @@ import {
   usePatchAnswer,
   usePostAnswer,
 } from "../../../../api/AnswerAPI";
+import { RefObject } from "../../../ErrorPopup/ErrorPopup";
 
 type AnswerGridProps = {
   theme: Theme;
@@ -36,6 +32,12 @@ type AnswerGridProps = {
 
 export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   const [rows, setRows] = React.useState<AnswerAPP[]>([]);
+
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
+  // Initialize handler functions
+  const handlers = new Handlers(ref);
 
   // Answer query
   const { status, data, error } = useGetAnswers(templateId);
@@ -47,7 +49,7 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
 
   // Called when "status" of answers query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handlers.handleInit(setRows, status, data, error);
   }, [status]);
 
   // Called when the 'Value' column is edited
@@ -66,7 +68,7 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: AnswerAPP, oldRow: AnswerAPP) =>
-      processRowUpdate(
+      handlers.processRowUpdate(
         setRows,
         patchAnswer as UseMutationResult,
         newRow,
@@ -78,14 +80,18 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, deleteAnswer as UseMutationResult, rowId as number);
+      handlers.handleDelete(
+        setRows,
+        deleteAnswer as UseMutationResult,
+        rowId as number
+      );
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postAnswer as UseMutationResult);
+    handlers.handleAdd(setRows, postAnswer as UseMutationResult);
   }, []);
 
   const columns = React.useMemo<GridColumns<AnswerAPP>>(
@@ -141,6 +147,7 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
       theme={theme}
       rows={rows}
       columns={columns}
+      ref={ref}
       processRowUpdate={processRowUpdateDecorator}
       hasToolbar
       add={{

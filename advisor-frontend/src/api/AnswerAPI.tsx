@@ -78,7 +78,7 @@ export function usePostAnswer(templateId: number) {
 
 // Patch answer in database
 export function usePatchAnswer() {
-  return useMutation(
+  return useMutation<AnswerAPP, Error, AnswerAPP>(
     ["PATCH", "/answer", "/{answer_id}"],
     async (answerAPP: AnswerAPP) => {
       // Convert answerAPP to template

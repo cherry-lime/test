@@ -26,18 +26,19 @@ export function useLogin() {
       }),
     {
       onSuccess: (data: any) => {
-        console.log(data);
+        // console.log(data);
       },
       onError: (error: any) => {
-        console.log(error);
+        // console.log(error);
       },
     }
   );
 }
 
 export default function AllGrid() {
-  // const login = useLogin();
-  // login.mutate();
+  const login = useLogin();
+  login.mutate();
+
   const userRole = "ASSESSOR";
   const teamId = 1;
   const templateId = 1;
