@@ -179,33 +179,8 @@ export class SubareaService {
    * @throws Subarea not found
    */
   async delete(subarea_id: number) {
-    const subarea = await this.prisma.subArea.findUnique({
-      where: {
-        subarea_id,
-      },
-    });
-
-    if (!subarea) {
-      throw new NotFoundException('Subarea not found');
-    }
-
-    // Create new order for all subareas after deleted subarea
-    await this.prisma.subArea.updateMany({
-      where: {
-        category_id: subarea.category_id,
-        order: {
-          gte: subarea.order,
-        },
-      },
-      data: {
-        order: {
-          decrement: 1,
-        },
-      },
-    });
-
     // Delete subarea
-    return await this.prisma.subArea
+    const deletedSubarea = await this.prisma.subArea
       .delete({
         where: {
           subarea_id,
@@ -214,5 +189,21 @@ export class SubareaService {
       .catch(() => {
         throw new InternalServerErrorException();
       });
+
+    // Create new order for all subareas after deleted subarea
+    await this.prisma.subArea.updateMany({
+      where: {
+        category_id: deletedSubarea.category_id,
+        order: {
+          gte: deletedSubarea.order,
+        },
+      },
+      data: {
+        order: {
+          decrement: 1,
+        },
+      },
+    });
+    return deletedSubarea;
   }
 }

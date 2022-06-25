@@ -184,35 +184,8 @@ export class MaturityService {
    * @throws Maturity not found
    */
   async delete(maturity_id: number) {
-    // Get maturity by id from prisma
-    const maturity = await this.prisma.maturity.findUnique({
-      where: {
-        maturity_id,
-      },
-    });
-
-    // Throw NotFoundException if maturity not found
-    if (!maturity) {
-      throw new NotFoundException('Maturity not found');
-    }
-
-    // Decrement order of all maturities with order bigger than deleted maturity
-    await this.prisma.maturity.updateMany({
-      where: {
-        template_id: maturity.template_id,
-        order: {
-          gte: maturity.order,
-        },
-      },
-      data: {
-        order: {
-          decrement: 1,
-        },
-      },
-    });
-
     // Delete maturity
-    return await this.prisma.maturity
+    const deletedMaturity = await this.prisma.maturity
       .delete({
         where: {
           maturity_id,
@@ -225,5 +198,21 @@ export class MaturityService {
         }
         throw new InternalServerErrorException();
       });
+
+    // Decrement order of all maturities with order bigger than deleted maturity
+    await this.prisma.maturity.updateMany({
+      where: {
+        template_id: deletedMaturity.template_id,
+        order: {
+          gte: deletedMaturity.order,
+        },
+      },
+      data: {
+        order: {
+          decrement: 1,
+        },
+      },
+    });
+    return deletedMaturity;
   }
 }
