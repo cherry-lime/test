@@ -5,25 +5,25 @@ import { AssessmentType } from '@prisma/client';
  * Response with assessment information
  */
 export class AssessmentDto {
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
   assessment_id: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'New Assessment' })
   assessment_name: string;
 
-  @ApiProperty({ enum: AssessmentType })
+  @ApiProperty({ enum: AssessmentType, default: AssessmentType.INDIVIDUAL })
   assessment_type: AssessmentType;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'Netherlands' })
   country_name: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'IT' })
   department_name: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
   template_id: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: '' })
   feedback_text: string;
 
   @ApiProperty()
@@ -35,6 +35,6 @@ export class AssessmentDto {
   @ApiPropertyOptional()
   completed_at?: Date;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ default: 1 })
   team_id?: number;
 }

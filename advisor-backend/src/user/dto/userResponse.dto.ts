@@ -1,17 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
+import { IsEnum } from 'class-validator';
 
 /**
  * Response with user information
  */
 export class userResponse {
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
   user_id: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'username' })
   username: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: Role.USER, enum: Role })
+  @IsEnum(Role)
   role: Role;
 
   @ApiProperty()

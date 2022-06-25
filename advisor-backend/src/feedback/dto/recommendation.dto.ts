@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Min } from 'class-validator';
 
 export class RecommendationDto {
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
+  @Min(1)
   order: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'Feedback example' })
   feedback_text: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: '' })
   feedback_additional_information: string;
 }

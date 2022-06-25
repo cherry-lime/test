@@ -55,7 +55,7 @@ export class FeedbackService {
         );
         const checkpointWeight = checkpoint.weight;
         const answerWeight = answers[saved.answer_id].answer_weight;
-        const maturityOrder = checkpoint.Maturity.maturity_order;
+        const maturityOrder = checkpoint.Maturity.order;
         const categoryOrder = checkpoint.Category.category_order;
         return {
           data: {
