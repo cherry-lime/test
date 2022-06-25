@@ -40,11 +40,7 @@ function answerToAPI(answerAPP: AnswerAPP) {
 }
 
 // Get all answers from database
-export function useGetAnswers(
-  templateId: number,
-  enabledFilter?: boolean,
-  wait?: number | undefined
-) {
+export function useGetAnswers(templateId: number, enabledFilter?: boolean) {
   return useQuery(
     ["GET", "/template", templateId, "/answer"],
     async () => {
@@ -68,7 +64,7 @@ export function useGetAnswers(
       // Convert data to answerAPP
       return answersAPP as AnswerAPP[];
     },
-    { enabled: !!wait }
+    { enabled: !!templateId }
   );
 }
 

@@ -41,7 +41,9 @@ function Checkpoint({
   set the value when clicking one of the radio-buttons
   */
 
-  const [value, setValue] = useState(checkpointvalues[0].toString());
+  const [value, setValue] = useState(
+    checkpointvalues.length > 0 ? checkpointvalues[0].toString() : ""
+  );
 
   const handleClick = useCallback(
     (event) => {

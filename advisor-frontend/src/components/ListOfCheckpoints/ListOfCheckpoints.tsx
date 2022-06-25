@@ -92,15 +92,13 @@ function ListOfCheckpoints({
   // get area list from API
   const areasResponse = useGetCategories(
     Number(assessmentInfo?.templateId),
-    false,
-    assessmentInfo?.templateId
+    true
   );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
     Number(assessmentInfo?.templateId),
-    false,
-    assessmentInfo?.templateId
+    true
   );
 
   // set assessment info value

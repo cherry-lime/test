@@ -44,11 +44,7 @@ function categoryToAPI(categoryAPP: CategoryAPP) {
 }
 
 // Get all categories from database
-export function useGetCategories(
-  templateId: number,
-  enabledFilter?: boolean,
-  wait?: number | undefined
-) {
+export function useGetCategories(templateId: number, enabledFilter?: boolean) {
   return useQuery(
     ["GET", "/template", templateId, "/category", enabledFilter],
     async () => {
@@ -71,7 +67,7 @@ export function useGetCategories(
 
       return categoriesAPP as CategoryAPP[];
     },
-    { enabled: !!wait }
+    { enabled: !!templateId }
   );
 }
 
