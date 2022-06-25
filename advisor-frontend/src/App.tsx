@@ -60,9 +60,12 @@ function App() {
             )
           }
         />
-        <Route path="/login" element={<SignIn />} />
-        <Route path="/signup" element={<Chooserole />} />
-        <Route path="/signup/details" element={<DetailGen />} />
+        <Route path="/login" element={<SignIn theme={INGTheme} />} />
+        <Route path="/signup" element={<Chooserole theme={INGTheme} />} />
+        <Route
+          path="/signup/details"
+          element={<DetailGen theme={INGTheme} />}
+        />
         <Route path="/home" element={<Home />} />
 
         <Route path="/user" element={<UserInterface />} />

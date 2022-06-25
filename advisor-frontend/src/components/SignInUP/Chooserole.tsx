@@ -2,11 +2,10 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, Theme } from "@mui/material/styles";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
@@ -20,8 +19,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { userRegister } from "../../app/loginAPI";
 
-const theme = createTheme();
-export default function Chooserole() {
+export default function Chooserole({ theme }: { theme: Theme }) {
   // Defines the role state to keep track of the selected role
   const [userRole, setUserRole] = React.useState("");
   const handleChange = (event: SelectChangeEvent) => {
@@ -50,7 +48,6 @@ export default function Chooserole() {
           backgroundSize: "cover",
           backgroundAttachment: "fixed",
           minHeight: "100vh",
-          width: "100vw",
         }}
       >
         {" "}
@@ -58,7 +55,14 @@ export default function Chooserole() {
         <IconButton
           size="medium"
           onClick={handleClickOpen}
-          sx={{ color: "white", mr: 250, mt: 1 }}
+          sx={{
+            color: "white",
+            mr: 250,
+            mt: 1,
+            float: "left",
+            marginLeft: 2,
+            marginTop: 2,
+          }}
         >
           <HelpOutlineOutlinedIcon />
         </IconButton>
@@ -83,7 +87,7 @@ export default function Chooserole() {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Go to Login</Button>
+            <Button onClick={handleClose}>Go back to sign up</Button>
           </DialogActions>
         </Dialog>
         <Typography
@@ -99,28 +103,27 @@ export default function Chooserole() {
         </Typography>
         {/* Container is where all functionality exists */}
         <Container
-          component="main"
           maxWidth="xs"
           sx={{
             pt: 10,
           }}
         >
-          <CssBaseline />
           <Box
             sx={{
               pt: 0,
               marginBottom: 0,
+              padding: 4,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               border: 4,
-              borderColor: "orange",
+              borderColor: theme.palette.primary.main,
               borderRadius: "16px",
               bgcolor: "white",
             }}
           >
             {/* Conact rounded circle */}
-            <Avatar sx={{ m: 1, bgcolor: "#FF6200" }}>
+            <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
               <AccountCircleRoundedIcon />
             </Avatar>
             <Typography
@@ -130,25 +133,17 @@ export default function Chooserole() {
               fontWeight="fontWeightBold"
               sx={{
                 pt: 0,
+                marginTop: 2,
+                marginBottom: 2,
               }}
             >
               Please, select your role
-            </Typography>
-            <Typography
-              variant="body1"
-              color="black"
-              align="left"
-              sx={{
-                pt: 0,
-              }}
-            >
-              Role
             </Typography>
             {/* The form for the drop down menu to pick a role */}
             <FormControl fullWidth>
               <Select
                 variant="filled"
-                sx={{ m: 2, border: "orange" }}
+                sx={{ m: 2 }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={userRole}
@@ -160,17 +155,12 @@ export default function Chooserole() {
             </FormControl>
             <Button
               size="medium"
-              type="submit"
               variant="contained"
               color="primary"
               sx={{
                 p: 2,
                 m: 2,
-                color: "white",
-                borderColor: "#FF6200",
-                bgcolor: "#FF6200",
               }}
-              style={{ fontWeight: "700" }}
               onClick={() => {
                 userReg.mutate({ role: userRole });
               }}

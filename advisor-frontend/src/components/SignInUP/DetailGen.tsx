@@ -2,11 +2,10 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Theme, ThemeProvider } from "@mui/material/styles";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
@@ -24,8 +23,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useLoginTwo } from "../../app/loginAPI";
 
-const theme = createTheme();
-export default function DetailGen() {
+export default function DetailGen({ theme }: { theme: Theme }) {
   // Make global state variables accessible
   const { userPassword, userName } = useSelector(
     (state: RootState) => state.userData
@@ -52,14 +50,20 @@ export default function DetailGen() {
           backgroundSize: "cover",
           backgroundAttachment: "fixed",
           minHeight: "100vh",
-          width: "100vw",
         }}
       >
         {/* Help circle on the left */}
         <IconButton
           size="medium"
           onClick={handleClickOpen}
-          sx={{ color: "white", mr: 250, mt: 1 }}
+          sx={{
+            color: "white",
+            mr: 250,
+            mt: 1,
+            float: "left",
+            marginLeft: 2,
+            marginTop: 2,
+          }}
         >
           <HelpOutlineOutlinedIcon />
         </IconButton>
@@ -84,7 +88,7 @@ export default function DetailGen() {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Go to Login</Button>
+            <Button onClick={handleClose}>Go back to Sign up</Button>
           </DialogActions>
         </Dialog>
         <Typography
@@ -100,27 +104,26 @@ export default function DetailGen() {
         </Typography>
         {/* Container is where all functionality exists */}
         <Container
-          component="main"
           maxWidth="xs"
           sx={{
             pt: 10,
           }}
         >
-          <CssBaseline />
           <Box
             sx={{
               pt: 0,
               marginBottom: 0,
+              padding: "20px 30px 20px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               border: 4,
-              borderColor: "orange",
+              borderColor: theme.palette.primary.main,
               borderRadius: "16px",
               bgcolor: "white",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "#FF6200" }}>
+            <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
               <AccountCircleRoundedIcon />
             </Avatar>
             <Typography
@@ -130,6 +133,8 @@ export default function DetailGen() {
               fontWeight="fontWeightBold"
               sx={{
                 pt: 0,
+                marginTop: 2,
+                marginBottom: 3,
               }}
             >
               Your username and password were generated for you
@@ -174,18 +179,12 @@ export default function DetailGen() {
               />
             </FormControl>
             <Button
-              size="medium"
-              type="submit"
               variant="contained"
               color="primary"
               sx={{
-                p: 1,
+                p: 2,
                 m: 2,
-                color: "white",
-                borderColor: "#FF6200",
-                bgcolor: "#FF6200",
               }}
-              style={{ fontWeight: "700" }}
               onClick={() =>
                 login.mutate({
                   username: userName,
