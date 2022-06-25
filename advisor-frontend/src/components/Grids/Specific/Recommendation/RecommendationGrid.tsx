@@ -7,6 +7,8 @@ import GenericGrid from "../../Generic/GenericGrid";
 
 import { handleInit } from "../handlers";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 import {
   RecommendationAPP,
   useGetFeedbackAssessment,
@@ -25,6 +27,9 @@ export default function RecommendationGrid({
 }: RecommendationGridProps) {
   const [rows, setRows] = React.useState<RecommendationAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Feedback query
   const { status, data, error } = useGetFeedbackAssessment(
     assessmentId,
@@ -33,7 +38,7 @@ export default function RecommendationGrid({
 
   // Called when "status" of feedback query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data, error, ref);
   }, [status]);
 
   const columns = React.useMemo<GridColumns<RecommendationAPP>>(
@@ -62,5 +67,10 @@ export default function RecommendationGrid({
     []
   );
 
-  return <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />;
+  return (
+    <>
+      <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />
+      <ErrorPopup />
+    </>
+  );
 }

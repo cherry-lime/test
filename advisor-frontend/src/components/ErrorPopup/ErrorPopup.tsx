@@ -1,4 +1,5 @@
 import { Alert, Snackbar } from "@mui/material";
+import { AxiosError } from "axios";
 import { forwardRef, Ref, useImperativeHandle, useState } from "react";
 
 export interface RefObject {
@@ -10,7 +11,10 @@ export const handleError = (
   error: unknown
 ) => {
   if (ref && ref.current) {
-    if (typeof error !== undefined) {
+    if (error instanceof AxiosError) {
+      const errorMessage = `${error.response?.data.error}: ${error.response?.data.message}`;
+      ref.current.handleErrorPopup(errorMessage);
+    } else if (error instanceof Error) {
       ref.current.handleErrorPopup(error.toString());
     }
   }

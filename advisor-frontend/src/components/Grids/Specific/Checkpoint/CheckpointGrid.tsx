@@ -42,6 +42,8 @@ import {
   processRowUpdate,
 } from "../handlers";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 type CheckpointGridProps = {
   theme: Theme;
   templateId: number;
@@ -56,6 +58,9 @@ export default function CheckpointGrid({
   const [rows, setRows] = React.useState<CheckpointAPP[]>([]);
   const [topics, setTopics] = React.useState<TopicAPP[]>([]);
   const [maturities, setMaturities] = React.useState<MaturityAPP[]>([]);
+
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
 
   // Checkpoint queries
   const {
@@ -83,12 +88,18 @@ export default function CheckpointGrid({
 
   // Called when "status" of checkpoints query is changed
   React.useEffect(() => {
-    handleInit(setRows, statusCheckpoints, dataCheckpoints, errorCheckpoints);
+    handleInit(
+      setRows,
+      statusCheckpoints,
+      dataCheckpoints,
+      errorCheckpoints,
+      ref
+    );
   }, [statusCheckpoints]);
 
   // Called when "status" of topics query is changed
   React.useEffect(() => {
-    handleInit(setTopics, statusTopics, dataTopics, errorTopics);
+    handleInit(setTopics, statusTopics, dataTopics, errorTopics, ref);
   }, [statusTopics]);
 
   // Called when "status" of maturities query is changed
@@ -97,13 +108,15 @@ export default function CheckpointGrid({
       setMaturities,
       statusMaturities,
       dataMaturities,
-      errorMaturities
+      errorMaturities,
+      ref
     );
   }, [statusMaturities]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
-    (params: GridPreProcessEditCellProps) => preProcessEditOrder(rows, params),
+    (params: GridPreProcessEditCellProps) =>
+      preProcessEditOrder(rows, params, ref),
     [rows]
   );
 
@@ -114,7 +127,8 @@ export default function CheckpointGrid({
         setRows,
         patchCheckpoint as UseMutationResult,
         newRow,
-        oldRow
+        oldRow,
+        ref
       ),
     []
   );
@@ -122,10 +136,15 @@ export default function CheckpointGrid({
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: CheckpointAPP) => () => {
-      handleMove(setRows, patchCheckpoint as UseMutationResult, {
-        ...row,
-        order: row.order - 1,
-      });
+      handleMove(
+        setRows,
+        patchCheckpoint as UseMutationResult,
+        {
+          ...row,
+          order: row.order - 1,
+        },
+        ref
+      );
     },
     []
   );
@@ -133,10 +152,15 @@ export default function CheckpointGrid({
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: CheckpointAPP) => () => {
-      handleMove(setRows, patchCheckpoint as UseMutationResult, {
-        ...row,
-        order: row.order + 1,
-      });
+      handleMove(
+        setRows,
+        patchCheckpoint as UseMutationResult,
+        {
+          ...row,
+          order: row.order + 1,
+        },
+        ref
+      );
     },
     []
   );
@@ -154,7 +178,8 @@ export default function CheckpointGrid({
         setRows,
         patchCheckpoint as UseMutationResult,
         { ...row, topics: topicIds },
-        row
+        row,
+        ref
       );
     },
     []
@@ -169,7 +194,8 @@ export default function CheckpointGrid({
         setRows,
         patchCheckpoint as UseMutationResult,
         { ...row, maturityId },
-        row
+        row,
+        ref
       );
     },
     []
@@ -181,7 +207,8 @@ export default function CheckpointGrid({
       handleDelete(
         setRows,
         deleteCheckpoint as UseMutationResult,
-        rowId as number
+        rowId as number,
+        ref
       );
     },
     []
@@ -189,7 +216,7 @@ export default function CheckpointGrid({
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postCheckpoint as UseMutationResult);
+    handleAdd(setRows, postCheckpoint as UseMutationResult, ref);
   }, []);
 
   const columns = React.useMemo<GridColumns<CheckpointAPP>>(
@@ -325,16 +352,19 @@ export default function CheckpointGrid({
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={{
-        text: "CREATE CHECKPOINT",
-        handler: handleAddDecorator,
-      }}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={{
+          text: "CREATE CHECKPOINT",
+          handler: handleAddDecorator,
+        }}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

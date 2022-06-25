@@ -36,6 +36,8 @@ import {
   usePostCategory,
 } from "../../../../api/CategoryAPI";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 type CategoryGridProps = {
   theme: Theme;
   templateId: number;
@@ -43,6 +45,9 @@ type CategoryGridProps = {
 
 export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   const [rows, setRows] = React.useState<CategoryAPP[]>([]);
+
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
 
   // Category query
   const { status, data, error } = useGetCategories(templateId);
@@ -54,12 +59,13 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
 
   // Called when "status" of categories query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data, error, ref);
   }, [status]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
-    (params: GridPreProcessEditCellProps) => preProcessEditOrder(rows, params),
+    (params: GridPreProcessEditCellProps) =>
+      preProcessEditOrder(rows, params, ref),
     [rows]
   );
 
@@ -70,7 +76,8 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         setRows,
         patchCategory as UseMutationResult,
         newRow,
-        oldRow
+        oldRow,
+        ref
       ),
     []
   );
@@ -78,10 +85,15 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: CategoryAPP) => () => {
-      handleMove(setRows, patchCategory as UseMutationResult, {
-        ...row,
-        order: row.order - 1,
-      });
+      handleMove(
+        setRows,
+        patchCategory as UseMutationResult,
+        {
+          ...row,
+          order: row.order - 1,
+        },
+        ref
+      );
     },
     []
   );
@@ -89,10 +101,15 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: CategoryAPP) => () => {
-      handleMove(setRows, patchCategory as UseMutationResult, {
-        ...row,
-        order: row.order + 1,
-      });
+      handleMove(
+        setRows,
+        patchCategory as UseMutationResult,
+        {
+          ...row,
+          order: row.order + 1,
+        },
+        ref
+      );
     },
     []
   );
@@ -104,7 +121,8 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         setRows,
         patchCategory as UseMutationResult,
         { ...row, color: color.hex },
-        row
+        row,
+        ref
       );
     },
     []
@@ -116,7 +134,8 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       handleDelete(
         setRows,
         deleteCategory as UseMutationResult,
-        rowId as number
+        rowId as number,
+        ref
       );
     },
     []
@@ -124,7 +143,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postCategory as UseMutationResult);
+    handleAdd(setRows, postCategory as UseMutationResult, ref);
   }, []);
 
   const columns = React.useMemo<GridColumns<CategoryAPP>>(
@@ -240,16 +259,19 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={{
-        text: "CREATE NEW AREA",
-        handler: handleAddDecorator,
-      }}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={{
+          text: "CREATE NEW AREA",
+          handler: handleAddDecorator,
+        }}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

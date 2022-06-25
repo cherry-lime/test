@@ -12,6 +12,8 @@ import GenericGrid from "../../Generic/GenericGrid";
 
 import { UserRole } from "../../../../types/UserRole";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 import {
   handleAdd,
   handleDelete,
@@ -35,6 +37,9 @@ type TeamGridProps = {
 export default function TeamGrid({ theme, userRole }: TeamGridProps) {
   const [rows, setRows] = React.useState<TeamAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Team query
   const { status, data, error } = useGetMyTeams();
 
@@ -45,27 +50,38 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
 
   // Called when "status" of teams query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data, error, ref);
   }, [status]);
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: TeamAPP, oldRow: TeamAPP) =>
-      processRowUpdate(setRows, patchTeam as UseMutationResult, newRow, oldRow),
+      processRowUpdate(
+        setRows,
+        patchTeam as UseMutationResult,
+        newRow,
+        oldRow,
+        ref
+      ),
     []
   );
 
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, deleteTeam as UseMutationResult, rowId as number);
+      handleDelete(
+        setRows,
+        deleteTeam as UseMutationResult,
+        rowId as number,
+        ref
+      );
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postTeam as UseMutationResult);
+    handleAdd(setRows, postTeam as UseMutationResult, ref);
   }, []);
 
   const columns = React.useMemo<GridColumns<TeamAPP>>(
@@ -108,17 +124,20 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={
-        userRole === "ASSESSOR"
-          ? { text: "CREATE NEW TEAM", handler: handleAddDecorator }
-          : undefined
-      }
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={
+          userRole === "ASSESSOR"
+            ? { text: "CREATE NEW TEAM", handler: handleAddDecorator }
+            : undefined
+        }
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

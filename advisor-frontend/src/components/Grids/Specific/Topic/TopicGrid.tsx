@@ -9,6 +9,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import GenericGrid from "../../Generic/GenericGrid";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 import {
   handleAdd,
   handleDelete,
@@ -32,6 +34,9 @@ type TopicGridProps = {
 export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   const [rows, setRows] = React.useState<TopicAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Topic query
   const { status, data, error } = useGetTopics(templateId);
 
@@ -42,7 +47,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
 
   // Called when "status" of templates query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data, error, ref);
   }, [status]);
 
   // Called when a row is edited
@@ -52,7 +57,8 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
         setRows,
         patchTopic as UseMutationResult,
         newRow,
-        oldRow
+        oldRow,
+        ref
       ),
     []
   );
@@ -69,14 +75,19 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, deleteTopic as UseMutationResult, rowId as number);
+      handleDelete(
+        setRows,
+        deleteTopic as UseMutationResult,
+        rowId as number,
+        ref
+      );
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postTopic as UseMutationResult);
+    handleAdd(setRows, postTopic as UseMutationResult, ref);
   }, []);
 
   const columns = React.useMemo<GridColumns<TopicAPP>>(
@@ -122,16 +133,19 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={{
-        text: "CREATE NEW TOPIC",
-        handler: handleAddDecorator,
-      }}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={{
+          text: "CREATE NEW TOPIC",
+          handler: handleAddDecorator,
+        }}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

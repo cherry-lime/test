@@ -32,6 +32,8 @@ import {
   usePostMaturity,
 } from "../../../../api/MaturityAPI";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 type MaturityGridProps = {
   theme: Theme;
   templateId: number;
@@ -39,6 +41,9 @@ type MaturityGridProps = {
 
 export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   const [rows, setRows] = React.useState<MaturityAPP[]>([]);
+
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
 
   // Maturity query
   const { status, data, error } = useGetMaturities(templateId);
@@ -50,12 +55,13 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
 
   // Called when "status" of maturities query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data, error, ref);
   }, [status]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
-    (params: GridPreProcessEditCellProps) => preProcessEditOrder(rows, params),
+    (params: GridPreProcessEditCellProps) =>
+      preProcessEditOrder(rows, params, ref),
     [rows]
   );
 
@@ -66,7 +72,8 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         setRows,
         patchMaturity as UseMutationResult,
         newRow,
-        oldRow
+        oldRow,
+        ref
       ),
     []
   );
@@ -74,10 +81,15 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: MaturityAPP) => () => {
-      handleMove(setRows, patchMaturity as UseMutationResult, {
-        ...row,
-        order: row.order - 1,
-      });
+      handleMove(
+        setRows,
+        patchMaturity as UseMutationResult,
+        {
+          ...row,
+          order: row.order - 1,
+        },
+        ref
+      );
     },
     []
   );
@@ -85,10 +97,15 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: MaturityAPP) => () => {
-      handleMove(setRows, patchMaturity as UseMutationResult, {
-        ...row,
-        order: row.order + 1,
-      });
+      handleMove(
+        setRows,
+        patchMaturity as UseMutationResult,
+        {
+          ...row,
+          order: row.order + 1,
+        },
+        ref
+      );
     },
     []
   );
@@ -99,7 +116,8 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       handleDelete(
         setRows,
         deleteMaturity as UseMutationResult,
-        rowId as number
+        rowId as number,
+        ref
       );
     },
     []
@@ -107,7 +125,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postMaturity as UseMutationResult);
+    handleAdd(setRows, postMaturity as UseMutationResult, ref);
   }, []);
 
   const columns = React.useMemo<GridColumns<MaturityAPP>>(
@@ -177,16 +195,19 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={{
-        text: "CREATE NEW MATURITY LEVEL",
-        handler: handleAddDecorator,
-      }}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={{
+          text: "CREATE NEW MATURITY LEVEL",
+          handler: handleAddDecorator,
+        }}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

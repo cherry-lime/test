@@ -11,6 +11,8 @@ import { UserRole } from "../../../../types/UserRole";
 
 import { handleDelete, handleInit } from "../handlers";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 import {
   useDeleteMemberTeam,
   useGetMembersTeam,
@@ -32,6 +34,9 @@ export default function MemberGrid({
 }: MemberGridProps) {
   const [rows, setRows] = React.useState<UserAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Member query
   const { status, data, error } = useGetMembersTeam(teamId, userRole);
 
@@ -40,13 +45,18 @@ export default function MemberGrid({
 
   // Called when "status" of member query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data, error, ref);
   }, [status]);
 
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, deleteMember as UseMutationResult, rowId as number);
+      handleDelete(
+        setRows,
+        deleteMember as UseMutationResult,
+        rowId as number,
+        ref
+      );
     },
     []
   );
@@ -84,5 +94,10 @@ export default function MemberGrid({
     [handleDeleteDecorator]
   );
 
-  return <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />;
+  return (
+    <>
+      <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />
+      <ErrorPopup ref={ref} />
+    </>
+  );
 }

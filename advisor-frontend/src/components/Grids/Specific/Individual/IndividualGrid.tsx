@@ -20,6 +20,8 @@ import {
   usePatchUser,
 } from "../../../../api/UserAPI";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 // Define type for the rows in the grid
 type Row = {
   id: number;
@@ -36,6 +38,9 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
   const roles = ["USER", "ASSESSOR", "ADMIN"];
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // User query
   const { status, data, error } = useGetUsers();
 
@@ -45,7 +50,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
 
   // Called when "status" of user query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data, error, ref);
   }, [status]);
 
   // Called when maturity level changes
@@ -55,7 +60,8 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         setRows,
         patchUser as UseMutationResult,
         { ...row, role: event.target.value },
-        row
+        row,
+        ref
       );
     },
     []
@@ -64,7 +70,12 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(setRows, deleteUser as UseMutationResult, rowId as number);
+      handleDelete(
+        setRows,
+        deleteUser as UseMutationResult,
+        rowId as number,
+        ref
+      );
     },
     []
   );
@@ -120,12 +131,15 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      hasToolbar
-      sortModel={[{ field: "name", sort: "asc" }]}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        hasToolbar
+        sortModel={[{ field: "name", sort: "asc" }]}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

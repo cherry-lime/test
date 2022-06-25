@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 import GenericGrid from "../../Generic/GenericGrid";
 import { AssessmentType } from "../../../../types/AssessmentType";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 import {
   TemplateAPP,
   useDeleteTemplate,
@@ -40,6 +42,9 @@ export default function TemplateGrid({
 }: TemplateGridProps) {
   const [rows, setRows] = React.useState<TemplateAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Template query
   const { status, data, error } = useGetTemplates(templateType);
 
@@ -51,7 +56,7 @@ export default function TemplateGrid({
 
   // Called when "status" of templates query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data, error, ref);
   }, [status]);
 
   // Called when a row is edited
@@ -61,7 +66,8 @@ export default function TemplateGrid({
         setRows,
         patchTemplate as UseMutationResult,
         newRow,
-        oldRow
+        oldRow,
+        ref
       ),
     []
   );
@@ -72,7 +78,8 @@ export default function TemplateGrid({
       handleDelete(
         setRows,
         deleteTemplate as UseMutationResult,
-        rowId as number
+        rowId as number,
+        ref
       );
     },
     []
@@ -84,7 +91,8 @@ export default function TemplateGrid({
       handleDuplicate(
         setRows,
         duplicateTemplate as UseMutationResult,
-        rowId as number
+        rowId as number,
+        ref
       );
     },
     []
@@ -92,7 +100,7 @@ export default function TemplateGrid({
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postTemplate as UseMutationResult);
+    handleAdd(setRows, postTemplate as UseMutationResult, ref);
   }, []);
 
   const columns = React.useMemo<GridColumns<TemplateAPP>>(
@@ -148,16 +156,19 @@ export default function TemplateGrid({
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={{
-        text: `CREATE NEW ${templateType} EVALUATION TEMPLATE`,
-        handler: handleAddDecorator,
-      }}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={{
+          text: `CREATE NEW ${templateType} EVALUATION TEMPLATE`,
+          handler: handleAddDecorator,
+        }}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

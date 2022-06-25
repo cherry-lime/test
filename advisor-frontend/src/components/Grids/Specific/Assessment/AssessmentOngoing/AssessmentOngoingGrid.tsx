@@ -24,6 +24,8 @@ import {
   usePostAssessment,
 } from "../../../../../api/AssessmentAPI";
 
+import ErrorPopup, { RefObject } from "../../../../ErrorPopup/ErrorPopup";
+
 type AssessmentOngoingGridProps = {
   theme: Theme;
   userRole: UserRole;
@@ -40,6 +42,9 @@ export default function AssessmentOngoingGrid({
 }: AssessmentOngoingGridProps) {
   const [rows, setRows] = React.useState<AssessmentAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Assessment query
   const { status, data, error } =
     assessmentType === "TEAM" && teamId !== undefined
@@ -54,12 +59,12 @@ export default function AssessmentOngoingGrid({
 
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data, error, ref);
   }, [status]);
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postAssessment as UseMutationResult);
+    handleAdd(setRows, postAssessment as UseMutationResult, ref);
   }, []);
 
   const columns = React.useMemo<GridColumns<AssessmentAPP>>(
@@ -107,20 +112,23 @@ export default function AssessmentOngoingGrid({
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      hasToolbar
-      add={
-        userRole === "USER" && assessmentType === "TEAM"
-          ? undefined
-          : {
-              text: "START NEW EVALUATION",
-              handler: handleAddDecorator,
-            }
-      }
-      sortModel={[{ field: "updatedAt", sort: "desc" }]}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        hasToolbar
+        add={
+          userRole === "USER" && assessmentType === "TEAM"
+            ? undefined
+            : {
+                text: "START NEW EVALUATION",
+                handler: handleAddDecorator,
+              }
+        }
+        sortModel={[{ field: "updatedAt", sort: "desc" }]}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }
