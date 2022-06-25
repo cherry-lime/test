@@ -13,6 +13,7 @@ import { RootState } from "../../app/store";
 import pdf from "./pdf";
 import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
+import ProgressOverallCard from "../../components/PageCard/SpecificPageCards/ProgressOverallCard";
 
 /**
  * Page with the feedback related to a self assessment
@@ -117,6 +118,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           </Tabs>
         </Stack>
       </Card>
+      {value === "Recommendations" && <ProgressOverallCard />}
 
       {/* this is not actually a subarea, it's the automated feedback */}
       {value !== "Progress" && (
