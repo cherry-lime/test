@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { aTeam } from '../prisma/mock/mockTeam';
 import { AssessmentType } from '@prisma/client';
+import { aFullUser } from '../prisma/mock/mockUser';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -47,7 +48,9 @@ describe('AssessmentService', () => {
 
   describe('create', () => {
     it('Should return the created assessment', async () => {
-      expect(assessmentService.create(aAssessment)).resolves.toBe(aAssessment);
+      expect(assessmentService.create(aAssessment, aFullUser)).resolves.toBe(
+        aAssessment
+      );
     });
 
     it('Should throw ConflictException on conflict', async () => {
@@ -55,25 +58,25 @@ describe('AssessmentService', () => {
         .spyOn(prisma.assessment, 'create')
         .mockRejectedValueOnce({ code: 'P2002' });
 
-      expect(assessmentService.create(aAssessment)).rejects.toThrowError(
-        ConflictException
-      );
+      expect(
+        assessmentService.create(aAssessment, aFullUser)
+      ).rejects.toThrowError(ConflictException);
     });
 
     it('Should reject with unknown error', async () => {
       jest
         .spyOn(prisma.assessment, 'create')
         .mockRejectedValueOnce({ code: 'TEST' });
-      expect(assessmentService.create(aAssessment)).rejects.toThrowError(
-        InternalServerErrorException
-      );
+      expect(
+        assessmentService.create(aAssessment, aFullUser)
+      ).rejects.toThrowError(InternalServerErrorException);
     });
 
     it('Should reject with NotFoundException on team not found', async () => {
       jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(null);
-      expect(assessmentService.create(aTeamAssessment)).rejects.toThrowError(
-        NotFoundException
-      );
+      expect(
+        assessmentService.create(aTeamAssessment, aFullUser)
+      ).rejects.toThrowError(NotFoundException);
     });
 
     it('Should reject with BadRequestException if type team but no team_id', async () => {
@@ -81,9 +84,9 @@ describe('AssessmentService', () => {
         ...aTeamAssessment,
       };
       delete aTeamAssessment2.team_id;
-      expect(assessmentService.create(aTeamAssessment2)).rejects.toThrowError(
-        BadRequestException
-      );
+      expect(
+        assessmentService.create(aTeamAssessment2, aFullUser)
+      ).rejects.toThrowError(BadRequestException);
     });
 
     it('Should reject with BadRequestException if type individual but team_id', async () => {
@@ -91,16 +94,16 @@ describe('AssessmentService', () => {
         ...aTeamAssessment,
         assessment_type: AssessmentType.INDIVIDUAL,
       };
-      expect(assessmentService.create(aTeamAssessment2)).rejects.toThrowError(
-        BadRequestException
-      );
+      expect(
+        assessmentService.create(aTeamAssessment2, aFullUser)
+      ).rejects.toThrowError(BadRequestException);
     });
 
     it('Should return created team on correct team assessment', async () => {
       jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(aTeam);
-      expect(assessmentService.create(aTeamAssessment)).resolves.toBe(
-        aAssessment
-      );
+      expect(
+        assessmentService.create(aTeamAssessment, aFullUser)
+      ).resolves.toBe(aAssessment);
     });
   });
 

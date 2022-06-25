@@ -25,15 +25,19 @@ model User {
 
 model Checkpoint {
   checkpoint_id                     Int                                 @id @default(autoincrement())
-  checkpoint_name                   String
-  checkpoint_description            String
-  weight                            Int
+  checkpoint_description            String                              @default("New Checkpoint")
+  checkpoint_additional_information String                              @default("")
+  order                             Int
+  weight                            Int                                 @default(1)
+  disabled                          Boolean                             @default(false)
   Maturity                          Maturity                            @relation(fields: [maturity_id], references: [maturity_id])
   maturity_id                       Int
   Category                          Category                            @relation(fields: [category_id], references: [category_id])
   category_id                       Int
   CheckpointInTopic                 CheckpointInTopic[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
+
+  @@unique([checkpoint_description, category_id])
 }
 
 model Answer {
@@ -42,6 +46,7 @@ model Answer {
   answer_weight                     Float                               @default(0)
   Template                          Template                            @relation(fields: [template_id], references: [template_id])
   template_id                       Int
+  disabled                          Boolean                             @default(false)
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
   @@unique([answer_text, template_id])
@@ -53,8 +58,8 @@ model Maturity {
   maturity_order Int
   Template       Template     @relation(fields: [template_id], references: [template_id])
   template_id    Int
+  disabled       Boolean      @default(false)
   Checkpoint     Checkpoint[]
-  Feedback       Feedback[]
 
   @@unique([maturity_name, template_id])
 }
@@ -64,8 +69,8 @@ model Topic {
   topic_name        String              @default("New Topic")
   Template          Template            @relation(fields: [template_id], references: [template_id])
   template_id       Int
+  disabled          Boolean             @default(false)
   CheckpointInTopic CheckpointInTopic[]
-  Feedback          Feedback[]
 
   @@unique([topic_name, template_id])
 }
@@ -81,10 +86,10 @@ model CheckpointInTopic {
 
 model Team {
   team_id         Int          @id @default(autoincrement())
-  team_name       String       @unique
+  team_name       String       @default("New Team")
   invite_token    String       @unique @default(uuid()) @db.Uuid
-  team_country    String
-  team_department String
+  team_country    String       @default("")
+  team_department String       @default("")
   UserInTeam      UserInTeam[]
   Assessment      Assessment[]
 }
@@ -118,6 +123,8 @@ model Assessment {
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
   @@unique([assessment_name, assessment_type, team_id])
+  @@index([assessment_type])
+  @@index([team_id])
 }
 
 model AssessmentParticipants {
@@ -131,18 +138,18 @@ model AssessmentParticipants {
 }
 
 model Template {
-  template_id       Int            @id @default(autoincrement())
-  template_name     String         @default("New Template")
-  template_type     AssessmentType
-  enabled           Boolean        @default(false)
-  weight_range_min  Int            @default(1)
-  weight_range_max  Int            @default(3)
-  score_formula     String         @default("sum(x)")
-  include_no_answer Boolean        @default(false)
-  Assessment        Assessment[]
-  Answers           Answer[]
-  Topic             Topic[]
-  Category          Category[]
+  template_id          Int            @id @default(autoincrement())
+  template_name        String         @default("New Template")
+  template_description String         @default("")
+  template_type        AssessmentType
+  enabled              Boolean        @default(false)
+  weight_range_min     Int            @default(1)
+  weight_range_max     Int            @default(3)
+  include_no_answer    Boolean        @default(false)
+  Assessment           Assessment[]
+  Answers              Answer[]
+  Topic                Topic[]
+  Category             Category[]
 
   Maturity Maturity[]
   @@unique([template_name, template_type])
@@ -155,7 +162,7 @@ model Category {
   order         Int
   Template      Template     @relation(fields: [template_id], references: [template_id])
   template_id   Int
-  Feedback      Feedback[]
+  disabled      Boolean      @default(false)
   Checkpoint    Checkpoint[]
   SubArea       SubArea[]
 
@@ -178,24 +185,11 @@ model CheckpointAndAnswersInAssessments {
   assessment_id Int
   checkpoint    Checkpoint @relation(fields: [checkpoint_id], references: [checkpoint_id])
   checkpoint_id Int
-  Answer        Answer     @relation(fields: [answer_id], references: [answer_id])
-  answer_id     Int
+  Answer        Answer?    @relation(fields: [answer_id], references: [answer_id])
+  answer_id     Int?
 
   @@id([assessment_id, checkpoint_id])
-}
-
-model Feedback {
-  feedback_id   Int      @id @default(autoincrement())
-  feedback_name String
-  feedback_text String
-  Topic         Topic    @relation(fields: [topic_id], references: [topic_id])
-  topic_id      Int
-  Maturity      Maturity @relation(fields: [maturity_id], references: [maturity_id])
-  maturity_id   Int
-  answer_weight Float
-  Category      Category @relation(fields: [category_id], references: [category_id])
-  category_id   Int
-  weight_factor Int
+  @@index([assessment_id])
 }
 
 enum AssessmentType {

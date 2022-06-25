@@ -3,9 +3,12 @@ import { PrismaService } from '../prisma/prisma.service';
 import { TemplateService } from './template.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
-import { aTemplate, updateTemplate } from '../prisma/mock/mockTemplate';
+import {
+  aTemplate,
+  updateTemplate,
+  updateTemplateDto,
+} from '../prisma/mock/mockTemplate';
 import { AssessmentType } from '@prisma/client';
-import { UpdateTemplateDto } from './dto/update-template.dto';
 import {
   ConflictException,
   InternalServerErrorException,
@@ -13,16 +16,6 @@ import {
 } from '@nestjs/common';
 
 const moduleMocker = new ModuleMocker(global);
-
-export const updateTemplateDto: UpdateTemplateDto = {
-  template_name: 'new_name',
-  template_type: 'INDIVIDUAL',
-  enabled: false,
-  weight_range_min: 1,
-  weight_range_max: 5,
-  score_formula: 'avg(x)',
-  include_no_answer: true,
-};
 
 describe('TemplateService', () => {
   let templateService: TemplateService;
@@ -140,39 +133,6 @@ describe('TemplateService', () => {
   describe('findAll', () => {
     it('Should return all templates', async () => {
       expect(templateService.findAll()).resolves.toEqual([aTemplate]);
-    });
-  });
-
-  describe('clone', () => {
-    it('Should return the cloned template', async () => {
-      expect(templateService.clone(1)).resolves.toBe(aTemplate);
-    });
-
-    it('Should reject if template not found', async () => {
-      jest.spyOn(prisma.template, 'findUnique').mockReturnValueOnce(null);
-      expect(templateService.clone(2)).rejects.toThrowError(NotFoundException);
-    });
-
-    it('Should create template with (copy) (copy) if copy exists', async () => {
-      jest
-        .spyOn(prisma.template, 'create')
-        .mockRejectedValueOnce({ code: 'P2002' });
-      jest
-        .spyOn(prisma.template, 'create')
-        .mockRejectedValueOnce({ code: 'P2002' });
-      const cloneTemplate = { ...aTemplate };
-      cloneTemplate.template_name = `test (Copy) (Copy)`;
-      delete cloneTemplate.template_id;
-      expect(templateService.clone(1)).resolves;
-    });
-
-    it('Should reject with unknown error', async () => {
-      jest
-        .spyOn(prisma.template, 'create')
-        .mockRejectedValueOnce({ code: 'TEST' });
-      expect(templateService.clone(1)).rejects.toThrowError(
-        InternalServerErrorException
-      );
     });
   });
 

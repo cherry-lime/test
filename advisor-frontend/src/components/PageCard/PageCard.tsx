@@ -41,7 +41,7 @@ function CardImage(ch: string, img: string) {
     <div style={{ minWidth: "33vw", height: ch, backgroundColor: "#FF6222" }}>
       <img
         style={{
-          minWidth: "33vw",
+          width: "33vw",
           height: ch,
           objectFit: "cover",
           opacity: 0.4,
@@ -74,6 +74,7 @@ export default function PageCard({
         verticalAlign: "middle",
         width: "100vw",
         borderRadius: "20px",
+        marginBottom: "10px",
       }}
     >
       {/* if Cardmedia,add image to the left side */}

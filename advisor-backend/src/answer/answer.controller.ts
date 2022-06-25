@@ -6,9 +6,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import {
   ApiConflictResponse,
   ApiNotFoundResponse,
@@ -17,7 +15,6 @@ import {
 } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { Roles } from '../common/decorators/roles.decorator';
-import { RolesGuard } from '../common/guards/roles.guard';
 import { AnswerService } from './answer.service';
 import { AnswerDto } from './dto/answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
@@ -33,7 +30,6 @@ export class AnswerController {
    * @returns Answer object
    */
   @Get(':answer_id')
-  @UseGuards(AuthGuard('jwt'))
   @ApiResponse({
     description: 'Found answer',
     type: AnswerDto,
@@ -50,7 +46,6 @@ export class AnswerController {
    * @returns updated answer
    */
   @Patch(':answer_id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   @ApiResponse({
     description: 'Updated answer',
@@ -71,7 +66,6 @@ export class AnswerController {
    * @returns deleted answer
    */
   @Delete(':answer_id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   @ApiResponse({
     description: 'Deleted answer',

@@ -1,6 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import { store } from "./app/store";
 
 // test('renders learn react link', () => {
 //   render(<App />);
@@ -10,36 +12,44 @@ import App from "./App";
 
 test("app rendering/navigating to user interface", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
 
   const button = screen.getByTestId("user");
   fireEvent.click(button);
-  expect(screen.getByText(/Home User/i)).toBeInTheDocument();
+  expect(
+    screen.getByText(/View and start individual evaluations/i)
+  ).toBeInTheDocument();
 });
 
 test("app rendering/navigating to admin interface", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("admin");
   fireEvent.click(button);
-  expect(screen.getByText(/Admin Interface/i)).toBeInTheDocument();
+  expect(screen.getByText(/Admin Home/i)).toBeInTheDocument();
 });
 
 test("app rendering/navigating to assessor interface", async () => {
   render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   );
   const button = screen.getByTestId("assessor");
   fireEvent.click(button);
-  expect(screen.getByText(/assessor Interface here/i)).toBeInTheDocument();
+  expect(screen.getByText(/View your teams/i)).toBeInTheDocument();
 });
 
 // describe block = test suite
@@ -49,9 +59,11 @@ test("app rendering/navigating to assessor interface", async () => {
 describe("test suite of test cases", () => {
   test("testcase1", () => {
     render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
     );
     // expect(to be tested function or component).toBe(expected result of the component);
     // example:

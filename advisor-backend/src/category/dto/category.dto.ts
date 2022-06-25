@@ -15,6 +15,9 @@ export class CategoryDto {
   @Min(1)
   order: number;
 
+  @ApiProperty({ default: false })
+  disabled: boolean;
+
   @ApiProperty({ default: 1 })
   template_id: number;
 }

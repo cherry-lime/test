@@ -1,4 +1,9 @@
-import { TextField, ThemeOptions, ThemeProvider } from "@mui/material";
+import {
+  ClickAwayListener,
+  TextField,
+  ThemeOptions,
+  ThemeProvider,
+} from "@mui/material";
 import { useState } from "react";
 import PropTypes from "prop-types";
 /*
@@ -9,31 +14,62 @@ default set to five
 the background color of the text is white
 text can be edited, after selection
 */
-function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
+function TextfieldEdit({
+  text,
+  theme,
+  rows,
+}: {
+  text: string;
+  theme: ThemeOptions;
+  rows: number;
+}) {
   /*
   initial value of the textfield is set to the bodytext passed as parameter
   using the State Hook in React
   the value is updated when you are done entering and click outside the textfield
   */
   const initialState = text;
-  const [value, setValue] = useState(initialState);
-  const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+  const [, setValue] = useState(initialState);
+  const [intermediateValue, setIntermediateValue] = useState(initialState);
+  let multiline = false;
+  const handleSave = () => {
+    // here you save the new text
+    // that is contained in intermediateValue
+    setValue(intermediateValue);
   };
+
+  const handleModify = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIntermediateValue(event.target.value);
+  };
+
+  /*
+  if the textfield has only one row then
+  multiline must be disabled,
+  e.g,. in country + IT department textfields
+  */
+  if (rows > 1) {
+    multiline = true;
+  } else {
+    multiline = false;
+  }
+
   return (
     <ThemeProvider theme={theme}>
-      <TextField
-        sx={{
-          backgroundColor: "white",
-          width: "50ch",
-        }}
-        variant="outlined"
-        multiline
-        rows={5}
-        size="small"
-        value={value}
-        onChange={doSomething}
-      />
+      <ClickAwayListener onClickAway={handleSave}>
+        <TextField
+          sx={{
+            backgroundColor: "white",
+            width: "inherit",
+            marginTop: "10px",
+          }}
+          variant="outlined"
+          multiline={multiline}
+          rows={rows}
+          size="small"
+          value={intermediateValue}
+          onChange={handleModify}
+        />
+      </ClickAwayListener>
     </ThemeProvider>
   );
 }
@@ -45,6 +81,7 @@ Define proptypes for textfieldedit:
 TextfieldEdit.propTypes = {
   text: PropTypes.string.isRequired,
   theme: PropTypes.node.isRequired,
+  rows: PropTypes.number.isRequired,
 };
 
 export default TextfieldEdit;

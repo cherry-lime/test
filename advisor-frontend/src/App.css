@@ -11,8 +11,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: #5a534f;
   align-content: flex-start;
   flex-wrap: wrap;
   padding: 4vh;
@@ -22,7 +20,7 @@
   background-color: lightgrey;
   flex-grow: 1;
   border-radius: 20px;
-  row-gap: 30px;
+  row-gap: 15px;
 }
 .body_footer {
   width: 96%;
@@ -40,7 +38,6 @@
   border-bottom-right-radius: 0px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   row-gap: 30px;
-  overflow: auto;
 }
 .header {
   border-bottom-left-radius: 20px;
@@ -49,7 +46,7 @@
 .header h1 {
   font-size: 400px;
 }
-a {
+a:not(.buttonLink) {
   display: inline-flex;
   width: inherit;
   text-decoration: none;
@@ -58,4 +55,10 @@ a {
   border-radius: 5px;
   padding: 2px;
   margin: 5px;
+}
+.buttonLink {
+  text-decoration: none;
+}
+.widthInherited {
+  width: inherit !important;
 }

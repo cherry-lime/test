@@ -31,7 +31,7 @@ import {
 
 type AnswerTypeGridProps = {
   theme: Theme;
-  templateId: number;
+  templateId: string | undefined;
 };
 
 export default function AnswerTypeGrid({

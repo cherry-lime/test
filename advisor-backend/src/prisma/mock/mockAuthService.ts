@@ -10,7 +10,7 @@ export const userArray = [
     username: 'zipper_parent_instea',
     password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
     user_id: 1,
-    role: [Role.USER],
+    role: Role.USER,
     created_at: myStartDate,
     updated_at: myEndDate,
   },
@@ -18,7 +18,7 @@ export const userArray = [
     username: 'Jeremy',
     password: 'hashbrown',
     user_id: 2,
-    role: [Role.USER],
+    role: Role.USER,
     created_at: myStartDate,
     updated_at: myEndDate,
   },
@@ -35,7 +35,7 @@ export const userDto = {
 
 // Mock a User registration dto
 export const registerDto = {
-  role: [Role.USER],
+  role: Role.USER,
 };
 
 // Mock individual user 1
@@ -43,7 +43,7 @@ export const aFullUser1 = {
   username: 'zipper_parent_instea',
   password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
   user_id: 1,
-  role: [Role.USER],
+  role: Role.USER,
   created_at: myStartDate,
   updated_at: myEndDate,
 };
@@ -53,7 +53,7 @@ export const aFullUser2 = {
   username: 'Foofi',
   password: 'examplehashedpassword',
   user_id: 2,
-  role: [Role.USER],
+  role: Role.USER,
   created_at: myStartDate,
   updated_at: myEndDate,
 };
@@ -62,7 +62,7 @@ export const aFullUser2 = {
 export const UserWithoutPassword = {
   username: 'Foofi',
   user_id: 2,
-  role: [Role.USER],
+  role: Role.USER,
   created_at: myStartDate,
   updated_at: myEndDate,
 };

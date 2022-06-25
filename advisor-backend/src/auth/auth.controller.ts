@@ -1,9 +1,8 @@
-import { Controller, Post, Body, Get, UseGuards, Res } from '@nestjs/common';
+import { Controller, Post, Body, Get, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './auth_dto/login-user.dto';
 import AuthUser from '../common/decorators/auth-user.decorator';
 import { User } from '.prisma/client';
-import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './auth_dto/register-user.dto';
 import {
   ApiNotFoundResponse,
@@ -12,8 +11,16 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Response } from 'express';
+import { CookieOptions, Response } from 'express';
 import { ProfileDto } from '../user/dto/profile.dto';
+import { Unauthorized } from '../common/decorators/unauthorized.decorrator';
+
+// Cookie options
+const cookieOptions: CookieOptions = {
+  httpOnly: true,
+  sameSite: 'none',
+  secure: true,
+};
 
 @Controller('auth')
 @ApiTags('auth')
@@ -29,7 +36,7 @@ export class AuthController {
   @ApiOkResponse({ description: 'login successful' })
   @ApiNotFoundResponse({ description: 'user not found' })
   @ApiUnauthorizedResponse({ description: 'incorrect password' })
-  @UseGuards(AuthGuard('local'))
+  @Unauthorized()
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response
@@ -42,7 +49,7 @@ export class AuthController {
       refreshToken: '',
     };
 
-    res.cookie('token', secretData, { httpOnly: true });
+    res.cookie('token', secretData, cookieOptions);
     return { msg: 'login successful' }; // this.authService.login(loginDto);
   }
 
@@ -56,6 +63,7 @@ export class AuthController {
     description: 'Registered',
     type: LoginDto,
   })
+  @Unauthorized()
   async register(
     @Body() createUserDto: CreateUserDto,
     @Res({ passthrough: true }) res: Response
@@ -70,13 +78,13 @@ export class AuthController {
       refreshToken: '',
     };
 
-    res.cookie('token', secretData, { httpOnly: true });
+    res.cookie('token', secretData, cookieOptions);
     return { username: user.username, password: user.password };
   }
 
   @Post('/logout')
   async logout(@Res() res: Response) {
-    res.clearCookie('token').send({ msg: 'logout successful' });
+    res.clearCookie('token', cookieOptions).send({ msg: 'logout successful' });
   }
 
   /**
@@ -84,7 +92,6 @@ export class AuthController {
    * @param user
    * @returns user
    */
-  @UseGuards(AuthGuard('jwt'))
   @Get('/profile')
   @ApiResponse({
     description: 'Found user',

@@ -87,6 +87,7 @@ export default function AllGrid() {
       />
       <strong>Recommendations</strong>
       <RecommendationGrid
+        topicId={1}
         theme={INGTheme}
         assessmentId={assessmentId}
         topicId={userId}

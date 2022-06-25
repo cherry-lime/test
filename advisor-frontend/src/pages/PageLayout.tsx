@@ -51,7 +51,14 @@ export default function PageLayout({
             <Footer />
           </>
         ) : (
-          <Box className="body"> {children} </Box>
+          <Box
+            className="body"
+            sx={{
+              bgcolor: "secondary.light",
+            }}
+          >
+            {children}
+          </Box>
         )}
       </div>
     </Sidebar>
