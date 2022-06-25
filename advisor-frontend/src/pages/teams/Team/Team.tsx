@@ -18,9 +18,7 @@ import Textfield from "../../../components/Textfield/Textfield";
 function Team({ theme }: { theme: Theme }) {
   const { teamId } = useParams();
 
-  const { userId, userRole } = useSelector(
-    (state: RootState) => state.userData
-  );
+  const { userRole } = useSelector((state: RootState) => state.userData);
   const tmId = 4;
 
   return (
@@ -58,7 +56,6 @@ function Team({ theme }: { theme: Theme }) {
 
       <MemberGrid
         theme={theme}
-        userId={userId}
         userRole={userRole}
         teamId={tmId}
         forAssessors
@@ -66,7 +63,6 @@ function Team({ theme }: { theme: Theme }) {
       <h3>Members</h3>
       <MemberGrid
         theme={theme}
-        userId={userId}
         userRole={userRole}
         teamId={tmId}
         forAssessors={false}
@@ -75,16 +71,15 @@ function Team({ theme }: { theme: Theme }) {
       <h3>Ongoing Evaluations</h3>
       <AssessmentOngoingGrid
         theme={theme}
-        userId={userId}
         userRole={userRole}
+        teamId={tmId}
         assessmentType="TEAM"
       />
 
       <h3>Completed Evaluations</h3>
       <AssessmentCompletedGrid
         theme={theme}
-        userId={userId}
-        userRole={userRole}
+        teamId={tmId}
         assessmentType="TEAM"
       />
     </PageLayout>

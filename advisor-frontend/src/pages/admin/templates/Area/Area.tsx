@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { Theme } from "@mui/material";
 import SubareaGrid from "../../../../components/Grids/Specific/Subarea/SubareaGrid";
 import userType from "../../../../components/Sidebar/listUsersTypes";

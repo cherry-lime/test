@@ -9,13 +9,11 @@ import { RootState } from "../../../app/store";
  * Page with the list of teams that the user or assessor is part of
  */
 function TeamList({ theme }: { theme: Theme }) {
-  const { userId, userRole } = useSelector(
-    (state: RootState) => state.userData
-  );
+  const { userRole } = useSelector((state: RootState) => state.userData);
 
   return (
     <PageLayout title="Teams" sidebarType={userTypes[userRole]}>
-      <TeamGrid theme={theme} userId={userId} userRole={userRole} />
+      <TeamGrid theme={theme} userRole={userRole} />
     </PageLayout>
   );
 }

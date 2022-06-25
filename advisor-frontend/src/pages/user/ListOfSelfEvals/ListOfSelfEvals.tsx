@@ -8,7 +8,6 @@ import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessme
  * Page with the list of self evaluations that belog to the user
  */
 function ListOfSelfEvals({ theme }: { theme: Theme }) {
-  const userId = "0";
   // only users sees this page, no need to fetch role
   const userRole = "USER";
 
@@ -20,18 +19,12 @@ function ListOfSelfEvals({ theme }: { theme: Theme }) {
       <h2>Ongoing Evaluations</h2>
       <AssessmentOngoingGrid
         theme={theme}
-        userId={userId}
         userRole={userRole}
         assessmentType="INDIVIDUAL"
       />
 
       <h2>Completed Evaluations</h2>
-      <AssessmentCompletedGrid
-        theme={theme}
-        userId={userId}
-        userRole={userRole}
-        assessmentType="INDIVIDUAL"
-      />
+      <AssessmentCompletedGrid theme={theme} assessmentType="INDIVIDUAL" />
     </PageLayout>
   );
 }
