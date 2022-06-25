@@ -7,7 +7,6 @@ import { store } from "../../../../app/store";
 import Theme from "../../../../Theme";
 import Team from "../Team";
 
-const queryClient = new QueryClient();
 test("app rendering/navigating from assessor view to specific team evaluation", async () => {
   render(
     <QueryClientProvider client={client}>

@@ -7,8 +7,6 @@ import { store } from "../../../../../app/store";
 import Theme from "../../../../../Theme";
 import ListOfTemplates from "../ListOfTemplates";
 
-const queryClient = new QueryClient();
-
 test("app render list of templates", async () => {
   render(
     <QueryClientProvider client={client}>
