@@ -104,6 +104,12 @@ export class CheckpointService {
    * @returns all checkpoints in category
    */
   async findAll(category_id: number, role: Role) {
+    const disabledMaturities = await this.prisma.maturity.findMany({
+      where: {
+        disabled: true,
+      },
+    });
+
     const data: Prisma.CheckpointFindManyArgs = {
       where: {
         category_id,
@@ -113,11 +119,16 @@ export class CheckpointService {
       },
     };
 
-    if (role !== Role.ADMIN) {
-      data.where.disabled = false;
-    }
+    let foundCheckpoints = await this.prisma.checkpoint.findMany(data);
 
-    const foundCheckpoints = await this.prisma.checkpoint.findMany(data);
+    if (role != Role.ADMIN) {
+      foundCheckpoints = foundCheckpoints
+        .filter((c) => !c.disabled)
+        .filter(
+          (c) =>
+            !disabledMaturities.some((m) => m.maturity_id === c.maturity_id)
+        );
+    }
 
     return foundCheckpoints.map((c) => this.formatTopics(c));
   }

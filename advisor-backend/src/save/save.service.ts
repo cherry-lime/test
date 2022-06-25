@@ -90,6 +90,7 @@ export class SaveService {
     const categories = await this.prisma.category.findMany({
       where: {
         template_id,
+        disabled: false,
       },
       include: {
         Checkpoint: true,
@@ -100,11 +101,24 @@ export class SaveService {
     const answers = await this.prisma.answer.findMany({
       where: {
         template_id,
+        disabled: false,
+      },
+    });
+
+    // Get all disabled maturities to filter out checkpoints of disabled maturity
+    const disabledMaturities = await this.prisma.maturity.findMany({
+      where: {
+        template_id,
+        disabled: true,
       },
     });
 
     // Get checkpoints in assessment
-    const checkpoints = categories.flatMap((category) => category.Checkpoint);
+    const checkpoints = categories
+      .flatMap((category) => category.Checkpoint)
+      .filter((c) => {
+        return !disabledMaturities.some((m) => m.maturity_id === c.maturity_id);
+      });
 
     // find all saved answers in assessment
     return (
