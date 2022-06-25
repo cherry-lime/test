@@ -1,20 +1,23 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import App from "../../../../App";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { store } from "../../../../app/store";
+import AdminInterface from "../AdminInterface";
+
+const queryClient = new QueryClient();
 
 test("app rendering/navigating from admin interface to individuals", async () => {
   render(
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AdminInterface />
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   );
-  const button = screen.getByTestId("admin");
-  fireEvent.click(button);
   expect(screen.getByText(/Admin Home/i)).toBeInTheDocument();
 });
 
