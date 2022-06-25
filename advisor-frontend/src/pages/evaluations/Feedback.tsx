@@ -1,4 +1,4 @@
-import { Card, Stack, Tab, Tabs, Theme, Button } from "@mui/material";
+import { Card, Stack, Tab, Tabs, Theme, Button, Box } from "@mui/material";
 import React, { useState } from "react";
 // import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -167,9 +167,14 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         variant="contained"
         onClick={createPDF}
       >
-        <Stack>
+        <Stack direction="row">
           <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />
-          Download as PDF
+          <Box sx={{ p: 1.0 }}>
+            {" "}
+            <b>
+              <u>Download as PDF</u>
+            </b>
+          </Box>
         </Stack>
       </Button>
     </PageLayout>
