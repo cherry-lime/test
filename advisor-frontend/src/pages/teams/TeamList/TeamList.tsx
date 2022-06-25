@@ -1,4 +1,4 @@
-import { Grid, Theme } from "@mui/material";
+import { Theme } from "@mui/material";
 import { useSelector } from "react-redux";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
@@ -15,7 +15,6 @@ function TeamList({ theme }: { theme: Theme }) {
 
   return (
     <PageLayout title="Teams" sidebarType={userTypes[userRole]}>
-      <Grid container direction="column" alignItems="left" />
       <TeamGrid theme={theme} userId={userId} userRole={userRole} />
     </PageLayout>
   );
