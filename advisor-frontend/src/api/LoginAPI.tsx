@@ -9,7 +9,7 @@ import {
   setUserId,
   setUserName,
   setPassword,
-} from "./userDataSlice";
+} from "../app/userDataSlice";
 
 // Defines the API address, used to send the requests to
 const API = axios.create({

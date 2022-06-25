@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { resetUser } from "../../app/userDataSlice";
-import { userLogout } from "../../app/loginAPI";
+import { userLogout } from "../../api/LoginAPI";
 
 type SidebarListProps = {
   userType: Map<string, boolean>;

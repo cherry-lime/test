@@ -17,7 +17,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { userRegister } from "../../app/loginAPI";
+import { userRegister } from "../../api/LoginAPI";
 
 export default function Chooserole({ theme }: { theme: Theme }) {
   // Defines the role state to keep track of the selected role
