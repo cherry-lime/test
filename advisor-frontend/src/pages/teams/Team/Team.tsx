@@ -1,6 +1,7 @@
 import { Theme } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import React, { useState } from "react";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import TextfieldEdit from "../../../components/TextfieldEdit/TextfieldEdit";
@@ -9,7 +10,7 @@ import AssessmentOngoingGrid from "../../../components/Grids/Specific/Assessment
 import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessment/AssessmentCompleted/AssessmentCompletedGrid";
 import { RootState } from "../../../app/store";
 import Textfield from "../../../components/Textfield/Textfield";
-import { useGetTeam } from "../../../api/TeamAPI";
+import { TeamAPP, useGetTeam, usePatchTeam } from "../../../api/TeamAPI";
 
 /**
  * Page providing team details
@@ -22,7 +23,56 @@ function Team({ theme }: { theme: Theme }) {
   const { userRole } = useSelector((state: RootState) => state.userData);
   const tmId = 4;
 
-  const { status, data, error } = useGetTeam(teamId);
+  const { status, data, error } = useGetTeam(Number(teamId));
+
+  const [teamInfo, setTeamInfo] = useState<TeamAPP>();
+
+  // Called when "status" of team query is changed
+  React.useEffect(() => {
+    switch (status) {
+      case "error":
+        // eslint-disable-next-line no-console
+        console.log(error);
+        break;
+      case "success":
+        if (data) {
+          setTeamInfo(data);
+        }
+        break;
+      default:
+        break;
+    }
+  }, [status, data]);
+
+  const patchTeam = usePatchTeam();
+
+  const changeInfo = (newInfo: TeamAPP) => {
+    patchTeam.mutate(newInfo, {
+      onSuccess: (teamAPP: TeamAPP) => {
+        setTeamInfo(teamAPP);
+      },
+      onError: (e: unknown) => {
+        // eslint-disable-next-line no-console
+        console.log(e);
+      },
+    });
+  };
+
+  const changeDept = (newDept: string) => {
+    if (teamInfo) {
+      const newInfo = teamInfo;
+      newInfo.department = newDept;
+      changeInfo(newInfo);
+    }
+  };
+
+  const changeCountry = (newCountry: string) => {
+    if (teamInfo) {
+      const newInfo = teamInfo;
+      newInfo.country = newCountry;
+      changeInfo(newInfo);
+    }
+  };
 
   return (
     <PageLayout title={`Team ${teamId}`} sidebarType={userTypes[userRole]}>
@@ -30,11 +80,17 @@ function Team({ theme }: { theme: Theme }) {
       <h3> Country </h3>
 
       {userRole === "ASSESSOR" && (
-        <TextfieldEdit text="Netherlands" theme={theme} rows={1} />
+        <TextfieldEdit
+          text={teamInfo ? teamInfo.country : ""}
+          theme={theme}
+          rows={1}
+          handleSave={changeCountry}
+        />
       )}
-      {userRole === "USER" && (
+
+      {userRole !== "ASSESSOR" && (
         <Textfield
-          text="Netherlands"
+          text={teamInfo ? teamInfo.country : ""}
           theme={theme}
           rows={1}
           columns="inherit"
@@ -44,11 +100,16 @@ function Team({ theme }: { theme: Theme }) {
       <h3> IT Area / Department </h3>
 
       {userRole === "ASSESSOR" && (
-        <TextfieldEdit text="Department A" theme={theme} rows={1} />
+        <TextfieldEdit
+          text={teamInfo ? teamInfo.department : ""}
+          theme={theme}
+          rows={1}
+          handleSave={changeDept}
+        />
       )}
-      {userRole === "USER" && (
+      {userRole !== "ASSESSOR" && (
         <Textfield
-          text="Department A"
+          text={teamInfo ? teamInfo.department : ""}
           theme={theme}
           rows={1}
           columns="inherit"

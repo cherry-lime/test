@@ -4,8 +4,9 @@ import {
   ThemeOptions,
   ThemeProvider,
 } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
+
 /*
 size of the textfield is specified with the parameter width (in characters)
 default set to 50
@@ -30,8 +31,7 @@ function TextfieldEdit({
   using the State Hook in React
   the value is updated when you are done entering and click outside the textfield
   */
-  const initialState = text;
-  const [intermediateValue, setIntermediateValue] = useState(initialState);
+  const [intermediateValue, setIntermediateValue] = useState(text);
   let multiline = false;
 
   const handleModify = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,6 +52,10 @@ function TextfieldEdit({
   } else {
     multiline = false;
   }
+
+  React.useEffect(() => {
+    setIntermediateValue(text);
+  }, [text]);
 
   return (
     <ThemeProvider theme={theme}>
