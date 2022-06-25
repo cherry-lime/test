@@ -21,6 +21,7 @@ model User {
   UserInTeam             UserInTeam[]
 
   @@index([role])
+  @@index([username])
 }
 
 model Checkpoint {
@@ -38,6 +39,8 @@ model Checkpoint {
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
   @@unique([checkpoint_description, category_id])
+  @@index([category_id, order])
+  @@index([maturity_id])
 }
 
 model Answer {
@@ -50,18 +53,20 @@ model Answer {
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
   @@unique([answer_text, template_id])
+  @@index([template_id])
 }
 
 model Maturity {
-  maturity_id    Int          @id @default(autoincrement())
-  maturity_name  String       @default("New Maturity")
-  maturity_order Int
-  Template       Template     @relation(fields: [template_id], references: [template_id])
-  template_id    Int
-  disabled       Boolean      @default(false)
-  Checkpoint     Checkpoint[]
+  maturity_id   Int          @id @default(autoincrement())
+  maturity_name String       @default("New Maturity")
+  order         Int
+  Template      Template     @relation(fields: [template_id], references: [template_id])
+  template_id   Int
+  disabled      Boolean      @default(false)
+  Checkpoint    Checkpoint[]
 
   @@unique([maturity_name, template_id])
+  @@index([template_id, maturity_order])
 }
 
 model Topic {
@@ -73,6 +78,7 @@ model Topic {
   CheckpointInTopic CheckpointInTopic[]
 
   @@unique([topic_name, template_id])
+  @@index([template_id])
 }
 
 model CheckpointInTopic {
@@ -82,6 +88,7 @@ model CheckpointInTopic {
   topic_id      Int
 
   @@id([topic_id, checkpoint_id])
+  @@index([checkpoint_id, topic_id])
 }
 
 model Team {
@@ -153,6 +160,7 @@ model Template {
 
   Maturity Maturity[]
   @@unique([template_name, template_type])
+  @@index([enabled])
 }
 
 model Category {
@@ -167,6 +175,7 @@ model Category {
   SubArea       SubArea[]
 
   @@unique([category_name, template_id])
+  @@index([template_id, order])
 }
 
 model SubArea {
@@ -174,10 +183,13 @@ model SubArea {
   subarea_name        String   @default("New Subarea")
   subarea_summary     String   @default("")
   subarea_description String   @default("")
+  disabled            Boolean  @default(false)
+  order               Int
   Category            Category @relation(fields: [category_id], references: [category_id])
   category_id         Int
 
   @@unique([subarea_name, category_id])
+  @@index([category_id])
 }
 
 model CheckpointAndAnswersInAssessments {
@@ -190,6 +202,7 @@ model CheckpointAndAnswersInAssessments {
 
   @@id([assessment_id, checkpoint_id])
   @@index([assessment_id])
+  @@index([checkpoint_id])
 }
 
 enum AssessmentType {

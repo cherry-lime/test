@@ -58,7 +58,7 @@ export class AssessmentScoreService {
         disabled: false,
       },
       orderBy: {
-        maturity_order: 'asc',
+        order: 'asc',
       },
     });
 

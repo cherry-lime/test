@@ -101,7 +101,7 @@ describe('SubareaService', () => {
     });
 
     it('should throw an error if category not found', async () => {
-      jest.spyOn(prisma.subArea, 'update').mockRejectedValue({ code: 'P2025' });
+      jest.spyOn(prisma.subArea, 'findUnique').mockResolvedValueOnce(null);
       await expect(subareaService.update(1, aSubarea)).rejects.toThrowError(
         NotFoundException
       );
@@ -121,7 +121,9 @@ describe('SubareaService', () => {
     });
 
     it('should throw an error if subarea is not found', async () => {
-      jest.spyOn(prisma.subArea, 'delete').mockRejectedValue({ code: 'P2025' });
+      jest
+        .spyOn(prisma.subArea, 'delete')
+        .mockRejectedValueOnce({ code: 'P2025' });
       await expect(subareaService.delete(1)).rejects.toThrowError(
         NotFoundException
       );

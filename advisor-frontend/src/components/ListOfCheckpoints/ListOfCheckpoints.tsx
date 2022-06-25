@@ -178,17 +178,16 @@ function ListOfCheckpoints({
     if (checkpoints !== undefined && answers !== undefined) {
       return setCheckpointComponents(
         checkpoints.map((checkpoint) => (
-          <Grid key={`checkpoint-card-${checkpoint.checkpointId}`} item>
-            <Checkpoint
-              feedback={feedback}
-              number={checkpoint.order}
-              topics={checkpoint.topics.map((topic) => topic.name)}
-              theme={theme}
-              description={checkpoint.description}
-              checkpointvalues={answers.map((a) => a.answerId)}
-              checkpointlabels={answers.map((a) => a.text)}
-            />
-          </Grid>
+          <Checkpoint
+            key={`checkpoint-card-${checkpoint.checkpointId}`}
+            feedback={feedback}
+            number={checkpoint.order}
+            topics={checkpoint.topics.map((topic) => topic.name)}
+            theme={theme}
+            description={checkpoint.description}
+            checkpointvalues={answers.map((a) => a.answerId)}
+            checkpointlabels={answers.map((a) => a.text)}
+          />
         ))
       );
     }
@@ -199,14 +198,13 @@ function ListOfCheckpoints({
     if (subareas !== undefined) {
       setSubareaComponents(
         subareas.map((subarea) => (
-          <Grid key={subarea.subareaId} item>
-            <Subarea
-              theme={theme}
-              title={subarea.name}
-              summary={subarea.summary}
-              description={subarea.description}
-            />
-          </Grid>
+          <Subarea
+            key={subarea.subareaId}
+            theme={theme}
+            title={subarea.name}
+            summary={subarea.summary}
+            description={subarea.description}
+          />
         ))
       );
     }
@@ -214,70 +212,56 @@ function ListOfCheckpoints({
 
   return (
     <div style={{ width: "inherit", display: "contents" }}>
-      <Grid
-        sx={{ width: "inherit" }}
-        container
-        direction="column"
-        alignItems="left"
-        spacing="20px"
-      >
-        {areaList !== undefined && area !== undefined && (
-          <Grid item sx={{ width: "inherit" }}>
-            <FormControl>
-              <Select value={area} onChange={handleAreaChange}>
-                {areaList.map((a) => (
-                  <MenuItem key={`menu-area-${a.areaId}`} value={a.areaId}>
-                    {a.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-        )}
+      {areaList !== undefined && area !== undefined && (
+        <FormControl sx={{ width: "inherit" }}>
+          <Select value={area} onChange={handleAreaChange}>
+            {areaList.map((a) => (
+              <MenuItem key={`menu-area-${a.areaId}`} value={a.areaId}>
+                {a.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
 
-        <Grid item>
-          <Card
-            sx={{
-              backgroundColor: "white",
-              width: "inherit",
-              borderRadius: "5px",
-            }}
-          >
-            <Stack direction="row" justifyContent="left" alignItems="center">
-              <Tabs value={value} onChange={handleChange} textColor="primary">
-                <Tab value="Single" label="Single" />
-                <Tab value="List" label="List" />
-              </Tabs>
+      <Card
+        sx={{
+          backgroundColor: "white",
+          width: "inherit",
+          borderRadius: "5px",
+        }}
+      >
+        <Stack direction="row" justifyContent="left" alignItems="center">
+          <Tabs value={value} onChange={handleChange} textColor="primary">
+            <Tab value="Single" label="Single" />
+            <Tab value="List" label="List" />
+          </Tabs>
+        </Stack>
+      </Card>
+      {subareaComponents !== undefined && subareaComponents}
+      {value === "Single" &&
+        checkpointComponents !== undefined &&
+        checkpointComponents[page - 1]}
+      {value === "List" &&
+        checkpointComponents !== undefined &&
+        checkpointComponents}
+      {checkpoints !== undefined && (
+        <Grid item container direction="column" alignItems="center">
+          <Grid item>
+            <Stack direction="row" spacing={2} alignItems="center">
+              {value === "Single" && (
+                <Pagination
+                  onChange={handlePageChange}
+                  count={checkpoints.length}
+                  shape="rounded"
+                  color="primary"
+                  page={page}
+                />
+              )}
             </Stack>
-          </Card>
-        </Grid>
-        {subareaComponents !== undefined && subareaComponents}
-        <Grid item>
-          {value === "Single" &&
-            checkpointComponents !== undefined &&
-            checkpointComponents[page - 1]}
-        </Grid>
-        {value === "List" &&
-          checkpointComponents !== undefined &&
-          checkpointComponents}
-        {checkpoints !== undefined && (
-          <Grid item container direction="column" alignItems="center">
-            <Grid item>
-              <Stack direction="row" spacing={2} alignItems="center">
-                {value === "Single" && (
-                  <Pagination
-                    onChange={handlePageChange}
-                    count={checkpoints.length}
-                    shape="rounded"
-                    color="primary"
-                    page={page}
-                  />
-                )}
-              </Stack>
-            </Grid>
           </Grid>
-        )}
-      </Grid>
+        </Grid>
+      )}
     </div>
   );
 }

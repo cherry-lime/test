@@ -1,4 +1,4 @@
-import { Grid, Theme } from "@mui/material";
+import { Theme } from "@mui/material";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import AssessmentOngoingGrid from "../../../components/Grids/Specific/Assessment/AssessmentOngoing/AssessmentOngoingGrid";
@@ -17,17 +17,21 @@ function ListOfSelfEvals({ theme }: { theme: Theme }) {
       title="Individual Evaluations"
       sidebarType={userTypes[userRole]}
     >
-      <Grid container direction="column" alignItems="left">
-        <h2>Ongoing Evaluations</h2>
-        <AssessmentOngoingGrid
-          theme={theme}
-          userRole={userRole}
-          assessmentType="INDIVIDUAL"
-        />
+      <h2>Ongoing Evaluations</h2>
+      <AssessmentOngoingGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        assessmentType="INDIVIDUAL"
+      />
 
-        <h2>Completed Evaluations</h2>
-        <AssessmentCompletedGrid theme={theme} assessmentType="INDIVIDUAL" />
-      </Grid>
+      <h2>Completed Evaluations</h2>
+      <AssessmentCompletedGrid
+        theme={theme}
+        userId={userId}
+        userRole={userRole}
+        assessmentType="INDIVIDUAL"
+      />
     </PageLayout>
   );
 }
