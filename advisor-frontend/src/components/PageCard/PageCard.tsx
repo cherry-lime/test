@@ -72,7 +72,7 @@ export default function PageCard({
       sx={{
         display: "flex",
         verticalAlign: "middle",
-        width: "100vw",
+        width: "inherit",
         borderRadius: "20px",
         marginBottom: "10px",
       }}
