@@ -1,7 +1,7 @@
 import { Theme } from "@mui/material";
 import PageLayout from "../../PageLayout";
 import userType from "../../../components/Sidebar/listUsersTypes";
-import IndividualGrid from "../../../components/Grids/Specific/IndividualGrid";
+import IndividualGrid from "../../../components/Grids/Specific/Individual/IndividualGrid";
 
 /**
  * Page listing all users registered in the tool

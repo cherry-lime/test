@@ -1,20 +1,20 @@
 import React from "react";
+import { QueryClientProvider } from "react-query";
+import { Provider } from "react-redux";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { QueryClient, QueryClientProvider } from "react-query";
 import App from "./App";
 import { store } from "./app/store";
+import client from "./app/client";
 
 const rootElement = document.getElementById("root");
-const queryClient = new QueryClient();
 if (!rootElement) throw new Error("Failed to find the root element");
 
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={client}>
       <Provider store={store}>
         <BrowserRouter>
           <App />

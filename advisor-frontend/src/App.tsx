@@ -21,7 +21,7 @@ import INGTheme from "./Theme";
 import SignIn from "./components/SignInUP/SignIn";
 import Chooserole from "./components/SignInUP/Chooserole";
 import { RootState } from "./app/store";
-import { authProfile } from "./app/loginAPI";
+import { authProfile } from "./api/LoginAPI";
 import DetailGen from "./components/SignInUP/DetailGen";
 
 function App() {

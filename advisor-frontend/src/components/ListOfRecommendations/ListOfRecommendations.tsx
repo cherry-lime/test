@@ -8,7 +8,7 @@ import {
 import React, { Dispatch, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import RecommendationGrid from "../Grids/Specific/RecommendationGrid";
+import RecommendationGrid from "../Grids/Specific/Recommendation/RecommendationGrid";
 
 type Topic = {
   topicId: number;
@@ -21,11 +21,13 @@ type Topic = {
  */
 function ListOfRecommendations({
   theme,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentId,
 }: {
   theme: Theme;
   assessmentId: string | undefined;
 }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { userId, userRole } = useSelector(
     (state: RootState) => state.userData
   );
@@ -74,11 +76,8 @@ function ListOfRecommendations({
       {topic !== undefined && (
         <RecommendationGrid
           theme={theme}
-          assessmentId={assessmentId}
+          assessmentId={1} // assessmentId
           topicId={topic}
-          assessmentType="INDIVIDUAL"
-          userId={userId}
-          userRole={userRole}
         />
       )}
     </div>

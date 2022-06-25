@@ -18,7 +18,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useLoginTwo } from "../../app/loginAPI";
+import { useLoginTwo } from "../../api/LoginAPI";
 
 // Sign in functionality to be used later
 export default function SignIn({ theme }: { theme: Theme }) {

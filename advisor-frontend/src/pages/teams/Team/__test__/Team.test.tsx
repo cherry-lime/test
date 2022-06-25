@@ -1,21 +1,21 @@
 import { render, screen } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import client from "../../../../app/client";
 import { store } from "../../../../app/store";
 import Theme from "../../../../Theme";
 import Team from "../Team";
 
-const queryClient = new QueryClient();
 test("app rendering/navigating from assessor view to specific team evaluation", async () => {
   render(
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={client}>
+      <Provider store={store}>
         <BrowserRouter>
           <Team theme={Theme} />
         </BrowserRouter>
-      </QueryClientProvider>
-    </Provider>
+      </Provider>
+    </QueryClientProvider>
   );
 
   expect(screen.getByText(/Team Information/i)).toBeInTheDocument();

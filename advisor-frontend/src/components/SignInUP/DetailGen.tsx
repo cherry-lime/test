@@ -21,7 +21,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { useLoginTwo } from "../../app/loginAPI";
+import { useLoginTwo } from "../../api/LoginAPI";
 
 export default function DetailGen({ theme }: { theme: Theme }) {
   // Make global state variables accessible

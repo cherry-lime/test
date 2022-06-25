@@ -1,34 +1,56 @@
-import TeamGrid from "./TeamGrid";
-import MemberGrid from "./MemberGrid";
-import AssessmentOngoingGrid from "./AssessmentOngoingGrid";
-import AssessmentCompletedGrid from "./AssessmentCompletedGrid";
-import RecommendationGrid from "./RecommendationGrid";
-import IndividualGrid from "./IndividualGrid";
-import TemplateGrid from "./TemplateGrid";
-import CategoryGrid from "./CategoryGrid";
-import TopicGrid from "./TopicGrid";
-import MaturityGrid from "./MaturityGrid";
-import AnswerTypeGrid from "./AnswerTypeGrid";
-import SubareaGrid from "./SubareaGrid";
-import CheckpointGrid from "./CheckpointGrid";
+import { useMutation } from "react-query";
+
+import TeamGrid from "./Team/TeamGrid";
+import MemberGrid from "./Member/MemberGrid";
+import AssessmentOngoingGrid from "./Assessment/AssessmentOngoing/AssessmentOngoingGrid";
+import AssessmentCompletedGrid from "./Assessment/AssessmentCompleted/AssessmentCompletedGrid";
+import RecommendationGrid from "./Recommendation/RecommendationGrid";
+import IndividualGrid from "./Individual/IndividualGrid";
+import TemplateGrid from "./Template/TemplateGrid";
+import CategoryGrid from "./Category/CategoryGrid";
+import TopicGrid from "./Topic/TopicGrid";
+import MaturityGrid from "./Maturity/MaturityGrid";
+import AnswerGrid from "./Answer/AnswerGrid";
+import SubareaGrid from "./Subarea/SubareaGrid";
+import CheckpointGrid from "./Checkpoint/CheckpointGrid";
 import INGTheme from "../../../Theme";
+import API from "../../../api/_API";
+
+export function useLogin() {
+  return useMutation(
+    ["Login Admin"],
+    () =>
+      API.post(`/auth/login`, {
+        username: "symbol_enemy_throat",
+        password: "1ed4d82c-5ccd-447c-938e-d3c1efec1044",
+      }),
+    {
+      onSuccess: (data: any) => {
+        console.log(data);
+      },
+      onError: (error: any) => {
+        console.log(error);
+      },
+    }
+  );
+}
 
 export default function AllGrid() {
-  const userId = "0";
+  // const login = useLogin();
+  // login.mutate();
   const userRole = "ASSESSOR";
-  const teamId = "0";
-  const templateId = "0";
-  const categoryId = "0";
-  const assessmentId = "0";
+  const teamId = 1;
+  const templateId = 1;
+  const categoryId = 2;
+  const assessmentId = 3;
 
   return (
     <div style={{ width: "100%" }}>
       <strong>Team Grid</strong>
-      <TeamGrid theme={INGTheme} userId={userId} userRole={userRole} />
+      <TeamGrid theme={INGTheme} userRole={userRole} />
       <strong>Assessor Grid</strong>
       <MemberGrid
         theme={INGTheme}
-        userId={userId}
         userRole="USER"
         teamId={teamId}
         forAssessors
@@ -36,7 +58,6 @@ export default function AllGrid() {
       <strong>Member Grid</strong>
       <MemberGrid
         theme={INGTheme}
-        userId={userId}
         userRole="USER"
         teamId={teamId}
         forAssessors={false}
@@ -44,21 +65,14 @@ export default function AllGrid() {
       <strong>Ongoing Evaluations (Individual)</strong>
       <AssessmentOngoingGrid
         theme={INGTheme}
-        userId={userId}
         userRole={userRole}
         assessmentType="INDIVIDUAL"
       />
       <strong>Completed Evaluations (Individual)</strong>
-      <AssessmentCompletedGrid
-        theme={INGTheme}
-        userId={userId}
-        userRole={userRole}
-        assessmentType="INDIVIDUAL"
-      />
+      <AssessmentCompletedGrid theme={INGTheme} assessmentType="INDIVIDUAL" />
       <strong>Ongoing Evaluations (Team)</strong>
       <AssessmentOngoingGrid
         theme={INGTheme}
-        userId={userId}
         userRole={userRole}
         teamId={teamId}
         assessmentType="TEAM"
@@ -66,26 +80,21 @@ export default function AllGrid() {
       <strong>Completed Evaluations (Team)</strong>
       <AssessmentCompletedGrid
         theme={INGTheme}
-        userId={userId}
-        userRole={userRole}
         teamId={teamId}
         assessmentType="TEAM"
       />
       <strong>Recommendations</strong>
       <RecommendationGrid
-        topicId={1}
         theme={INGTheme}
+        topicId={1}
         assessmentId={assessmentId}
-        assessmentType="TEAM"
-        userId={userId}
-        userRole={userRole}
       />
       <strong>Individuals</strong>
       <IndividualGrid theme={INGTheme} />
       <strong>Individual Evaluation Templates</strong>
-      <TemplateGrid theme={INGTheme} assessmentType="INDIVIDUAL" />
+      <TemplateGrid theme={INGTheme} templateType="INDIVIDUAL" />
       <strong>Team Evaluation Templates</strong>
-      <TemplateGrid theme={INGTheme} assessmentType="TEAM" />
+      <TemplateGrid theme={INGTheme} templateType="TEAM" />
       <strong>Areas</strong>
       <CategoryGrid theme={INGTheme} templateId={templateId} />
       <strong>Topics</strong>
@@ -93,13 +102,9 @@ export default function AllGrid() {
       <strong>Maturity Levels</strong>
       <MaturityGrid theme={INGTheme} templateId={templateId} />
       <strong>Answer Types</strong>
-      <AnswerTypeGrid theme={INGTheme} templateId={templateId} />
+      <AnswerGrid theme={INGTheme} templateId={templateId} />
       <strong>Subareas</strong>
-      <SubareaGrid
-        theme={INGTheme}
-        templateId={templateId}
-        categoryId={categoryId}
-      />
+      <SubareaGrid theme={INGTheme} categoryId={categoryId} />
       <strong>Checkpoints</strong>
       <CheckpointGrid
         theme={INGTheme}

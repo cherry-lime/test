@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { FormControl, MenuItem, Select, Theme } from "@mui/material";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
-import TemplateGrid from "../../../../components/Grids/Specific/TemplateGrid";
+import TemplateGrid from "../../../../components/Grids/Specific/Template/TemplateGrid";
 
 /**
  * Page containing the list of all existing templates
@@ -48,7 +48,7 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
           </Select>
         </FormControl>
 
-        <TemplateGrid theme={theme} assessmentType="INDIVIDUAL" />
+        <TemplateGrid theme={theme} templateType="INDIVIDUAL" />
 
         <h2>Team Templates</h2>
         <p style={{ marginBottom: "0px" }}>
@@ -63,7 +63,7 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
             ))}
           </Select>
         </FormControl>
-        <TemplateGrid theme={theme} assessmentType="TEAM" />
+        <TemplateGrid theme={theme} templateType="TEAM" />
       </PageLayout>
     </div>
   );

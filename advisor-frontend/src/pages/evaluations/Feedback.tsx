@@ -1,6 +1,6 @@
 import { Card, Stack, Tab, Tabs, Theme, Button } from "@mui/material";
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import userTypes from "../../components/Sidebar/listUsersTypes";
@@ -19,7 +19,8 @@ import ListOfRecommendations from "../../components/ListOfRecommendations/ListOf
  * This should only be accessible to the user whose assement this belongs to
  */
 function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
-  const { assessmentId } = useParams();
+  // const { assessmentId } = useParams();
+  const assessmentId = 1;
 
   const { userRole } = useSelector((state: RootState) => state.userData);
 
@@ -143,11 +144,18 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       )}
 
       {value === "Recommendations" && (
-        <ListOfRecommendations theme={theme} assessmentId={assessmentId} />
+        <ListOfRecommendations
+          theme={theme}
+          assessmentId={assessmentId.toString()}
+        />
       )}
 
       {value === "Checkpoints" && (
-        <ListOfCheckpoints feedback theme={theme} assessmentId={assessmentId} />
+        <ListOfCheckpoints
+          feedback
+          theme={theme}
+          assessmentId={assessmentId.toString()}
+        />
       )}
 
       {value === "Progress" && <ProgressEvaluationCard />}

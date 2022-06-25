@@ -1,14 +1,13 @@
 import { Theme } from "@mui/material";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
-import AssessmentOngoingGrid from "../../../components/Grids/Specific/AssessmentOngoingGrid";
-import AssessmentCompletedGrid from "../../../components/Grids/Specific/AssessmentCompletedGrid";
+import AssessmentOngoingGrid from "../../../components/Grids/Specific/Assessment/AssessmentOngoing/AssessmentOngoingGrid";
+import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessment/AssessmentCompleted/AssessmentCompletedGrid";
 
 /**
  * Page with the list of self evaluations that belog to the user
  */
 function ListOfSelfEvals({ theme }: { theme: Theme }) {
-  const userId = "0";
   // only users sees this page, no need to fetch role
   const userRole = "USER";
 
@@ -20,18 +19,12 @@ function ListOfSelfEvals({ theme }: { theme: Theme }) {
       <h2>Ongoing Evaluations</h2>
       <AssessmentOngoingGrid
         theme={theme}
-        userId={userId}
         userRole={userRole}
         assessmentType="INDIVIDUAL"
       />
 
       <h2>Completed Evaluations</h2>
-      <AssessmentCompletedGrid
-        theme={theme}
-        userId={userId}
-        userRole={userRole}
-        assessmentType="INDIVIDUAL"
-      />
+      <AssessmentCompletedGrid theme={theme} assessmentType="INDIVIDUAL" />
     </PageLayout>
   );
 }
