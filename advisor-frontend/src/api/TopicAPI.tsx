@@ -61,13 +61,17 @@ export function useGetTopics(templateId: number, enabledFilter?: boolean) {
 }
 
 // Get topic with id from database
-export function useGetTopic() {
-  return useQuery(["GET", "/topic", "/{topic_id}"], async (topicId) => {
-    // Get data from database
-    const { data } = await API.get(`/topic/${topicId}`);
+export function useGetTopic(topicId: number) {
+  return useQuery(
+    ["GET", "/topic", "/{topic_id}"],
+    async () => {
+      // Get data from database
+      const { data } = await API.get(`/topic/${topicId}`);
 
-    return topicToAPP(data) as TopicAPP;
-  });
+      return topicToAPP(data) as TopicAPP;
+    },
+    { enabled: !!topicId }
+  );
 }
 
 // Post topic to database

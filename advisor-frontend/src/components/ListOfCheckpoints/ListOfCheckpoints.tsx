@@ -1,49 +1,19 @@
 import {
-  Grid,
-  Stack,
-  Pagination,
-  Card,
-  Tab,
-  Tabs,
   ThemeOptions,
   FormControl,
   Select,
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
-import React, { Dispatch, useState } from "react";
+import React, { useState } from "react";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
-import { AssessmentAPP, useGetAssessment } from "../../api/AssessmentAPI";
+import {
+  AssessmentAPP,
+  useGetAssessment,
+  useGetSaveAssessment,
+} from "../../api/AssessmentAPI";
 import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
-import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI";
-import Checkpoint from "../Checkpoint/Checkpoint";
-import Subarea from "../Subarea/Subarea";
 import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
-
-type AssessmentCheckpoint = {
-  checkpointId: number;
-  description: string;
-  area: Area;
-  order: number;
-  topics: Topic[];
-};
-
-type Topic = {
-  topicId: number;
-  name: string;
-};
-
-type Area = {
-  areaId: number;
-  name: string;
-};
-
-type AssessmentSubarea = {
-  subareaId: number;
-  name: string;
-  summary: string;
-  description: string;
-};
 
 /**
  * Page with a self evaluation that can be filled in
@@ -59,19 +29,6 @@ function ListOfCheckpoints({
   theme: ThemeOptions;
   feedback: boolean;
 }) {
-  const [page, setPage] = React.useState(1);
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    setPage(value);
-  };
-
-  const [value, setValue] = React.useState("Single");
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-
   const [activeArea, setActiveArea] = useState<number>();
 
   const handleAreaChange = (event: SelectChangeEvent<number>) => {
@@ -83,7 +40,8 @@ function ListOfCheckpoints({
   const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
   const [areaList, setAreaList] = useState<CategoryAPP[]>();
   const [answerList, setAnswerList] = useState<AnswerAPP[]>();
-  const [subareaList, setSubareaList] = useState<SubareaAPP[]>();
+  const [checkpointAnswerList, setCheckpointAnswerList] =
+    useState<Record<number, number>>();
 
   // get assessment information from API
   const {
@@ -103,6 +61,9 @@ function ListOfCheckpoints({
     Number(assessmentInfo?.templateId),
     true
   );
+
+  // get checkpoint answer list from API
+  const checkpointAnswerResponse = useGetSaveAssessment(assessmentId);
 
   // set assessment info value
   React.useEffect(() => {
@@ -160,6 +121,24 @@ function ListOfCheckpoints({
   }, [answersResponse]);
 
   React.useEffect(() => {
+    if (checkpointAnswerResponse.data) {
+      switch (checkpointAnswerResponse.status) {
+        case "success":
+          if (checkpointAnswerResponse.data) {
+            const answerDictionary: Record<number, number> = {};
+            checkpointAnswerResponse.data.forEach((a) => {
+              answerDictionary[a.checkpointId] = a.answerId;
+            });
+            setCheckpointAnswerList(answerDictionary);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
+
+  React.useEffect(() => {
     if (areaList) {
       setActiveArea(Number(areaList[0].id));
     }
@@ -179,13 +158,14 @@ function ListOfCheckpoints({
         </FormControl>
       )}
 
-      {activeArea && answerList && assessmentId && (
+      {activeArea && answerList && assessmentInfo && checkpointAnswerList && (
         <AreaSpecificCheckpoints
           theme={theme}
           areaId={activeArea}
           answerList={answerList}
+          checkpointAnswerList={checkpointAnswerList}
           feedback={feedback}
-          assessmentId={Number(assessmentId)}
+          assessmentId={Number(assessmentInfo.id)}
         />
       )}
     </div>

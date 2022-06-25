@@ -5,13 +5,14 @@ import {
   RadioGroup,
   Radio,
 } from "@mui/material";
+import { UseQueryResult } from "react-query";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import PropTypes from "prop-types";
 import { ThemeOptions } from "@mui/material/styles/experimental_extendTheme";
 import { AnswerAPP } from "../../api/AnswerAPI";
+import { TopicAPP, useGetTopic } from "../../api/TopicAPI";
 
 /*
 passing parameter of the optional description of the checkpoints
@@ -32,7 +33,7 @@ function Checkpoint({
   number: number;
   topicIds: number[];
   answers: AnswerAPP[];
-  selectedAnswer: "";
+  selectedAnswer: string;
   theme: ThemeOptions;
   feedback: boolean;
 }) {
@@ -55,23 +56,49 @@ function Checkpoint({
     [value]
   );
 
+  const [topicList, setTopicList] = useState<TopicAPP[]>([]);
+  const topicResponses: UseQueryResult<TopicAPP, unknown>[] = [];
+
+  topicIds.forEach((topicId) => {
+    topicResponses.push(useGetTopic(topicId));
+  });
+
+  topicResponses.forEach((topicResponse) => {
+    React.useEffect(() => {
+      if (topicResponse.data) {
+        switch (topicResponse.status) {
+          case "error":
+            // eslint-disable-next-line no-console
+            console.log(topicResponse.error);
+            break;
+          case "success":
+            if (topicResponse.data) {
+              setTopicList((list) => {
+                list.push(topicResponse.data);
+                return list;
+              });
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    }, [topicResponse]);
+  });
+
   /*
   the following for loop is used to dynamically generate an amount of checkpoints
   the amount of checkpoints is defined in checkpointvalues, which is an array of strings
   */
-  const items = [];
-
-  for (let i = 0; i < answers.length; i += 1) {
-    items.push(
-      <FormControlLabel
-        key={`answers-${answers[i].id.toString()}`}
-        control={<Radio color="primary" />}
-        label={answers[i].label}
-        value={answers[i].id.toString()}
-        disabled={feedback}
-      />
-    );
-  }
+  const items = answers.map((a) => (
+    <FormControlLabel
+      key={`answers-${a.id.toString()}`}
+      control={<Radio color="primary" />}
+      label={a.label}
+      value={a.id.toString()}
+      disabled={feedback}
+    />
+  ));
 
   return (
     /*  
@@ -98,11 +125,11 @@ function Checkpoint({
           >
             {number}
           </Typography>
-          {/* {topicIds !== undefined && (
+          {topicIds.length > 0 && (
             <Typography sx={{ textAlign: "left" }} id="checkpoint-topics">
-              {`Topics: ${topics.join(", ")}`}
+              {`Topics: ${topicList.join(", ")}`}
             </Typography>
-          )} */}
+          )}
           <Typography sx={{ textAlign: "left" }} id="checkpointnamelabel">
             {description}
           </Typography>
@@ -118,7 +145,6 @@ function Checkpoint({
           >
             <div>{items}</div>
           </RadioGroup>
-          {/* {console.log(value)}  */}
         </CardActions>
       </Card>
     </ThemeProvider>

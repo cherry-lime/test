@@ -6,42 +6,13 @@ import {
   Tab,
   Tabs,
   ThemeOptions,
-  FormControl,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
 } from "@mui/material";
-import React, { Dispatch, useState } from "react";
-import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
-import {
-  AssessmentAPP,
-  AssessmentCheckpointAPP,
-  useGetAssessment,
-  useGetSaveAssessment,
-} from "../../api/AssessmentAPI";
-import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
+import React, { useState } from "react";
+import { AnswerAPP } from "../../api/AnswerAPI";
 import { CheckpointAPP, useGetCheckpoints } from "../../api/CheckpointAPI";
 import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI";
 import Checkpoint from "../Checkpoint/Checkpoint";
 import Subarea from "../Subarea/Subarea";
-
-type AssessmentCheckpoint = {
-  checkpointId: number;
-  description: string;
-  area: Area;
-  order: number;
-  topics: Topic[];
-};
-
-type Topic = {
-  topicId: number;
-  name: string;
-};
-
-type Area = {
-  areaId: number;
-  name: string;
-};
 
 /**
  * Page with a self evaluation that can be filled in
@@ -52,12 +23,14 @@ function AreaSpecificCheckpoints({
   assessmentId,
   areaId,
   answerList,
+  checkpointAnswerList,
   theme,
   feedback,
 }: {
   assessmentId: number;
   areaId: number;
   answerList: AnswerAPP[];
+  checkpointAnswerList: Record<number, number>;
   theme: ThemeOptions;
   feedback: boolean;
 }) {
@@ -72,23 +45,18 @@ function AreaSpecificCheckpoints({
   const [value, setValue] = React.useState("Single");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+    // here we need to send new value to API
   };
 
   // GET ASSESSMENT INFORMATION
 
   const [subareaList, setSubareaList] = useState<SubareaAPP[]>();
   const [checkpointList, setCheckpointList] = useState<CheckpointAPP[]>();
-  const [checkpointAnswerList, setCheckpointAnswerList] =
-    useState<AssessmentCheckpointAPP[]>();
-
   // get answer list from API
   const subareasResponse = useGetSubareas(areaId, true);
 
   // get checkpoint list from API
   const checkpointResponse = useGetCheckpoints(areaId, true);
-
-  // get checkpoint answer list from API
-  const checkpointAnswerResponse = useGetSaveAssessment(assessmentId);
 
   const [checkpointComponents, setCheckpointComponents] =
     useState<React.ReactElement[]>();
@@ -134,24 +102,9 @@ function AreaSpecificCheckpoints({
     }
   }, [checkpointResponse]);
 
-  // set the checkpoint list value
-  React.useEffect(() => {
-    if (checkpointAnswerResponse.data) {
-      switch (checkpointAnswerResponse.status) {
-        case "success":
-          if (checkpointAnswerResponse.data) {
-            setCheckpointAnswerList(checkpointAnswerResponse.data);
-          }
-          break;
-        default:
-          break;
-      }
-    }
-  }, [checkpointAnswerResponse]);
-
   // create checkpoint card components
   React.useEffect(() => {
-    if (checkpointList !== undefined && answerList !== undefined) {
+    if (checkpointList && answerList && checkpointAnswerList) {
       return setCheckpointComponents(
         checkpointList.map((checkpoint) => (
           <Checkpoint
@@ -159,7 +112,11 @@ function AreaSpecificCheckpoints({
             feedback={feedback}
             number={checkpoint.order}
             topicIds={checkpoint.topics}
-            selectedAnswer=""
+            selectedAnswer={
+              Number(checkpoint.id) in checkpointAnswerList
+                ? checkpointAnswerList[Number(checkpoint.id)].toString()
+                : ""
+            }
             theme={theme}
             description={checkpoint.description}
             answers={answerList}
@@ -168,7 +125,7 @@ function AreaSpecificCheckpoints({
       );
     }
     return undefined;
-  }, [checkpointList]);
+  }, [checkpointList, checkpointAnswerList]);
 
   React.useEffect(() => {
     if (subareaList !== undefined) {
