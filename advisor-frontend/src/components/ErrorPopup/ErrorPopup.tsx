@@ -16,6 +16,8 @@ export const handleError = (
       ref.current.handleErrorPopup(errorMessage);
     } else if (error instanceof Error) {
       ref.current.handleErrorPopup(error.toString());
+    } else if (typeof error === "string") {
+      ref.current.handleErrorPopup(error);
     }
   }
 };
