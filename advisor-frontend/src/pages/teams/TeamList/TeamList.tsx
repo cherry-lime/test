@@ -1,4 +1,4 @@
-import { Theme } from "@mui/material";
+import { Box, Stack, Theme } from "@mui/material";
 import { useSelector } from "react-redux";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
@@ -16,16 +16,14 @@ function TeamList({ theme }: { theme: Theme }) {
   return (
     <PageLayout title="Teams" sidebarType={userTypes[userRole]}>
       {userRole !== "ADMIN" && (
-        <TextfieldEdit text="Enter token here" theme={theme} rows={1} />
-      )}
-      {userRole !== "ADMIN" && (
-        <div
-          style={{
-            width: "inherit",
-          }}
-        >
-          <ButtonRegular text="Join Team With Token" />
-        </div>
+        <Stack direction="row" sx={{ width: "inherit" }}>
+          <Box>
+            <TextfieldEdit text="Enter token here" theme={theme} rows={1} />
+          </Box>
+          <Box sx={{ p: 1.5 }}>
+            <ButtonRegular text="Join Team With Token" />
+          </Box>
+        </Stack>
       )}
 
       <TeamGrid theme={theme} userRole={userRole} />
