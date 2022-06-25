@@ -1,5 +1,7 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import UserInterface from "./pages/user/UserInterface/UserInterface";
 import Home from "./Home";
 import Evaluation from "./pages/evaluations/Evaluation/Evaluation";
@@ -16,12 +18,22 @@ import Template from "./pages/admin/templates/Template/Template";
 import Example from "./pages/ExamplePage";
 import GlobalStyles from "./GlobalStyles";
 import INGTheme from "./Theme";
+import SignIn from "./components/SignInUP/SignIn";
+import Chooserole from "./components/SignInUP/Chooserole";
+import { RootState } from "./app/store";
+import { authProfile } from "./app/loginAPI";
+import DetailGen from "./components/SignInUP/DetailGen";
 
 function App() {
+  // Import the global state variables that will be used throughout the session
+  const { userRole } = useSelector((state: RootState) => state.userData);
+  // Call authentication API on pageload once
+  const auth = authProfile();
+  useEffect(() => auth.mutate(), []);
   return (
     <div className="App">
       <GlobalStyles />
-      <Link data-testid="home" to="/">
+      <Link data-testid="home" to="/home">
         Home
       </Link>
       <Link to="/user" state="user" data-testid="user">
@@ -33,9 +45,28 @@ function App() {
       <Link to="/admin" state="admin" data-testid="admin">
         Admin
       </Link>
+      <Link to="/login" state="admin" data-testid="login">
+        login
+      </Link>
       <Link to="/example"> Examples</Link>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={
+            userRole !== "NONE" ? (
+              <Navigate to={`/${userRole}`} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route path="/login" element={<SignIn theme={INGTheme} />} />
+        <Route path="/signup" element={<Chooserole theme={INGTheme} />} />
+        <Route
+          path="/signup/details"
+          element={<DetailGen theme={INGTheme} />}
+        />
+        <Route path="/home" element={<Home />} />
 
         <Route path="/user" element={<UserInterface />} />
         <Route

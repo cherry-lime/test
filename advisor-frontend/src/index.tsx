@@ -9,6 +9,7 @@ import { store } from "./app/store";
 import client from "./app/client";
 
 const rootElement = document.getElementById("root");
+const queryClient = new QueryClient();
 if (!rootElement) throw new Error("Failed to find the root element");
 
 const root = ReactDOM.createRoot(rootElement);

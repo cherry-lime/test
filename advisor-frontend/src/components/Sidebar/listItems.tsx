@@ -7,9 +7,11 @@ import HomeIcon from "@mui/icons-material/Home";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EditIcon from "@mui/icons-material/Edit";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
+import { resetUser } from "../../app/userDataSlice";
+import { userLogout } from "../../app/loginAPI";
 
 type SidebarListProps = {
   userType: Map<string, boolean>;
@@ -17,6 +19,8 @@ type SidebarListProps = {
 
 export default function SidebarList({ userType }: SidebarListProps) {
   const { userRole } = useSelector((state: RootState) => state.userData);
+  const dispatch = useDispatch();
+  const logout = userLogout();
   return (
     <>
       {userType.get("home") && (
@@ -46,9 +50,9 @@ export default function SidebarList({ userType }: SidebarListProps) {
       {userType.get("template") && (
         <ListItemButton component={Link} to="/admin/templates">
           <ListItemIcon>
-            <EditIcon color="info" style={{ color: "background" }} />
+            <EditIcon color="info" />
           </ListItemIcon>
-          <ListItemText primary="Templates" />
+          <ListItemText primary="Templates" style={{ color: "background" }} />
         </ListItemButton>
       )}
       {userType.get("settings") && (
@@ -60,7 +64,14 @@ export default function SidebarList({ userType }: SidebarListProps) {
         </ListItemButton>
       )}
       {userType.get("signout") && (
-        <ListItemButton component={Link} to="/">
+        <ListItemButton
+          component={Link}
+          to="/"
+          onClick={() => {
+            logout.mutate();
+            dispatch(resetUser());
+          }}
+        >
           <ListItemIcon>
             <LogoutIcon color="info" />
           </ListItemIcon>
