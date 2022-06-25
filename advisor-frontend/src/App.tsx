@@ -53,7 +53,7 @@ function App() {
       <Routes>
         {/* Redirect to initial page if there is an invalid URL */}
         <Route path="*" element={<Navigate to="/" />} />
-       
+
         <Route path="/login" element={<SignIn theme={INGTheme} />} />
         <Route path="/signup" element={<Chooserole theme={INGTheme} />} />
         <Route
@@ -129,7 +129,7 @@ function App() {
         ) : (
           <> </>
         )}
-         <Route
+        <Route
           path="/"
           element={
             userRole !== "NONE" ? (
