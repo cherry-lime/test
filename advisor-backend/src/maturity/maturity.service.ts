@@ -5,6 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateMaturityDto } from './dto/update-maturity.dto';
 
@@ -50,12 +51,18 @@ export class MaturityService {
    * @param template_id template id
    * @returns all maturities in template
    */
-  async findAll(template_id: number) {
-    return await this.prisma.maturity.findMany({
+  async findAll(template_id: number, role: Role) {
+    const data: Prisma.MaturityFindManyArgs = {
       where: {
         template_id,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    return await this.prisma.maturity.findMany(data);
   }
 
   /**

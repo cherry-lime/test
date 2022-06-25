@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { MaturityService } from './maturity.service';
 import { aMaturity } from '../prisma/mock/mockMaturity';
+import { Role } from '@prisma/client';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -73,7 +74,9 @@ describe('MaturityService', () => {
 
   describe('findAll', () => {
     it('should return all categories', async () => {
-      expect(maturityService.findAll(1)).resolves.toEqual([aMaturity]);
+      expect(maturityService.findAll(1, Role.ADMIN)).resolves.toEqual([
+        aMaturity,
+      ]);
     });
   });
 

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { TemplateService } from '../template/template.service';
 import { TopicService } from '../topic/topic.service';
+import { Prisma, Role } from '@prisma/client';
 
 @Injectable()
 export class CheckpointService {
@@ -102,15 +103,21 @@ export class CheckpointService {
    * @param category_id category id
    * @returns all checkpoints in category
    */
-  async findAll(category_id: number) {
-    const foundCheckpoints = await this.prisma.checkpoint.findMany({
+  async findAll(category_id: number, role: Role) {
+    const data: Prisma.CheckpointFindManyArgs = {
       where: {
         category_id,
       },
       include: {
         CheckpointInTopic: true,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    const foundCheckpoints = await this.prisma.checkpoint.findMany(data);
 
     return foundCheckpoints.map((c) => this.formatTopics(c));
   }

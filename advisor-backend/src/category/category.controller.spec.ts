@@ -5,6 +5,7 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { aCategory } from '../prisma/mock/mockCategory';
 import { SubareaService } from '../subarea/subarea.service';
 import { aSubarea } from '../prisma/mock/mockSubarea';
+import { aFullUser } from '../prisma/mock/mockUser';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -66,7 +67,9 @@ describe('CategoryController', () => {
 
   describe('findAllSubareas', () => {
     it('Should return the subareas', async () => {
-      expect(controller.findAllSubareas(1)).resolves.toEqual([aSubarea]);
+      expect(controller.findAllSubareas(1, aFullUser)).resolves.toEqual([
+        aSubarea,
+      ]);
     });
   });
 

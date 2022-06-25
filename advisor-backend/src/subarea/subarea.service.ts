@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateSubareaDto } from './dto/update-subarea.dto';
 
@@ -48,12 +49,18 @@ export class SubareaService {
    * @param category_id category id
    * @returns all subareas in category
    */
-  async findAll(category_id: number) {
-    return await this.prisma.subArea.findMany({
+  async findAll(category_id: number, role: Role) {
+    const data: Prisma.SubAreaFindManyArgs = {
       where: {
         category_id,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    return await this.prisma.subArea.findMany(data);
   }
 
   /**

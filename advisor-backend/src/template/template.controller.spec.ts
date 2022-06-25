@@ -12,6 +12,7 @@ import { aCategory } from '../prisma/mock/mockCategory';
 import { aMaturity } from '../prisma/mock/mockMaturity';
 import { MaturityService } from '../maturity/maturity.service';
 import { CloneTemplateService } from './clone-template.service';
+import { aFullUser } from '../prisma/mock/mockUser';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -101,7 +102,7 @@ describe('TemplateController', () => {
 
   describe('getAllTemplates', () => {
     it('Should return all templates', async () => {
-      expect(templateController.findAll()).resolves.toEqual(
+      expect(templateController.findAll(aFullUser)).resolves.toEqual(
         expect.arrayContaining([aTemplate])
       );
     });
@@ -121,9 +122,9 @@ describe('TemplateController', () => {
 
   describe('getAllCategories', () => {
     it('Should return all categories', async () => {
-      expect(templateController.findAllCategories(1)).resolves.toEqual([
-        aCategory,
-      ]);
+      expect(
+        templateController.findAllCategories(1, aFullUser)
+      ).resolves.toEqual([aCategory]);
     });
   });
 
@@ -135,9 +136,9 @@ describe('TemplateController', () => {
 
   describe('getAllMaturities', () => {
     it('Should return all maturities', async () => {
-      expect(templateController.findAllMaturities(1)).resolves.toEqual([
-        aMaturity,
-      ]);
+      expect(
+        templateController.findAllMaturities(1, aFullUser)
+      ).resolves.toEqual([aMaturity]);
     });
   });
 });
