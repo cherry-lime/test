@@ -15,7 +15,7 @@ import React, { Dispatch, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
-import RecommendationGrid from "../../components/Grids/Specific/RecommendationGrid";
+import RecommendationGrid from "../../components/Grids/Specific/Recommendation/RecommendationGrid";
 import userTypes from "../../components/Sidebar/listUsersTypes";
 import Subarea from "../../components/Subarea/Subarea";
 import PageLayout from "../PageLayout";
@@ -220,9 +220,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
             theme={theme}
             assessmentId={assessmentId}
             topicId={topic}
-            assessmentType="INDIVIDUAL"
-            userId={userId}
-            userRole={userRole}
           />
         )}
 

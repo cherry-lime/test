@@ -2,7 +2,7 @@ import { Grid, Theme } from "@mui/material";
 import { useSelector } from "react-redux";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
-import TeamGrid from "../../../components/Grids/Specific/TeamGrid";
+import TeamGrid from "../../../components/Grids/Specific/Team/TeamGrid";
 import { RootState } from "../../../app/store";
 
 /**
@@ -16,7 +16,7 @@ function TeamList({ theme }: { theme: Theme }) {
   return (
     <PageLayout title="Teams" sidebarType={userTypes[userRole]}>
       <Grid container direction="column" alignItems="left" />
-      <TeamGrid theme={theme} userId={userId} userRole={userRole} />
+      <TeamGrid theme={theme} userRole={userRole} />
     </PageLayout>
   );
 }

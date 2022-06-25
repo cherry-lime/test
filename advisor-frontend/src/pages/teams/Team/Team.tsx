@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import TextfieldEdit from "../../../components/TextfieldEdit/TextfieldEdit";
-import MemberGrid from "../../../components/Grids/Specific/MemberGrid";
-import AssessmentOngoingGrid from "../../../components/Grids/Specific/AssessmentOngoingGrid";
-import AssessmentCompletedGrid from "../../../components/Grids/Specific/AssessmentCompletedGrid";
+import MemberGrid from "../../../components/Grids/Specific/Member/MemberGrid";
+import AssessmentOngoingGrid from "../../../components/Grids/Specific/Assessment/AssessmentOngoing/AssessmentOngoingGrid";
+import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessment/AssessmentCompleted/AssessmentCompletedGrid";
 import { RootState } from "../../../app/store";
 import Textfield from "../../../components/Textfield/Textfield";
 
@@ -21,7 +21,7 @@ function Team({ theme }: { theme: Theme }) {
   const { userId, userRole } = useSelector(
     (state: RootState) => state.userData
   );
-  const tmId = "4";
+  const tmId = 4;
 
   return (
     <PageLayout title={`Team ${teamId}`} sidebarType={userTypes[userRole]}>
@@ -42,7 +42,6 @@ function Team({ theme }: { theme: Theme }) {
         )}
 
         <h3> IT Area / Department </h3>
-
         {userRole === "ASSESSOR" && (
           <TextfieldEdit text="Department A" theme={theme} rows={1} />
         )}
@@ -56,18 +55,16 @@ function Team({ theme }: { theme: Theme }) {
         )}
 
         <h3>Assessors</h3>
-
         <MemberGrid
           theme={theme}
-          userId={userId}
           userRole={userRole}
           teamId={tmId}
           forAssessors
         />
+
         <h3>Members</h3>
         <MemberGrid
           theme={theme}
-          userId={userId}
           userRole={userRole}
           teamId={tmId}
           forAssessors={false}
@@ -76,18 +73,12 @@ function Team({ theme }: { theme: Theme }) {
         <h3>Ongoing Evaluations</h3>
         <AssessmentOngoingGrid
           theme={theme}
-          userId={userId}
           userRole={userRole}
           assessmentType="TEAM"
         />
 
         <h3>Completed Evaluations</h3>
-        <AssessmentCompletedGrid
-          theme={theme}
-          userId={userId}
-          userRole={userRole}
-          assessmentType="TEAM"
-        />
+        <AssessmentCompletedGrid theme={theme} assessmentType="TEAM" />
       </Grid>
     </PageLayout>
   );

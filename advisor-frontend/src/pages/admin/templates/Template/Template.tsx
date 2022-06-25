@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
 import { FormControlLabel, Radio, RadioGroup, Theme } from "@mui/material";
 import { useCallback, useState } from "react";
-import AnswerTypeGrid from "../../../../components/Grids/Specific/AnswerTypeGrid";
-import CategoryGrid from "../../../../components/Grids/Specific/CategoryGrid";
-import MaturityGrid from "../../../../components/Grids/Specific/MaturityGrid";
-import TopicGrid from "../../../../components/Grids/Specific/TopicGrid";
+import AnswerGrid from "../../../../components/Grids/Specific/Answer/AnswerGrid";
+import CategoryGrid from "../../../../components/Grids/Specific/Category/CategoryGrid";
+import MaturityGrid from "../../../../components/Grids/Specific/Maturity/MaturityGrid";
+import TopicGrid from "../../../../components/Grids/Specific/Topic/TopicGrid";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import TextfieldEdit from "../../../../components/TextfieldEdit/TextfieldEdit";
 import PageLayout from "../../../PageLayout";
@@ -110,7 +110,7 @@ function Template({ theme }: { theme: Theme }) {
             />
           </RadioGroup>
         </div>
-        <AnswerTypeGrid theme={theme} templateId={templateId} />
+        <AnswerGrid theme={theme} templateId={templateId} />
       </PageLayout>
     </div>
   );

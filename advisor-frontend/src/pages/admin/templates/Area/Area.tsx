@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import { Theme } from "@mui/material";
-import SubareaGrid from "../../../../components/Grids/Specific/SubareaGrid";
+import SubareaGrid from "../../../../components/Grids/Specific/Subarea/SubareaGrid";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
-import CheckpointGrid from "../../../../components/Grids/Specific/CheckpointGrid";
+import CheckpointGrid from "../../../../components/Grids/Specific/Checkpoint/CheckpointGrid";
 
 /**
  * Page with details regarding an area beloging to a certain template
