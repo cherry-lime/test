@@ -15,7 +15,8 @@ import TextfieldEditWeight from "../../../../components/TextfieldEditWeight/Text
  * This should only be accessible to admins
  */
 function Template({ theme }: { theme: Theme }) {
-  const { templateId } = useParams();
+  // const { templateId } = useParams();
+  const templateId = 1;
   const templateName = "Random";
   const [minWeight, setMinWeight] = useState(0);
   const [maxWeight, setMaxWeight] = useState(100);

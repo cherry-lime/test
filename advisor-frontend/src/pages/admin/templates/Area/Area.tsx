@@ -10,8 +10,10 @@ import CheckpointGrid from "../../../../components/Grids/Specific/Checkpoint/Che
  * This should only be accessible to admins
  */
 function Area({ theme }: { theme: Theme }) {
-  const { templateId } = useParams();
-  const { areaId } = useParams();
+  // const { templateId } = useParams();
+  // const { areaId } = useParams();
+  const templateId = 1;
+  const areaId = 1;
 
   return (
     <div>

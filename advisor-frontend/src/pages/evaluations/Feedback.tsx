@@ -36,7 +36,8 @@ type Topic = {
  * This should only be accessible to the user whose assement this belongs to
  */
 function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
-  const { assessmentId } = useParams();
+  // const { assessmentId } = useParams();
+  const assessmentId = 1;
 
   const { userId, userRole } = useSelector(
     (state: RootState) => state.userData
@@ -227,7 +228,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           <ListOfCheckpoints
             feedback
             theme={theme}
-            assessmentId={assessmentId}
+            assessmentId={assessmentId.toString()}
           />
         )}
 
