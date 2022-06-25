@@ -188,17 +188,20 @@ export class CategoryService {
    * @throws Category not found
    */
   async delete(category_id: number) {
-    // Get category by id from prisma
-    const category = await this.prisma.category.findUnique({
-      where: {
-        category_id,
-      },
-    });
-
-    // Throw NotFoundException if category not found
-    if (!category) {
-      throw new NotFoundException('Category not found');
-    }
+    // Delete category
+    const category = await this.prisma.category
+      .delete({
+        where: {
+          category_id,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          // Throw error if category not found
+          throw new NotFoundException('Category not found');
+        }
+        throw new InternalServerErrorException();
+      });
 
     // Decrement order of all categories with order bigger than deleted category
     await this.prisma.category.updateMany({
@@ -215,15 +218,6 @@ export class CategoryService {
       },
     });
 
-    // Delete category
-    return await this.prisma.category
-      .delete({
-        where: {
-          category_id,
-        },
-      })
-      .catch(() => {
-        throw new InternalServerErrorException();
-      });
+    return category;
   }
 }

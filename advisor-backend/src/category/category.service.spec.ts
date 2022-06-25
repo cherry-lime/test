@@ -96,9 +96,7 @@ describe('CategoryService', () => {
     });
 
     it('should throw NotFoundException on not existing category_id', async () => {
-      jest
-        .spyOn(prisma.category, 'update')
-        .mockRejectedValueOnce({ code: 'P2025' });
+      jest.spyOn(prisma.category, 'findUnique').mockResolvedValueOnce(null);
       expect(categoryService.update(0, aCategory)).rejects.toThrowError(
         NotFoundException
       );
