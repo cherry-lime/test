@@ -170,46 +170,6 @@ function AreaSpecificCheckpoints({
     return undefined;
   }, [checkpointList]);
 
-  // BEGINNING OF HARDCODED DATA USED TO TEST
-
-  const hardcodedArea1 = { areaId: 14, name: "Ready Work" };
-  const hardcodedArea2 = { areaId: 4, name: "Alignment" };
-
-  const hardcodedTopic1 = { topicId: 15, name: "Risk Analysis" };
-  const hardcodedTopic2 = { topicId: 5, name: "Test Strategy" };
-
-  const hardcodedCheckpoint1 = {
-    checkpointId: 12,
-    description: "Checkpoint description",
-    area: hardcodedArea1,
-    order: 1,
-    topics: [hardcodedTopic1, hardcodedTopic2],
-  };
-
-  const hardcodedCheckpoint2 = {
-    checkpointId: 2,
-    description: "Another checkpoint description",
-    area: hardcodedArea2,
-    order: 2,
-    topics: [hardcodedTopic1],
-  };
-
-  const hardcodedSubarea1 = {
-    subareaId: 23,
-    name: "Subarea Name",
-    description: "Subarea Description",
-    summary: "Subarea Summary",
-  };
-
-  const hardcodedSubarea2 = {
-    subareaId: 10,
-    name: "Another Subarea Name",
-    description: "Subarea Description",
-    summary: "Subarea Summary",
-  };
-
-  // END OF HARDCODED DATA USED TO TEST
-
   const [checkpoints, setCheckpoints] = useState<AssessmentCheckpoint[]>();
 
   React.useEffect(() => {
