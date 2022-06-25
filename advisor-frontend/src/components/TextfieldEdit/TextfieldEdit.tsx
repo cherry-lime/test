@@ -18,10 +18,12 @@ function TextfieldEdit({
   text,
   theme,
   rows,
+  handleSave,
 }: {
   text: string;
   theme: ThemeOptions;
   rows: number;
+  handleSave: (intermediateValue: string) => void;
 }) {
   /*
   initial value of the textfield is set to the bodytext passed as parameter
@@ -29,17 +31,15 @@ function TextfieldEdit({
   the value is updated when you are done entering and click outside the textfield
   */
   const initialState = text;
-  const [, setValue] = useState(initialState);
   const [intermediateValue, setIntermediateValue] = useState(initialState);
   let multiline = false;
-  const handleSave = () => {
-    // here you save the new text
-    // that is contained in intermediateValue
-    setValue(intermediateValue);
-  };
 
   const handleModify = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIntermediateValue(event.target.value);
+  };
+
+  const handleSaveDecorator = () => {
+    handleSave(intermediateValue);
   };
 
   /*
@@ -55,7 +55,7 @@ function TextfieldEdit({
 
   return (
     <ThemeProvider theme={theme}>
-      <ClickAwayListener onClickAway={handleSave}>
+      <ClickAwayListener onClickAway={handleSaveDecorator}>
         <TextField
           sx={{
             backgroundColor: "white",
@@ -82,6 +82,7 @@ TextfieldEdit.propTypes = {
   text: PropTypes.string.isRequired,
   theme: PropTypes.node.isRequired,
   rows: PropTypes.number.isRequired,
+  handleSave: PropTypes.func.isRequired,
 };
 
 export default TextfieldEdit;

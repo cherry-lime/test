@@ -9,6 +9,7 @@ import AssessmentOngoingGrid from "../../../components/Grids/Specific/Assessment
 import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessment/AssessmentCompleted/AssessmentCompletedGrid";
 import { RootState } from "../../../app/store";
 import Textfield from "../../../components/Textfield/Textfield";
+import { useGetTeam } from "../../../api/TeamAPI";
 
 /**
  * Page providing team details
@@ -20,6 +21,8 @@ function Team({ theme }: { theme: Theme }) {
 
   const { userRole } = useSelector((state: RootState) => state.userData);
   const tmId = 4;
+
+  const { status, data, error } = useGetTeam(teamId);
 
   return (
     <PageLayout title={`Team ${teamId}`} sidebarType={userTypes[userRole]}>

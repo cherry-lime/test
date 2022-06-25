@@ -53,8 +53,8 @@ export function useGetMyTeams() {
 }
 
 // Get team with id from database
-export function useGetTeam() {
-  return useQuery(["GET", "/teams", "/{team_id}"], async (teamId) => {
+export function useGetTeam(teamId: number) {
+  return useQuery(["GET", "/teams", teamId], async () => {
     // Get data from database
     const { data } = await API.get(`/teams/${teamId}`);
 
