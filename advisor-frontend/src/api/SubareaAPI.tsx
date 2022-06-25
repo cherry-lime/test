@@ -70,7 +70,8 @@ export function useGetSubareas(categoryId: number, enabledFilter?: boolean) {
       }
 
       return subareasAPP as SubareaAPP[];
-    }
+    },
+    { enabled: !!categoryId }
   );
 }
 

@@ -59,7 +59,7 @@ export function useGetCategories(templateId: number, enabledFilter?: boolean) {
       // If defined, filter on enabled/disabled
       if (enabledFilter !== undefined) {
         const categoriesFilteredAPP = categoriesAPP.filter(
-          (categoryAPP: CategoryAPP) => categoryAPP.enabled !== enabledFilter
+          (categoryAPP: CategoryAPP) => categoryAPP.enabled === enabledFilter
         );
 
         return categoriesFilteredAPP as CategoryAPP[];

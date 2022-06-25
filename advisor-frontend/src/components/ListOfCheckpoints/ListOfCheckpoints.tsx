@@ -15,8 +15,10 @@ import React, { Dispatch, useState } from "react";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { AssessmentAPP, useGetAssessment } from "../../api/AssessmentAPI";
 import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
+import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI";
 import Checkpoint from "../Checkpoint/Checkpoint";
 import Subarea from "../Subarea/Subarea";
+import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
 
 type AssessmentCheckpoint = {
   checkpointId: number;
@@ -53,7 +55,7 @@ function ListOfCheckpoints({
   theme,
   feedback,
 }: {
-  assessmentId: string | undefined;
+  assessmentId: number;
   theme: ThemeOptions;
   feedback: boolean;
 }) {
@@ -81,6 +83,7 @@ function ListOfCheckpoints({
   const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
   const [areaList, setAreaList] = useState<CategoryAPP[]>();
   const [answerList, setAnswerList] = useState<AnswerAPP[]>();
+  const [subareaList, setSubareaList] = useState<SubareaAPP[]>();
 
   // get assessment information from API
   const {
@@ -156,115 +159,11 @@ function ListOfCheckpoints({
     }
   }, [answersResponse]);
 
-  // BEGINNING OF HARDCODED DATA USED TO TEST
-
-  const hardcodedArea1 = { areaId: 14, name: "Ready Work" };
-  const hardcodedArea2 = { areaId: 4, name: "Alignment" };
-
-  const hardcodedTopic1 = { topicId: 15, name: "Risk Analysis" };
-  const hardcodedTopic2 = { topicId: 5, name: "Test Strategy" };
-
-  const hardcodedCheckpoint1 = {
-    checkpointId: 12,
-    description: "Checkpoint description",
-    area: hardcodedArea1,
-    order: 1,
-    topics: [hardcodedTopic1, hardcodedTopic2],
-  };
-
-  const hardcodedCheckpoint2 = {
-    checkpointId: 2,
-    description: "Another checkpoint description",
-    area: hardcodedArea2,
-    order: 2,
-    topics: [hardcodedTopic1],
-  };
-
-  const hardcodedSubarea1 = {
-    subareaId: 23,
-    name: "Subarea Name",
-    description: "Subarea Description",
-    summary: "Subarea Summary",
-  };
-
-  const hardcodedSubarea2 = {
-    subareaId: 10,
-    name: "Another Subarea Name",
-    description: "Subarea Description",
-    summary: "Subarea Summary",
-  };
-
-  const hardcodedSubareaList = [hardcodedSubarea1, hardcodedSubarea2];
-
-  // END OF HARDCODED DATA USED TO TEST
-
-  const [checkpoints, setCheckpoints] = useState<AssessmentCheckpoint[]>();
-
-  const [subareas, setSubareas]: [
-    AssessmentSubarea[] | undefined,
-    Dispatch<AssessmentSubarea[] | undefined>
-  ] = useState();
-
-  const [checkpointComponents, setCheckpointComponents] =
-    useState<React.ReactElement[]>();
-
-  const [subareaComponents, setSubareaComponents] =
-    useState<React.ReactElement[]>();
-
-  // first render: get the area and the answer list
   React.useEffect(() => {
     if (areaList) {
       setActiveArea(Number(areaList[0].id));
     }
   }, [areaList]);
-
-  React.useEffect(() => {
-    // get area checkpoints from API
-    // this if-else is purely for testing purposes
-    if (activeArea === 14) {
-      setCheckpoints([hardcodedCheckpoint1]);
-    } else {
-      setCheckpoints([hardcodedCheckpoint1, hardcodedCheckpoint2]);
-    }
-    // get subareas from API
-    setSubareas(hardcodedSubareaList);
-  }, [activeArea]);
-
-  React.useEffect(() => {
-    if (checkpoints !== undefined && answerList !== undefined) {
-      return setCheckpointComponents(
-        checkpoints.map((checkpoint) => (
-          <Checkpoint
-            key={`checkpoint-card-${checkpoint.checkpointId}`}
-            feedback={feedback}
-            number={checkpoint.order}
-            topics={checkpoint.topics.map((topic) => topic.name)}
-            theme={theme}
-            description={checkpoint.description}
-            checkpointvalues={answerList.map((a) => Number(a.id))}
-            checkpointlabels={answerList.map((a) => a.label)}
-          />
-        ))
-      );
-    }
-    return undefined;
-  }, [checkpoints]);
-
-  React.useEffect(() => {
-    if (subareas !== undefined) {
-      setSubareaComponents(
-        subareas.map((subarea) => (
-          <Subarea
-            key={subarea.subareaId}
-            theme={theme}
-            title={subarea.name}
-            summary={subarea.summary}
-            description={subarea.description}
-          />
-        ))
-      );
-    }
-  }, [subareas]);
 
   return (
     <div style={{ width: "inherit", display: "contents" }}>
@@ -280,43 +179,14 @@ function ListOfCheckpoints({
         </FormControl>
       )}
 
-      <Card
-        sx={{
-          backgroundColor: "white",
-          width: "inherit",
-          borderRadius: "5px",
-        }}
-      >
-        <Stack direction="row" justifyContent="left" alignItems="center">
-          <Tabs value={value} onChange={handleChange} textColor="primary">
-            <Tab value="Single" label="Single" />
-            <Tab value="List" label="List" />
-          </Tabs>
-        </Stack>
-      </Card>
-      {subareaComponents !== undefined && subareaComponents}
-      {value === "Single" &&
-        checkpointComponents !== undefined &&
-        checkpointComponents[page - 1]}
-      {value === "List" &&
-        checkpointComponents !== undefined &&
-        checkpointComponents}
-      {checkpoints !== undefined && (
-        <Grid item container direction="column" alignItems="center">
-          <Grid item>
-            <Stack direction="row" spacing={2} alignItems="center">
-              {value === "Single" && (
-                <Pagination
-                  onChange={handlePageChange}
-                  count={checkpoints.length}
-                  shape="rounded"
-                  color="primary"
-                  page={page}
-                />
-              )}
-            </Stack>
-          </Grid>
-        </Grid>
+      {activeArea && answerList && assessmentId && (
+        <AreaSpecificCheckpoints
+          theme={theme}
+          areaId={activeArea}
+          answerList={answerList}
+          feedback={feedback}
+          assessmentId={Number(assessmentId)}
+        />
       )}
     </div>
   );

@@ -34,6 +34,7 @@ export function handleInit(
     case "success":
       if (data) {
         initRows(setRows, data);
+        console.log(data);
       }
       break;
     default:

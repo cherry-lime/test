@@ -40,7 +40,10 @@ function answerToAPI(answerAPP: AnswerAPP) {
 }
 
 // Get all answers from database
-export function useGetAnswers(templateId: number, enabledFilter?: boolean) {
+export function useGetAnswers(
+  templateId: number | undefined,
+  enabledFilter?: boolean
+) {
   return useQuery(
     ["GET", "/template", templateId, "/answer"],
     async () => {
@@ -55,7 +58,7 @@ export function useGetAnswers(templateId: number, enabledFilter?: boolean) {
       // If defined, filter on enabled/disabled
       if (enabledFilter !== undefined) {
         const answersFilteredAPP = answersAPP.filter(
-          (answerAPP: AnswerAPP) => answerAPP.enabled !== enabledFilter
+          (answerAPP: AnswerAPP) => answerAPP.enabled === enabledFilter
         );
 
         return answersFilteredAPP as AnswerAPP[];

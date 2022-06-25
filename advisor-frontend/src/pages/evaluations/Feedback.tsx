@@ -1,6 +1,6 @@
 import { Card, Stack, Tab, Tabs, Theme, Button } from "@mui/material";
 import React, { useState } from "react";
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import userTypes from "../../components/Sidebar/listUsersTypes";
@@ -19,8 +19,7 @@ import ListOfRecommendations from "../../components/ListOfRecommendations/ListOf
  * This should only be accessible to the user whose assement this belongs to
  */
 function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
-  // const { assessmentId } = useParams();
-  const assessmentId = 1;
+  const { assessmentId } = useParams();
 
   const { userRole } = useSelector((state: RootState) => state.userData);
 
@@ -130,9 +129,9 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
       {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
 
-      {team && userRole === "ASSESSOR" && value === "Recommendations" && (
+      {/* {team && userRole === "ASSESSOR" && value === "Recommendations" && (
         <TextfieldEdit rows={5} theme={theme} text="assessor feedback here" />
-      )}
+      )} */}
 
       {team && userRole === "USER" && value === "Recommendations" && (
         <Textfield
@@ -146,7 +145,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       {value === "Recommendations" && (
         <ListOfRecommendations
           theme={theme}
-          assessmentId={assessmentId.toString()}
+          assessmentId={Number(assessmentId)}
         />
       )}
 
@@ -154,7 +153,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         <ListOfCheckpoints
           feedback
           theme={theme}
-          assessmentId={assessmentId.toString()}
+          assessmentId={Number(assessmentId)}
         />
       )}
 

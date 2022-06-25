@@ -62,7 +62,7 @@ export default function CheckpointGrid({
     status: statusCheckpoints,
     data: dataCheckpoints,
     error: errorCheckpoints,
-  } = useGetCheckpoints(categoryId);
+  } = useGetCheckpoints(categoryId, undefined);
 
   const {
     status: statusTopics,

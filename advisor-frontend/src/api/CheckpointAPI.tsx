@@ -56,28 +56,35 @@ function checkpointToAPI(checkpointAPP: CheckpointAPP) {
 }
 
 // Get all checkpoints from database
-export function useGetCheckpoints(categoryId: number, enabledFilter?: boolean) {
-  return useQuery(["GET", "/category", categoryId, "/checkpoint"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/category/${categoryId}/checkpoint`);
+export function useGetCheckpoints(
+  categoryId: number | undefined,
+  enabledFilter?: boolean
+) {
+  return useQuery(
+    ["GET", "/category", categoryId, "/checkpoint"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/category/${categoryId}/checkpoint`);
 
-    // Convert data to checkpointsAPP
-    const checkpointsAPP = data.map((checkpointAPI: CheckpointAPI) =>
-      checkpointToAPP(checkpointAPI)
-    );
-
-    // If defined, filter on enabled/disabled
-    if (enabledFilter !== undefined) {
-      const checkpointsFilteredAPP = checkpointsAPP.filter(
-        (checkpointAPP: CheckpointAPP) =>
-          checkpointAPP.enabled === enabledFilter
+      // Convert data to checkpointsAPP
+      const checkpointsAPP = data.map((checkpointAPI: CheckpointAPI) =>
+        checkpointToAPP(checkpointAPI)
       );
 
-      return checkpointsFilteredAPP as CheckpointAPP[];
-    }
+      // If defined, filter on enabled/disabled
+      if (enabledFilter !== undefined) {
+        const checkpointsFilteredAPP = checkpointsAPP.filter(
+          (checkpointAPP: CheckpointAPP) =>
+            checkpointAPP.enabled === enabledFilter
+        );
 
-    return checkpointsAPP as CheckpointAPP[];
-  });
+        return checkpointsFilteredAPP as CheckpointAPP[];
+      }
+
+      return checkpointsAPP as CheckpointAPP[];
+    },
+    { enabled: !!categoryId }
+  );
 }
 
 // Get checkpoint with id from database

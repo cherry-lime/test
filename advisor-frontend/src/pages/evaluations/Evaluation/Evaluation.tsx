@@ -43,12 +43,15 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
         <ListOfCheckpoints
           feedback={false || (team && userRole === "USER")}
           theme={theme}
-          assessmentId={assessmentId}
+          assessmentId={Number(assessmentId)}
         />
       )}
 
       {!checkpointView && (
-        <ListOfRecommendations theme={theme} assessmentId={assessmentId} />
+        <ListOfRecommendations
+          theme={theme}
+          assessmentId={Number(assessmentId)}
+        />
       )}
 
       <div

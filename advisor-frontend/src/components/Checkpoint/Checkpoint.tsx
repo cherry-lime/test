@@ -11,6 +11,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import { ThemeOptions } from "@mui/material/styles/experimental_extendTheme";
+import { AnswerAPP } from "../../api/AnswerAPI";
 
 /*
 passing parameter of the optional description of the checkpoints
@@ -21,17 +22,17 @@ main function returning a checkpoint component
 function Checkpoint({
   description,
   number,
-  topics,
-  checkpointlabels,
-  checkpointvalues,
+  topicIds,
+  answers,
+  selectedAnswer,
   theme,
   feedback,
 }: {
   description: string;
   number: number;
-  topics: string[];
-  checkpointlabels: string[];
-  checkpointvalues: number[];
+  topicIds: number[];
+  answers: AnswerAPP[];
+  selectedAnswer: "";
   theme: ThemeOptions;
   feedback: boolean;
 }) {
@@ -41,9 +42,7 @@ function Checkpoint({
   set the value when clicking one of the radio-buttons
   */
 
-  const [value, setValue] = useState(
-    checkpointvalues.length > 0 ? checkpointvalues[0].toString() : ""
-  );
+  const [value, setValue] = useState(selectedAnswer);
 
   const handleClick = useCallback(
     (event) => {
@@ -62,12 +61,13 @@ function Checkpoint({
   */
   const items = [];
 
-  for (let i = 0; i < checkpointvalues.length; i += 1) {
+  for (let i = 0; i < answers.length; i += 1) {
     items.push(
       <FormControlLabel
+        key={`answers-${answers[i].id.toString()}`}
         control={<Radio color="primary" />}
-        label={checkpointlabels[i]}
-        value={checkpointvalues[i].toString()}
+        label={answers[i].label}
+        value={answers[i].id.toString()}
         disabled={feedback}
       />
     );
@@ -98,11 +98,11 @@ function Checkpoint({
           >
             {number}
           </Typography>
-          {topics !== undefined && (
+          {/* {topicIds !== undefined && (
             <Typography sx={{ textAlign: "left" }} id="checkpoint-topics">
               {`Topics: ${topics.join(", ")}`}
             </Typography>
-          )}
+          )} */}
           <Typography sx={{ textAlign: "left" }} id="checkpointnamelabel">
             {description}
           </Typography>
@@ -124,21 +124,5 @@ function Checkpoint({
     </ThemeProvider>
   );
 }
-
-/*
-Props of the checkpoints consisting of the description,
-the id number,
-the values of the checkpoints,
-and theme
-*/
-Checkpoint.propTypes = {
-  description: PropTypes.string.isRequired,
-  number: PropTypes.number.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  checkpointvalues: PropTypes.any.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  checkpointlabels: PropTypes.any.isRequired,
-  theme: PropTypes.node.isRequired,
-};
 
 export default Checkpoint;

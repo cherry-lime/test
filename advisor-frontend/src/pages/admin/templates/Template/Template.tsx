@@ -1,6 +1,7 @@
 // import { useParams } from "react-router-dom";
 import { FormControlLabel, Radio, RadioGroup, Theme } from "@mui/material";
 import { useCallback, useState } from "react";
+import { useParams } from "react-router-dom";
 import AnswerGrid from "../../../../components/Grids/Specific/Answer/AnswerGrid";
 import CategoryGrid from "../../../../components/Grids/Specific/Category/CategoryGrid";
 import MaturityGrid from "../../../../components/Grids/Specific/Maturity/MaturityGrid";
@@ -15,8 +16,7 @@ import TextfieldEditWeight from "../../../../components/TextfieldEditWeight/Text
  * This should only be accessible to admins
  */
 function Template({ theme }: { theme: Theme }) {
-  // const { templateId } = useParams();
-  const templateId = 1;
+  const { templateId } = useParams();
   const templateName = "Random";
   const [minWeight, setMinWeight] = useState(0);
   const [maxWeight, setMaxWeight] = useState(100);
@@ -38,11 +38,11 @@ function Template({ theme }: { theme: Theme }) {
       >
         <h2> Feedback Textbox </h2>
 
-        <TextfieldEdit
+        {/* <TextfieldEdit
           rows={5}
           theme={theme}
           text="Get editable feedback text"
-        />
+        /> */}
 
         <h2> Areas </h2>
 
@@ -50,14 +50,14 @@ function Template({ theme }: { theme: Theme }) {
           To view, edit, add, or delete subareas and checkpoints belonging to an
           area, click on the arrow button.
         </p>
-        <CategoryGrid theme={theme} templateId={templateId} />
+        <CategoryGrid theme={theme} templateId={Number(templateId)} />
         <h2>Topics </h2>
 
-        <TopicGrid theme={theme} templateId={templateId} />
+        <TopicGrid theme={theme} templateId={Number(templateId)} />
 
         <h2> Maturity Levels </h2>
 
-        <MaturityGrid theme={theme} templateId={templateId} />
+        <MaturityGrid theme={theme} templateId={Number(templateId)} />
 
         <h2> Score Formula </h2>
 
@@ -111,7 +111,7 @@ function Template({ theme }: { theme: Theme }) {
             />
           </RadioGroup>
         </div>
-        <AnswerGrid theme={theme} templateId={templateId} />
+        <AnswerGrid theme={theme} templateId={Number(templateId)} />
       </PageLayout>
     </div>
   );

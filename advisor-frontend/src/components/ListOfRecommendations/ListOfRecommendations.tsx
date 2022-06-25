@@ -25,7 +25,7 @@ function ListOfRecommendations({
   assessmentId,
 }: {
   theme: Theme;
-  assessmentId: string | undefined;
+  assessmentId: number;
 }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { userId, userRole } = useSelector(

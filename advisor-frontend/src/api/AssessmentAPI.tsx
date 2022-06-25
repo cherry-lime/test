@@ -288,22 +288,19 @@ export function usePostSaveAssessment(assessmentId: number) {
 
 // Get saved assessment checkpoints from database
 export function useGetSaveAssessment(assessmentId: number) {
-  return useMutation(
-    ["GET", "/assessment", assessmentId, "/save"],
-    async () => {
-      // Get response data from database
-      const { data } = await API.get(`/assessment/${assessmentId}/save`);
+  return useQuery(["GET", "/assessment", assessmentId, "/save"], async () => {
+    // Get response data from database
+    const { data } = await API.get(`/assessment/${assessmentId}/save`);
 
-      // Convert data to checkpointsAPP
-      const checkpointsAPP = data.map(
-        (assessmentCheckpointAPI: AssessmentCheckpointAPI) =>
-          assessmentCheckpointToAPP(assessmentCheckpointAPI)
-      );
+    // Convert data to checkpointsAPP
+    const checkpointsAPP = data.map(
+      (assessmentCheckpointAPI: AssessmentCheckpointAPI) =>
+        assessmentCheckpointToAPP(assessmentCheckpointAPI)
+    );
 
-      // Return response
-      return checkpointsAPP as AssessmentCheckpointAPP[];
-    }
-  );
+    // Return response
+    return checkpointsAPP as AssessmentCheckpointAPP[];
+  });
 }
 
 // Post feedback of assessment to database
