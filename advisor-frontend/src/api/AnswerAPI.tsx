@@ -40,28 +40,36 @@ function answerToAPI(answerAPP: AnswerAPP) {
 }
 
 // Get all answers from database
-export function useGetAnswers(templateId: number, enabledFilter?: boolean) {
-  return useQuery(["GET", "/template", templateId, "/answer"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/template/${templateId}/answer`);
+export function useGetAnswers(
+  templateId: number,
+  enabledFilter?: boolean,
+  wait?: number | undefined
+) {
+  return useQuery(
+    ["GET", "/template", templateId, "/answer"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/template/${templateId}/answer`);
 
-    // Convert data to answersAPP
-    const answersAPP = data.map((answerAPI: AnswerAPI) =>
-      answerToAPP(answerAPI)
-    );
-
-    // If defined, filter on enabled/disabled
-    if (enabledFilter !== undefined) {
-      const answersFilteredAPP = answersAPP.filter(
-        (answerAPP: AnswerAPP) => answerAPP.enabled !== enabledFilter
+      // Convert data to answersAPP
+      const answersAPP = data.map((answerAPI: AnswerAPI) =>
+        answerToAPP(answerAPI)
       );
 
-      return answersFilteredAPP as AnswerAPP[];
-    }
+      // If defined, filter on enabled/disabled
+      if (enabledFilter !== undefined) {
+        const answersFilteredAPP = answersAPP.filter(
+          (answerAPP: AnswerAPP) => answerAPP.enabled !== enabledFilter
+        );
 
-    // Convert data to answerAPP
-    return answersAPP as AnswerAPP[];
-  });
+        return answersFilteredAPP as AnswerAPP[];
+      }
+
+      // Convert data to answerAPP
+      return answersAPP as AnswerAPP[];
+    },
+    { enabled: !!wait }
+  );
 }
 
 // Get answer with id from database

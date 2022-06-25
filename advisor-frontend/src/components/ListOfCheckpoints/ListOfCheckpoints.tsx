@@ -12,6 +12,9 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import React, { Dispatch, useState } from "react";
+import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
+import { AssessmentAPP, useGetAssessment } from "../../api/AssessmentAPI";
+import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
 import Checkpoint from "../Checkpoint/Checkpoint";
 import Subarea from "../Subarea/Subarea";
 
@@ -31,11 +34,6 @@ type Topic = {
 type Area = {
   areaId: number;
   name: string;
-};
-
-type Answer = {
-  answerId: number;
-  text: string;
 };
 
 type AssessmentSubarea = {
@@ -72,21 +70,101 @@ function ListOfCheckpoints({
     setValue(newValue);
   };
 
+  const [activeArea, setActiveArea] = useState<number>();
+
+  const handleAreaChange = (event: SelectChangeEvent<number>) => {
+    setActiveArea(Number(event.target.value));
+  };
+
+  // GET ASSESSMENT INFORMATION
+
+  const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
+  const [areaList, setAreaList] = useState<CategoryAPP[]>();
+  const [answerList, setAnswerList] = useState<AnswerAPP[]>();
+
+  // get assessment information from API
+  const {
+    status: assessmentStatus,
+    data: assessmentData,
+    error: assessmentError,
+  } = useGetAssessment(Number(assessmentId));
+
+  // get area list from API
+  const areasResponse = useGetCategories(
+    Number(assessmentInfo?.templateId),
+    false,
+    assessmentInfo?.templateId
+  );
+
+  // get answer list from API
+  const answersResponse = useGetAnswers(
+    Number(assessmentInfo?.templateId),
+    false,
+    assessmentInfo?.templateId
+  );
+
+  // set assessment info value
+  React.useEffect(() => {
+    switch (assessmentStatus) {
+      case "error":
+        // eslint-disable-next-line no-console
+        console.log(assessmentError);
+        break;
+      case "success":
+        if (assessmentData) {
+          setAssessmentInfo(assessmentData);
+        }
+        break;
+      default:
+        break;
+    }
+  }, [assessmentStatus, assessmentData]);
+
+  // set the area list value
+  React.useEffect(() => {
+    if (areasResponse.data) {
+      switch (areasResponse.status) {
+        case "error":
+          // eslint-disable-next-line no-console
+          console.log(areasResponse.error);
+          break;
+        case "success":
+          if (areasResponse.data) {
+            setAreaList(areasResponse.data);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }, [areasResponse]);
+
+  // set the answer list value
+  React.useEffect(() => {
+    if (answersResponse.data) {
+      switch (answersResponse.status) {
+        case "error":
+          // eslint-disable-next-line no-console
+          console.log(answersResponse.error);
+          break;
+        case "success":
+          if (answersResponse.data) {
+            setAnswerList(answersResponse.data);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }, [answersResponse]);
+
   // BEGINNING OF HARDCODED DATA USED TO TEST
 
   const hardcodedArea1 = { areaId: 14, name: "Ready Work" };
   const hardcodedArea2 = { areaId: 4, name: "Alignment" };
 
-  const hardcodedAreaList = [hardcodedArea1, hardcodedArea2];
-
   const hardcodedTopic1 = { topicId: 15, name: "Risk Analysis" };
   const hardcodedTopic2 = { topicId: 5, name: "Test Strategy" };
-
-  const hardcodedAnswerList = [
-    { text: "Yes", answerId: 1 },
-    { text: "No", answerId: 2 },
-    { text: "N/A", answerId: 3 },
-  ];
 
   const hardcodedCheckpoint1 = {
     checkpointId: 12,
@@ -122,27 +200,7 @@ function ListOfCheckpoints({
 
   // END OF HARDCODED DATA USED TO TEST
 
-  const [areaList, setAreaList]: [
-    Area[] | undefined,
-    Dispatch<Area[] | undefined>
-  ] = useState();
-
-  const [area, setArea]: [number | undefined, Dispatch<number | undefined>] =
-    useState();
-
-  const handleAreaChange = (event: SelectChangeEvent<number>) => {
-    setArea(Number(event.target.value));
-  };
-
-  const [checkpoints, setCheckpoints]: [
-    AssessmentCheckpoint[] | undefined,
-    Dispatch<AssessmentCheckpoint[] | undefined>
-  ] = useState();
-
-  const [answers, setAnswers]: [
-    Answer[] | undefined,
-    Dispatch<Answer[] | undefined>
-  ] = useState();
+  const [checkpoints, setCheckpoints] = useState<AssessmentCheckpoint[]>();
 
   const [subareas, setSubareas]: [
     AssessmentSubarea[] | undefined,
@@ -157,25 +215,25 @@ function ListOfCheckpoints({
 
   // first render: get the area and the answer list
   React.useEffect(() => {
-    setAreaList(hardcodedAreaList);
-    setArea(hardcodedAreaList[0].areaId);
-    setAnswers(hardcodedAnswerList);
-  }, []);
+    if (areaList) {
+      setActiveArea(Number(areaList[0].id));
+    }
+  }, [areaList]);
 
   React.useEffect(() => {
     // get area checkpoints from API
     // this if-else is purely for testing purposes
-    if (area === 14) {
+    if (activeArea === 14) {
       setCheckpoints([hardcodedCheckpoint1]);
     } else {
       setCheckpoints([hardcodedCheckpoint1, hardcodedCheckpoint2]);
     }
     // get subareas from API
     setSubareas(hardcodedSubareaList);
-  }, [area]);
+  }, [activeArea]);
 
   React.useEffect(() => {
-    if (checkpoints !== undefined && answers !== undefined) {
+    if (checkpoints !== undefined && answerList !== undefined) {
       return setCheckpointComponents(
         checkpoints.map((checkpoint) => (
           <Checkpoint
@@ -185,8 +243,8 @@ function ListOfCheckpoints({
             topics={checkpoint.topics.map((topic) => topic.name)}
             theme={theme}
             description={checkpoint.description}
-            checkpointvalues={answers.map((a) => a.answerId)}
-            checkpointlabels={answers.map((a) => a.text)}
+            checkpointvalues={answerList.map((a) => Number(a.id))}
+            checkpointlabels={answerList.map((a) => a.label)}
           />
         ))
       );
@@ -212,11 +270,11 @@ function ListOfCheckpoints({
 
   return (
     <div style={{ width: "inherit", display: "contents" }}>
-      {areaList !== undefined && area !== undefined && (
+      {areaList !== undefined && activeArea !== undefined && (
         <FormControl sx={{ width: "inherit" }}>
-          <Select value={area} onChange={handleAreaChange}>
+          <Select value={activeArea} onChange={handleAreaChange}>
             {areaList.map((a) => (
-              <MenuItem key={`menu-area-${a.areaId}`} value={a.areaId}>
+              <MenuItem key={`menu-area-${a.id}`} value={a.id}>
                 {a.name}
               </MenuItem>
             ))}

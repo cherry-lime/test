@@ -21,7 +21,6 @@ function Team({ theme }: { theme: Theme }) {
   const { teamId } = useParams();
 
   const { userRole } = useSelector((state: RootState) => state.userData);
-  const tmId = 4;
 
   const { status, data, error } = useGetTeam(Number(teamId));
 
@@ -121,14 +120,14 @@ function Team({ theme }: { theme: Theme }) {
       <MemberGrid
         theme={theme}
         userRole={userRole}
-        teamId={tmId}
+        teamId={Number(teamId)}
         forAssessors
       />
       <h3>Members</h3>
       <MemberGrid
         theme={theme}
         userRole={userRole}
-        teamId={tmId}
+        teamId={Number(teamId)}
         forAssessors={false}
       />
 
@@ -136,14 +135,14 @@ function Team({ theme }: { theme: Theme }) {
       <AssessmentOngoingGrid
         theme={theme}
         userRole={userRole}
-        teamId={tmId}
+        teamId={Number(teamId)}
         assessmentType="TEAM"
       />
 
       <h3>Completed Evaluations</h3>
       <AssessmentCompletedGrid
         theme={theme}
-        teamId={tmId}
+        teamId={Number(teamId)}
         assessmentType="TEAM"
       />
     </PageLayout>

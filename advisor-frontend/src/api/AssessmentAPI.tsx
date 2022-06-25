@@ -184,16 +184,13 @@ export function useGetMyTeamAssessments(isCompleted: boolean, teamId: number) {
 }
 
 // Get assessment with id from database
-export function useGetAssessment() {
-  return useQuery(
-    ["GET", "/assessment", "/{assessment_id}"],
-    async (assessmentId) => {
-      // Get data from database
-      const { data } = await API.get(`/assessment/${assessmentId}`);
+export function useGetAssessment(assessmentId: number) {
+  return useQuery(["GET", "/assessment", assessmentId], async () => {
+    // Get data from database
+    const { data } = await API.get(`/assessment/${assessmentId}`);
 
-      return assessmentToAPP(data) as AssessmentAPP;
-    }
-  );
+    return assessmentToAPP(data) as AssessmentAPP;
+  });
 }
 
 // Post assessment to database

@@ -92,16 +92,13 @@ export function useGetTemplates(
 }
 
 // Get template with id from database
-export function useGetTemplate() {
-  return useQuery(
-    ["GET", "/template", "/{template_id}"],
-    async (templateId) => {
-      // Get data from database
-      const { data } = await API.get(`/template/${templateId}`);
+export function useGetTemplate(templateId: number) {
+  return useQuery(["GET", "/template", templateId], async () => {
+    // Get data from database
+    const { data } = await API.get(`/template/${templateId}`);
 
-      return templateToAPP(data) as TemplateAPP;
-    }
-  );
+    return templateToAPP(data) as TemplateAPP;
+  });
 }
 
 // Post template to database

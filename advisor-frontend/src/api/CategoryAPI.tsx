@@ -44,14 +44,18 @@ function categoryToAPI(categoryAPP: CategoryAPP) {
 }
 
 // Get all categories from database
-export function useGetCategories(templateId: number, enabledFilter?: boolean) {
+export function useGetCategories(
+  templateId: number,
+  enabledFilter?: boolean,
+  wait?: number | undefined
+) {
   return useQuery(
     ["GET", "/template", templateId, "/category", enabledFilter],
     async () => {
       // Get response data from database
       const { data } = await API.get(`/template/${templateId}/category`);
 
-      // Convert data to categoriesAPP
+      // Convert data to csategoriesAPP
       const categoriesAPP = data.map((categoryAPI: CategoryAPI) =>
         categoryToAPP(categoryAPI)
       );
@@ -66,7 +70,8 @@ export function useGetCategories(templateId: number, enabledFilter?: boolean) {
       }
 
       return categoriesAPP as CategoryAPP[];
-    }
+    },
+    { enabled: !!wait }
   );
 }
 
