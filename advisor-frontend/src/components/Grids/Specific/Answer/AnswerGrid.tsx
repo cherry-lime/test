@@ -29,15 +29,12 @@ import {
   usePostAnswer,
 } from "../../../../api/AnswerAPI";
 
-type AnswerTypeGridProps = {
+type AnswerGridProps = {
   theme: Theme;
-  templateId: string | undefined;
+  templateId: number;
 };
 
-export default function AnswerTypeGrid({
-  theme,
-  templateId,
-}: AnswerTypeGridProps) {
+export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   const [rows, setRows] = React.useState<AnswerAPP[]>([]);
 
   // Answer query

@@ -10,7 +10,7 @@ import TemplateGrid from "./Template/TemplateGrid";
 import CategoryGrid from "./Category/CategoryGrid";
 import TopicGrid from "./Topic/TopicGrid";
 import MaturityGrid from "./Maturity/MaturityGrid";
-import AnswerTypeGrid from "./Answer/AnswerGrid";
+import AnswerGrid from "./Answer/AnswerGrid";
 import SubareaGrid from "./Subarea/SubareaGrid";
 import CheckpointGrid from "./Checkpoint/CheckpointGrid";
 import INGTheme from "../../../Theme";
@@ -38,8 +38,6 @@ export function useLogin() {
 export default function AllGrid() {
   // const login = useLogin();
   // login.mutate();
-
-  const userId = 0;
   const userRole = "ASSESSOR";
   const teamId = 1;
   const templateId = 1;
@@ -87,10 +85,9 @@ export default function AllGrid() {
       />
       <strong>Recommendations</strong>
       <RecommendationGrid
-        topicId={1}
         theme={INGTheme}
+        topicId={1}
         assessmentId={assessmentId}
-        topicId={userId}
       />
       <strong>Individuals</strong>
       <IndividualGrid theme={INGTheme} />
@@ -105,7 +102,7 @@ export default function AllGrid() {
       <strong>Maturity Levels</strong>
       <MaturityGrid theme={INGTheme} templateId={templateId} />
       <strong>Answer Types</strong>
-      <AnswerTypeGrid theme={INGTheme} templateId={templateId} />
+      <AnswerGrid theme={INGTheme} templateId={templateId} />
       <strong>Subareas</strong>
       <SubareaGrid theme={INGTheme} categoryId={categoryId} />
       <strong>Checkpoints</strong>
