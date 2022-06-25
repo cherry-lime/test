@@ -186,7 +186,10 @@ export class SubareaService {
           subarea_id,
         },
       })
-      .catch(() => {
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Subarea not found');
+        }
         throw new InternalServerErrorException();
       });
 
