@@ -17,11 +17,7 @@ function Area({ theme }: { theme: Theme }) {
     <div>
       <PageLayout title={`Subarea "${areaId}"`} sidebarType={userType.ADMIN}>
         <h2>Subareas</h2>
-        <SubareaGrid
-          theme={theme}
-          templateId={templateId}
-          categoryId={areaId}
-        />
+        <SubareaGrid theme={theme} categoryId={areaId} />
         <h2>Checkpoints</h2>
         <CheckpointGrid
           theme={theme}
