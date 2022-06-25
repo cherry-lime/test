@@ -1,17 +1,21 @@
 import { render, screen } from "@testing-library/react";
+import { QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import client from "../../../../../app/client";
 import { store } from "../../../../../app/store";
 import Theme from "../../../../../Theme";
 import ListOfTemplates from "../ListOfTemplates";
 
 test("app render list of templates", async () => {
   render(
-    <Provider store={store}>
-      <BrowserRouter>
-        <ListOfTemplates theme={Theme} />
-      </BrowserRouter>
-    </Provider>
+    <QueryClientProvider client={client}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <ListOfTemplates theme={Theme} />
+        </BrowserRouter>
+      </Provider>
+    </QueryClientProvider>
   );
   expect(screen.getByText(/Individual Templates/i)).toBeInTheDocument();
   expect(screen.getByText(/Team Templates/i)).toBeInTheDocument();
