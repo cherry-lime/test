@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AssessmentParticipants, Role, UserInTeam } from '@prisma/client';
-import { IsIn, IsString, IsUUID } from 'class-validator';
+import { IsIn, IsString } from 'class-validator';
 
 /**
  * Response with authentication information
