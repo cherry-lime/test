@@ -6,7 +6,6 @@ import { IsIn, IsString, IsUUID } from 'class-validator';
  * Response with authentication information
  */
 export class AuthenticationDto {
-  @IsUUID()
   @ApiProperty({ default: 'bf30b88f-a641-4194-9c5a-95b801884440' })
   password: string;
 
