@@ -9,7 +9,6 @@ export class Team {
   team_name: string;
 
   @ApiProperty({ default: 'bf30b88f-a641-4194-9c5a-95b801884440' })
-  @IsUUID()
   invite_token: string;
 
   @ApiProperty({ default: 'Netherlands' })
