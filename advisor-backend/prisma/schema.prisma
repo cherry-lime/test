@@ -149,6 +149,7 @@ model Template {
   template_name        String         @default("New Template")
   template_description String         @default("")
   template_type        AssessmentType
+  template_feedback    String         @default("")
   enabled              Boolean        @default(false)
   weight_range_min     Int            @default(1)
   weight_range_max     Int            @default(3)

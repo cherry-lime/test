@@ -74,6 +74,7 @@ export class AssessmentService {
       .create({
         data: {
           ...createAssessmentDto,
+          feedback_text: template.template_feedback,
           template_id: template.template_id,
           AssessmentParticipants: {
             create: users,
