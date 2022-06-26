@@ -79,6 +79,7 @@ export default function AllGrid() {
         theme={INGTheme}
         topicId={1}
         assessmentId={assessmentId}
+        isEditable
       />
       <strong>Individuals</strong>
       <IndividualGrid theme={INGTheme} />
