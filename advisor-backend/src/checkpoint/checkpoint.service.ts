@@ -56,11 +56,12 @@ export class CheckpointService {
     const maturity = await this.prisma.maturity.findFirst({
       where: {
         template_id: category.Template.template_id,
+        disabled: false,
       },
     });
 
     if (!maturity) {
-      throw new NotFoundException('No maturities found');
+      throw new NotFoundException('No enabled maturities found');
     }
 
     const createdCheckpoint = await this.prisma.checkpoint
@@ -168,6 +169,12 @@ export class CheckpointService {
     checkpoint_id: number,
     updateCheckpointDto: UpdateCheckpointDto
   ) {
+    let topics;
+    if (updateCheckpointDto.topics) {
+      topics = [...updateCheckpointDto.topics];
+      delete updateCheckpointDto.topics;
+    }
+
     // Get checkpoint by id from prisma
     const checkpoint = await this.prisma.checkpoint.findUnique({
       where: {
@@ -240,7 +247,7 @@ export class CheckpointService {
     };
 
     // Update checkpoint
-    const updatedCheckpoint = await this.prisma.checkpoint
+    const updatedCheckpoint: any = await this.prisma.checkpoint
       .update(updateData)
       .catch((error) => {
         if (error.code === 'P2002') {
@@ -296,13 +303,13 @@ export class CheckpointService {
       });
     }
 
-    // Update topics and upsert them
-    if (updateCheckpointDto.topics) {
-      await this.topicService.updateTopics(
-        checkpoint_id,
-        updateData,
-        updateCheckpointDto
+    // Update relations of topics if specified
+    if (topics) {
+      const newTopics = await this.topicService.updateTopics(
+        updatedCheckpoint,
+        topics
       );
+      updatedCheckpoint.CheckpointInTopic = newTopics;
     }
 
     return this.formatTopics(updatedCheckpoint);
