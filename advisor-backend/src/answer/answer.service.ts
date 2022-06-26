@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 
@@ -33,6 +34,7 @@ export class AnswerService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -42,12 +44,18 @@ export class AnswerService {
    * @param template_id template id
    * @returns all answers in template
    */
-  async findAll(template_id: number) {
-    return await this.prisma.answer.findMany({
+  async findAll(template_id: number, role: Role) {
+    const data: Prisma.AnswerFindManyArgs = {
       where: {
         template_id,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    return await this.prisma.answer.findMany(data);
   }
 
   /**
@@ -98,6 +106,7 @@ export class AnswerService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -120,6 +129,7 @@ export class AnswerService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }

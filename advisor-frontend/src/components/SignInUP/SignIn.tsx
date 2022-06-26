@@ -47,7 +47,6 @@ export default function SignIn({ theme }: { theme: Theme }) {
   const handleClose = () => {
     setOpen(false);
   };
-
   return (
     <ThemeProvider theme={theme}>
       <div

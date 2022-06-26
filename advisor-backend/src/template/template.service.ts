@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { AssessmentType } from '@prisma/client';
+import { AssessmentType, Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';
@@ -17,9 +17,17 @@ export class TemplateService {
    * Get all templates
    * @returns All templates
    */
-  async findAll(): Promise<TemplateDto[]> {
+  async findAll(role: Role): Promise<TemplateDto[]> {
     // Return all templates from prisma
-    return await this.prisma.template.findMany();
+    const data: Prisma.TemplateFindManyArgs = {
+      where: {},
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.enabled = true;
+    }
+
+    return await this.prisma.template.findMany(data);
   }
 
   /**
@@ -50,6 +58,7 @@ export class TemplateService {
             'Template with this name and type already exists'
           );
         } else {
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -63,15 +72,11 @@ export class TemplateService {
    */
   async findOne(id: number): Promise<TemplateDto> {
     // Get template by id from prisma
-    const template = await this.prisma.template
-      .findUnique({
-        where: {
-          template_id: id,
-        },
-      })
-      .catch(() => {
-        throw new InternalServerErrorException();
-      });
+    const template = await this.prisma.template.findUnique({
+      where: {
+        template_id: id,
+      },
+    });
 
     // Throw error if template not found
     if (!template) {
@@ -110,6 +115,7 @@ export class TemplateService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 
@@ -150,6 +156,7 @@ export class TemplateService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }

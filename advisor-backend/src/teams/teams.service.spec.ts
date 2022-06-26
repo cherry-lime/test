@@ -117,15 +117,6 @@ describe('TeamsService', () => {
         NotFoundException
       );
     });
-
-    it('Should reject with unknown error', async () => {
-      jest
-        .spyOn(prisma.team, 'findUnique')
-        .mockRejectedValueOnce({ code: 'TEST' });
-      await expect(teamsService.findTeamMembers(1)).rejects.toThrow(
-        InternalServerErrorException
-      );
-    });
   });
 
   describe('addTeamMember', () => {
@@ -152,15 +143,6 @@ describe('TeamsService', () => {
 
     it('Should reject with unknown error', async () => {
       jest
-        .spyOn(prisma.team, 'findUnique')
-        .mockRejectedValueOnce({ code: 'TEST' });
-      await expect(teamsService.addTeamMember(aUser1, 'test')).rejects.toThrow(
-        InternalServerErrorException
-      );
-    });
-
-    it('Should reject with unknown error', async () => {
-      jest
         .spyOn(prisma.userInTeam, 'create')
         .mockRejectedValueOnce({ code: 'TEST' });
       await expect(teamsService.addTeamMember(aUser1, 'test')).rejects.toThrow(
@@ -180,15 +162,6 @@ describe('TeamsService', () => {
       jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(null);
       expect(teamsService.getInviteToken(2)).rejects.toThrow(NotFoundException);
     });
-
-    it('Should reject with unknown error', async () => {
-      jest
-        .spyOn(prisma.team, 'findUnique')
-        .mockRejectedValueOnce({ code: 'TEST' });
-      await expect(teamsService.getInviteToken(1)).rejects.toThrow(
-        InternalServerErrorException
-      );
-    });
   });
 
   describe('getTeamAssessments', () => {
@@ -204,15 +177,6 @@ describe('TeamsService', () => {
     it('Should reject if team not found', async () => {
       jest.spyOn(prisma.team, 'findUnique').mockResolvedValueOnce(null);
       expect(teamsService.getAssessments(2)).rejects.toThrow(NotFoundException);
-    });
-
-    it('Should reject with unknown error', async () => {
-      jest
-        .spyOn(prisma.team, 'findUnique')
-        .mockRejectedValueOnce({ code: 'TEST' });
-      await expect(teamsService.getAssessments(1)).rejects.toThrow(
-        InternalServerErrorException
-      );
     });
   });
 

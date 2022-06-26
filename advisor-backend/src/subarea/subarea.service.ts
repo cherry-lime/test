@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateSubareaDto } from './dto/update-subarea.dto';
 
@@ -39,6 +40,7 @@ export class SubareaService {
         } else if (error.code === 'P2003') {
           throw new NotFoundException('Category not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -48,12 +50,18 @@ export class SubareaService {
    * @param category_id category id
    * @returns all subareas in category
    */
-  async findAll(category_id: number) {
-    return await this.prisma.subArea.findMany({
+  async findAll(category_id: number, role: Role) {
+    const data: Prisma.SubAreaFindManyArgs = {
       where: {
         category_id,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    return await this.prisma.subArea.findMany(data);
   }
 
   /**
@@ -126,6 +134,7 @@ export class SubareaService {
         if (error.code === 'P2002') {
           throw new ConflictException('Subarea with this name already exists');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 
@@ -190,6 +199,7 @@ export class SubareaService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Subarea not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 

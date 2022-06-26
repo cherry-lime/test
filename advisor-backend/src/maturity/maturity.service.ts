@@ -5,6 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateMaturityDto } from './dto/update-maturity.dto';
 
@@ -41,6 +42,7 @@ export class MaturityService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -50,12 +52,18 @@ export class MaturityService {
    * @param template_id template id
    * @returns all maturities in template
    */
-  async findAll(template_id: number) {
-    return await this.prisma.maturity.findMany({
+  async findAll(template_id: number, role: Role) {
+    const data: Prisma.MaturityFindManyArgs = {
       where: {
         template_id,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    return await this.prisma.maturity.findMany(data);
   }
 
   /**
@@ -132,6 +140,7 @@ export class MaturityService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 
@@ -196,6 +205,7 @@ export class MaturityService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Maturity not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 

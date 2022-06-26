@@ -48,8 +48,6 @@ export function useRegister(ref?: React.RefObject<RefObject>) {
 export function authProfile(ref?: React.RefObject<RefObject>) {
   // Import the Slice functions to access the Redux functions
   const dispatch = useDispatch();
-  // Navigation hook, to be used after the user is logged in
-  const navigate = useNavigate();
 
   return useMutation(
     ["Auth profile"],
@@ -61,7 +59,6 @@ export function authProfile(ref?: React.RefObject<RefObject>) {
       onSuccess: async (userAPI: UserAPI) => {
         dispatch(setUserRole(userAPI.role));
         dispatch(setUserId(userAPI.user_id.toString()));
-        navigate(`/`);
       },
       onError: (error: unknown) => {
         if (ref) {
@@ -79,15 +76,21 @@ export function authProfile(ref?: React.RefObject<RefObject>) {
  */
 export function useLogin(ref?: React.RefObject<RefObject>) {
   // Calls authentication API this way to avoid hook-in-hook issues
+
   const auth = authProfile(ref);
 
+  // Navigation hook, to be used after the user is logged in
+  const navigate = useNavigate();
+
+
   return useMutation(
-    ["Login Admin"],
+    ["Login"],
     (loginInfo: { username: string; password: string }) =>
       API.post(`/auth/login`, loginInfo),
     {
-      onSuccess: () => {
-        auth.mutate();
+      onSuccess: async () => {
+        await auth.mutate();
+        await navigate(`/`);
       },
       onError: (error: unknown) => {
         if (ref) {

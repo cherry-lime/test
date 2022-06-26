@@ -41,7 +41,7 @@ export class CloneTemplateService {
 
     // Throw error if failed
     if (!newTemplate) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('Failed to create new template');
     }
 
     const categoryMap = this.createMap(

@@ -139,7 +139,7 @@ export class AssessmentScoreService {
 
     // Getting the ids of checkpoints which have are not disabled and are in
     //   maturityIds and categoryIds
-    const checkpoints = await this.prisma.checkpoint.findMany({
+    let checkpoints = await this.prisma.checkpoint.findMany({
       where: {
         disabled: false,
         maturity_id: {
@@ -151,6 +151,12 @@ export class AssessmentScoreService {
       },
       select: selectParam,
     });
+
+    checkpoints = checkpoints.filter(
+      (c) =>
+        maturityIds.some((m) => m.maturity_id === c.maturity_id) &&
+        categoryIds.some((c) => c.category_id === c.category_id)
+    );
 
     if (checkpoints.length === 0) {
       return new BadRequestException(

@@ -80,6 +80,7 @@ export class TeamsCRUDController {
           throw new NotFoundException('Team with given team id not found');
         } else {
           // Throw error if internal server error
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -122,6 +123,7 @@ export class TeamsCRUDController {
           throw new NotFoundException('Team with given team id not found');
         } else {
           // Throw error if internal server error
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -163,6 +165,7 @@ export class TeamsCRUDController {
           throw new NotFoundException('Team with given team id not found');
         } else {
           // Throw error if internal server error
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });

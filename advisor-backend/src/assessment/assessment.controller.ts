@@ -208,7 +208,7 @@ export class AssessmentController {
       user
     );
 
-    if (!assessment) {
+    if (!assessment || assessment.completed_at) {
       throw new ForbiddenException();
     }
 
@@ -331,16 +331,16 @@ export class AssessmentController {
 
   @Get(':assessment_id/feedback')
   @ApiTags('feedback')
-  @ApiResponse({
-    description: 'Recommendations',
-    type: RecommendationDto,
-    isArray: true,
-  })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   @ApiQuery({
     name: 'topic_id',
     required: false,
     type: Number,
+  })
+  @ApiResponse({
+    description: 'Recommendations',
+    type: RecommendationDto,
+    isArray: true,
   })
   async getRecommendations(
     @Param('assessment_id', ParseIntPipe) assessment_id: number,

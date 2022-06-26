@@ -129,6 +129,7 @@ model Assessment {
   AssessmentParticipants            AssessmentParticipants[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
+  Feedback Feedback[]
   @@unique([assessment_name, assessment_type, team_id])
   @@index([assessment_type])
   @@index([team_id])
@@ -204,6 +205,18 @@ model CheckpointAndAnswersInAssessments {
   @@id([assessment_id, checkpoint_id])
   @@index([assessment_id])
   @@index([checkpoint_id])
+}
+
+model Feedback {
+  feedback_id                     Int        @id @default(autoincrement())
+  Assessment                      Assessment @relation(fields: [assessment_id], references: [assessment_id])
+  assessment_id                   Int
+  feedback_text                   String
+  feedback_additional_information String
+  order                           Int
+  topic_ids                       Int[]
+
+  @@index([assessment_id, order])
 }
 
 enum AssessmentType {
