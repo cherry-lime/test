@@ -151,6 +151,9 @@ export class CheckpointService {
     checkpoint_id: number,
     updateCheckpointDto: UpdateCheckpointDto
   ) {
+    const topics = [...updateCheckpointDto.topics];
+    delete updateCheckpointDto.topics;
+
     // Get checkpoint by id from prisma
     const checkpoint = await this.prisma.checkpoint.findUnique({
       where: {
@@ -223,7 +226,7 @@ export class CheckpointService {
     };
 
     // Update checkpoint
-    const updatedCheckpoint = await this.prisma.checkpoint
+    const updatedCheckpoint: any = await this.prisma.checkpoint
       .update(updateData)
       .catch((error) => {
         if (error.code === 'P2002') {
@@ -279,13 +282,13 @@ export class CheckpointService {
       });
     }
 
-    // Update topics and upsert them
-    if (updateCheckpointDto.topics) {
-      await this.topicService.updateTopics(
-        checkpoint_id,
-        updateData,
-        updateCheckpointDto
+    // Update relations of topics if specified
+    if (topics) {
+      const newTopics = await this.topicService.updateTopics(
+        updatedCheckpoint,
+        topics
       );
+      updatedCheckpoint.CheckpointInTopic = newTopics;
     }
 
     return this.formatTopics(updatedCheckpoint);

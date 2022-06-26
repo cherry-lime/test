@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { UpdateCheckpointDto } from '../checkpoint/dto/update-checkpoint.dto';
+import { Checkpoint } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateTopicDto } from './dto/update-topic.dto';
 
@@ -126,30 +126,46 @@ export class TopicService {
       });
   }
 
-  async updateTopics(
-    checkpoint_id: number,
-    updateData: any,
-    updateCheckpointDto: UpdateCheckpointDto
-  ) {
-    await this.prisma.checkpointInTopic.deleteMany({
+  // Replace topics with topics in topic_ids
+  async updateTopics(checkpoint: Checkpoint, topic_ids: number[]) {
+    // Get topics of template
+    let topics = await this.prisma.topic.findMany({
       where: {
-        checkpoint_id,
+        topic_id: {
+          in: topic_ids,
+        },
       },
     });
 
-    updateData.data.CheckpointInTopic = {
-      connectOrCreate: updateCheckpointDto.topics.map((topic_id) => ({
-        where: {
-          topic_id_checkpoint_id: {
-            topic_id,
-            checkpoint_id,
-          },
-        },
-        create: {
-          topic_id,
-        },
-      })),
-    };
-    delete updateCheckpointDto.topics;
+    // Get category of checkpoint
+    const category = await this.prisma.category.findUnique({
+      where: {
+        category_id: checkpoint.category_id,
+      },
+    });
+
+    // Filter topics to topics in template
+    topics = topics.filter((t) => t.template_id === category.template_id);
+
+    // Delete all current relations
+    await this.prisma.checkpointInTopic.deleteMany({
+      where: {
+        checkpoint_id: checkpoint.checkpoint_id,
+      },
+    });
+
+    // Create data for new relations
+    const entries = topics.map((t) => ({
+      checkpoint_id: checkpoint.checkpoint_id,
+      topic_id: t.topic_id,
+    }));
+
+    // Create new relations
+    await this.prisma.checkpointInTopic.createMany({
+      data: entries,
+    });
+
+    // Return entries
+    return entries;
   }
 }
