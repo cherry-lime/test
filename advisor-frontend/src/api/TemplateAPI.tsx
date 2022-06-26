@@ -47,6 +47,7 @@ function templateToAPI(templateAPP: TemplateAPP) {
   return {
     template_id: templateAPP.id,
     template_name: templateAPP.name,
+    template_description: templateAPP.description,
     template_type: templateAPP.templateType,
     enabled: templateAPP.enabled,
     weight_range_min: templateAPP.weightRangeMin,

@@ -1,6 +1,6 @@
 // import { useParams } from "react-router-dom";
 import { FormControlLabel, Radio, RadioGroup, Theme } from "@mui/material";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import AnswerGrid from "../../../../components/Grids/Specific/Answer/AnswerGrid";
 import CategoryGrid from "../../../../components/Grids/Specific/Category/CategoryGrid";
@@ -10,6 +10,11 @@ import userType from "../../../../components/Sidebar/listUsersTypes";
 import TextfieldEdit from "../../../../components/TextfieldEdit/TextfieldEdit";
 import PageLayout from "../../../PageLayout";
 import TextfieldEditWeight from "../../../../components/TextfieldEditWeight/TextfieldEditWeight";
+import {
+  TemplateAPP,
+  useGetTemplate,
+  usePatchTemplate,
+} from "../../../../api/TemplateAPI";
 
 /**
  * Page with details regarding a certain template
@@ -30,6 +35,48 @@ function Template({ theme }: { theme: Theme }) {
     [allowNa]
   );
 
+  const [templateInfo, setTemplateInfo] = useState<TemplateAPP>();
+  const templateResponse = useGetTemplate(Number(templateId));
+
+  React.useEffect(() => {
+    switch (templateResponse.status) {
+      case "error":
+        // eslint-disable-next-line no-console
+        console.log(templateResponse.error);
+        break;
+      case "success":
+        if (templateResponse.data) {
+          setTemplateInfo(templateResponse.data);
+        }
+        break;
+      default:
+        break;
+    }
+  }, [templateResponse.status, templateResponse.data]);
+
+  const patchTemplate = usePatchTemplate();
+
+  const changeInfo = (newInfo: TemplateAPP) => {
+    patchTemplate.mutate(newInfo, {
+      onSuccess: (templateAPP: TemplateAPP) => {
+        setTemplateInfo(templateAPP);
+      },
+      onError: (e: unknown) => {
+        // eslint-disable-next-line no-console
+        console.log(e);
+      },
+    });
+  };
+
+  const changeFeedback = (newFeedback: string) => {
+    if (templateInfo) {
+      const newInfo = templateInfo;
+      // TODO: change description to feedback
+      newInfo.description = newFeedback;
+      changeInfo(newInfo);
+    }
+  };
+
   return (
     <div>
       <PageLayout
@@ -38,11 +85,14 @@ function Template({ theme }: { theme: Theme }) {
       >
         <h2> Feedback Textbox </h2>
 
-        {/* <TextfieldEdit
-          rows={5}
-          theme={theme}
-          text="Get editable feedback text"
-        /> */}
+        {templateInfo && (
+          <TextfieldEdit
+            rows={5}
+            theme={theme}
+            text={templateInfo.description}
+            handleSave={changeFeedback}
+          />
+        )}
 
         <h2> Areas </h2>
 

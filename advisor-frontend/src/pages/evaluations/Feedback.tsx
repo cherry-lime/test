@@ -13,7 +13,11 @@ import { RootState } from "../../app/store";
 import pdf from "./pdf";
 import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
-import { AssessmentAPP, useGetAssessment, usePostFeedbackAssessment } from "../../api/AssessmentAPI";
+import {
+  AssessmentAPP,
+  useGetAssessment,
+  usePostFeedbackAssessment,
+} from "../../api/AssessmentAPI";
 
 /**
  * Page with the feedback related to a self assessment
@@ -163,18 +167,29 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
       {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
 
-      {team && userRole === "ASSESSOR" && value === "Recommendations" && assessmentInfo && (
-        <TextfieldEdit rows={5} theme={theme} text={assessmentInfo.feedbackText} handleSave={changeFeedback} />
-      )}
+      {team &&
+        userRole === "ASSESSOR" &&
+        value === "Recommendations" &&
+        assessmentInfo && (
+          <TextfieldEdit
+            rows={5}
+            theme={theme}
+            text={assessmentInfo.feedbackText}
+            handleSave={changeFeedback}
+          />
+        )}
 
-      {team && userRole === "USER" && value === "Recommendations" && assessmentInfo && (
-        <Textfield
-          rows={5}
-          columns="inherit"
-          theme={theme}
-          text={assessmentInfo.feedbackText}
-        />
-      )}
+      {team &&
+        userRole === "USER" &&
+        value === "Recommendations" &&
+        assessmentInfo && (
+          <Textfield
+            rows={5}
+            columns="inherit"
+            theme={theme}
+            text={assessmentInfo.feedbackText}
+          />
+        )}
 
       {value === "Recommendations" && (
         <ListOfRecommendations

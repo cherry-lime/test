@@ -139,7 +139,7 @@ function ListOfCheckpoints({
   }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
 
   React.useEffect(() => {
-    if (areaList) {
+    if (areaList && areaList.length > 0) {
       setActiveArea(Number(areaList[0].id));
     }
   }, [areaList]);
