@@ -29,10 +29,7 @@ function App() {
   const { userRole } = useSelector((state: RootState) => state.userData);
   // Call authentication API on pageload once
   const auth = authProfile();
-  useEffect(() => {
-    auth.mutate();
-    console.log("Authenticated");
-  }, []);
+  useEffect(() => auth.mutate(), []);
   return (
     <div className="App">
       <GlobalStyles />
@@ -61,20 +58,6 @@ function App() {
           element={<DetailGen theme={INGTheme} />}
         />
         <Route path="/home" element={<Home />} />
-
-        <Route path="/user" element={<UserInterface />} />
-            <Route
-              path="/user/self_evaluations"
-              element={<ListOfSelfEvals theme={INGTheme} />}
-            />
-            <Route
-              path="/user/self_evaluations/:assessmentId"
-              element={<Evaluation team={false} theme={INGTheme} />}
-            />
-            <Route
-              path="/user/self_evaluations/feedback/:assessmentId"
-              element={<Feedback team={false} theme={INGTheme} />}
-            />
         {/* Only route to the user pages if the user has USER rights */}
         {userRole === "USER" ? (
           <>
@@ -146,9 +129,14 @@ function App() {
         <Route
           path="/"
           element={
-            <Home />
+            userRole !== "NONE" ? (
+              <Navigate to={`/${userRole}`} />
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
+        <Route element={<Home />} />
 
         <Route path="/example" element={<Example />} />
       </Routes>

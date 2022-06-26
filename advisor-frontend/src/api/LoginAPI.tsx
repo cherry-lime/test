@@ -58,7 +58,6 @@ export function authProfile() {
       const response = data.data;
       dispatch(setUserRole(response.role));
       dispatch(setUserId(response.user_id));
-      navigate(`/`);
       console.log(response);
     },
     onError: (error: any) => {
