@@ -55,11 +55,12 @@ export class CheckpointService {
     const maturity = await this.prisma.maturity.findFirst({
       where: {
         template_id: category.Template.template_id,
+        disabled: false,
       },
     });
 
     if (!maturity) {
-      throw new NotFoundException('No maturities found');
+      throw new NotFoundException('No enabled maturities found');
     }
 
     const createdCheckpoint = await this.prisma.checkpoint
