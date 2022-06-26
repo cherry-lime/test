@@ -5,7 +5,6 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 
 /*
 size of the textfield is specified with the parameter width (in characters)
@@ -77,16 +76,5 @@ function TextfieldEdit({
     </ThemeProvider>
   );
 }
-/*
-Define proptypes for textfieldedit:
-1) text (which will be seen in the textfield)
-2) theme (according to UI)
-*/
-TextfieldEdit.propTypes = {
-  text: PropTypes.string.isRequired,
-  theme: PropTypes.node.isRequired,
-  rows: PropTypes.number.isRequired,
-  handleSave: PropTypes.func.isRequired,
-};
 
 export default TextfieldEdit;

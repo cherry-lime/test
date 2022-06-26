@@ -16,7 +16,7 @@ export type SubareaAPP = {
 type SubareaAPI = {
   subarea_id: number;
   subarea_name: string;
-  subarea_order: number;
+  order: number;
   subarea_description: string;
   subarea_summary: string;
   category_id: number;
@@ -27,7 +27,7 @@ function subareaToAPP(subareaAPI: SubareaAPI) {
   return {
     id: subareaAPI.subarea_id,
     name: subareaAPI.subarea_name,
-    order: subareaAPI.subarea_order,
+    order: subareaAPI.order,
     description: subareaAPI.subarea_description,
     summary: subareaAPI.subarea_summary,
     categoryId: subareaAPI.category_id,
@@ -39,7 +39,7 @@ function subareaToAPI(subareaAPP: SubareaAPP) {
   return {
     subarea_id: subareaAPP.id,
     subarea_name: subareaAPP.name,
-    subarea_order: subareaAPP.order,
+    order: subareaAPP.order,
     subarea_description: subareaAPP.description,
     subarea_summary: subareaAPP.summary,
     category_id: subareaAPP.categoryId,

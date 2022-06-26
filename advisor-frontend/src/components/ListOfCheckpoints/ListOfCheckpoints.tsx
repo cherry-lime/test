@@ -42,7 +42,7 @@ function ListOfCheckpoints({
   const [areaList, setAreaList] = useState<CategoryAPP[]>();
   const [answerList, setAnswerList] = useState<AnswerAPP[]>();
   const [checkpointAnswerList, setCheckpointAnswerList] =
-    useState<Record<number, number>>();
+    useState<Record<number, number | undefined>>();
 
   // get assessment information from API
   const {
@@ -126,10 +126,12 @@ function ListOfCheckpoints({
       switch (checkpointAnswerResponse.status) {
         case "success":
           if (checkpointAnswerResponse.data) {
-            const answerDictionary: Record<number, number> = {};
+            const answerDictionary: Record<number, number | undefined> = {};
             checkpointAnswerResponse.data.forEach((a) => {
-              answerDictionary[a.checkpointId] = a.answerId;
+              answerDictionary[a.checkpointId] = a.answerId ;
             });
+            console.log("answer dictionary")
+            console.log(checkpointAnswerResponse.data)
             setCheckpointAnswerList(answerDictionary);
           }
           break;

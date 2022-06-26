@@ -20,7 +20,6 @@ import { TopicAPP } from "../../api/TopicAPI";
  * This should only be accessible to the user whose assement this belongs to
  */
 function AreaSpecificCheckpoints({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentId,
   topicList,
   areaId,
@@ -33,7 +32,7 @@ function AreaSpecificCheckpoints({
   topicList: TopicAPP[];
   areaId: number;
   answerList: AnswerAPP[];
-  checkpointAnswerList: Record<number, number>;
+  checkpointAnswerList: Record<number, number | undefined>;
   theme: ThemeOptions;
   feedback: boolean;
 }) {
@@ -113,13 +112,16 @@ function AreaSpecificCheckpoints({
           <Checkpoint
             key={`checkpoint-card-${checkpoint.id}`}
             feedback={feedback}
+            checkpointId={Number(checkpoint.id)}
+            assessmentId={assessmentId}
             topicList={topicList}
             number={checkpoint.order}
             topicIds={checkpoint.topics}
             selectedAnswer={
+              // eslint-disable-next-line no-nested-ternary
               Number(checkpoint.id) in checkpointAnswerList
-                ? checkpointAnswerList[Number(checkpoint.id)].toString()
-                : ""
+                ? (checkpointAnswerList[Number(checkpoint.id)] ? checkpointAnswerList[Number(checkpoint.id)]?.toString() : "-") 
+                : "-"
             }
             theme={theme}
             description={checkpoint.description}

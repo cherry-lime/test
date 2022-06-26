@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { ThemeOptions } from "@mui/material/styles/experimental_extendTheme";
 import { AnswerAPP } from "../../api/AnswerAPI";
 import { TopicAPP } from "../../api/TopicAPI";
+import { AssessmentCheckpointAPP, usePostSaveAssessment } from "../../api/AssessmentAPI";
 
 /*
 passing parameter of the optional description of the checkpoints
@@ -21,6 +22,8 @@ main function returning a checkpoint component
 */
 function Checkpoint({
   description,
+  checkpointId,
+  assessmentId,
   number,
   topicIds,
   topicList,
@@ -30,11 +33,13 @@ function Checkpoint({
   feedback,
 }: {
   description: string;
+  checkpointId: number;
+  assessmentId: number;
   number: number;
   topicIds: number[];
   topicList: TopicAPP[];
   answers: AnswerAPP[];
-  selectedAnswer: string;
+  selectedAnswer: string | undefined;
   theme: ThemeOptions;
   feedback: boolean;
 }) {
@@ -43,15 +48,36 @@ function Checkpoint({
   using the State Hook in React
   set the value when clicking one of the radio-buttons
   */
+  console.log(`${description} ${checkpointId} `)
 
-  const [value, setValue] = useState(selectedAnswer);
+  const [value, setValue] = useState(selectedAnswer || "");
+
+  const postCheckpointAnswer = usePostSaveAssessment(assessmentId);
+
+  const changeCheckpointAnswer = (newValue: string) => {
+    const newAssessmentCheckpoint = {
+      checkpointId,
+      answerId: newValue !== "-" ? Number(newValue) : undefined,
+    };
+    postCheckpointAnswer.mutate(newAssessmentCheckpoint, {
+      onSuccess: (answer: AssessmentCheckpointAPP) => {
+        console.log("answer changed")
+        console.log(answer)
+        console.log(newValue)
+        setValue(newValue);
+      },
+      onError: (e: unknown) => {
+        // eslint-disable-next-line no-console
+        console.log(e);
+      },
+    });
+  };
 
   const handleClick = useCallback(
     (event) => {
-      if (event.target.value === value) {
-        setValue("");
-      } else if (event.target.value !== undefined) {
-        setValue(event.target.value);
+      const newValue = event.target.value;
+      if (newValue && event.target.value !== value) {
+        changeCheckpointAnswer(event.target.value);
       }
     },
     [value]

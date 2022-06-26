@@ -67,12 +67,12 @@ function assessmentToAPI(assessmentAPP: AssessmentAPP) {
 
 export type AssessmentCheckpointAPP = {
   checkpointId: number;
-  answerId: number;
+  answerId: number | undefined;
 };
 
 type AssessmentCheckpointAPI = {
   checkpoint_id: number;
-  answer_id: number;
+  answer_id: number | undefined;
 };
 
 function assessmentCheckpointToAPP(
@@ -269,7 +269,9 @@ export function usePostCompleteAssessment(assessmentId: number) {
 export function usePostSaveAssessment(assessmentId: number) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/save"],
-    async (assessmentCheckpointAPP: AssessmentCheckpointAPP) => {
+    async (
+      assessmentCheckpointAPP: AssessmentCheckpointAPP
+    ) => {
       const assessmentCheckpointAPI = assessmentCheckpointToAPI(
         assessmentCheckpointAPP
       );
