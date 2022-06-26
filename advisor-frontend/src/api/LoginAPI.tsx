@@ -1,21 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
-import axios from "axios";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import API from "./_API";
 import {
   setUserRole,
   setUserId,
   setUserName,
   setPassword,
 } from "../app/userDataSlice";
-
-// Defines the API address, used to send the requests to
-const API = axios.create({
-  withCredentials: true,
-  baseURL: "https://tabackend.azurewebsites.net",
-});
 
 /**
  * @params {role: "USERTYPE"} object that contains the body for the POST request
