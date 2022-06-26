@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import { ThemeOptions } from "@mui/material/styles/experimental_extendTheme";
 import { AnswerAPP } from "../../api/AnswerAPI";
 import { TopicAPP } from "../../api/TopicAPI";
-import { AssessmentCheckpointAPP, usePostSaveAssessment } from "../../api/AssessmentAPI";
+import { usePostSaveAssessment } from "../../api/AssessmentAPI";
 
 /*
 passing parameter of the optional description of the checkpoints
@@ -44,15 +44,11 @@ function Checkpoint({
   feedback: boolean;
 }) {
   /*
-  initial value of the checkpoint set to empty string
-  using the State Hook in React
   set the value when clicking one of the radio-buttons
   */
-  console.log(`${description} ${checkpointId} `)
-
   const [value, setValue] = useState(selectedAnswer || "");
 
-  const postCheckpointAnswer = usePostSaveAssessment(assessmentId);
+  const postCheckpointAnswer = usePostSaveAssessment(assessmentId, value);
 
   const changeCheckpointAnswer = (newValue: string) => {
     const newAssessmentCheckpoint = {
@@ -60,15 +56,15 @@ function Checkpoint({
       answerId: newValue !== "-" ? Number(newValue) : undefined,
     };
     postCheckpointAnswer.mutate(newAssessmentCheckpoint, {
-      onSuccess: (answer: AssessmentCheckpointAPP) => {
-        console.log("answer changed")
-        console.log(answer)
-        console.log(newValue)
+      onSuccess: () => {
         setValue(newValue);
       },
-      onError: (e: unknown) => {
+      onError: (err, _, context) => {
         // eslint-disable-next-line no-console
-        console.log(e);
+        console.log(err);
+        if (context) {
+          setValue(context.oldValue);
+        }
       },
     });
   };
@@ -77,6 +73,7 @@ function Checkpoint({
     (event) => {
       const newValue = event.target.value;
       if (newValue && event.target.value !== value) {
+        setValue(newValue);
         changeCheckpointAnswer(event.target.value);
       }
     },

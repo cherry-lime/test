@@ -128,10 +128,10 @@ function ListOfCheckpoints({
           if (checkpointAnswerResponse.data) {
             const answerDictionary: Record<number, number | undefined> = {};
             checkpointAnswerResponse.data.forEach((a) => {
-              answerDictionary[a.checkpointId] = a.answerId ;
+              answerDictionary[a.checkpointId] = a.answerId;
             });
-            console.log("answer dictionary")
-            console.log(checkpointAnswerResponse.data)
+            console.log("answer dictionary");
+            console.log(checkpointAnswerResponse.data);
             setCheckpointAnswerList(answerDictionary);
           }
           break;

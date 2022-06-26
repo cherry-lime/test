@@ -1,6 +1,6 @@
 import { Button, Theme } from "@mui/material";
 import { useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ButtonRegular from "../../../components/ButtonRegular/ButtonRegular";
 import ListOfCheckpoints from "../../../components/ListOfCheckpoints/ListOfCheckpoints";
@@ -8,6 +8,7 @@ import userTypes from "../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../PageLayout";
 import { RootState } from "../../../app/store";
 import ListOfRecommendations from "../../../components/ListOfRecommendations/ListOfRecommendations";
+import { usePostCompleteAssessment } from "../../../api/AssessmentAPI";
 
 /**
  * Page with a self evaluation that can be filled in
@@ -21,6 +22,12 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   const handleViewChange = () => {
     setCheckpointView((v) => !v);
   };
+
+  const postCompleteEval = usePostCompleteAssessment(Number(assessmentId));
+
+  const handleClickFinish = useCallback(() => {
+    postCompleteEval.mutate();
+  }, []);
 
   return (
     <PageLayout
@@ -69,7 +76,10 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
               : `/user/self_evaluations/feedback/${assessmentId}`
           }
         >
-          <ButtonRegular text="Finish Assessment" />
+          <Button variant="contained" onClick={handleClickFinish}>
+            {" "}
+            Finish Assessment{" "}
+          </Button>
         </Link>
       </div>
     </PageLayout>

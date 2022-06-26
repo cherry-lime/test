@@ -120,7 +120,9 @@ function AreaSpecificCheckpoints({
             selectedAnswer={
               // eslint-disable-next-line no-nested-ternary
               Number(checkpoint.id) in checkpointAnswerList
-                ? (checkpointAnswerList[Number(checkpoint.id)] ? checkpointAnswerList[Number(checkpoint.id)]?.toString() : "-") 
+                ? checkpointAnswerList[Number(checkpoint.id)]
+                  ? checkpointAnswerList[Number(checkpoint.id)]?.toString()
+                  : "-"
                 : "-"
             }
             theme={theme}

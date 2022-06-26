@@ -266,12 +266,10 @@ export function usePostCompleteAssessment(assessmentId: number) {
 }
 
 // Save assessment checkpoint in database
-export function usePostSaveAssessment(assessmentId: number) {
+export function usePostSaveAssessment(assessmentId: number, oldValue: string) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/save"],
-    async (
-      assessmentCheckpointAPP: AssessmentCheckpointAPP
-    ) => {
+    async (assessmentCheckpointAPP: AssessmentCheckpointAPP) => {
       const assessmentCheckpointAPI = assessmentCheckpointToAPI(
         assessmentCheckpointAPP
       );
@@ -284,7 +282,8 @@ export function usePostSaveAssessment(assessmentId: number) {
 
       // Return response
       return data;
-    }
+    },
+    { onMutate: () => ({ oldValue }) }
   );
 }
 
