@@ -10,15 +10,19 @@ import ListOfCheckpoints from "../../components/ListOfCheckpoints/ListOfCheckpoi
 import TextfieldEdit from "../../components/TextfieldEdit/TextfieldEdit";
 import Textfield from "../../components/Textfield/Textfield";
 import { RootState } from "../../app/store";
-import pdf from "./pdf";
+import pdf, { createPDF } from "./pdf";
 import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
 import {
   AssessmentAPP,
   useGetAssessment,
+  useGetSaveAssessment,
   usePostFeedbackAssessment,
 } from "../../api/AssessmentAPI";
 import ProgressOverallCard from "../../components/PageCard/SpecificPageCards/ProgressOverallCard";
+import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
+import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
+import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 
 /**
  * Page with the feedback related to a self assessment
@@ -50,48 +54,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       answer: "no",
     },
   ];
-
-  const createPDF = () => {
-    const filename = `Feedback-${assessmentId}.pdf`;
-    const recsHeaders = ["Priority", "Recommendation", "Additional Info"];
-    const recsArray = recs.map((r) => [
-      r.order,
-      r.description,
-      r.additionalInfo,
-    ]);
-    const recsSections = [
-      { title: "", text: "here is the automated feedback" },
-      { title: "Assessor Feedback", text: "here is the assessor feedback" },
-    ];
-    const recsTable = {
-      title: "Recommendations",
-      sections: recsSections,
-      data: recsArray,
-      headers: recsHeaders,
-    };
-
-    const checkpointHeaders = ["Number", "Description", "Topics", "Answer"];
-    const checkArray = checkpoints.map((c) => [
-      c.number,
-      c.description,
-      c.topics,
-      c.answer,
-    ]);
-    const checkSections = [
-      { title: "Subarea", text: "here is the subarea description" },
-    ];
-    const checkAreaTable = {
-      title: "Checkpoints: Area Name",
-      sections: checkSections,
-      data: checkArray,
-      headers: checkpointHeaders,
-    };
-    pdf({
-      title: `Feedback for assessment ${assessmentId}`,
-      tables: [recsTable, checkAreaTable, checkAreaTable],
-      filename,
-    });
-  };
 
   const [value, setValue] = useState("Recommendations");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -129,6 +91,124 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         console.log(e);
       },
     });
+  };
+
+  const [areaList, setAreaList] = useState<CategoryAPP[]>();
+  const [answerList, setAnswerList] = useState<AnswerAPP[]>();
+  const [checkpointAnswerList, setCheckpointAnswerList] =
+    useState<Record<number, number | undefined>>();
+
+  // get area list from API
+  const areasResponse = useGetCategories(
+    Number(assessmentInfo?.templateId),
+    true
+  );
+
+  // get answer list from API
+  const answersResponse = useGetAnswers(
+    Number(assessmentInfo?.templateId),
+    true
+  );
+
+  // get checkpoint answer list from API
+  const checkpointAnswerResponse = useGetSaveAssessment(
+    Number(assessmentInfo?.id)
+  );
+
+  // set the area list value
+  React.useEffect(() => {
+    if (areasResponse.data) {
+      switch (areasResponse.status) {
+        case "error":
+          // eslint-disable-next-line no-console
+          console.log(areasResponse.error);
+          break;
+        case "success":
+          if (areasResponse.data) {
+            setAreaList(areasResponse.data);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }, [areasResponse]);
+
+  // set the answer list value
+  React.useEffect(() => {
+    if (answersResponse.data) {
+      switch (answersResponse.status) {
+        case "error":
+          // eslint-disable-next-line no-console
+          console.log(answersResponse.error);
+          break;
+        case "success":
+          if (answersResponse.data) {
+            setAnswerList(answersResponse.data);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }, [answersResponse]);
+
+  React.useEffect(() => {
+    if (checkpointAnswerResponse.data) {
+      switch (checkpointAnswerResponse.status) {
+        case "success":
+          if (checkpointAnswerResponse.data) {
+            const answerDictionary: Record<number, number | undefined> = {};
+            checkpointAnswerResponse.data.forEach((a) => {
+              answerDictionary[a.checkpointId] = a.answerId;
+            });
+            setCheckpointAnswerList(answerDictionary);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
+
+  const [topicList, setTopicList] = useState<TopicAPP[]>([]);
+  const topicResponse = useGetTopics(assessmentInfo?.templateId);
+
+  // set assessment info value
+  React.useEffect(() => {
+    switch (topicResponse.status) {
+      case "error":
+        // eslint-disable-next-line no-console
+        console.log(topicResponse.error);
+        break;
+      case "success":
+        if (topicResponse.data) {
+          setTopicList(topicResponse.data);
+        }
+        break;
+      default:
+        break;
+    }
+  }, [topicResponse.status, topicResponse.data]);
+
+  const download = () => {
+    if (
+      assessmentId &&
+      areaList &&
+      answerList &&
+      checkpointAnswerList &&
+      topicList &&
+      answerList
+    ) {
+      createPDF(
+        Number(assessmentId),
+        areaList,
+        answerList,
+        checkpointAnswerList,
+        topicList,
+        answerList
+      );
+    }
   };
 
   return (
@@ -211,11 +291,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
       {value === "Progress" && <ProgressEvaluationCard />}
 
-      <Button
-        className="widthInherited"
-        variant="contained"
-        onClick={createPDF}
-      >
+      <Button className="widthInherited" variant="contained" onClick={download}>
         <Stack direction="row">
           <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />
           <Box sx={{ p: 1.0 }}>

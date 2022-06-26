@@ -13,7 +13,7 @@ export type SubareaAPP = {
   enabled: boolean;
 };
 
-type SubareaAPI = {
+export type SubareaAPI = {
   subarea_id: number;
   subarea_name: string;
   order: number;
@@ -23,7 +23,7 @@ type SubareaAPI = {
   disabled: boolean;
 };
 
-function subareaToAPP(subareaAPI: SubareaAPI) {
+export function subareaToAPP(subareaAPI: SubareaAPI) {
   return {
     id: subareaAPI.subarea_id,
     name: subareaAPI.subarea_name,

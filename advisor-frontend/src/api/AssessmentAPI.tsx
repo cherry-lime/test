@@ -185,12 +185,16 @@ export function useGetMyTeamAssessments(isCompleted: boolean, teamId: number) {
 
 // Get assessment with id from database
 export function useGetAssessment(assessmentId: number) {
-  return useQuery(["GET", "/assessment", assessmentId], async () => {
-    // Get data from database
-    const { data } = await API.get(`/assessment/${assessmentId}`);
+  return useQuery(
+    ["GET", "/assessment", assessmentId],
+    async () => {
+      // Get data from database
+      const { data } = await API.get(`/assessment/${assessmentId}`);
 
-    return assessmentToAPP(data) as AssessmentAPP;
-  });
+      return assessmentToAPP(data) as AssessmentAPP;
+    },
+    { enabled: !!assessmentId }
+  );
 }
 
 // Post assessment to database
@@ -289,19 +293,23 @@ export function usePostSaveAssessment(assessmentId: number, oldValue: string) {
 
 // Get saved assessment checkpoints from database
 export function useGetSaveAssessment(assessmentId: number) {
-  return useQuery(["GET", "/assessment", assessmentId, "/save"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/assessment/${assessmentId}/save`);
+  return useQuery(
+    ["GET", "/assessment", assessmentId, "/save"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/assessment/${assessmentId}/save`);
 
-    // Convert data to checkpointsAPP
-    const checkpointsAPP = data.map(
-      (assessmentCheckpointAPI: AssessmentCheckpointAPI) =>
-        assessmentCheckpointToAPP(assessmentCheckpointAPI)
-    );
+      // Convert data to checkpointsAPP
+      const checkpointsAPP = data.map(
+        (assessmentCheckpointAPI: AssessmentCheckpointAPI) =>
+          assessmentCheckpointToAPP(assessmentCheckpointAPI)
+      );
 
-    // Return response
-    return checkpointsAPP as AssessmentCheckpointAPP[];
-  });
+      // Return response
+      return checkpointsAPP as AssessmentCheckpointAPP[];
+    },
+    { enabled: !!assessmentId }
+  );
 }
 
 // Post feedback of assessment to database

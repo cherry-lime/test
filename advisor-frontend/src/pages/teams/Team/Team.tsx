@@ -2,7 +2,6 @@ import {
   FormControl,
   IconButton,
   InputAdornment,
-  InputLabel,
   OutlinedInput,
   Theme,
 } from "@mui/material";
@@ -18,11 +17,7 @@ import AssessmentOngoingGrid from "../../../components/Grids/Specific/Assessment
 import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessment/AssessmentCompleted/AssessmentCompletedGrid";
 import { RootState } from "../../../app/store";
 import Textfield from "../../../components/Textfield/Textfield";
-import {
-  TeamAPP,
-  useGetTeam,
-  usePatchTeam,
-} from "../../../api/TeamAPI";
+import { TeamAPP, useGetTeam, usePatchTeam } from "../../../api/TeamAPI";
 
 /**
  * Page providing team details

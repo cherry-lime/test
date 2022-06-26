@@ -21,7 +21,7 @@ type CategoryAPI = {
   template_id: number;
 };
 
-function categoryToAPP(categoryAPI: CategoryAPI) {
+export function categoryToAPP(categoryAPI: CategoryAPI) {
   return {
     id: categoryAPI.category_id,
     name: categoryAPI.category_name,
