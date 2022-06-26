@@ -65,6 +65,7 @@ export class UserService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Team with given team id not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
     delete user.password;
@@ -98,6 +99,7 @@ export class UserService {
           // Throw error if username already exsits
           throw new ConflictException('Username already exists');
         } else {
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -128,6 +130,7 @@ export class UserService {
           // Throw error if user not found
           throw new NotFoundException('User not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }

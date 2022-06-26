@@ -42,6 +42,7 @@ export class MaturityService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -139,6 +140,7 @@ export class MaturityService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 
@@ -203,6 +205,7 @@ export class MaturityService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Maturity not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 
