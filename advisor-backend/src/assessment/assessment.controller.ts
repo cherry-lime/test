@@ -208,7 +208,7 @@ export class AssessmentController {
       user
     );
 
-    if (!assessment?.completed_at) {
+    if (!assessment || assessment.completed_at) {
       throw new ForbiddenException();
     }
 
