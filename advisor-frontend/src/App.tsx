@@ -61,6 +61,20 @@ function App() {
           element={<DetailGen theme={INGTheme} />}
         />
         <Route path="/home" element={<Home />} />
+
+        <Route path="/user" element={<UserInterface />} />
+            <Route
+              path="/user/self_evaluations"
+              element={<ListOfSelfEvals theme={INGTheme} />}
+            />
+            <Route
+              path="/user/self_evaluations/:assessmentId"
+              element={<Evaluation team={false} theme={INGTheme} />}
+            />
+            <Route
+              path="/user/self_evaluations/feedback/:assessmentId"
+              element={<Feedback team={false} theme={INGTheme} />}
+            />
         {/* Only route to the user pages if the user has USER rights */}
         {userRole === "USER" ? (
           <>
@@ -132,11 +146,7 @@ function App() {
         <Route
           path="/"
           element={
-            userRole !== "NONE" ? (
-              <Navigate to={`/${userRole}`} />
-            ) : (
-              <Navigate to="/login" />
-            )
+            <Home />
           }
         />
 
