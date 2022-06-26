@@ -1,6 +1,6 @@
 // import { useParams } from "react-router-dom";
+import * as React from "react";
 import { FormControlLabel, Radio, RadioGroup, Theme } from "@mui/material";
-import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import AnswerGrid from "../../../../components/Grids/Specific/Answer/AnswerGrid";
 import CategoryGrid from "../../../../components/Grids/Specific/Category/CategoryGrid";
@@ -22,37 +22,16 @@ import {
  */
 function Template({ theme }: { theme: Theme }) {
   const { templateId } = useParams();
-  const templateName = "Random";
-  const [minWeight, setMinWeight] = useState(0);
-  const [maxWeight, setMaxWeight] = useState(100);
 
-  const [allowNa, setAllowNa] = useState(true);
+  const [templateInfo, setTemplateInfo] = React.useState<TemplateAPP>();
 
-  const handleAllowNa = useCallback(
-    (event) => {
-      setAllowNa(event.target.value);
-    },
-    [allowNa]
-  );
-
-  const [templateInfo, setTemplateInfo] = useState<TemplateAPP>();
-  const templateResponse = useGetTemplate(Number(templateId));
+  const { status, data } = useGetTemplate(Number(templateId));
 
   React.useEffect(() => {
-    switch (templateResponse.status) {
-      case "error":
-        // eslint-disable-next-line no-console
-        console.log(templateResponse.error);
-        break;
-      case "success":
-        if (templateResponse.data) {
-          setTemplateInfo(templateResponse.data);
-        }
-        break;
-      default:
-        break;
+    if (status === "success") {
+      setTemplateInfo(data);
     }
-  }, [templateResponse.status, templateResponse.data]);
+  }, [status]);
 
   const patchTemplate = usePatchTemplate();
 
@@ -61,108 +40,125 @@ function Template({ theme }: { theme: Theme }) {
       onSuccess: (templateAPP: TemplateAPP) => {
         setTemplateInfo(templateAPP);
       },
-      onError: (e: unknown) => {
-        // eslint-disable-next-line no-console
-        console.log(e);
+      onError: (error: unknown) => {
+        // handle error
       },
     });
   };
 
-  const changeFeedback = (newFeedback: string) => {
-    if (templateInfo) {
-      const newInfo = templateInfo;
-      // TODO: change description to feedback
-      newInfo.description = newFeedback;
-      changeInfo(newInfo);
-    }
+  const changeInfoOptimistic = (newInfo: TemplateAPP) => {
+    const oldInfo = templateInfo;
+    setTemplateInfo(newInfo);
+
+    patchTemplate.mutate(newInfo, {
+      onError: (error: unknown) => {
+        // handle error
+        setTemplateInfo(oldInfo);
+      },
+    });
   };
 
   return (
     <div>
-      <PageLayout
-        title={`Template "${templateName}"`}
-        sidebarType={userType.ADMIN}
-      >
-        <h2> Feedback Textbox </h2>
-
-        {templateInfo && (
+      {templateInfo && (
+        <PageLayout
+          title={`Template "${templateInfo && templateInfo.name}"`}
+          sidebarType={userType.ADMIN}
+        >
+          <h2> Feedback Textbox </h2>
           <TextfieldEdit
             rows={5}
             theme={theme}
-            text={templateInfo.description}
-            handleSave={changeFeedback}
+            text={templateInfo.feedback}
+            handleSave={(intermediateStringValue) =>
+              changeInfo({
+                ...templateInfo,
+                feedback: intermediateStringValue,
+              })
+            }
           />
-        )}
 
-        <h2> Areas </h2>
+          <h2> Areas </h2>
+          <p style={{ margin: "0px" }}>
+            To view, edit, add, or delete subareas and checkpoints belonging to
+            an area, click on the arrow button.
+          </p>
+          <CategoryGrid theme={theme} templateId={Number(templateId)} />
 
-        <p style={{ margin: "0px" }}>
-          To view, edit, add, or delete subareas and checkpoints belonging to an
-          area, click on the arrow button.
-        </p>
-        <CategoryGrid theme={theme} templateId={Number(templateId)} />
-        <h2>Topics </h2>
+          <h2>Topics </h2>
+          <TopicGrid theme={theme} templateId={Number(templateId)} />
 
-        <TopicGrid theme={theme} templateId={Number(templateId)} />
+          <h2> Maturity Levels </h2>
+          <MaturityGrid theme={theme} templateId={Number(templateId)} />
 
-        <h2> Maturity Levels </h2>
-
-        <MaturityGrid theme={theme} templateId={Number(templateId)} />
-
-        <h2> Score Formula </h2>
-
-        <h2> Weight Range </h2>
-        <div
-          style={{
-            width: "inherit",
-            display: "inline-grid",
-            gridTemplateColumns: "repeat(2, 250px [col-start])",
-            rowGap: "10px",
-          }}
-        >
-          <div>Start</div>
-          <div>End</div>
-          <TextfieldEditWeight
-            theme={theme}
-            weightValue={minWeight}
-            setWeight={setMinWeight}
-          />
-          <TextfieldEditWeight
-            theme={theme}
-            weightValue={maxWeight}
-            setWeight={setMaxWeight}
-          />
-        </div>
-        <h2> Checkpoint Values </h2>
-
-        <div style={{ width: "inherit" }}>
-          Include N/A
-          <RadioGroup
-            sx={{
+          <h2> Weight Range </h2>
+          <div
+            style={{
               width: "inherit",
-              marginTop: "5px",
+              display: "inline-grid",
+              gridTemplateColumns: "repeat(2, 250px [col-start])",
+              rowGap: "10px",
             }}
-            name="allowna"
-            aria-labelledby="allowna-checkpoints"
-            value={allowNa}
-            onClick={handleAllowNa}
-            row
           >
-            <FormControlLabel
-              control={<Radio color="primary" />}
-              label="Yes"
-              value
+            <div>Start</div>
+            <div>End</div>
+            <TextfieldEditWeight
+              theme={theme}
+              weightValue={templateInfo.weightRangeMin}
+              setWeight={(weight) =>
+                changeInfo({
+                  ...templateInfo,
+                  weightRangeMin: weight,
+                })
+              }
             />
+            <TextfieldEditWeight
+              theme={theme}
+              weightValue={templateInfo.weightRangeMax}
+              setWeight={(weight) =>
+                changeInfo({
+                  ...templateInfo,
+                  weightRangeMax: weight,
+                })
+              }
+            />
+          </div>
 
-            <FormControlLabel
-              control={<Radio color="primary" />}
-              label="No"
-              value={false}
-            />
-          </RadioGroup>
-        </div>
-        <AnswerGrid theme={theme} templateId={Number(templateId)} />
-      </PageLayout>
+          <h2> Checkpoint Values </h2>
+          <div style={{ width: "inherit" }}>
+            Include N/A
+            <RadioGroup
+              sx={{
+                width: "inherit",
+                marginTop: "5px",
+              }}
+              name="allowna"
+              aria-labelledby="allowna-checkpoints"
+              value={templateInfo.includeNoAnswer}
+              onClick={() =>
+                changeInfoOptimistic({
+                  ...templateInfo,
+                  includeNoAnswer: !templateInfo.includeNoAnswer,
+                })
+              }
+              row
+            >
+              <FormControlLabel
+                control={<Radio color="primary" />}
+                label="Yes"
+                value
+              />
+
+              <FormControlLabel
+                control={<Radio color="primary" />}
+                label="No"
+                value={false}
+              />
+            </RadioGroup>
+          </div>
+          <AnswerGrid theme={theme} templateId={Number(templateId)} />
+        </PageLayout>
+      )}
     </div>
   );
 }
