@@ -91,79 +91,83 @@ export default function Chooserole({ theme }: { theme: Theme }) {
             <Button onClick={handleClose}>Go back to sign up</Button>
           </DialogActions>
         </Dialog>
-        <Typography
-          variant="h2"
-          align="center"
-          color="white"
-          fontWeight="fontWeightBold"
-          sx={{
-            pt: 5,
-          }}
-        >
-          TestING Advisor
-        </Typography>
-        {/* Container is where all functionality exists */}
-        <Container
-          maxWidth="xs"
-          sx={{
-            pt: 10,
-            alignContent: "center",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Box
+        <Box sx={{ height: "25vh" }}>
+          <Typography
+            variant="h2"
+            align="center"
+            color="white"
+            fontWeight="fontWeightBold"
             sx={{
-              pt: 0,
-              marginBottom: 0,
-              padding: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              borderRadius: "16px",
-              bgcolor: "white",
+              pt: 5,
             }}
           >
-            {/* Conact rounded circle */}
-            <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
-              <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
-            </Avatar>
-            <Typography
-              variant="h6"
-              align="center"
-              color="text.secondary"
-              fontWeight="fontWeightBold"
+            TestING Advisor
+          </Typography>
+        </Box>
+        {/* Container is where all functionality exists */}
+        <Box sx={{ height: "50vh" }}>
+          <Container
+            maxWidth="xs"
+            sx={{
+              pt: 10,
+              alignContent: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Box
               sx={{
                 pt: 0,
-                marginTop: 2,
-                marginBottom: 2,
+                marginBottom: 0,
+                padding: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                borderRadius: "16px",
+                bgcolor: "white",
               }}
             >
-              Please, select your role
-            </Typography>
-            {/* The form for the drop down menu to pick a role */}
-            <FormControl fullWidth>
-              <Select sx={{ m: 2 }} value={userRole} onChange={handleChange}>
-                <MenuItem value="USER">User</MenuItem>
-                <MenuItem value="ASSESSOR">Assessor</MenuItem>
-              </Select>
-            </FormControl>
-            <Button
-              size="medium"
-              variant="contained"
-              color="primary"
-              sx={{
-                p: 2,
-                m: 2,
-              }}
-              onClick={() => {
-                userReg.mutate({ role: userRole });
-              }}
-            >
-              Continue
-            </Button>
-          </Box>
-        </Container>
+              {/* Conact rounded circle */}
+              <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
+                <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
+              </Avatar>
+              <Typography
+                variant="h6"
+                align="center"
+                color="text.secondary"
+                fontWeight="fontWeightBold"
+                sx={{
+                  pt: 0,
+                  marginTop: 2,
+                  marginBottom: 2,
+                }}
+              >
+                Please, select your role
+              </Typography>
+              {/* The form for the drop down menu to pick a role */}
+              <FormControl fullWidth>
+                <Select sx={{ m: 2 }} value={userRole} onChange={handleChange}>
+                  <MenuItem value="USER">User</MenuItem>
+                  <MenuItem value="ASSESSOR">Assessor</MenuItem>
+                </Select>
+              </FormControl>
+              <Button
+                size="medium"
+                variant="contained"
+                color="primary"
+                sx={{
+                  p: 2,
+                  m: 2,
+                }}
+                onClick={() => {
+                  userReg.mutate({ role: userRole });
+                }}
+              >
+                Continue
+              </Button>
+            </Box>
+          </Container>
+        </Box>
       </div>
     </ThemeProvider>
   );

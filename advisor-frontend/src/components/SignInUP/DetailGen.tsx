@@ -92,109 +92,113 @@ export default function DetailGen({ theme }: { theme: Theme }) {
             <Button onClick={handleClose}>Go back to Sign up</Button>
           </DialogActions>
         </Dialog>
-        <Typography
-          variant="h2"
-          align="center"
-          color="white"
-          fontWeight="fontWeightBold"
-          sx={{
-            pt: 5,
-          }}
-        >
-          TestING Advisor
-        </Typography>
-        {/* Container is where all functionality exists */}
-        <Container
-          maxWidth="xs"
-          sx={{
-            pt: 10,
-          }}
-        >
-          <Box
+        <Box sx={{ height: "25vh" }}>
+          <Typography
+            variant="h2"
+            align="center"
+            color="white"
+            fontWeight="fontWeightBold"
             sx={{
-              pt: 0,
-              marginBottom: 0,
-              padding: "20px 30px 20px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              borderRadius: "16px",
-              bgcolor: "white",
+              pt: 5,
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
-              <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
-            </Avatar>
-            <Typography
-              variant="h6"
-              align="center"
-              color="text.secondary"
-              fontWeight="fontWeightBold"
+            TestING Advisor
+          </Typography>
+        </Box>
+        {/* Container is where all functionality exists */}
+        <Box sx={{ height: "50vh" }}>
+          <Container
+            maxWidth="xs"
+            sx={{
+              pt: 10,
+            }}
+          >
+            <Box
               sx={{
                 pt: 0,
-                marginTop: 2,
-                marginBottom: 3,
+                marginBottom: 0,
+                padding: "20px 30px 20px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                borderRadius: "16px",
+                bgcolor: "white",
               }}
             >
-              Your username and password were generated for you
-            </Typography>
-            {/* Uneditable text field */}
-            <FormControl variant="standard">
-              <InputLabel htmlFor="Username">Username</InputLabel>
-              <OutlinedInput
-                id="username"
-                value={userName}
-                readOnly
-                sx={{ m: 2 }}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <IconButton
-                      onClick={() => navigator.clipboard.writeText(userName)}
-                    >
-                      <ContentCopyIcon />
-                    </IconButton>
-                  </InputAdornment>
+              <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
+                <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
+              </Avatar>
+              <Typography
+                variant="h6"
+                align="center"
+                color="text.secondary"
+                fontWeight="fontWeightBold"
+                sx={{
+                  pt: 0,
+                  marginTop: 2,
+                  marginBottom: 3,
+                }}
+              >
+                Your username and password were generated for you
+              </Typography>
+              {/* Uneditable text field */}
+              <FormControl variant="standard">
+                <InputLabel htmlFor="Username">Username</InputLabel>
+                <OutlinedInput
+                  id="username"
+                  value={userName}
+                  readOnly
+                  sx={{ m: 2 }}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <IconButton
+                        onClick={() => navigator.clipboard.writeText(userName)}
+                      >
+                        <ContentCopyIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+              <FormControl variant="standard">
+                <InputLabel htmlFor="Username">Password</InputLabel>
+                <OutlinedInput
+                  readOnly
+                  sx={{ m: 2 }}
+                  id="password"
+                  value={userPassword}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <IconButton
+                        onClick={() =>
+                          navigator.clipboard.writeText(userPassword)
+                        }
+                      >
+                        <ContentCopyIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  p: 2,
+                  m: 2,
+                }}
+                onClick={() =>
+                  login.mutate({
+                    username: userName,
+                    password: userPassword,
+                  })
                 }
-              />
-            </FormControl>
-            <FormControl variant="standard">
-              <InputLabel htmlFor="Username">Password</InputLabel>
-              <OutlinedInput
-                readOnly
-                sx={{ m: 2 }}
-                id="password"
-                value={userPassword}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <IconButton
-                      onClick={() =>
-                        navigator.clipboard.writeText(userPassword)
-                      }
-                    >
-                      <ContentCopyIcon />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                p: 2,
-                m: 2,
-              }}
-              onClick={() =>
-                login.mutate({
-                  username: userName,
-                  password: userPassword,
-                })
-              }
-            >
-              Finish and Log in
-            </Button>
-          </Box>
-        </Container>
+              >
+                Finish and Log in
+              </Button>
+            </Box>
+          </Container>
+        </Box>
       </div>
     </ThemeProvider>
   );
