@@ -13,6 +13,7 @@ import {
   useGetSaveAssessment,
 } from "../../api/AssessmentAPI";
 import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
+import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
 
 /**
@@ -138,6 +139,26 @@ function ListOfCheckpoints({
     }
   }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
 
+  const [topicList, setTopicList] = useState<TopicAPP[]>([]);
+  const topicResponse = useGetTopics(assessmentInfo?.templateId);
+
+  // set assessment info value
+  React.useEffect(() => {
+    switch (topicResponse.status) {
+      case "error":
+        // eslint-disable-next-line no-console
+        console.log(topicResponse.error);
+        break;
+      case "success":
+        if (topicResponse.data) {
+          setTopicList(topicResponse.data);
+        }
+        break;
+      default:
+        break;
+    }
+  }, [topicResponse.status, topicResponse.data]);
+
   React.useEffect(() => {
     if (areaList && areaList.length > 0) {
       setActiveArea(Number(areaList[0].id));
@@ -158,16 +179,21 @@ function ListOfCheckpoints({
         </FormControl>
       )}
 
-      {activeArea && answerList && assessmentInfo && checkpointAnswerList && (
-        <AreaSpecificCheckpoints
-          theme={theme}
-          areaId={activeArea}
-          answerList={answerList}
-          checkpointAnswerList={checkpointAnswerList}
-          feedback={feedback}
-          assessmentId={Number(assessmentInfo.id)}
-        />
-      )}
+      {activeArea &&
+        answerList &&
+        assessmentInfo &&
+        checkpointAnswerList &&
+        topicList && (
+          <AreaSpecificCheckpoints
+            theme={theme}
+            topicList={topicList}
+            areaId={activeArea}
+            answerList={answerList}
+            checkpointAnswerList={checkpointAnswerList}
+            feedback={feedback}
+            assessmentId={Number(assessmentInfo.id)}
+          />
+        )}
     </div>
   );
 }

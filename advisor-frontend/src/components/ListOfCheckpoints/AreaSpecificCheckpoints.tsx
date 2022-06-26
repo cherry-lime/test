@@ -13,6 +13,7 @@ import { CheckpointAPP, useGetCheckpoints } from "../../api/CheckpointAPI";
 import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI";
 import Checkpoint from "../Checkpoint/Checkpoint";
 import Subarea from "../Subarea/Subarea";
+import { TopicAPP } from "../../api/TopicAPI";
 
 /**
  * Page with a self evaluation that can be filled in
@@ -21,6 +22,7 @@ import Subarea from "../Subarea/Subarea";
 function AreaSpecificCheckpoints({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentId,
+  topicList,
   areaId,
   answerList,
   checkpointAnswerList,
@@ -28,6 +30,7 @@ function AreaSpecificCheckpoints({
   feedback,
 }: {
   assessmentId: number;
+  topicList: TopicAPP[];
   areaId: number;
   answerList: AnswerAPP[];
   checkpointAnswerList: Record<number, number>;
@@ -110,6 +113,7 @@ function AreaSpecificCheckpoints({
           <Checkpoint
             key={`checkpoint-card-${checkpoint.id}`}
             feedback={feedback}
+            topicList={topicList}
             number={checkpoint.order}
             topicIds={checkpoint.topics}
             selectedAnswer={

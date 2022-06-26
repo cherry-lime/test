@@ -5,14 +5,13 @@ import {
   RadioGroup,
   Radio,
 } from "@mui/material";
-import { UseQueryResult } from "react-query";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { ThemeOptions } from "@mui/material/styles/experimental_extendTheme";
 import { AnswerAPP } from "../../api/AnswerAPI";
-import { TopicAPP, useGetTopic } from "../../api/TopicAPI";
+import { TopicAPP } from "../../api/TopicAPI";
 
 /*
 passing parameter of the optional description of the checkpoints
@@ -24,6 +23,7 @@ function Checkpoint({
   description,
   number,
   topicIds,
+  topicList,
   answers,
   selectedAnswer,
   theme,
@@ -32,6 +32,7 @@ function Checkpoint({
   description: string;
   number: number;
   topicIds: number[];
+  topicList: TopicAPP[];
   answers: AnswerAPP[];
   selectedAnswer: string;
   theme: ThemeOptions;
@@ -55,36 +56,6 @@ function Checkpoint({
     },
     [value]
   );
-
-  const [topicList, setTopicList] = useState<TopicAPP[]>([]);
-  const topicResponses: UseQueryResult<TopicAPP, unknown>[] = [];
-
-  topicIds.forEach((topicId) => {
-    topicResponses.push(useGetTopic(topicId));
-  });
-
-  topicResponses.forEach((topicResponse) => {
-    React.useEffect(() => {
-      if (topicResponse.data) {
-        switch (topicResponse.status) {
-          case "error":
-            // eslint-disable-next-line no-console
-            console.log(topicResponse.error);
-            break;
-          case "success":
-            if (topicResponse.data) {
-              setTopicList((list) => {
-                list.push(topicResponse.data);
-                return list;
-              });
-            }
-            break;
-          default:
-            break;
-        }
-      }
-    }, [topicResponse]);
-  });
 
   /*
   the following for loop is used to dynamically generate an amount of checkpoints
@@ -127,7 +98,10 @@ function Checkpoint({
           </Typography>
           {topicIds.length > 0 && (
             <Typography sx={{ textAlign: "left" }} id="checkpoint-topics">
-              {`Topics: ${topicList.join(", ")}`}
+              {`Topics: ${topicList
+                .filter((t) => topicIds.includes(Number(t.id)))
+                .map((t) => t.name)
+                .join(", ")}`}
             </Typography>
           )}
           <Typography sx={{ textAlign: "left" }} id="checkpointnamelabel">

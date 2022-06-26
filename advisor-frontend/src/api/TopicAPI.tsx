@@ -36,7 +36,10 @@ function topicToAPI(topicAPP: TopicAPP) {
 }
 
 // Get all topics from database
-export function useGetTopics(templateId: number, enabledFilter?: boolean) {
+export function useGetTopics(
+  templateId: number | undefined,
+  enabledFilter?: boolean
+) {
   return useQuery(
     ["GET", "/template", templateId, "/topic", enabledFilter],
     async () => {
@@ -56,7 +59,8 @@ export function useGetTopics(templateId: number, enabledFilter?: boolean) {
       }
 
       return topicsAPP as TopicAPP[];
-    }
+    },
+    { enabled: !!templateId }
   );
 }
 
