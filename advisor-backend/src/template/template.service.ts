@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { AssessmentType } from '@prisma/client';
+import { AssessmentType, Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';
@@ -17,9 +17,17 @@ export class TemplateService {
    * Get all templates
    * @returns All templates
    */
-  async findAll(): Promise<TemplateDto[]> {
+  async findAll(role: Role): Promise<TemplateDto[]> {
     // Return all templates from prisma
-    return await this.prisma.template.findMany();
+    const data: Prisma.TemplateFindManyArgs = {
+      where: {},
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.enabled = true;
+    }
+
+    return await this.prisma.template.findMany(data);
   }
 
   /**

@@ -8,7 +8,7 @@ import {
   updateTemplate,
   updateTemplateDto,
 } from '../prisma/mock/mockTemplate';
-import { AssessmentType } from '@prisma/client';
+import { AssessmentType, Role } from '@prisma/client';
 import {
   ConflictException,
   InternalServerErrorException,
@@ -132,7 +132,7 @@ describe('TemplateService', () => {
 
   describe('findAll', () => {
     it('Should return all templates', async () => {
-      expect(templateService.findAll()).resolves.toEqual([aTemplate]);
+      expect(templateService.findAll(Role.ADMIN)).resolves.toEqual([aTemplate]);
     });
   });
 

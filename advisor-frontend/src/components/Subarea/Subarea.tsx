@@ -18,11 +18,14 @@ function Subarea({
   description,
   summary,
   theme,
+  tip,
 }: {
   title: string;
   summary: string;
   description: string;
   theme: ThemeOptions;
+  // eslint-disable-next-line react/require-default-props
+  tip?: boolean;
 }) {
   return (
     <ThemeProvider theme={theme}>
@@ -42,9 +45,14 @@ function Subarea({
           <Typography className="subareaText" id="subarea-summary">
             {summary}
           </Typography>
-          <Typography className="subareaText" id="subarea-description">
-            {description}
+          <Typography
+            className="subareaText"
+            id="subarea-description"
+            sx={{ color: "primary.main" }}
+          >
+            {tip && "TIP: "}
           </Typography>
+          <Typography>{description}</Typography>
         </CardContent>
       </Card>
     </ThemeProvider>

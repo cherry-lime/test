@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 
@@ -42,12 +43,18 @@ export class AnswerService {
    * @param template_id template id
    * @returns all answers in template
    */
-  async findAll(template_id: number) {
-    return await this.prisma.answer.findMany({
+  async findAll(template_id: number, role: Role) {
+    const data: Prisma.AnswerFindManyArgs = {
       where: {
         template_id,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    return await this.prisma.answer.findMany(data);
   }
 
   /**
