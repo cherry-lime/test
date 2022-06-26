@@ -151,8 +151,11 @@ export class CheckpointService {
     checkpoint_id: number,
     updateCheckpointDto: UpdateCheckpointDto
   ) {
-    const topics = [...updateCheckpointDto.topics];
-    delete updateCheckpointDto.topics;
+    let topics;
+    if (updateCheckpointDto.topics) {
+      topics = [...updateCheckpointDto.topics];
+      delete updateCheckpointDto.topics;
+    }
 
     // Get checkpoint by id from prisma
     const checkpoint = await this.prisma.checkpoint.findUnique({
