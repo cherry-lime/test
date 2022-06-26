@@ -110,7 +110,6 @@ export default function Chooserole({ theme }: { theme: Theme }) {
             alignContent: "center",
             justifyContent: "center",
             alignItems: "center",
-            display: "flex",
           }}
         >
           <Box
