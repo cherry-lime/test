@@ -11,14 +11,15 @@ import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
 import { Theme, ThemeProvider } from "@mui/material";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useLoginTwo } from "../../api/LoginAPI";
+import { useLogin } from "../../api/LoginAPI";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 
 // Sign in functionality to be used later
 export default function SignIn({ theme }: { theme: Theme }) {
@@ -26,8 +27,13 @@ export default function SignIn({ theme }: { theme: Theme }) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
+
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
   // Import login API calls
-  const login = useLoginTwo();
+  const login = useLogin(ref);
+
   // Create statehooks to store the login details in the textfields
   const [inputUserName, setInputUserName] = useState("");
   const [inputPassword, setInputPassword] = useState("");
@@ -205,6 +211,7 @@ export default function SignIn({ theme }: { theme: Theme }) {
             </Box>
           </Box>
         </Container>
+        <ErrorPopup ref={ref} />
       </div>
     </ThemeProvider>
   );

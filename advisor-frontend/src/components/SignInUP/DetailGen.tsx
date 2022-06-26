@@ -21,15 +21,20 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { useLoginTwo } from "../../api/LoginAPI";
+import { useLogin } from "../../api/LoginAPI";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 
 export default function DetailGen({ theme }: { theme: Theme }) {
   // Make global state variables accessible
   const { userPassword, userName } = useSelector(
     (state: RootState) => state.userData
   );
+
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Make Login API call available
-  const login = useLoginTwo();
+  const login = useLogin(ref);
 
   const [open, setOpen] = React.useState(false);
 
@@ -196,6 +201,7 @@ export default function DetailGen({ theme }: { theme: Theme }) {
             </Button>
           </Box>
         </Container>
+        <ErrorPopup ref={ref} />
       </div>
     </ThemeProvider>
   );

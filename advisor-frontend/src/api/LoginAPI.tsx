@@ -15,7 +15,7 @@ import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
  * @params {role: "USERTYPE"} object that contains the body for the POST request
  * @returns Object of login details for the user
  */
-export function userRegister(ref?: React.RefObject<RefObject>) {
+export function useRegister(ref?: React.RefObject<RefObject>) {
   // Navigation hook, to be used after the user is logged in
   const navigate = useNavigate();
   // Make the global state variable functions available
@@ -77,9 +77,9 @@ export function authProfile(ref?: React.RefObject<RefObject>) {
  * @param password String value
  * @returns onError: display the error message received from the backend API.
  */
-export function useLoginTwo(ref?: React.RefObject<RefObject>) {
+export function useLogin(ref?: React.RefObject<RefObject>) {
   // Calls authentication API this way to avoid hook-in-hook issues
-  const auth = authProfile();
+  const auth = authProfile(ref);
 
   return useMutation(
     ["Login Admin"],
@@ -102,7 +102,7 @@ export function useLoginTwo(ref?: React.RefObject<RefObject>) {
  * API Call to logout the current user.
  * Removes the cookie token and resets the session state
  */
-export function userLogout(ref?: React.RefObject<RefObject>) {
+export function useLogout(ref?: React.RefObject<RefObject>) {
   return useMutation(["User Logout"], () => API.post(`/auth/logout`), {
     onError: (error: unknown) => {
       if (ref) {

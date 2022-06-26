@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Link, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { useSelector } from "react-redux";
@@ -23,13 +23,17 @@ import Chooserole from "./components/SignInUP/Chooserole";
 import { RootState } from "./app/store";
 import { authProfile } from "./api/LoginAPI";
 import DetailGen from "./components/SignInUP/DetailGen";
+import ErrorPopup, { RefObject } from "./components/ErrorPopup/ErrorPopup";
 
 function App() {
   // Import the global state variables that will be used throughout the session
   const { userRole } = useSelector((state: RootState) => state.userData);
 
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
   // Call authentication API on pageload once
-  const auth = authProfile();
+  const auth = authProfile(ref);
   useEffect(() => auth.mutate(), []);
 
   return (
@@ -144,6 +148,7 @@ function App() {
 
         <Route path="/example" element={<Example />} />
       </Routes>
+      <ErrorPopup ref={ref} />
     </div>
   );
 }
