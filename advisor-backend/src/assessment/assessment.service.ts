@@ -264,7 +264,25 @@ export class AssessmentService {
     );
 
     if (!userInAssessment) {
-      console.log(userInAssessment);
+      if (assessment.assessment_type === AssessmentType.INDIVIDUAL) {
+        return null;
+      }
+
+      const isInTeam = await this.prisma.team.findMany({
+        where: {
+          team_id: assessment.team_id,
+          UserInTeam: {
+            some: {
+              user_id: user.user_id,
+            },
+          },
+        },
+      });
+
+      if (isInTeam) {
+        return assessment;
+      }
+
       return null;
     }
 
