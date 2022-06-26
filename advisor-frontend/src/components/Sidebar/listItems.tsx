@@ -8,6 +8,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EditIcon from "@mui/icons-material/Edit";
+import PersonIcon from "@mui/icons-material/Person";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
@@ -44,6 +45,14 @@ export default function SidebarList({ userType }: SidebarListProps) {
             <BarChartIcon color="info" />
           </ListItemIcon>
           <ListItemText primary="Evaluations" style={{ color: "background" }} />
+        </ListItemButton>
+      )}
+      {userType.get("individuals") && (
+        <ListItemButton component={Link} to="/admin/individuals">
+          <ListItemIcon>
+            <PersonIcon color="info" />
+          </ListItemIcon>
+          <ListItemText primary="Individuals" style={{ color: "background" }} />
         </ListItemButton>
       )}
       {userType.get("teams") && (
