@@ -5,6 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
@@ -53,12 +54,18 @@ export class CategoryService {
    * @param template_id template id
    * @returns all categories in template
    */
-  async findAll(template_id: number) {
-    return await this.prisma.category.findMany({
+  async findAll(template_id: number, role: Role) {
+    const data: Prisma.CategoryFindManyArgs = {
       where: {
         template_id,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    return await this.prisma.category.findMany(data);
   }
 
   /**
