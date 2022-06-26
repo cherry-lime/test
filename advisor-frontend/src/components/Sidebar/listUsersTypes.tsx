@@ -23,7 +23,7 @@ const assessor = new Map<string, boolean>([
 const admin = new Map<string, boolean>([
   ["home", true],
   ["evaluation", false],
-  ["teams", true],
+  ["teams", false],
   ["signout", true],
   ["settings", true],
   ["template", true],

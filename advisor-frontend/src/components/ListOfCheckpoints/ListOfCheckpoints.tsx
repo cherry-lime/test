@@ -7,11 +7,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
-import {
-  AssessmentAPP,
-  useGetAssessment,
-  useGetSaveAssessment,
-} from "../../api/AssessmentAPI";
+import { AssessmentAPP, useGetSaveAssessment } from "../../api/AssessmentAPI";
 import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
@@ -22,11 +18,11 @@ import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
  */
 function ListOfCheckpoints({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  assessmentId,
+  assessmentInfo,
   theme,
   feedback,
 }: {
-  assessmentId: number;
+  assessmentInfo: AssessmentAPP;
   theme: ThemeOptions;
   feedback: boolean;
 }) {
@@ -38,50 +34,27 @@ function ListOfCheckpoints({
 
   // GET ASSESSMENT INFORMATION
 
-  const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
   const [areaList, setAreaList] = useState<CategoryAPP[]>();
   const [answerList, setAnswerList] = useState<AnswerAPP[]>();
   const [checkpointAnswerList, setCheckpointAnswerList] =
     useState<Record<number, number | undefined>>();
 
-  // get assessment information from API
-  const {
-    status: assessmentStatus,
-    data: assessmentData,
-    error: assessmentError,
-  } = useGetAssessment(Number(assessmentId));
-
   // get area list from API
   const areasResponse = useGetCategories(
-    Number(assessmentInfo?.templateId),
+    Number(assessmentInfo.templateId),
     true
   );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
-    Number(assessmentInfo?.templateId),
+    Number(assessmentInfo.templateId),
     true
   );
 
   // get checkpoint answer list from API
-  const checkpointAnswerResponse = useGetSaveAssessment(assessmentId);
-
-  // set assessment info value
-  React.useEffect(() => {
-    switch (assessmentStatus) {
-      case "error":
-        // eslint-disable-next-line no-console
-        console.log(assessmentError);
-        break;
-      case "success":
-        if (assessmentData) {
-          setAssessmentInfo(assessmentData);
-        }
-        break;
-      default:
-        break;
-    }
-  }, [assessmentStatus, assessmentData]);
+  const checkpointAnswerResponse = useGetSaveAssessment(
+    Number(assessmentInfo.id)
+  );
 
   // set the area list value
   React.useEffect(() => {
@@ -130,8 +103,6 @@ function ListOfCheckpoints({
             checkpointAnswerResponse.data.forEach((a) => {
               answerDictionary[a.checkpointId] = a.answerId;
             });
-            console.log("answer dictionary");
-            console.log(checkpointAnswerResponse.data);
             setCheckpointAnswerList(answerDictionary);
           }
           break;
