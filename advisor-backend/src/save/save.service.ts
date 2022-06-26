@@ -116,6 +116,7 @@ export class SaveService {
     // Get checkpoints in assessment
     const checkpoints = categories
       .flatMap((category) => category.Checkpoint)
+      .filter((c) => !c.disabled)
       .filter((c) => {
         return !disabledMaturities.some((m) => m.maturity_id === c.maturity_id);
       });
