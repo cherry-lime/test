@@ -25,7 +25,6 @@ import DetailGen from "./components/SignInUP/DetailGen";
 import ErrorPopup, { RefObject } from "./components/ErrorPopup/ErrorPopup";
 import ErrorPage from "./pages/ErrorPage";
 
-
 function App() {
   // Import the global state variables that will be used throughout the session
   const { userRole } = useSelector((state: RootState) => state.userData);
@@ -36,7 +35,6 @@ function App() {
   // Call authentication API on pageload once
   const auth = authProfile(ref);
   useEffect(() => auth.mutate(), []);
-
 
   return (
     <div className="App">

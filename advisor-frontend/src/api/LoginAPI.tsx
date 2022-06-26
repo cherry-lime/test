@@ -82,7 +82,6 @@ export function useLogin(ref?: React.RefObject<RefObject>) {
   // Navigation hook, to be used after the user is logged in
   const navigate = useNavigate();
 
-
   return useMutation(
     ["Login"],
     (loginInfo: { username: string; password: string }) =>
