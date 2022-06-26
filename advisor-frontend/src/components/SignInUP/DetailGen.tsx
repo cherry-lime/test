@@ -22,6 +22,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useLoginTwo } from "../../api/LoginAPI";
+import INGTheme from "../../Theme";
 
 export default function DetailGen({ theme }: { theme: Theme }) {
   // Make global state variables accessible
@@ -42,7 +43,7 @@ export default function DetailGen({ theme }: { theme: Theme }) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={INGTheme}>
       <div // ING background image
         style={{
           backgroundImage: "url(/backpic.png)",
@@ -117,19 +118,17 @@ export default function DetailGen({ theme }: { theme: Theme }) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              border: 4,
-              borderColor: theme.palette.primary.main,
               borderRadius: "16px",
               bgcolor: "white",
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
-              <AccountCircleRoundedIcon />
+              <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
             </Avatar>
             <Typography
               variant="h6"
               align="center"
-              color="black"
+              color="text.secondary"
               fontWeight="fontWeightBold"
               sx={{
                 pt: 0,

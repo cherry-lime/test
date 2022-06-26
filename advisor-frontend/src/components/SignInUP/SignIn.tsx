@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircle";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
 import { Theme, ThemeProvider } from "@mui/material";
@@ -19,6 +19,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useLoginTwo } from "../../api/LoginAPI";
+import INGTheme from "../../Theme";
 
 // Sign in functionality to be used later
 export default function SignIn({ theme }: { theme: Theme }) {
@@ -41,8 +42,9 @@ export default function SignIn({ theme }: { theme: Theme }) {
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={INGTheme}>
       <div
         // ING colored image for background
         style={{
@@ -60,6 +62,7 @@ export default function SignIn({ theme }: { theme: Theme }) {
           onClick={handleClickOpen}
           sx={{
             color: "white",
+            mr: 250,
             mt: 1,
             float: "left",
             marginLeft: 2,
@@ -118,16 +121,14 @@ export default function SignIn({ theme }: { theme: Theme }) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              border: 4,
               padding: "20px 5px 0",
-              borderColor: theme.palette.primary.main,
               borderRadius: "16px",
               bgcolor: "white",
             }}
           >
             {/* Contact icon on top of username */}
             <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
-              <AccountCircleRoundedIcon />
+              <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
             </Avatar>
             <Box
               component="form"

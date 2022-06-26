@@ -18,6 +18,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { userRegister } from "../../api/LoginAPI";
+import INGTheme from "../../Theme";
 
 export default function Chooserole({ theme }: { theme: Theme }) {
   // Defines the role state to keep track of the selected role
@@ -39,7 +40,7 @@ export default function Chooserole({ theme }: { theme: Theme }) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={INGTheme}>
       <div
         // ING colored image for background
         style={{
@@ -106,6 +107,10 @@ export default function Chooserole({ theme }: { theme: Theme }) {
           maxWidth="xs"
           sx={{
             pt: 10,
+            alignContent: "center",
+            justifyContent: "center",
+            alignItems: "center",
+            display: "flex",
           }}
         >
           <Box
@@ -116,20 +121,18 @@ export default function Chooserole({ theme }: { theme: Theme }) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              border: 4,
-              borderColor: theme.palette.primary.main,
               borderRadius: "16px",
               bgcolor: "white",
             }}
           >
             {/* Conact rounded circle */}
             <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
-              <AccountCircleRoundedIcon />
+              <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
             </Avatar>
             <Typography
               variant="h6"
               align="center"
-              color="black"
+              color="text.secondary"
               fontWeight="fontWeightBold"
               sx={{
                 pt: 0,
@@ -141,14 +144,7 @@ export default function Chooserole({ theme }: { theme: Theme }) {
             </Typography>
             {/* The form for the drop down menu to pick a role */}
             <FormControl fullWidth>
-              <Select
-                variant="filled"
-                sx={{ m: 2 }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={userRole}
-                onChange={handleChange}
-              >
+              <Select sx={{ m: 2 }} value={userRole} onChange={handleChange}>
                 <MenuItem value="USER">User</MenuItem>
                 <MenuItem value="ASSESSOR">Assessor</MenuItem>
               </Select>
