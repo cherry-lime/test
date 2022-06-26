@@ -8,15 +8,15 @@ import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
 export type UserAPP = {
   id: GridRowId;
   name: string;
-  role: string;
+  role: UserRole;
   createdAt: string;
   updatedAt: string;
 };
 
-type UserAPI = {
+export type UserAPI = {
   user_id: number;
   username: string;
-  role: string;
+  role: UserRole;
   created_at: string;
   updated_at: string;
 };
