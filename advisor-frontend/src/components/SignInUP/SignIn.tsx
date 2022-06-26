@@ -42,6 +42,7 @@ export default function SignIn({ theme }: { theme: Theme }) {
     setOpen(false);
   };
 
+  console.log("Now in login")
   return (
     <ThemeProvider theme={theme}>
       <div

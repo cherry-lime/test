@@ -29,7 +29,10 @@ function App() {
   const { userRole } = useSelector((state: RootState) => state.userData);
   // Call authentication API on pageload once
   const auth = authProfile();
-  useEffect(() => auth.mutate(), []);
+  useEffect(() => {
+    auth.mutate();
+    console.log("Authenticated");
+  }, []);
   return (
     <div className="App">
       <GlobalStyles />
@@ -51,9 +54,6 @@ function App() {
       <Link to="/teams"> Teams</Link>
       <Link to="/user/failed"> Invalid</Link>
       <Routes>
-        {/* Redirect to initial page if there is an invalid URL */}
-        <Route path="*" element={<Navigate to="/" />} />
-
         <Route path="/login" element={<SignIn theme={INGTheme} />} />
         <Route path="/signup" element={<Chooserole theme={INGTheme} />} />
         <Route
