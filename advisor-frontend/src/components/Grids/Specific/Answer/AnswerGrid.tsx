@@ -43,16 +43,16 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   const ref = React.useRef<RefObject>(null);
 
   // Answer query
-  const { status, data, error } = useGetAnswers(templateId);
+  const { status, data } = useGetAnswers(templateId, ref);
 
   // Answer mutations
-  const patchAnswer = usePatchAnswer();
-  const postAnswer = usePostAnswer(templateId);
-  const deleteAnswer = useDeleteAnswer();
+  const patchAnswer = usePatchAnswer(ref);
+  const postAnswer = usePostAnswer(templateId, ref);
+  const deleteAnswer = useDeleteAnswer(ref);
 
   // Called when "status" of answers query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the 'Value' column is edited
@@ -75,8 +75,7 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
         setRows,
         patchAnswer as UseMutationResult,
         newRow,
-        oldRow,
-        ref
+        oldRow
       ),
     []
   );
@@ -84,19 +83,14 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(
-        setRows,
-        deleteAnswer as UseMutationResult,
-        rowId as number,
-        ref
-      );
+      handleDelete(setRows, deleteAnswer as UseMutationResult, rowId as number);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postAnswer as UseMutationResult, ref);
+    handleAdd(setRows, postAnswer as UseMutationResult);
   }, []);
 
   const columns = React.useMemo<GridColumns<AnswerAPP>>(

@@ -41,47 +41,36 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
   const ref = React.useRef<RefObject>(null);
 
   // Team query
-  const { status, data, error } = useGetMyTeams();
+  const { status, data } = useGetMyTeams(ref);
 
   // Team mutations
-  const patchTeam = usePatchTeam();
-  const postTeam = usePostTeam();
-  const deleteTeam = useDeleteTeam();
+  const patchTeam = usePatchTeam(ref);
+  const postTeam = usePostTeam(ref);
+  const deleteTeam = useDeleteTeam(ref);
 
   // Called when "status" of teams query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: TeamAPP, oldRow: TeamAPP) =>
-      processRowUpdate(
-        setRows,
-        patchTeam as UseMutationResult,
-        newRow,
-        oldRow,
-        ref
-      ),
+      processRowUpdate(setRows, patchTeam as UseMutationResult, newRow, oldRow),
     []
   );
 
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(
-        setRows,
-        deleteTeam as UseMutationResult,
-        rowId as number,
-        ref
-      );
+      handleDelete(setRows, deleteTeam as UseMutationResult, rowId as number);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postTeam as UseMutationResult, ref);
+    handleAdd(setRows, postTeam as UseMutationResult);
   }, []);
 
   const columns = React.useMemo<GridColumns<TeamAPP>>(

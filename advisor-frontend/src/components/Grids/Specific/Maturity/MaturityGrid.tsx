@@ -46,16 +46,16 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   const ref = React.useRef<RefObject>(null);
 
   // Maturity query
-  const { status, data, error } = useGetMaturities(templateId);
+  const { status, data } = useGetMaturities(templateId, undefined, ref);
 
   // Maturity mutations
-  const patchMaturity = usePatchMaturity();
-  const postMaturity = usePostMaturity(templateId);
-  const deleteMaturity = useDeleteMaturity();
+  const patchMaturity = usePatchMaturity(ref);
+  const postMaturity = usePostMaturity(templateId, ref);
+  const deleteMaturity = useDeleteMaturity(ref);
 
   // Called when "status" of maturities query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the 'Order' column is edited
@@ -72,8 +72,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         setRows,
         patchMaturity as UseMutationResult,
         newRow,
-        oldRow,
-        ref
+        oldRow
       ),
     []
   );
@@ -81,15 +80,10 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: MaturityAPP) => () => {
-      handleMove(
-        setRows,
-        patchMaturity as UseMutationResult,
-        {
-          ...row,
-          order: row.order - 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchMaturity as UseMutationResult, {
+        ...row,
+        order: row.order - 1,
+      });
     },
     []
   );
@@ -97,15 +91,10 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: MaturityAPP) => () => {
-      handleMove(
-        setRows,
-        patchMaturity as UseMutationResult,
-        {
-          ...row,
-          order: row.order + 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchMaturity as UseMutationResult, {
+        ...row,
+        order: row.order + 1,
+      });
     },
     []
   );
@@ -116,8 +105,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       handleDelete(
         setRows,
         deleteMaturity as UseMutationResult,
-        rowId as number,
-        ref
+        rowId as number
       );
     },
     []
@@ -125,7 +113,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postMaturity as UseMutationResult, ref);
+    handleAdd(setRows, postMaturity as UseMutationResult);
   }, []);
 
   const columns = React.useMemo<GridColumns<MaturityAPP>>(

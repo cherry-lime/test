@@ -46,17 +46,17 @@ export default function TemplateGrid({
   const ref = React.useRef<RefObject>(null);
 
   // Template query
-  const { status, data, error } = useGetTemplates(templateType);
+  const { status, data } = useGetTemplates(templateType, undefined, ref);
 
   // Template mutations
-  const patchTemplate = usePatchTemplate();
-  const postTemplate = usePostTemplate(templateType);
-  const deleteTemplate = useDeleteTemplate();
-  const duplicateTemplate = useDuplicateTemplate();
+  const patchTemplate = usePatchTemplate(ref);
+  const postTemplate = usePostTemplate(templateType, ref);
+  const deleteTemplate = useDeleteTemplate(ref);
+  const duplicateTemplate = useDuplicateTemplate(ref);
 
   // Called when "status" of templates query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when a row is edited
@@ -66,8 +66,7 @@ export default function TemplateGrid({
         setRows,
         patchTemplate as UseMutationResult,
         newRow,
-        oldRow,
-        ref
+        oldRow
       ),
     []
   );
@@ -78,8 +77,7 @@ export default function TemplateGrid({
       handleDelete(
         setRows,
         deleteTemplate as UseMutationResult,
-        rowId as number,
-        ref
+        rowId as number
       );
     },
     []
@@ -91,8 +89,7 @@ export default function TemplateGrid({
       handleDuplicate(
         setRows,
         duplicateTemplate as UseMutationResult,
-        rowId as number,
-        ref
+        rowId as number
       );
     },
     []
@@ -100,7 +97,7 @@ export default function TemplateGrid({
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postTemplate as UseMutationResult, ref);
+    handleAdd(setRows, postTemplate as UseMutationResult);
   }, []);
 
   const columns = React.useMemo<GridColumns<TemplateAPP>>(

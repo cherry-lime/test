@@ -46,16 +46,16 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
   const ref = React.useRef<RefObject>(null);
 
   // Subarea query
-  const { status, data, error } = useGetSubareas(categoryId);
+  const { status, data } = useGetSubareas(categoryId, undefined, ref);
 
   // Subarea mutations
-  const patchSubarea = usePatchSubarea();
-  const postSubarea = usePostSubarea(categoryId);
-  const deleteSubarea = useDeleteSubarea();
+  const patchSubarea = usePatchSubarea(ref);
+  const postSubarea = usePostSubarea(categoryId, ref);
+  const deleteSubarea = useDeleteSubarea(ref);
 
   // Called when "status" of subareas query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the 'Order' column is edited
@@ -72,8 +72,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
         setRows,
         patchSubarea as UseMutationResult,
         newRow,
-        oldRow,
-        ref
+        oldRow
       ),
     []
   );
@@ -81,15 +80,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: SubareaAPP) => () => {
-      handleMove(
-        setRows,
-        patchSubarea as UseMutationResult,
-        {
-          ...row,
-          order: row.order - 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchSubarea as UseMutationResult, {
+        ...row,
+        order: row.order - 1,
+      });
     },
     []
   );
@@ -97,15 +91,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: SubareaAPP) => () => {
-      handleMove(
-        setRows,
-        patchSubarea as UseMutationResult,
-        {
-          ...row,
-          order: row.order + 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchSubarea as UseMutationResult, {
+        ...row,
+        order: row.order + 1,
+      });
     },
     []
   );
@@ -116,8 +105,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
       handleDelete(
         setRows,
         deleteSubarea as UseMutationResult,
-        rowId as number,
-        ref
+        rowId as number
       );
     },
     []
@@ -125,7 +113,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postSubarea as UseMutationResult, ref);
+    handleAdd(setRows, postSubarea as UseMutationResult);
   }, []);
 
   const columns = React.useMemo<GridColumns<SubareaAPP>>(

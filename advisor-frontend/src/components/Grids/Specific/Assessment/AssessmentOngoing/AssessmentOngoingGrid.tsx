@@ -46,25 +46,25 @@ export default function AssessmentOngoingGrid({
   const ref = React.useRef<RefObject>(null);
 
   // Assessment query
-  const { status, data, error } =
+  const { status, data } =
     assessmentType === "TEAM" && teamId !== undefined
-      ? useGetMyTeamAssessments(false, teamId)
-      : useGetMyIndividualAssessments(false);
+      ? useGetMyTeamAssessments(false, teamId, ref)
+      : useGetMyIndividualAssessments(false, ref);
 
   // Assessment mutation
   const postAssessment =
     assessmentType === "TEAM" && teamId !== undefined
-      ? usePostAssessment(assessmentType, teamId)
-      : usePostAssessment(assessmentType);
+      ? usePostAssessment(assessmentType, teamId, ref)
+      : usePostAssessment(assessmentType, undefined, ref);
 
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postAssessment as UseMutationResult, ref);
+    handleAdd(setRows, postAssessment as UseMutationResult);
   }, []);
 
   const columns = React.useMemo<GridColumns<AssessmentAPP>>(

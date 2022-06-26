@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
+import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
 
 export type AnswerAPP = {
   id: GridRowId;
@@ -40,44 +41,80 @@ function answerToAPI(answerAPP: AnswerAPP) {
 }
 
 // Get all answers from database
-export function useGetAnswers(templateId: number) {
-  return useQuery(["GET", "/template", templateId, "/answer"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/template/${templateId}/answer`);
+export function useGetAnswers(
+  templateId: number,
+  ref?: React.RefObject<RefObject>
+) {
+  return useQuery(
+    ["GET", "/template", templateId, "/answer"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/template/${templateId}/answer`);
 
-    // Convert data to answersAPP
-    const answersAPP = data.map((answerAPI: AnswerAPI) =>
-      answerToAPP(answerAPI)
-    );
+      // Convert data to answersAPP
+      const answersAPP = data.map((answerAPI: AnswerAPI) =>
+        answerToAPP(answerAPI)
+      );
 
-    // Convert data to answerAPP
-    return answersAPP as AnswerAPP[];
-  });
+      // Convert data to answerAPP
+      return answersAPP as AnswerAPP[];
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Get answer with id from database
-export function useGetAnswer() {
-  return useQuery(["GET", "/answer", "/answer_id}"], async (answerId) => {
-    // Get data from database
-    const { data } = await API.get(`/answer/${answerId}`);
+export function useGetAnswer(ref?: React.RefObject<RefObject>) {
+  return useQuery(
+    ["GET", "/answer", "/answer_id}"],
+    async (answerId) => {
+      // Get data from database
+      const { data } = await API.get(`/answer/${answerId}`);
 
-    return answerToAPP(data) as AnswerAPP;
-  });
+      return answerToAPP(data) as AnswerAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Post answer to database
-export function usePostAnswer(templateId: number) {
-  return useMutation(["POST", "/template", templateId, "/answer"], async () => {
-    // Get response data from database
-    const { data } = await API.post(`/template/${templateId}/answer`);
+export function usePostAnswer(
+  templateId: number,
+  ref?: React.RefObject<RefObject>
+) {
+  return useMutation(
+    ["POST", "/template", templateId, "/answer"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.post(`/template/${templateId}/answer`);
 
-    // Convert data to answerAPP
-    return answerToAPP(data) as AnswerAPP;
-  });
+      // Convert data to answerAPP
+      return answerToAPP(data) as AnswerAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Patch answer in database
-export function usePatchAnswer() {
+export function usePatchAnswer(ref?: React.RefObject<RefObject>) {
   return useMutation<AnswerAPP, Error, AnswerAPP>(
     ["PATCH", "/answer", "/{answer_id}"],
     async (answerAPP: AnswerAPP) => {
@@ -89,12 +126,19 @@ export function usePatchAnswer() {
 
       // Convert data to answerAPP
       return answerToAPP(data) as AnswerAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Delete answer from database
-export function useDeleteAnswer() {
+export function useDeleteAnswer(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["DELETE", "/answer", "/{answer_id}"],
     async (answerId: number) => {
@@ -103,6 +147,13 @@ export function useDeleteAnswer() {
 
       // Convert data to answerAPP
       return answerToAPP(data) as AnswerAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }

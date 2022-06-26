@@ -63,23 +63,20 @@ export default function CheckpointGrid({
   const ref = React.useRef<RefObject>(null);
 
   // Checkpoint queries
-  const {
-    status: statusCheckpoints,
-    data: dataCheckpoints,
-    error: errorCheckpoints,
-  } = useGetCheckpoints(categoryId);
+  const { status: statusCheckpoints, data: dataCheckpoints } =
+    useGetCheckpoints(categoryId, undefined, ref);
 
-  const {
-    status: statusTopics,
-    data: dataTopics,
-    error: errorTopics,
-  } = useGetTopics(templateId, true);
+  const { status: statusTopics, data: dataTopics } = useGetTopics(
+    templateId,
+    true,
+    ref
+  );
 
-  const {
-    status: statusMaturities,
-    data: dataMaturities,
-    error: errorMaturities,
-  } = useGetMaturities(templateId, true);
+  const { status: statusMaturities, data: dataMaturities } = useGetMaturities(
+    templateId,
+    true,
+    ref
+  );
 
   // Checkpoint mutations
   const patchCheckpoint = usePatchCheckpoint();
@@ -88,29 +85,17 @@ export default function CheckpointGrid({
 
   // Called when "status" of checkpoints query is changed
   React.useEffect(() => {
-    handleInit(
-      setRows,
-      statusCheckpoints,
-      dataCheckpoints,
-      errorCheckpoints,
-      ref
-    );
+    handleInit(setRows, statusCheckpoints, dataCheckpoints);
   }, [statusCheckpoints]);
 
   // Called when "status" of topics query is changed
   React.useEffect(() => {
-    handleInit(setTopics, statusTopics, dataTopics, errorTopics, ref);
+    handleInit(setTopics, statusTopics, dataTopics);
   }, [statusTopics]);
 
   // Called when "status" of maturities query is changed
   React.useEffect(() => {
-    handleInit(
-      setMaturities,
-      statusMaturities,
-      dataMaturities,
-      errorMaturities,
-      ref
-    );
+    handleInit(setMaturities, statusMaturities, dataMaturities);
   }, [statusMaturities]);
 
   // Called when the 'Order' column is edited
@@ -127,8 +112,7 @@ export default function CheckpointGrid({
         setRows,
         patchCheckpoint as UseMutationResult,
         newRow,
-        oldRow,
-        ref
+        oldRow
       ),
     []
   );
@@ -136,15 +120,10 @@ export default function CheckpointGrid({
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: CheckpointAPP) => () => {
-      handleMove(
-        setRows,
-        patchCheckpoint as UseMutationResult,
-        {
-          ...row,
-          order: row.order - 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchCheckpoint as UseMutationResult, {
+        ...row,
+        order: row.order - 1,
+      });
     },
     []
   );
@@ -152,15 +131,10 @@ export default function CheckpointGrid({
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: CheckpointAPP) => () => {
-      handleMove(
-        setRows,
-        patchCheckpoint as UseMutationResult,
-        {
-          ...row,
-          order: row.order + 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchCheckpoint as UseMutationResult, {
+        ...row,
+        order: row.order + 1,
+      });
     },
     []
   );
@@ -178,8 +152,7 @@ export default function CheckpointGrid({
         setRows,
         patchCheckpoint as UseMutationResult,
         { ...row, topics: topicIds },
-        row,
-        ref
+        row
       );
     },
     []
@@ -194,8 +167,7 @@ export default function CheckpointGrid({
         setRows,
         patchCheckpoint as UseMutationResult,
         { ...row, maturityId },
-        row,
-        ref
+        row
       );
     },
     []
@@ -207,8 +179,7 @@ export default function CheckpointGrid({
       handleDelete(
         setRows,
         deleteCheckpoint as UseMutationResult,
-        rowId as number,
-        ref
+        rowId as number
       );
     },
     []
@@ -216,7 +187,7 @@ export default function CheckpointGrid({
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postCheckpoint as UseMutationResult, ref);
+    handleAdd(setRows, postCheckpoint as UseMutationResult);
   }, []);
 
   const columns = React.useMemo<GridColumns<CheckpointAPP>>(

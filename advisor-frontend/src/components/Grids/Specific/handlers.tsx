@@ -26,21 +26,12 @@ export function preProcessEditOrder(
 export function handleInit(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   status: "error" | "idle" | "loading" | "success",
-  data: GridRowModel[] | undefined,
-  error: unknown,
-  ref: React.RefObject<RefObject>
+  data: GridRowModel[] | undefined
 ) {
-  switch (status) {
-    case "error":
-      handleError(ref, error);
-      break;
-    case "success":
-      if (data) {
-        initRows(setRows, data);
-      }
-      break;
-    default:
-      break;
+  if (status === "success") {
+    if (data) {
+      initRows(setRows, data);
+    }
   }
 }
 
@@ -48,8 +39,7 @@ export async function processRowUpdate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   patchMutation: UseMutationResult,
   newRow: GridRowModel,
-  oldRow: GridRowModel,
-  ref: React.RefObject<RefObject>
+  oldRow: GridRowModel
 ) {
   // If row has not changed
   if (JSON.stringify(newRow) === JSON.stringify(oldRow)) {
@@ -68,8 +58,6 @@ export async function processRowUpdate(
     // Update internal state
     return newRow;
   } catch (error) {
-    handleError(ref, error);
-
     // Keep internal state
     return oldRow;
   }
@@ -78,30 +66,22 @@ export async function processRowUpdate(
 export function handleMove(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   patchMutation: UseMutationResult,
-  row: GridRowModel,
-  ref: React.RefObject<RefObject>
+  row: GridRowModel
 ) {
   patchMutation.mutate(row, {
     onSuccess: (movedRow: GridRowModel) => {
       moveRow(setRows, movedRow, movedRow.order);
-    },
-    onError: (error: unknown) => {
-      handleError(ref, error);
     },
   });
 }
 
 export function handleAdd(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  addMutation: UseMutationResult,
-  ref: React.RefObject<RefObject>
+  addMutation: UseMutationResult
 ) {
   addMutation.mutate(undefined, {
     onSuccess: (addedRow: GridRowModel) => {
       addRow(setRows, addedRow);
-    },
-    onError: (error: unknown) => {
-      handleError(ref, error);
     },
   });
 }
@@ -109,15 +89,11 @@ export function handleAdd(
 export function handleDelete(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   deleteMutation: UseMutationResult,
-  rowId: number,
-  ref: React.RefObject<RefObject>
+  rowId: number
 ) {
   deleteMutation.mutate(rowId, {
     onSuccess: (deletedRow: GridRowModel) => {
       deleteRow(setRows, deletedRow);
-    },
-    onError: (error: unknown) => {
-      handleError(ref, error);
     },
   });
 }
@@ -125,15 +101,11 @@ export function handleDelete(
 export function handleDuplicate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   duplicateMutation: UseMutationResult,
-  row: GridRowModel,
-  ref: React.RefObject<RefObject>
+  row: GridRowModel
 ) {
   duplicateMutation.mutate(row, {
     onSuccess: (duplicatedRow: GridRowModel) => {
       addRow(setRows, duplicatedRow);
-    },
-    onError: (error: unknown) => {
-      handleError(ref, error);
     },
   });
 }
@@ -142,15 +114,11 @@ export function handleChange(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   patchMutation: UseMutationResult,
   newRow: GridRowModel,
-  oldRow: GridRowModel,
-  ref: React.RefObject<RefObject>
+  oldRow: GridRowModel
 ) {
   patchMutation.mutate(newRow, {
     onSuccess: (changedRow: GridRowModel) => {
       updateRow(setRows, changedRow, oldRow);
-    },
-    onError: (error: unknown) => {
-      handleError(ref, error);
     },
   });
 }

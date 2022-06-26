@@ -42,15 +42,15 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   const ref = React.useRef<RefObject>(null);
 
   // User query
-  const { status, data, error } = useGetUsers();
+  const { status, data } = useGetUsers(undefined, ref);
 
   // User mutations
-  const patchUser = usePatchUser();
-  const deleteUser = useDeleteUser();
+  const patchUser = usePatchUser(ref);
+  const deleteUser = useDeleteUser(ref);
 
   // Called when "status" of user query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when maturity level changes
@@ -60,8 +60,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         setRows,
         patchUser as UseMutationResult,
         { ...row, role: event.target.value },
-        row,
-        ref
+        row
       );
     },
     []
@@ -70,12 +69,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(
-        setRows,
-        deleteUser as UseMutationResult,
-        rowId as number,
-        ref
-      );
+      handleDelete(setRows, deleteUser as UseMutationResult, rowId as number);
     },
     []
   );

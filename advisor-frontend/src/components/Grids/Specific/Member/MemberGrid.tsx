@@ -38,25 +38,20 @@ export default function MemberGrid({
   const ref = React.useRef<RefObject>(null);
 
   // Member query
-  const { status, data, error } = useGetMembersTeam(teamId, userRole);
+  const { status, data } = useGetMembersTeam(teamId, userRole, ref);
 
   // Member mutation
-  const deleteMember = useDeleteMemberTeam(teamId);
+  const deleteMember = useDeleteMemberTeam(teamId, ref);
 
   // Called when "status" of member query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(
-        setRows,
-        deleteMember as UseMutationResult,
-        rowId as number,
-        ref
-      );
+      handleDelete(setRows, deleteMember as UseMutationResult, rowId as number);
     },
     []
   );

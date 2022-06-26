@@ -17,21 +17,11 @@ import INGTheme from "../../../Theme";
 import API from "../../../api/_API";
 
 export function useLogin() {
-  return useMutation(
-    ["Login Admin"],
-    () =>
-      API.post(`/auth/login`, {
-        username: "symbol_enemy_throat",
-        password: "1ed4d82c-5ccd-447c-938e-d3c1efec1044",
-      }),
-    {
-      onSuccess: (data: any) => {
-        // console.log(data);
-      },
-      onError: (error: any) => {
-        // console.log(error);
-      },
-    }
+  return useMutation(["Login Admin"], () =>
+    API.post(`/auth/login`, {
+      username: "symbol_enemy_throat",
+      password: "1ed4d82c-5ccd-447c-938e-d3c1efec1044",
+    })
   );
 }
 

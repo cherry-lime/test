@@ -31,14 +31,11 @@ export default function RecommendationGrid({
   const ref = React.useRef<RefObject>(null);
 
   // Feedback query
-  const { status, data, error } = useGetFeedbackAssessment(
-    assessmentId,
-    topicId
-  );
+  const { status, data } = useGetFeedbackAssessment(assessmentId, topicId, ref);
 
   // Called when "status" of feedback query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   const columns = React.useMemo<GridColumns<RecommendationAPP>>(

@@ -41,14 +41,14 @@ export default function AssessmentCompletedGrid({
   const ref = React.useRef<RefObject>(null);
 
   // Assessment query
-  const { status, data, error } =
+  const { status, data } =
     assessmentType === "TEAM" && teamId !== undefined
-      ? useGetMyTeamAssessments(true, teamId)
-      : useGetMyIndividualAssessments(true);
+      ? useGetMyTeamAssessments(true, teamId, ref)
+      : useGetMyIndividualAssessments(true, ref);
 
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   const columns = React.useMemo<GridColumns<AssessmentAPP>>(

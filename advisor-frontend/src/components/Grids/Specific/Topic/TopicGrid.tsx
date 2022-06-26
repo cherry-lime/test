@@ -38,16 +38,16 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   const ref = React.useRef<RefObject>(null);
 
   // Topic query
-  const { status, data, error } = useGetTopics(templateId);
+  const { status, data } = useGetTopics(templateId, undefined, ref);
 
   // Topic mutations
-  const patchTopic = usePatchTopic();
-  const postTopic = usePostTopic(templateId);
-  const deleteTopic = useDeleteTopic();
+  const patchTopic = usePatchTopic(ref);
+  const postTopic = usePostTopic(templateId, ref);
+  const deleteTopic = useDeleteTopic(ref);
 
   // Called when "status" of templates query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when a row is edited
@@ -57,8 +57,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
         setRows,
         patchTopic as UseMutationResult,
         newRow,
-        oldRow,
-        ref
+        oldRow
       ),
     []
   );
@@ -75,19 +74,14 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
-      handleDelete(
-        setRows,
-        deleteTopic as UseMutationResult,
-        rowId as number,
-        ref
-      );
+      handleDelete(setRows, deleteTopic as UseMutationResult, rowId as number);
     },
     []
   );
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postTopic as UseMutationResult, ref);
+    handleAdd(setRows, postTopic as UseMutationResult);
   }, []);
 
   const columns = React.useMemo<GridColumns<TopicAPP>>(

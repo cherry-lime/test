@@ -50,16 +50,16 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   const ref = React.useRef<RefObject>(null);
 
   // Category query
-  const { status, data, error } = useGetCategories(templateId);
+  const { status, data } = useGetCategories(templateId, undefined, ref);
 
   // Category mutations
-  const patchCategory = usePatchCategory();
-  const postCategory = usePostCategory(templateId);
-  const deleteCategory = useDeleteCategory();
+  const patchCategory = usePatchCategory(ref);
+  const postCategory = usePostCategory(templateId, ref);
+  const deleteCategory = useDeleteCategory(ref);
 
   // Called when "status" of categories query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error, ref);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the 'Order' column is edited
@@ -76,8 +76,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         setRows,
         patchCategory as UseMutationResult,
         newRow,
-        oldRow,
-        ref
+        oldRow
       ),
     []
   );
@@ -85,15 +84,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: CategoryAPP) => () => {
-      handleMove(
-        setRows,
-        patchCategory as UseMutationResult,
-        {
-          ...row,
-          order: row.order - 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchCategory as UseMutationResult, {
+        ...row,
+        order: row.order - 1,
+      });
     },
     []
   );
@@ -101,15 +95,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: CategoryAPP) => () => {
-      handleMove(
-        setRows,
-        patchCategory as UseMutationResult,
-        {
-          ...row,
-          order: row.order + 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchCategory as UseMutationResult, {
+        ...row,
+        order: row.order + 1,
+      });
     },
     []
   );
@@ -121,8 +110,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         setRows,
         patchCategory as UseMutationResult,
         { ...row, color: color.hex },
-        row,
-        ref
+        row
       );
     },
     []
@@ -134,8 +122,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       handleDelete(
         setRows,
         deleteCategory as UseMutationResult,
-        rowId as number,
-        ref
+        rowId as number
       );
     },
     []
@@ -143,7 +130,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postCategory as UseMutationResult, ref);
+    handleAdd(setRows, postCategory as UseMutationResult);
   }, []);
 
   const columns = React.useMemo<GridColumns<CategoryAPP>>(
