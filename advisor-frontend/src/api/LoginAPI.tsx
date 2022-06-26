@@ -50,8 +50,6 @@ export function userRegister() {
 export function authProfile() {
   // Import the Slice functions to access the Redux functions
   const dispatch = useDispatch();
-  // Navigation hook, to be used after the user is logged in
-  const navigate = useNavigate();
 
   return useMutation(["Auth profile"], () => API.get(`/auth/profile`), {
     onSuccess: async (data: any) => {
@@ -74,16 +72,19 @@ export function authProfile() {
 export function useLoginTwo() {
   // Calls authentication API this way to avoid hook-in-hook issues
   const auth = authProfile();
+  // Navigation hook, to be used after the user is logged in
+  const navigate = useNavigate();
 
   return useMutation(
     ["Login Admin"],
     (loginInfo: { username: string; password: string }) =>
       API.post(`/auth/login`, loginInfo),
     {
-      onSuccess: (data: any) => {
-        auth.mutate();
+      onSuccess: async (data: any) => {
+        await auth.mutate();
         // eslint-disable-next-line no-console
         console.log(data);
+        await navigate(`/`);
       },
       onError: (error: any) => {
         // TODO: Display if login has failed.

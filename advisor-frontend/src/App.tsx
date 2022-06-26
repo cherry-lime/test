@@ -1,4 +1,4 @@
-import { Link, Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -15,7 +15,6 @@ import ListOfTemplates from "./pages/admin/templates/ListOfTemplates/ListOfTempl
 import ListOfIndividuals from "./pages/admin/ListOfIndividuals/ListOfIndividuals";
 import Area from "./pages/admin/templates/Area/Area";
 import Template from "./pages/admin/templates/Template/Template";
-import Example from "./pages/ExamplePage";
 import GlobalStyles from "./GlobalStyles";
 import INGTheme from "./Theme";
 import SignIn from "./components/SignInUP/SignIn";
@@ -23,35 +22,31 @@ import Chooserole from "./components/SignInUP/Chooserole";
 import { RootState } from "./app/store";
 import { authProfile } from "./api/LoginAPI";
 import DetailGen from "./components/SignInUP/DetailGen";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   // Import the global state variables that will be used throughout the session
   const { userRole } = useSelector((state: RootState) => state.userData);
   // Call authentication API on pageload once
   const auth = authProfile();
-  useEffect(() => auth.mutate(), []);
+  useEffect(() => {
+    auth.mutate();
+  }, []);
+
   return (
     <div className="App">
       <GlobalStyles />
-      <Link data-testid="home" to="/home">
-        Home
-      </Link>
-      <Link to="/user" state="user" data-testid="user">
-        User
-      </Link>
-      <Link to="/assessor" state="assessor" data-testid="assessor">
-        Assessor
-      </Link>
-      <Link to="/admin" state="admin" data-testid="admin">
-        Admin
-      </Link>
-      <Link to="/login" state="admin" data-testid="login">
-        login
-      </Link>
-      <Link to="/teams"> Teams</Link>
-      <Link to="/user/failed"> Invalid</Link>
       <Routes>
-        <Route path="/login" element={<SignIn theme={INGTheme} />} />
+        <Route
+          path="/login"
+          element={
+            userRole !== "NONE" ? (
+              <Navigate to={`/${userRole}`} />
+            ) : (
+              <SignIn theme={INGTheme} />
+            )
+          }
+        />
         <Route path="/signup" element={<Chooserole theme={INGTheme} />} />
         <Route
           path="/signup/details"
@@ -136,9 +131,12 @@ function App() {
             )
           }
         />
-        <Route element={<Home />} />
-
-        <Route path="/example" element={<Example />} />
+        {/* Redirect to initial page if there is an invalid URL */}
+        <Route
+          path="/*"
+          element={userRole !== "NONE" ? <Navigate to="/error" /> : <> </>}
+        />
+        <Route path="/error" element={<ErrorPage />} />
       </Routes>
     </div>
   );
