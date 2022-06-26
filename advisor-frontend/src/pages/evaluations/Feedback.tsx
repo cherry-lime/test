@@ -201,11 +201,11 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         />
       )}
 
-      {value === "Checkpoints" && (
+      {value === "Checkpoints" && assessmentInfo && (
         <ListOfCheckpoints
           feedback
           theme={theme}
-          assessmentId={Number(assessmentId)}
+          assessmentInfo={assessmentInfo}
         />
       )}
 
