@@ -105,27 +105,21 @@ export function useDeleteTeam() {
 }
 
 // Get team with id from database
-export function useGetInviteTokenTeam() {
-  return useQuery(
-    ["GET", "/teams", "/{team_id}", "invite_token"],
-    async (teamId) => {
-      // Get data from database
-      const { data } = await API.get(`/teams/${teamId}/invite_token`);
+export function useGetInviteTokenTeam(teamId: number) {
+  return useQuery(["GET", "/teams", teamId, "invite_token"], async () => {
+    // Get data from database
+    const { data } = await API.get(`/teams/${teamId}/invite_token`);
 
-      return data as string;
-    }
-  );
+    return data as string;
+  });
 }
 
 // Patch team in database
-export function useJoinInviteTokenTeam() {
-  return useMutation(
-    ["PATCH", "/teams", "/join", "invite_token"],
-    async (inviteToken) => {
-      // Get response data from database
-      const { data } = await API.patch(`/teams/join/${inviteToken}`);
+export function useJoinInviteTokenTeam(inviteToken: string) {
+  return useMutation(["PATCH", "/teams", "/join", inviteToken], async () => {
+    // Get response data from database
+    const { data } = await API.patch(`/teams/join/${inviteToken}`);
 
-      return data;
-    }
-  );
+    return data;
+  });
 }

@@ -1,7 +1,15 @@
-import { Theme } from "@mui/material";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  Theme,
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import React, { useState } from "react";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import TextfieldEdit from "../../../components/TextfieldEdit/TextfieldEdit";
@@ -10,7 +18,11 @@ import AssessmentOngoingGrid from "../../../components/Grids/Specific/Assessment
 import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessment/AssessmentCompleted/AssessmentCompletedGrid";
 import { RootState } from "../../../app/store";
 import Textfield from "../../../components/Textfield/Textfield";
-import { TeamAPP, useGetTeam, usePatchTeam } from "../../../api/TeamAPI";
+import {
+  TeamAPP,
+  useGetTeam,
+  usePatchTeam,
+} from "../../../api/TeamAPI";
 
 /**
  * Page providing team details
@@ -106,6 +118,7 @@ function Team({ theme }: { theme: Theme }) {
           handleSave={changeDept}
         />
       )}
+
       {userRole !== "ASSESSOR" && (
         <Textfield
           text={teamInfo ? teamInfo.department : ""}
@@ -115,6 +128,31 @@ function Team({ theme }: { theme: Theme }) {
         />
       )}
 
+      {userRole === "ASSESSOR" && <h3>Invite Token</h3>}
+
+      {userRole === "ASSESSOR" && teamInfo && (
+        <FormControl sx={{ width: "inherit" }} variant="standard">
+          <OutlinedInput
+            readOnly
+            sx={{ backgroundColor: "white" }}
+            id="token"
+            value={teamInfo.inviteToken}
+            startAdornment={
+              <InputAdornment position="start">
+                <IconButton
+                  onClick={() =>
+                    navigator.clipboard.writeText(
+                      teamInfo.inviteToken.toString()
+                    )
+                  }
+                >
+                  <ContentCopyIcon />
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+      )}
       <h3>Assessors</h3>
 
       <MemberGrid

@@ -82,7 +82,7 @@ function App() {
           <> </>
         )}
         {/* Only route to the teams pages if the user has USER or ASSESSOR rights */}
-        {userRole === "USER" && "ASSESSOR" ? (
+        {userRole === "USER" || userRole === "ASSESSOR" ? (
           <>
             <Route path="/teams" element={<TeamList theme={INGTheme} />} />
             <Route path="/teams/:teamId" element={<Team theme={INGTheme} />} />
