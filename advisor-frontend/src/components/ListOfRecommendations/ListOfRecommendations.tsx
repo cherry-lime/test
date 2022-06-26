@@ -78,6 +78,7 @@ function ListOfRecommendations({
           theme={theme}
           assessmentId={1} // assessmentId
           topicId={topic}
+          isEditable={userRole === "ASSESSOR"} // TODO: Add && assessment === done later
         />
       )}
     </div>
