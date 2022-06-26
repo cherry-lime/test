@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { AssessmentType, User } from '@prisma/client';
+import { FeedbackService } from '../feedback/feedback.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { FeedbackDto } from './dto/feedback.dto';
@@ -13,7 +14,10 @@ import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
 @Injectable()
 export class AssessmentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly feedbackService: FeedbackService
+  ) {}
 
   /**
    * Create assessment
@@ -212,7 +216,7 @@ export class AssessmentService {
    * @throws Assessment not found
    */
   async complete(id: number) {
-    return await this.prisma.assessment
+    const assessment = await this.prisma.assessment
       .update({
         where: {
           assessment_id: id,
@@ -228,6 +232,10 @@ export class AssessmentService {
           throw new InternalServerErrorException();
         }
       });
+
+    await this.feedbackService.saveRecommendations(assessment);
+
+    return assessment;
   }
 
   /**
@@ -257,7 +265,25 @@ export class AssessmentService {
     );
 
     if (!userInAssessment) {
-      console.log(userInAssessment);
+      if (assessment.assessment_type === AssessmentType.INDIVIDUAL) {
+        return null;
+      }
+
+      const isInTeam = await this.prisma.team.findMany({
+        where: {
+          team_id: assessment.team_id,
+          UserInTeam: {
+            some: {
+              user_id: user.user_id,
+            },
+          },
+        },
+      });
+
+      if (isInTeam) {
+        return assessment;
+      }
+
       return null;
     }
 
