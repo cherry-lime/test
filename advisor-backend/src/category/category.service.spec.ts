@@ -9,6 +9,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -73,7 +74,9 @@ describe('CategoryService', () => {
 
   describe('findAll', () => {
     it('should return all categories', async () => {
-      expect(categoryService.findAll(1)).resolves.toEqual([aCategory]);
+      expect(categoryService.findAll(1, Role.ADMIN)).resolves.toEqual([
+        aCategory,
+      ]);
     });
   });
 

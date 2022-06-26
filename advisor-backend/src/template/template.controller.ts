@@ -27,8 +27,9 @@ import { TopicService } from '../topic/topic.service';
 import { AnswerDto } from '../answer/dto/answer.dto';
 import { AnswerService } from '../answer/answer.service';
 import { Roles } from '../common/decorators/roles.decorator';
-import { Role } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import { CloneTemplateService } from './clone-template.service';
+import AuthUser from '../common/decorators/auth-user.decorator';
 
 @Controller('template')
 @ApiTags('template')
@@ -53,8 +54,8 @@ export class TemplateController {
   })
   @Get('')
   @Roles(Role.ADMIN)
-  async findAll(): Promise<TemplateDto[]> {
-    return this.templateService.findAll();
+  async findAll(@AuthUser() user: User): Promise<TemplateDto[]> {
+    return this.templateService.findAll(user.role);
   }
 
   /**
@@ -172,9 +173,10 @@ export class TemplateController {
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
   async findAllCategories(
-    @Param('template_id', ParseIntPipe) id: number
+    @Param('template_id', ParseIntPipe) id: number,
+    @AuthUser() user: User
   ): Promise<CategoryDto[]> {
-    return this.categoryService.findAll(id);
+    return this.categoryService.findAll(id, user.role);
   }
 
   /**
@@ -212,9 +214,10 @@ export class TemplateController {
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
   async findAllMaturities(
-    @Param('template_id', ParseIntPipe) id: number
+    @Param('template_id', ParseIntPipe) id: number,
+    @AuthUser() user: User
   ): Promise<MaturityDto[]> {
-    return this.maturityService.findAll(id);
+    return this.maturityService.findAll(id, user.role);
   }
 
   /**
@@ -229,8 +232,11 @@ export class TemplateController {
     type: TopicDto,
     isArray: true,
   })
-  async findAllTopics(@Param('template_id', ParseIntPipe) template_id: number) {
-    return this.topicService.findAll(template_id);
+  async findAllTopics(
+    @Param('template_id', ParseIntPipe) template_id: number,
+    @AuthUser() user: User
+  ) {
+    return this.topicService.findAll(template_id, user.role);
   }
 
   /**
@@ -264,8 +270,11 @@ export class TemplateController {
     type: AnswerDto,
     isArray: true,
   })
-  async getAnswers(@Param('template_id', ParseIntPipe) template_id: number) {
-    return this.answerService.findAll(template_id);
+  async getAnswers(
+    @Param('template_id', ParseIntPipe) template_id: number,
+    @AuthUser() user: User
+  ) {
+    return this.answerService.findAll(template_id, user.role);
   }
 
   /**
