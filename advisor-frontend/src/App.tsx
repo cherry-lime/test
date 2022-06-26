@@ -50,8 +50,87 @@ function App() {
       <Link to="/login" state="admin" data-testid="login">
         login
       </Link>
-      <Link to="/example"> Examples</Link>
+      <Link to="/teams"> Teams</Link>
+      <Link to="/user/failed"> Invalid</Link>
       <Routes>
+        {/* Redirect to initial page if there is an invalid URL */}
+        <Route path="*" element={<Navigate to="/" />} />
+
+        <Route path="/login" element={<SignIn theme={INGTheme} />} />
+        <Route path="/signup" element={<Chooserole theme={INGTheme} />} />
+        <Route
+          path="/signup/details"
+          element={<DetailGen theme={INGTheme} />}
+        />
+        <Route path="/home" element={<Home />} />
+        {/* Only route to the user pages if the user has USER rights */}
+        {userRole === "USER" ? (
+          <>
+            <Route path="/user" element={<UserInterface />} />
+            <Route
+              path="/user/self_evaluations"
+              element={<ListOfSelfEvals theme={INGTheme} />}
+            />
+            <Route
+              path="/user/self_evaluations/:assessmentId"
+              element={<Evaluation team={false} theme={INGTheme} />}
+            />
+            <Route
+              path="/user/self_evaluations/feedback/:assessmentId"
+              element={<Feedback team={false} theme={INGTheme} />}
+            />
+          </>
+        ) : (
+          <> </>
+        )}
+        {/* Only route to the teams pages if the user has USER or ASSESSOR rights */}
+        {userRole === "USER" && "ASSESSOR" ? (
+          <>
+            <Route path="/teams" element={<TeamList theme={INGTheme} />} />
+            <Route path="/teams/:teamId" element={<Team theme={INGTheme} />} />
+            <Route
+              path="/teams/:teamId/:assessmentId"
+              element={<Evaluation team theme={INGTheme} />}
+            />
+            <Route
+              path="/teams/:teamId/feedback/:assessmentId"
+              element={<Feedback team theme={INGTheme} />}
+            />
+          </>
+        ) : (
+          <> </>
+        )}
+
+        {/* Only route to the assessor pages if the user has ASSESSOR rights */}
+        {userRole === "ASSESSOR" ? (
+          <Route path="/assessor" element={<AssessorInterface />} />
+        ) : (
+          <> </>
+        )}
+        {/* Only route to the admin pages if the user has ADMIN rights */}
+        {userRole === "ADMIN" ? (
+          <>
+            <Route path="/admin" element={<AdminInterface />} />
+            <Route
+              path="/admin/individuals"
+              element={<ListOfIndividuals theme={INGTheme} />}
+            />
+            <Route
+              path="/admin/templates"
+              element={<ListOfTemplates theme={INGTheme} />}
+            />
+            <Route
+              path="/admin/templates/:templateId"
+              element={<Template theme={INGTheme} />}
+            />
+            <Route
+              path="/admin/templates/:templateId/:areaId"
+              element={<Area theme={INGTheme} />}
+            />
+          </>
+        ) : (
+          <> </>
+        )}
         <Route
           path="/"
           element={
@@ -62,58 +141,7 @@ function App() {
             )
           }
         />
-        <Route path="/login" element={<SignIn theme={INGTheme} />} />
-        <Route path="/signup" element={<Chooserole theme={INGTheme} />} />
-        <Route
-          path="/signup/details"
-          element={<DetailGen theme={INGTheme} />}
-        />
-        <Route path="/home" element={<Home />} />
 
-        <Route path="/user" element={<UserInterface />} />
-        <Route
-          path="/user/self_evaluations"
-          element={<ListOfSelfEvals theme={INGTheme} />}
-        />
-        <Route
-          path="/user/self_evaluations/:assessmentId"
-          element={<Evaluation team={false} theme={INGTheme} />}
-        />
-        <Route
-          path="/user/self_evaluations/feedback/:assessmentId"
-          element={<Feedback team={false} theme={INGTheme} />}
-        />
-
-        <Route path="/teams" element={<TeamList theme={INGTheme} />} />
-        <Route path="/teams/:teamId" element={<Team theme={INGTheme} />} />
-        <Route
-          path="/teams/:teamId/:assessmentId"
-          element={<Evaluation team theme={INGTheme} />}
-        />
-        <Route
-          path="/teams/:teamId/feedback/:assessmentId"
-          element={<Feedback team theme={INGTheme} />}
-        />
-
-        <Route path="/assessor" element={<AssessorInterface />} />
-
-        <Route path="/admin" element={<AdminInterface />} />
-        <Route
-          path="/admin/individuals"
-          element={<ListOfIndividuals theme={INGTheme} />}
-        />
-        <Route
-          path="/admin/templates"
-          element={<ListOfTemplates theme={INGTheme} />}
-        />
-        <Route
-          path="/admin/templates/:templateId"
-          element={<Template theme={INGTheme} />}
-        />
-        <Route
-          path="/admin/templates/:templateId/:areaId"
-          element={<Area theme={INGTheme} />}
-        />
         <Route path="/example" element={<Example />} />
       </Routes>
     </div>

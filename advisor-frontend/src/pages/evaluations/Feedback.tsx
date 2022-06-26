@@ -1,4 +1,4 @@
-import { Card, Stack, Tab, Tabs, Theme, Button } from "@mui/material";
+import { Card, Stack, Tab, Tabs, Theme, Button, Box } from "@mui/material";
 import React, { useState } from "react";
 // import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import { RootState } from "../../app/store";
 import pdf from "./pdf";
 import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
+import ProgressOverallCard from "../../components/PageCard/SpecificPageCards/ProgressOverallCard";
 
 /**
  * Page with the feedback related to a self assessment
@@ -117,6 +118,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           </Tabs>
         </Stack>
       </Card>
+      {value === "Recommendations" && <ProgressOverallCard />}
 
       {/* this is not actually a subarea, it's the automated feedback */}
       {value !== "Progress" && (
@@ -124,7 +126,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           theme={theme}
           title=""
           summary="Below you will find a list of items that you or your squad can review in order to start improving your testing maturity. This list is based on your answers and prioritized to maximize your testing maturity."
-          description="TIP: only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
+          description="Only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
+          tip
         />
       )}
 
@@ -165,9 +168,14 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         variant="contained"
         onClick={createPDF}
       >
-        <Stack>
+        <Stack direction="row">
           <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />
-          Download as PDF
+          <Box sx={{ p: 1.0 }}>
+            {" "}
+            <b>
+              <u>Download as PDF</u>
+            </b>
+          </Box>
         </Stack>
       </Button>
     </PageLayout>

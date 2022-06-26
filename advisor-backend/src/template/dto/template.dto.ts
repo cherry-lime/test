@@ -18,6 +18,9 @@ export class TemplateDto {
   @IsEnum(AssessmentType)
   template_type: AssessmentType;
 
+  @ApiProperty({ default: '' })
+  template_feedback: string;
+
   @ApiProperty({ default: true })
   @IsBoolean()
   enabled: boolean;
