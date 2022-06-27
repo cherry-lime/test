@@ -337,7 +337,7 @@ export default async function createPDF(
       topics
     )
   ).forEach((s) => tables.push(s));
-  console.log(allAreas);
+  //console.log(allAreas);
 
   pdf(tables, `Feedback for assessment ${assessmentId}`, filename);
 }

@@ -93,13 +93,14 @@ function ListOfCheckpoints({
   React.useEffect(() => {
     if (checkpointAnswerResponse.data) {
       switch (checkpointAnswerResponse.status) {
-        case "success":
+        case "success": {
           const answerDictionary: Record<number, number | undefined> = {};
           checkpointAnswerResponse.data.forEach((a) => {
             answerDictionary[a.checkpointId] = a.answerId;
           })
           setCheckpointAnswerList(answerDictionary);
           break;
+        }
         default:
           break;
       }
