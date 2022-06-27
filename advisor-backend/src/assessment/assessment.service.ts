@@ -240,8 +240,9 @@ export class AssessmentService {
         }
       });
 
-    const areAllCheckpointsFilled =
-      this.saveService.areAllAnswersFilled(assessment);
+    const areAllCheckpointsFilled = await this.saveService.areAllAnswersFilled(
+      assessment
+    );
 
     if (!areAllCheckpointsFilled) {
       throw new BadRequestException(
