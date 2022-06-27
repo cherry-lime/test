@@ -372,7 +372,7 @@ export function useGetSaveAssessment(
     async () => {
       // Get response data from database
       const { data } = await API.get(`/assessment/${assessmentId}/save`);
-      console.log(data);
+
       // Convert data to checkpointsAPP
       const checkpointsAPP = data.map(
         (assessmentCheckpointAPI: AssessmentCheckpointAPI) =>

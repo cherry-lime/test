@@ -25,7 +25,6 @@ function TextfieldEdit({
   theme: ThemeOptions;
   rows: number;
   handleSave: (intermediateValue: string) => void;
-  // eslint-disable-next-line react/require-default-props
   label?: string;
 }) {
   /*
@@ -80,5 +79,9 @@ function TextfieldEdit({
     </ThemeProvider>
   );
 }
+
+TextfieldEdit.defaultProps = {
+  label: "",
+};
 
 export default TextfieldEdit;

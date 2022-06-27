@@ -2,7 +2,6 @@ import { ThemeOptions, ThemeProvider } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import PropTypes from "prop-types";
 import "./Subarea.css";
 
 /*  
@@ -58,14 +57,5 @@ function Subarea({
     </ThemeProvider>
   );
 }
-/*
-props declarations:
-subarea card that contains title, description with its theme
-*/
-Subarea.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  theme: PropTypes.node.isRequired,
-};
 
 export default Subarea;
