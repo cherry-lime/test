@@ -71,14 +71,6 @@ export default function SidebarList({ userType }: SidebarListProps) {
           <ListItemText primary="Templates" style={{ color: "background" }} />
         </ListItemButton>
       )}
-      {userType.get("settings") && (
-        <ListItemButton component={Link} to="/">
-          <ListItemIcon>
-            <SettingsIcon color="info" />
-          </ListItemIcon>
-          <ListItemText primary="Settings" style={{ color: "background" }} />
-        </ListItemButton>
-      )}
       {userType.get("signout") && (
         <ListItemButton
           component={Link}
