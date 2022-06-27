@@ -17,7 +17,6 @@ import RecommendationGrid from "../Grids/Specific/Recommendation/RecommendationG
  */
 function ListOfRecommendations({
   theme,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentId,
   templateId,
 }: {
@@ -71,7 +70,7 @@ function ListOfRecommendations({
       {topic !== undefined && (
         <RecommendationGrid
           theme={theme}
-          assessmentId={1} // assessmentId
+          assessmentId={assessmentId} 
           topicId={topic}
           isEditable={userRole === "ASSESSOR"} // TODO: Add && assessment === done later
         />
