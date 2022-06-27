@@ -47,7 +47,6 @@ function ListOfRecommendations({
   // first render: get the area list and set the area
   React.useEffect(() => {
     if (status === "success") {
-      console.log(data[0]);
       setTopicList(data);
       setTopic(data[0].id as number);
     }
