@@ -114,7 +114,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
         >
           <Button variant="contained" onClick={handleClickFinish}>
             {" "}
-            Finish Assessment{" "}
+            Finish Evaluation{" "}
           </Button>
         </Link>
         <ErrorPopup ref={ref} />
