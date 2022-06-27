@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { AppService } from './app.service';
+import { Unauthorized } from './common/decorators/unauthorized.decorrator';
 
 @Controller()
 export class AppController {
@@ -8,6 +9,7 @@ export class AppController {
 
   @ApiResponse({ status: 200, description: 'Hello World' })
   @Get()
+  @Unauthorized()
   getHello(): string {
     return this.appService.getHello();
   }

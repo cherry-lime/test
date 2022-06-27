@@ -21,7 +21,6 @@ import { Team } from './dto/team.dto';
 import { TeamMembers } from './dto/team-member.dto';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
-import { Roles } from '../common/decorators/roles.decorator';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
 
@@ -201,12 +200,15 @@ export class TeamsController {
     description: 'Team member with given user id not found',
   })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  @Roles(Role.ADMIN, Role.ASSESSOR)
   async deleteTeamMember(
     @AuthUser() user: User,
     @Param('team_id', ParseIntPipe) team_id: number,
     @Param('user_id', ParseIntPipe) user_id: number
   ): Promise<TeamMembers> {
+    if (user.role === Role.USER && user.user_id !== user_id) {
+      throw new ForbiddenException();
+    }
+
     const isUserInTeam = await this.teamsService
       .isUserInTeam(user.user_id, team_id)
       .catch((error) => {
