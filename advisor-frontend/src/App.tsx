@@ -38,7 +38,6 @@ function App() {
     auth.mutate();
   }, []);
 
-  
   // If the authentication is done, render the routing
   if (auth.isSuccess || auth.isError) {
     return (
@@ -162,7 +161,7 @@ function App() {
     );
   }
   // If the authentication is in progress, show blank page
-  return( <div className="App"> </div>);
+  return <div className="App"> </div>;
 }
 
 export default App;
