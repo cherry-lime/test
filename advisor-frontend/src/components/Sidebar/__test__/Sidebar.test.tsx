@@ -25,7 +25,6 @@ it("user sidebar rendering without crash", () => {
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Home");
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Evaluations");
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Teams");
-  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Settings");
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Sign Out");
   expect(screen.getByTestId("SidebarTest")).not.toHaveTextContent("Templates");
   fireEvent.click(screen.getByTestId("DrawerButton"));
@@ -48,7 +47,6 @@ it("assessor sidebar rendering without crash", () => {
   );
   expect(screen.getByTestId("SidebarTest")).not.toHaveTextContent("Templates");
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Teams");
-  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Settings");
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Sign Out");
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
@@ -70,7 +68,6 @@ it("admin sidebar rendering without crash", () => {
   );
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Templates");
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Individuals");
-  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Settings");
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Sign Out");
   fireEvent.click(screen.getByTestId("DrawerButton"));
 });
