@@ -1,5 +1,5 @@
 import { Card, Stack, Tab, Tabs, Theme, Button, Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
@@ -19,10 +19,10 @@ import {
   useGetSaveAssessment,
   usePostFeedbackAssessment,
 } from "../../api/AssessmentAPI";
-import ProgressOverallCard from "../../components/PageCard/SpecificPageCards/ProgressOverallCard";
 import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
+import ErrorPopup, { RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 const showFeedbackText = (
   team: boolean,
@@ -50,8 +50,12 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     setValue(newValue);
   };
 
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
   const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
-  const assessmentResponse = useGetAssessment(Number(assessmentId));
+
+  const assessmentResponse = useGetAssessment(Number(assessmentId), ref);
 
   React.useEffect(() => {
     switch (assessmentResponse.status) {
@@ -69,7 +73,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     }
   }, [assessmentResponse.status, assessmentResponse.data]);
 
-  const postFeedback = usePostFeedbackAssessment(Number(assessmentId));
+  const postFeedback = usePostFeedbackAssessment(Number(assessmentId), ref);
 
   const changeFeedback = (newFeedback: string) => {
     postFeedback.mutate(newFeedback, {
@@ -91,18 +95,21 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   // get area list from API
   const areasResponse = useGetCategories(
     Number(assessmentInfo?.templateId),
-    true
+    true,
+    ref
   );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
     Number(assessmentInfo?.templateId),
-    true
+    true,
+    ref
   );
 
   // get checkpoint answer list from API
   const checkpointAnswerResponse = useGetSaveAssessment(
-    Number(assessmentInfo?.id)
+    Number(assessmentInfo?.id),
+    ref
   );
 
   // set the area list value
@@ -162,7 +169,11 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
 
   const [topicList, setTopicList] = useState<TopicAPP[]>([]);
-  const topicResponse = useGetTopics(Number(assessmentInfo?.templateId), true);
+  const topicResponse = useGetTopics(
+    Number(assessmentInfo?.templateId),
+    true,
+    ref
+  );
 
   // set assessment info value
   React.useEffect(() => {
@@ -224,7 +235,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           </Tabs>
         </Stack>
       </Card>
-      {value === "Recommendations" && <ProgressOverallCard />}
 
       {/* this is not actually a subarea, it's the automated feedback */}
       {value !== "Progress" && (
@@ -291,6 +301,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           </Box>
         </Stack>
       </Button>
+      <ErrorPopup ref={ref} />
     </PageLayout>
   );
 }

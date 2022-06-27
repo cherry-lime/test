@@ -5,10 +5,11 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import { RootState } from "../../app/store";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import RecommendationGrid from "../Grids/Specific/Recommendation/RecommendationGrid";
 
 /**
@@ -29,8 +30,11 @@ function ListOfRecommendations({
     (state: RootState) => state.userData
   );
 
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
   // Fetch the GetTopics API
-  const { status, data } = useGetTopics(templateId);
+  const { status, data } = useGetTopics(templateId, undefined, ref);
 
   const [topicList, setTopicList]: [
     TopicAPP[] | undefined,
@@ -74,6 +78,7 @@ function ListOfRecommendations({
           isEditable={userRole === "ASSESSOR"} // TODO: Add && assessment === done later
         />
       )}
+      <ErrorPopup ref={ref} />
     </div>
   );
 }

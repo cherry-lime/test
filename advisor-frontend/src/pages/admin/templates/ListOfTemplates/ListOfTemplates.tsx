@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FormControl, MenuItem, Select, Theme } from "@mui/material";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
@@ -8,6 +8,9 @@ import {
   useGetTemplates,
   usePatchTemplate,
 } from "../../../../api/TemplateAPI";
+import ErrorPopup, {
+  RefObject,
+} from "../../../../components/ErrorPopup/ErrorPopup";
 
 /**
  * Page containing the list of all existing templates
@@ -23,14 +26,21 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
     useState<TemplateAPP>();
   const [activeTeamTemplate, setActiveTeamTemplate] = useState<TemplateAPP>();
 
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
   // Template queries
   const { status: statusIndividual, data: dataIndividual } =
     useGetTemplates("INDIVIDUAL");
 
-  const { status: statusTeam, data: dataTeam } = useGetTemplates("TEAM");
+  const { status: statusTeam, data: dataTeam } = useGetTemplates(
+    "TEAM",
+    undefined,
+    ref
+  );
 
   // Template mutation
-  const patchTemplate = usePatchTemplate();
+  const patchTemplate = usePatchTemplate(ref);
 
   useEffect(() => {
     if (statusIndividual === "success") {
@@ -142,6 +152,7 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         </FormControl>
         <TemplateGrid theme={theme} templateType="TEAM" />
       </PageLayout>
+      <ErrorPopup ref={ref} />
     </div>
   );
 }
