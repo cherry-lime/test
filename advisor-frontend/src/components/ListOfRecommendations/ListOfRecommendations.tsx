@@ -7,13 +7,9 @@ import {
 } from "@mui/material";
 import React, { Dispatch, useState } from "react";
 import { useSelector } from "react-redux";
+import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import { RootState } from "../../app/store";
 import RecommendationGrid from "../Grids/Specific/Recommendation/RecommendationGrid";
-
-type Topic = {
-  topicId: number;
-  name: string;
-};
 
 /**
  * Returns dropdown menu for topic choice
@@ -23,27 +19,23 @@ function ListOfRecommendations({
   theme,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentId,
+  templateId,
 }: {
   theme: Theme;
   assessmentId: number;
+  templateId: number;
 }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { userId, userRole } = useSelector(
     (state: RootState) => state.userData
   );
 
-  // BEGINNING OF HARDCODED DATA USED TO TEST
-
-  const hardcodedTopic1 = { topicId: 14, name: "Risk Analysis" };
-  const hardcodedTopic2 = { topicId: 4, name: "Test Strategy" };
-
-  const hardcodedTopicList = [hardcodedTopic1, hardcodedTopic2];
-
-  // END OF HARDCODED DATA USED TO TEST
+  // Fetch the GetTopics API
+  const { status, data } = useGetTopics(templateId);
 
   const [topicList, setTopicList]: [
-    Topic[] | undefined,
-    Dispatch<Topic[] | undefined>
+    TopicAPP[] | undefined,
+    Dispatch<TopicAPP[] | undefined>
   ] = useState();
 
   const [topic, setTopic]: [number | undefined, Dispatch<number | undefined>] =
@@ -55,9 +47,12 @@ function ListOfRecommendations({
 
   // first render: get the area list and set the area
   React.useEffect(() => {
-    setTopicList(hardcodedTopicList);
-    setTopic(hardcodedTopicList[0].topicId);
-  }, []);
+    if (status === "success") {
+      console.log(data[0]);
+      setTopicList(data);
+      setTopic(data[0].id as number);
+    }
+  }, [status]);
 
   return (
     <div style={{ width: "inherit", display: "contents" }}>
@@ -65,7 +60,7 @@ function ListOfRecommendations({
         <FormControl sx={{ width: "inherit" }}>
           <Select value={topic} onChange={handleTopicChange}>
             {topicList.map((t) => (
-              <MenuItem key={`menu-topic-${t.topicId}`} value={t.topicId}>
+              <MenuItem key={`menu-topic-${t.id}`} value={t.id}>
                 {t.name}
               </MenuItem>
             ))}
