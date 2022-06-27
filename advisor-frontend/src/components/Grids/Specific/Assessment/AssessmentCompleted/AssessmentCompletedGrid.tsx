@@ -49,7 +49,7 @@ export default function AssessmentCompletedGrid({
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   const columns = React.useMemo<GridColumns<AssessmentAPP>>(
     () => [

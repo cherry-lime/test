@@ -53,7 +53,7 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   // Called when "status" of answers query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when the 'Value' column is edited
   const preProcessEditValue = React.useCallback(

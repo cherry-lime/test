@@ -46,7 +46,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   // Called when "status" of templates query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(

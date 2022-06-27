@@ -50,7 +50,7 @@ export default function RecommendationGrid({
   // Called when "status" of recommendation query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(

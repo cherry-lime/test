@@ -60,7 +60,7 @@ export default function AssessmentOngoingGrid({
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {

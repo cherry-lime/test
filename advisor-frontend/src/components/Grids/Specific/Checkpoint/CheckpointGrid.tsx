@@ -86,17 +86,17 @@ export default function CheckpointGrid({
   // Called when "status" of checkpoints query is changed
   React.useEffect(() => {
     handleInit(setRows, statusCheckpoints, dataCheckpoints);
-  }, [statusCheckpoints]);
+  }, [statusCheckpoints, dataCheckpoints]);
 
   // Called when "status" of topics query is changed
   React.useEffect(() => {
     handleInit(setTopics, statusTopics, dataTopics);
-  }, [statusTopics]);
+  }, [statusTopics, dataTopics]);
 
   // Called when "status" of maturities query is changed
   React.useEffect(() => {
     handleInit(setMaturities, statusMaturities, dataMaturities);
-  }, [statusMaturities]);
+  }, [statusMaturities, dataMaturities]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(

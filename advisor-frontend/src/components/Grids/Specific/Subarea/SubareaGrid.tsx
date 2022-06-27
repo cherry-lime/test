@@ -56,7 +56,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
   // Called when "status" of subareas query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(

@@ -56,7 +56,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when "status" of maturities query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
