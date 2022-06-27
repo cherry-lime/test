@@ -42,7 +42,8 @@ function answerToAPI(answerAPP: AnswerAPP) {
 
 // Get all answers from database
 export function useGetAnswers(
-  templateId: number, enabledFilter?: boolean,
+  templateId: number,
+  enabledFilter?: boolean,
   ref?: React.RefObject<RefObject>
 ) {
   return useQuery(
@@ -73,7 +74,7 @@ export function useGetAnswers(
           handleError(ref, error);
         }
       },
-      enabled: !!templateId
+      enabled: !!templateId,
     }
   );
 }

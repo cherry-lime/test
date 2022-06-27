@@ -81,7 +81,7 @@ function Team({ theme }: { theme: Theme }) {
   };
 
   return (
-    <PageLayout title={`Team ${teamId}`} sidebarType={userTypes[userRole]}>
+    <PageLayout title={data?.name as string} sidebarType={userTypes[userRole]}>
       <h2> Team Information </h2>
       <h3> Country </h3>
 

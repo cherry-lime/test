@@ -333,11 +333,11 @@ export default async function createPDF(
       allAreas,
       checkpointHeaders,
       checkpointAnswers,
-      answerList, 
+      answerList,
       topics
     )
   ).forEach((s) => tables.push(s));
-  console.log(allAreas)
+  console.log(allAreas);
 
   pdf(tables, `Feedback for assessment ${assessmentId}`, filename);
 }

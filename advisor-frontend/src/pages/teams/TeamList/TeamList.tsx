@@ -16,7 +16,7 @@ function TeamList({ theme }: { theme: Theme }) {
     (state: RootState) => state.userData
   );
 
-  const [token, setToken] = useState("Enter token here");
+  const [token, setToken] = useState("");
   const saveToken = (newToken: string) => {
     setToken(newToken);
   };
@@ -36,6 +36,7 @@ function TeamList({ theme }: { theme: Theme }) {
               handleSave={saveToken}
               text={token}
               theme={theme}
+              label="Enter token"
               rows={1}
             />
           </Box>

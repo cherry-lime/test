@@ -67,7 +67,7 @@ export function useGetTopics(
           handleError(ref, error);
         }
       },
-      enabled: !!templateId
+      enabled: !!templateId,
     }
   );
 }
@@ -88,7 +88,7 @@ export function useGetTopic(topicId: number, ref?: React.RefObject<RefObject>) {
           handleError(ref, error);
         }
       },
-      enabled: !!topicId
+      enabled: !!topicId,
     }
   );
 }

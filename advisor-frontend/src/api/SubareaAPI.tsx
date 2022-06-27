@@ -82,7 +82,7 @@ export function useGetSubareas(
           handleError(ref, error);
         }
       },
-      enabled: !!categoryId
+      enabled: !!categoryId,
     }
   );
 }

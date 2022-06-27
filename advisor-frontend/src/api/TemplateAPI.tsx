@@ -106,7 +106,10 @@ export function useGetTemplates(
 }
 
 // Get template with id from database
-export function useGetTemplate(templateId: number, ref?: React.RefObject<RefObject>) {
+export function useGetTemplate(
+  templateId: number,
+  ref?: React.RefObject<RefObject>
+) {
   return useQuery(
     ["GET", "/template", templateId],
     async () => {

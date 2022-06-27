@@ -91,7 +91,7 @@ export function useGetCheckpoints(
           handleError(ref, error);
         }
       },
-      enabled: !!categoryId
+      enabled: !!categoryId,
     }
   );
 }
