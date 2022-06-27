@@ -36,13 +36,9 @@ function App() {
   const auth = authProfile(ref);
   useEffect(() => {
     auth.mutate();
-    console.log(userRole);
   }, []);
 
-  // If the authentication is in progress, show blank page
-  if (auth.isLoading) {
-    return <> </>;
-  }
+  
   // If the authentication is done, render the routing
   if (auth.isSuccess || auth.isError) {
     return (
@@ -165,6 +161,8 @@ function App() {
       </div>
     );
   }
+  // If the authentication is in progress, show blank page
+  return( <div className="App"> </div>);
 }
 
 export default App;
