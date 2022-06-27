@@ -1,4 +1,3 @@
-import { createTheme } from "@mui/material";
 import { render, cleanup, screen, fireEvent } from "@testing-library/react";
 import { QueryClientProvider } from "react-query";
 import Checkpoint from "../Checkpoint";
