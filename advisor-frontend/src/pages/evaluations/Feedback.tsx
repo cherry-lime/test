@@ -128,7 +128,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   }, [answersResponse]);
 
   React.useEffect(() => {
-    //console.log(checkpointAnswerResponse.status);
+    // console.log(checkpointAnswerResponse.status);
     if (checkpointAnswerResponse.data) {
       switch (checkpointAnswerResponse.status) {
         case "success": {
@@ -166,7 +166,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   }, [topicResponse.status, topicResponse.data]);
 
   const download = () => {
-    //console.log(checkpointAnswerList);
+    // console.log(checkpointAnswerList);
     if (
       assessmentId &&
       areaList &&
