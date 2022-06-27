@@ -81,6 +81,12 @@ function Template({ theme }: { theme: Theme }) {
           sidebarType={userType.ADMIN}
         >
           <h2> Feedback Textbox </h2>
+          <p style={{ margin: "0px" }}>
+            This is the automated textfield that appears at the top of every
+            assessment. It might contain an explanation of the recommendations
+            list as well as some notes or tips for the person reviewing their
+            feedback.
+          </p>
           <TextfieldEdit
             rows={5}
             theme={theme}
