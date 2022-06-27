@@ -1,6 +1,5 @@
 import { createTheme } from "@mui/material";
 import { render, cleanup } from "@testing-library/react";
-import { useState } from "react";
 import TextfieldEdit from "../TextfieldEdit";
 
 //  cleanup after each test case
