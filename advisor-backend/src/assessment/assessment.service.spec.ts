@@ -13,6 +13,7 @@ import {
 import { aTeam } from '../prisma/mock/mockTeam';
 import { AssessmentType } from '@prisma/client';
 import { aFullUser } from '../prisma/mock/mockUser';
+import { SaveService } from '../save/save.service';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -27,6 +28,11 @@ describe('AssessmentService', () => {
       .useMocker((token) => {
         if (token === PrismaService) {
           return mockPrisma;
+        }
+        if (token === SaveService) {
+          return {
+            areAllAnswersFilled: jest.fn().mockResolvedValue(true),
+          };
         }
         if (typeof token === 'function') {
           const mockMetadata = moduleMocker.getMetadata(
