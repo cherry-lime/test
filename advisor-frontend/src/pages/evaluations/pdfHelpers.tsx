@@ -7,6 +7,12 @@ import {
   checkpointToAPP,
 } from "../../api/CheckpointAPI";
 import { SubareaAPI, SubareaAPP, subareaToAPP } from "../../api/SubareaAPI";
+import {
+  RecommendationAPI,
+  RecommendationAPP,
+  recommendationToAPP,
+} from "../../api/AssessmentAPI";
+import { TopicAPP } from "../../api/TopicAPI";
 
 export async function getArea(areaId: number) {
   const area = await API.get(`/category/${areaId}`);
@@ -51,4 +57,36 @@ export async function getSubareas(areaId: number) {
   );
 
   return subareasFilteredAPP as SubareaAPP[];
+}
+
+export async function getTopicRecommendations(
+  assessmentId: number,
+  topicId: number
+) {
+  // Get response data from database
+  const { data } = await API.get(`/assessment/${assessmentId}/feedback`, {
+    params: { topic_id: topicId },
+  });
+
+  // Convert data to recommendationAPP
+  const recommendationsAPP = data.map((recommendationAPI: RecommendationAPI) =>
+    recommendationToAPP(recommendationAPI)
+  );
+
+  // Return response
+  return recommendationsAPP as RecommendationAPP[];
+}
+
+export async function getRecommendations(
+  assessmentId: number,
+  topicIds: TopicAPP[]
+) {
+  const recList: Record<string, RecommendationAPP[]> = {};
+  // eslint-disable-next-line no-restricted-syntax
+  for (const t of topicIds) {
+    // eslint-disable-next-line no-await-in-loop
+    const rec = await getTopicRecommendations(assessmentId, Number(t.id));
+    recList[t.name] = rec;
+  }
+  return recList;
 }

@@ -10,7 +10,7 @@ import ListOfCheckpoints from "../../components/ListOfCheckpoints/ListOfCheckpoi
 import TextfieldEdit from "../../components/TextfieldEdit/TextfieldEdit";
 import Textfield from "../../components/Textfield/Textfield";
 import { RootState } from "../../app/store";
-import pdf, { createPDF } from "./pdf";
+import createPDF  from "./pdf";
 import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
 import {
@@ -32,28 +32,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   const { assessmentId } = useParams();
 
   const { userRole } = useSelector((state: RootState) => state.userData);
-
-  // hardcoded to test pdf generation
-  const recs = [
-    { order: 1, description: "bla", additionalInfo: "hello" },
-    { order: 2, description: "bla", additionalInfo: "hello" },
-  ];
-  // hardcoded to test pdf generation
-  const checkpoints = [
-    {
-      number: 1,
-      description:
-        "this is a checkpoint description this is supposed to be quite long in order to test how it will look like in a table, so i'm just writing random things in hopes that it will work properly and none of the text disappears or goes over another",
-      topics: "topic 1, topic 2",
-      answer: "yes",
-    },
-    {
-      number: 1,
-      description: "this is a checkpoint description",
-      topics: "topic 4",
-      answer: "no",
-    },
-  ];
 
   const [value, setValue] = useState("Recommendations");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -203,7 +181,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       createPDF(
         Number(assessmentId),
         areaList,
-        answerList,
         checkpointAnswerList,
         topicList,
         answerList

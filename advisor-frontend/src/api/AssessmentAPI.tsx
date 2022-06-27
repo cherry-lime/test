@@ -100,13 +100,13 @@ export type RecommendationAPP = {
   additionalInfo: string;
 };
 
-type RecommendationAPI = {
+export type RecommendationAPI = {
   order: number;
   feedback_text: string;
   feedback_additional_information: string;
 };
 
-function recommendationToAPP(recommendationAPI: RecommendationAPI) {
+export function recommendationToAPP(recommendationAPI: RecommendationAPI) {
   return {
     id: recommendationAPI.order,
     order: recommendationAPI.order,

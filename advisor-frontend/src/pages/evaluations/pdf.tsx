@@ -1,14 +1,16 @@
 /* eslint-disable max-lines */
 import JsPDF from "jspdf";
 import { AnswerAPP } from "../../api/AnswerAPI";
-import {
-  AssessmentCheckpointAPP,
-  RecommendationAPP,
-} from "../../api/AssessmentAPI";
+import { RecommendationAPP } from "../../api/AssessmentAPI";
 import { CategoryAPP } from "../../api/CategoryAPI";
 import { CheckpointAPP } from "../../api/CheckpointAPI";
 import { TopicAPP } from "../../api/TopicAPI";
-import { getAreas, getCheckpoints, getSubareas } from "./pdfHelpers";
+import {
+  getAreas,
+  getCheckpoints,
+  getRecommendations,
+  getSubareas,
+} from "./pdfHelpers";
 
 type Table = {
   title: string;
@@ -70,7 +72,7 @@ async function getAreaTables(
     // eslint-disable-next-line no-await-in-loop
     const subareas = await getSubareas(Number(a.id));
     tables.push({
-      title: a.name,
+      title: `Checkpoints: ${a.name}`,
       sections: subareas.map((s) => ({
         title: s.name,
         text: [s.summary, s.description],
@@ -84,6 +86,23 @@ async function getAreaTables(
       headers: checkpointHeaders,
     });
   }
+  return tables;
+}
+
+function getRecTables(
+  recs: Record<string, RecommendationAPP[]>,
+  topics: TopicAPP[],
+  recsHeaders: string[]
+) {
+  const tables: Table[] = [];
+  topics.forEach((t) => {
+    tables.push({
+      title: `Recommendations: ${t.name}`,
+      sections: [],
+      data: recs[t.name].map((c) => [c.order, c.description, c.additionalInfo]),
+      headers: recsHeaders,
+    });
+  });
   return tables;
 }
 
@@ -227,7 +246,7 @@ function addTable(
   return nextY;
 }
 
-export default function pdf(tables: Table[], title: string, filename: string) {
+function pdf(tables: Table[], title: string, filename: string) {
   const doc = new JsPDF({
     orientation: "l",
     unit: "pt",
@@ -292,26 +311,32 @@ export default function pdf(tables: Table[], title: string, filename: string) {
   doc.save(filename);
 }
 
-export const createPDF = async (
+export default async function createPDF(
   assessmentId: number,
   areas: CategoryAPP[],
-  answers: AnswerAPP[],
   checkpointAnswers: Record<number, number | undefined>,
   topics: TopicAPP[],
   answerList: AnswerAPP[]
-) => {
+) {
   const filename = `Feedback-${assessmentId}.pdf`;
   const recsHeaders = ["Priority", "Recommendation", "Additional Info"];
   const checkpointHeaders = ["Order", "Description", "Topics", "Answer"];
 
+  const tables: Table[] = [];
+  const recs = await getRecommendations(assessmentId, topics);
+
+  getRecTables(recs, topics, recsHeaders).forEach((s) => tables.push(s));
+
   const allAreas = await getAreas(areas.map((a) => Number(a.id)));
-  const tables = await getAreaTables(
-    allAreas,
-    checkpointHeaders,
-    checkpointAnswers,
-    answerList,
-    topics
-  );
+  (
+    await getAreaTables(
+      allAreas,
+      checkpointHeaders,
+      checkpointAnswers,
+      answerList,
+      topics
+    )
+  ).forEach((s) => tables.push(s));
 
   pdf(tables, `Feedback for assessment ${assessmentId}`, filename);
-};
+}
