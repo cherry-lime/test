@@ -80,6 +80,7 @@ export class AssessmentService {
           ...createAssessmentDto,
           feedback_text: template.template_feedback,
           template_id: template.template_id,
+          information: template.information,
           AssessmentParticipants: {
             create: users,
           },
