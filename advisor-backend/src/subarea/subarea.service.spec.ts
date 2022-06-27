@@ -9,6 +9,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -71,7 +72,9 @@ describe('SubareaService', () => {
 
   describe('findAll', () => {
     it('should return all subareas', async () => {
-      expect(subareaService.findAll(1)).resolves.toEqual([aSubarea]);
+      expect(subareaService.findAll(1, Role.ADMIN)).resolves.toEqual([
+        aSubarea,
+      ]);
     });
   });
 
@@ -101,7 +104,7 @@ describe('SubareaService', () => {
     });
 
     it('should throw an error if category not found', async () => {
-      jest.spyOn(prisma.subArea, 'update').mockRejectedValue({ code: 'P2025' });
+      jest.spyOn(prisma.subArea, 'findUnique').mockResolvedValueOnce(null);
       await expect(subareaService.update(1, aSubarea)).rejects.toThrowError(
         NotFoundException
       );
@@ -121,7 +124,9 @@ describe('SubareaService', () => {
     });
 
     it('should throw an error if subarea is not found', async () => {
-      jest.spyOn(prisma.subArea, 'delete').mockRejectedValue({ code: 'P2025' });
+      jest
+        .spyOn(prisma.subArea, 'delete')
+        .mockRejectedValueOnce({ code: 'P2025' });
       await expect(subareaService.delete(1)).rejects.toThrowError(
         NotFoundException
       );

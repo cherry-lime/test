@@ -8,10 +8,10 @@ export class CategoryDto {
   @ApiProperty({ default: 'New Category' })
   category_name: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: '#FF0000' })
   color: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
   @Min(1)
   order: number;
 

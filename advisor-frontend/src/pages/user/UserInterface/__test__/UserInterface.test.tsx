@@ -1,23 +1,28 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import App from "../../../../App";
 import { store } from "../../../../app/store";
+import UserInterface from "../UserInterface";
+
+const queryClient = new QueryClient();
 
 test("app rendering/navigating from user interface to self-evals", async () => {
   render(
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <UserInterface />
+        </BrowserRouter>
+      </QueryClientProvider>
     </Provider>
   );
-  const button = screen.getByTestId("user");
-  fireEvent.click(button);
   expect(
     screen.getByText(/View and start individual evaluations/i)
   ).toBeInTheDocument();
   expect(screen.getByText(/View your teams/i)).toBeInTheDocument();
+  const button = screen.getByTestId("user-evals");
+  fireEvent.click(button);
 });
 
 // describe block = test suite

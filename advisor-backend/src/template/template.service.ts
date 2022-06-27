@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { AssessmentType } from '@prisma/client';
+import { AssessmentType, Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { TemplateDto } from './dto/template.dto';
@@ -17,9 +17,17 @@ export class TemplateService {
    * Get all templates
    * @returns All templates
    */
-  async findAll(): Promise<TemplateDto[]> {
+  async findAll(role: Role): Promise<TemplateDto[]> {
     // Return all templates from prisma
-    return await this.prisma.template.findMany();
+    const data: Prisma.TemplateFindManyArgs = {
+      where: {},
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.enabled = true;
+    }
+
+    return await this.prisma.template.findMany(data);
   }
 
   /**
@@ -50,6 +58,7 @@ export class TemplateService {
             'Template with this name and type already exists'
           );
         } else {
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -63,15 +72,11 @@ export class TemplateService {
    */
   async findOne(id: number): Promise<TemplateDto> {
     // Get template by id from prisma
-    const template = await this.prisma.template
-      .findUnique({
-        where: {
-          template_id: id,
-        },
-      })
-      .catch(() => {
-        throw new InternalServerErrorException();
-      });
+    const template = await this.prisma.template.findUnique({
+      where: {
+        template_id: id,
+      },
+    });
 
     // Throw error if template not found
     if (!template) {
@@ -99,6 +104,9 @@ export class TemplateService {
           template_id: id,
         },
         data: updateTemplateDto,
+        include: {
+          Category: true,
+        },
       })
       .catch((error) => {
         if (error.code === 'P2002') {
@@ -110,8 +118,63 @@ export class TemplateService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
+
+    if (
+      updateTemplateDto.weight_range_max ||
+      updateTemplateDto.weight_range_min
+    ) {
+      const categories = template.Category.map(
+        (category) => category.category_id
+      );
+
+      if (updateTemplateDto.weight_range_min) {
+        if (updateTemplateDto.weight_range_min > template.weight_range_max) {
+          throw new ConflictException(
+            'Weight range min must be less than weight range max'
+          );
+        } else if (
+          updateTemplateDto.weight_range_max < template.weight_range_min
+        ) {
+          throw new ConflictException(
+            'Weight range max must be greater than weight range min'
+          );
+        }
+      }
+      await this.prisma.checkpoint.updateMany({
+        where: {
+          category_id: {
+            in: categories,
+          },
+          weight: {
+            gt: updateTemplateDto.weight_range_max,
+          },
+        },
+        data: {
+          weight: {
+            set: updateTemplateDto.weight_range_max,
+          },
+        },
+      });
+
+      await this.prisma.checkpoint.updateMany({
+        where: {
+          category_id: {
+            in: categories,
+          },
+          weight: {
+            lt: updateTemplateDto.weight_range_min,
+          },
+        },
+        data: {
+          weight: {
+            set: updateTemplateDto.weight_range_min,
+          },
+        },
+      });
+    }
 
     if (updateTemplateDto.enabled) {
       // Disable all other templates with same type
@@ -128,6 +191,7 @@ export class TemplateService {
       });
     }
 
+    delete template.Category;
     return template;
   }
 
@@ -150,12 +214,13 @@ export class TemplateService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
 
   async checkWeightRange(template_id, weight) {
-    if (!weight) {
+    if (weight === undefined) {
       return true;
     }
 
@@ -164,7 +229,7 @@ export class TemplateService {
     });
 
     return (
-      weight >= template.weight_range_min || weight <= template.weight_range_max
+      weight >= template.weight_range_min && weight <= template.weight_range_max
     );
   }
 }

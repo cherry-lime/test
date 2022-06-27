@@ -2,22 +2,50 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, Theme } from "@mui/material/styles";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useRegister } from "../../api/LoginAPI";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import INGTheme from "../../Theme";
 
-const theme = createTheme();
-export default function Chooserole() {
+export default function Chooserole({ theme }: { theme: Theme }) {
+  // Defines the role state to keep track of the selected role
+  const [userRole, setUserRole] = React.useState("");
+  const handleChange = (event: SelectChangeEvent) => {
+    setUserRole(event.target.value as string);
+  };
+
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
+  // Imports the API hook for registering
+  const userReg = useRegister(ref);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={INGTheme}>
       <div
         // ING colored image for background
         style={{
@@ -26,94 +54,126 @@ export default function Chooserole() {
           backgroundSize: "cover",
           backgroundAttachment: "fixed",
           minHeight: "100vh",
-          width: "100vw",
         }}
       >
         {" "}
         {/* Help button placed on the left */}
-        <IconButton size="medium" sx={{ color: "white", mr: 250, mt: 1 }}>
+        <IconButton
+          size="medium"
+          onClick={handleClickOpen}
+          sx={{
+            color: "white",
+            mr: 250,
+            mt: 1,
+            float: "left",
+            marginLeft: 2,
+            marginTop: 2,
+          }}
+        >
           <HelpOutlineOutlinedIcon />
         </IconButton>
-        <Typography
-          variant="h2"
-          align="center"
-          color="white"
-          fontWeight="fontWeightBold"
-          sx={{
-            pt: 5,
-          }}
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
         >
-          TestING Advisor
-        </Typography>
-        {/* Container is where all functionality exists */}
-        <Container
-          component="main"
-          maxWidth="xs"
-          sx={{
-            pt: 10,
-          }}
-        >
-          <CssBaseline />
-          <Box
+          <DialogTitle id="alert-dialog-title">Our Tool</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              TestING Advisor builds on an Excel-based tool by giving users
+              automated feedback based on individual/team assessments, which
+              previously had to be done manually by an assessor. The current
+              tool has seven categories of assessment: Ready Work, Alignment,
+              Testware, Test Environment, Mastery, Metrics and Reporting. First,
+              login or signup by clicking the sign up button. This will take you
+              to a choose role screen where you can pick your role as an
+              Assessor or an Admin, then your username and password will be
+              generated, you can use these from now on.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Go back to sign up</Button>
+          </DialogActions>
+        </Dialog>
+        <Box sx={{ height: "25vh" }}>
+          <Typography
+            variant="h2"
+            align="center"
+            color="white"
+            fontWeight="fontWeightBold"
             sx={{
-              pt: 0,
-              marginBottom: 0,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              border: 4,
-              borderColor: "orange",
-              borderRadius: "16px",
-              bgcolor: "white",
+              pt: 5,
             }}
           >
-            {/* Conact rounded circle */}
-            <Avatar sx={{ m: 1, bgcolor: "orange" }}>
-              <AccountCircleRoundedIcon />
-            </Avatar>
-            <Typography
-              variant="h6"
-              align="center"
-              color="black"
-              fontWeight="fontWeightBold"
+            TestING Advisor
+          </Typography>
+        </Box>
+        {/* Container is where all functionality exists */}
+        <Box sx={{ height: "50vh" }}>
+          <Container
+            maxWidth="xs"
+            sx={{
+              pt: 10,
+              alignContent: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Box
               sx={{
                 pt: 0,
+                marginBottom: 0,
+                padding: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                borderRadius: "16px",
+                bgcolor: "white",
               }}
             >
-              Please, select your role
-            </Typography>
-            <Typography
-              variant="body1"
-              color="black"
-              sx={{
-                pt: 0,
-              }}
-            >
-              Role
-            </Typography>
-            {/* The form for the drop down menu to pick a role */}
-            <FormControl fullWidth>
-              <Select
-                variant="filled"
-                sx={{ m: 2, border: "orange" }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+              {/* Conact rounded circle */}
+              <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
+                <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
+              </Avatar>
+              <Typography
+                variant="h6"
+                align="center"
+                color="text.secondary"
+                fontWeight="fontWeightBold"
+                sx={{
+                  pt: 0,
+                  marginTop: 2,
+                  marginBottom: 2,
+                }}
               >
-                <MenuItem value={10}>User</MenuItem>
-                <MenuItem value={20}>Assessor</MenuItem>
-                <MenuItem value={30}>Adminstrator</MenuItem>
-              </Select>
-            </FormControl>
-            <Button
-              size="medium"
-              type="submit"
-              variant="contained"
-              sx={{ p: 1, m: 2 }}
-            >
-              Continue
-            </Button>
-          </Box>
-        </Container>
+                Please, select your role
+              </Typography>
+              {/* The form for the drop down menu to pick a role */}
+              <FormControl fullWidth>
+                <Select sx={{ m: 2 }} value={userRole} onChange={handleChange}>
+                  <MenuItem value="USER">User</MenuItem>
+                  <MenuItem value="ASSESSOR">Assessor</MenuItem>
+                </Select>
+              </FormControl>
+              <Button
+                size="medium"
+                variant="contained"
+                color="primary"
+                sx={{
+                  p: 2,
+                  m: 2,
+                }}
+                onClick={() => {
+                  userReg.mutate({ role: userRole });
+                }}
+              >
+                Continue
+              </Button>
+            </Box>
+          </Container>
+        </Box>
+        <ErrorPopup ref={ref} />
       </div>
     </ThemeProvider>
   );

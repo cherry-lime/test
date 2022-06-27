@@ -1,19 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class Team {
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
   team_id: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'New Team' })
   team_name: string;
 
-  @ApiProperty()
-  // UUID
+  @ApiProperty({ default: 'bf30b88f-a641-4194-9c5a-95b801884440' })
   invite_token: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'Netherlands' })
   team_country: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'IT' })
   team_department: string;
 }

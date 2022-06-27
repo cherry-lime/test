@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Patch,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -9,6 +8,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   ForbiddenException,
+  Patch,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import {
@@ -72,6 +72,7 @@ export class TeamsController {
           throw new NotFoundException('Team with given team id not found');
         } else {
           // Throw error if internal server error
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -130,6 +131,7 @@ export class TeamsController {
           throw new NotFoundException('Team with given team id not found');
         } else {
           // Throw error if internal server error
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -167,6 +169,7 @@ export class TeamsController {
           throw new NotFoundException('Team with given team id not found');
         } else {
           // Throw error if internal server error
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -212,6 +215,7 @@ export class TeamsController {
           throw new NotFoundException('Team with given team id not found');
         } else {
           // Throw error if internal server error
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });

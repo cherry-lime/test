@@ -58,7 +58,7 @@ export class AssessmentScoreService {
         disabled: false,
       },
       orderBy: {
-        maturity_order: 'asc',
+        order: 'asc',
       },
     });
 
@@ -137,6 +137,9 @@ export class AssessmentScoreService {
         },
       };
     }
+
+    // Getting the ids of checkpoints which have are not disabled and are in
+    //   maturityIds and categoryIds
     let checkpoints = await this.prisma.checkpoint.findMany({
       where: {
         disabled: false,

@@ -1,6 +1,5 @@
 import { TextField, ThemeOptions, ThemeProvider } from "@mui/material";
 import { useState } from "react";
-import PropTypes from "prop-types";
 
 /**
  * An editable textfield made specifically for weight factors
@@ -53,10 +52,5 @@ function TextfieldEditWeight({
     </ThemeProvider>
   );
 }
-
-TextfieldEditWeight.propTypes = {
-  weightValue: PropTypes.number.isRequired,
-  theme: PropTypes.node.isRequired,
-};
 
 export default TextfieldEditWeight;

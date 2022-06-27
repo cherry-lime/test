@@ -1,24 +1,32 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Min } from 'class-validator';
 
 export class CheckpointDto {
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
   checkpoint_id: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: 'New Checkpoint' })
   checkpoint_description: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: '' })
   checkpoint_additional_information: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 3 })
   weight: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
+  @Min(1)
   order: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: false })
+  disabled: boolean;
+
+  @ApiProperty({ default: 1 })
   maturity_id: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
   category_id: number;
+
+  @ApiProperty({ default: [1] })
+  topics: number[];
 }

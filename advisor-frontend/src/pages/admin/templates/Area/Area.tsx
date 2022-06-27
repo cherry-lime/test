@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { Theme } from "@mui/material";
-import SubareaGrid from "../../../../components/Grids/Specific/SubareaGrid";
+import { useParams } from "react-router-dom";
+import SubareaGrid from "../../../../components/Grids/Specific/Subarea/SubareaGrid";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
-import CheckpointGrid from "../../../../components/Grids/Specific/CheckpointGrid";
+import CheckpointGrid from "../../../../components/Grids/Specific/Checkpoint/CheckpointGrid";
 
 /**
  * Page with details regarding an area beloging to a certain template
@@ -15,18 +16,14 @@ function Area({ theme }: { theme: Theme }) {
 
   return (
     <div>
-      <PageLayout title={`Subarea "${areaId}"`} sidebarType={userType.ADMIN}>
+      <PageLayout title={`Area "${areaId}"`} sidebarType={userType.ADMIN}>
         <h2>Subareas</h2>
-        <SubareaGrid
-          theme={theme}
-          templateId={templateId}
-          categoryId={areaId}
-        />
+        <SubareaGrid theme={theme} categoryId={Number(areaId)} />
         <h2>Checkpoints</h2>
         <CheckpointGrid
           theme={theme}
-          templateId={templateId}
-          categoryId={areaId}
+          templateId={Number(templateId)}
+          categoryId={Number(areaId)}
         />
       </PageLayout>
     </div>

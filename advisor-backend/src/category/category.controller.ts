@@ -23,7 +23,8 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CheckpointDto } from '../checkpoint/dto/checkpoint.dto';
 import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { Roles } from '../common/decorators/roles.decorator';
-import { Role } from '@prisma/client';
+import { Role, User } from '@prisma/client';
+import AuthUser from '../common/decorators/auth-user.decorator';
 
 @ApiTags('category')
 @Controller('category')
@@ -97,8 +98,11 @@ export class CategoryController {
     isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Category not found' })
-  findAllSubareas(@Param('category_id', ParseIntPipe) category_id: number) {
-    return this.subareaService.findAll(category_id);
+  findAllSubareas(
+    @Param('category_id', ParseIntPipe) category_id: number,
+    @AuthUser() user: User
+  ) {
+    return this.subareaService.findAll(category_id, user.role);
   }
 
   /**
@@ -132,8 +136,11 @@ export class CategoryController {
     type: CheckpointDto,
     isArray: true,
   })
-  findCheckpoints(@Param('category_id', ParseIntPipe) category_id: number) {
-    return this.checkpointService.findAll(category_id);
+  findCheckpoints(
+    @Param('category_id', ParseIntPipe) category_id: number,
+    @AuthUser() user: User
+  ) {
+    return this.checkpointService.findAll(category_id, user.role);
   }
 
   /**

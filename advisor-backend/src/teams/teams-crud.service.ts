@@ -29,7 +29,8 @@ export class TeamsCRUDService {
           },
         },
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         throw new InternalServerErrorException();
       });
 
@@ -44,15 +45,11 @@ export class TeamsCRUDService {
    */
   async findOne(id: number): Promise<Team> {
     // Get team by team_id from prisma
-    const team = await this.prisma.team
-      .findUnique({
-        where: {
-          team_id: id,
-        },
-      })
-      .catch(() => {
-        throw new InternalServerErrorException();
-      });
+    const team = await this.prisma.team.findUnique({
+      where: {
+        team_id: id,
+      },
+    });
 
     if (!team) {
       // Throw error if team with given team id not found
@@ -85,6 +82,7 @@ export class TeamsCRUDService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Team with given team id not found');
         } else {
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -114,6 +112,7 @@ export class TeamsCRUDService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Team with given team id not found');
         } else {
+          console.log(error);
           console.log(error);
           throw new InternalServerErrorException();
         }

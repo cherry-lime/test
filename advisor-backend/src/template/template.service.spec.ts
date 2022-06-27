@@ -8,7 +8,7 @@ import {
   updateTemplate,
   updateTemplateDto,
 } from '../prisma/mock/mockTemplate';
-import { AssessmentType } from '@prisma/client';
+import { AssessmentType, Role } from '@prisma/client';
 import {
   ConflictException,
   InternalServerErrorException,
@@ -84,15 +84,6 @@ describe('TemplateService', () => {
         NotFoundException
       );
     });
-
-    it('Should reject with unknown error', async () => {
-      jest
-        .spyOn(prisma.template, 'findUnique')
-        .mockRejectedValueOnce({ code: 'TEST' });
-      expect(templateService.findOne(1)).rejects.toThrowError(
-        InternalServerErrorException
-      );
-    });
   });
 
   describe('update', () => {
@@ -132,7 +123,7 @@ describe('TemplateService', () => {
 
   describe('findAll', () => {
     it('Should return all templates', async () => {
-      expect(templateService.findAll()).resolves.toEqual([aTemplate]);
+      expect(templateService.findAll(Role.ADMIN)).resolves.toEqual([aTemplate]);
     });
   });
 

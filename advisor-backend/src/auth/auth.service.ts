@@ -4,10 +4,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { LoginDto } from './auth_dto/login-user.dto';
+import { LoginDto } from './dto/login-user.dto';
 import { JwtService } from '../../node_modules/@nestjs/jwt';
-import { AuthResponse } from './auth_dto/auth-response.dto';
-import { CreateUserDto } from './auth_dto/register-user.dto';
+import { AuthResponse } from './dto/auth-response.dto';
+import { CreateUserDto } from './dto/register-user.dto';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 
@@ -30,9 +30,6 @@ export class AuthService {
     const user = await this.prismaService.user.findUnique({
       where: { username },
     });
-    //    .catch(() => {
-    //    throw new InternalServerErrorException();
-    //});;
 
     if (!user) {
       throw new NotFoundException('user not found');

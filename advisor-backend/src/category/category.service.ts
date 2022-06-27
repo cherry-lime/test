@@ -5,6 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
@@ -44,6 +45,7 @@ export class CategoryService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -53,12 +55,18 @@ export class CategoryService {
    * @param template_id template id
    * @returns all categories in template
    */
-  async findAll(template_id: number) {
-    return await this.prisma.category.findMany({
+  async findAll(template_id: number, role: Role) {
+    const data: Prisma.CategoryFindManyArgs = {
       where: {
         template_id,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    return await this.prisma.category.findMany(data);
   }
 
   /**
@@ -102,8 +110,9 @@ export class CategoryService {
       throw new NotFoundException('Category not found');
     }
 
+    const newOrder = updateCategoryDto.order;
     // Update orders if order changed
-    if (updateCategoryDto.order) {
+    if (newOrder) {
       // Check if order is valid (not more than number of categories in template)
       const order = await this.prisma.category.count({
         where: {
@@ -111,48 +120,15 @@ export class CategoryService {
         },
       });
 
-      if (updateCategoryDto.order > order) {
+      if (newOrder > order) {
         throw new BadRequestException(
           'Order must be less than number of categories in template'
         );
       }
-      // If new order is smaller than old order, increase order of all categories with between new and old order
-      if (updateCategoryDto.order < category.order) {
-        await this.prisma.category.updateMany({
-          where: {
-            template_id: category.template_id,
-            order: {
-              gte: updateCategoryDto.order,
-              lte: category.order,
-            },
-          },
-          data: {
-            order: {
-              increment: 1,
-            },
-          },
-        });
-      } else if (updateCategoryDto.order > category.order) {
-        // If new order is bigger than old order, decrease order of all categories with between old and new order
-        await this.prisma.category.updateMany({
-          where: {
-            template_id: category.template_id,
-            order: {
-              gte: category.order,
-              lte: updateCategoryDto.order,
-            },
-          },
-          data: {
-            order: {
-              decrement: 1,
-            },
-          },
-        });
-      }
     }
 
     // Update category
-    return await this.prisma.category
+    const newCategory = await this.prisma.category
       .update({
         where: {
           category_id,
@@ -167,8 +143,51 @@ export class CategoryService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
+
+    // If new order is smaller than old order, increase order of all categories with between new and old order
+    if (newOrder && newOrder < category.order) {
+      await this.prisma.category.updateMany({
+        where: {
+          template_id: category.template_id,
+          category_id: {
+            not: category.category_id,
+          },
+          order: {
+            gte: updateCategoryDto.order,
+            lte: category.order,
+          },
+        },
+        data: {
+          order: {
+            increment: 1,
+          },
+        },
+      });
+    } else if (newOrder && newOrder > category.order) {
+      // If new order is bigger than old order, decrease order of all categories with between old and new order
+      await this.prisma.category.updateMany({
+        where: {
+          template_id: category.template_id,
+          category_id: {
+            not: category.category_id,
+          },
+          order: {
+            gte: category.order,
+            lte: updateCategoryDto.order,
+          },
+        },
+        data: {
+          order: {
+            decrement: 1,
+          },
+        },
+      });
+    }
+
+    return newCategory;
   }
 
   /**
@@ -178,17 +197,21 @@ export class CategoryService {
    * @throws Category not found
    */
   async delete(category_id: number) {
-    // Get category by id from prisma
-    const category = await this.prisma.category.findUnique({
-      where: {
-        category_id,
-      },
-    });
-
-    // Throw NotFoundException if category not found
-    if (!category) {
-      throw new NotFoundException('Category not found');
-    }
+    // Delete category
+    const category = await this.prisma.category
+      .delete({
+        where: {
+          category_id,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          // Throw error if category not found
+          throw new NotFoundException('Category not found');
+        }
+        console.log(error);
+        throw new InternalServerErrorException();
+      });
 
     // Decrement order of all categories with order bigger than deleted category
     await this.prisma.category.updateMany({
@@ -205,19 +228,6 @@ export class CategoryService {
       },
     });
 
-    // Delete category
-    return await this.prisma.category
-      .delete({
-        where: {
-          category_id,
-        },
-      })
-      .catch((error) => {
-        // Throw error if template not found
-        if (error.code === 'P2025') {
-          throw new NotFoundException('Category not found');
-        }
-        throw new InternalServerErrorException();
-      });
+    return category;
   }
 }
