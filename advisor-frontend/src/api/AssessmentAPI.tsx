@@ -13,6 +13,7 @@ export type AssessmentAPP = {
   departmentName: string;
   templateId: number;
   feedbackText: string;
+  information: string;
   createdAt: string;
   updatedAt: string;
   completedAt: string;
@@ -27,6 +28,7 @@ type AssessmentAPI = {
   department_name: string;
   template_id: number;
   feedback_text: string;
+  information: string;
   created_at: string;
   updated_at: string;
   completed_at: string;
@@ -42,6 +44,7 @@ function assessmentToAPP(assessmentAPI: AssessmentAPI) {
     departmentName: assessmentAPI.department_name,
     templateId: assessmentAPI.template_id,
     feedbackText: assessmentAPI.feedback_text,
+    information: assessmentAPI.information,
     createdAt: assessmentAPI.created_at,
     updatedAt: assessmentAPI.updated_at,
     completedAt: assessmentAPI.completed_at,
@@ -58,6 +61,7 @@ function assessmentToAPI(assessmentAPP: AssessmentAPP) {
     department_name: assessmentAPP.departmentName,
     template_id: assessmentAPP.templateId,
     feedback_text: assessmentAPP.feedbackText,
+    information: assessmentAPP.information,
     created_at: assessmentAPP.createdAt,
     updated_at: assessmentAPP.updatedAt,
     completed_at: assessmentAPP.completedAt,
@@ -372,7 +376,7 @@ export function useGetSaveAssessment(
     async () => {
       // Get response data from database
       const { data } = await API.get(`/assessment/${assessmentId}/save`);
-      console.log(data);
+
       // Convert data to checkpointsAPP
       const checkpointsAPP = data.map(
         (assessmentCheckpointAPI: AssessmentCheckpointAPI) =>
