@@ -58,7 +58,7 @@ export default function TeamGrid({ theme, userRole, userId }: TeamGridProps) {
   // Called when "status" of teams query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
