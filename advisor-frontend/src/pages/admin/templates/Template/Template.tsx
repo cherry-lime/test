@@ -15,6 +15,10 @@ import {
   useGetTemplate,
   usePatchTemplate,
 } from "../../../../api/TemplateAPI";
+import ErrorPopup, {
+  handleError,
+  RefObject,
+} from "../../../../components/ErrorPopup/ErrorPopup";
 
 /**
  * Page with details regarding a certain template
@@ -27,6 +31,9 @@ function Template({ theme }: { theme: Theme }) {
 
   const { status, data } = useGetTemplate(Number(templateId));
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   React.useEffect(() => {
     if (status === "success") {
       setTemplateInfo(data);
@@ -36,12 +43,20 @@ function Template({ theme }: { theme: Theme }) {
   const patchTemplate = usePatchTemplate();
 
   const changeInfo = (newInfo: TemplateAPP) => {
+    if (newInfo.weightRangeMax < newInfo.weightRangeMin) {
+      handleError(
+        ref,
+        "Out of bounds: Weight range start must not be less than end."
+      );
+      return;
+    }
+
     patchTemplate.mutate(newInfo, {
       onSuccess: (templateAPP: TemplateAPP) => {
         setTemplateInfo(templateAPP);
       },
-      onError: () => {
-        // handle error
+      onError: (error: unknown) => {
+        handleError(ref, error);
       },
     });
   };
@@ -51,8 +66,8 @@ function Template({ theme }: { theme: Theme }) {
     setTemplateInfo(newInfo);
 
     patchTemplate.mutate(newInfo, {
-      onError: () => {
-        // handle error
+      onError: (error: unknown) => {
+        handleError(ref, error);
         setTemplateInfo(oldInfo);
       },
     });
@@ -159,6 +174,7 @@ function Template({ theme }: { theme: Theme }) {
           <AnswerGrid theme={theme} templateId={Number(templateId)} />
         </PageLayout>
       )}
+      <ErrorPopup ref={ref} />
     </div>
   );
 }
