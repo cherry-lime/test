@@ -33,10 +33,10 @@ const theme = createTheme({
 
 //  test rendering of the editable textfield and check of bodytext
 it("Rendering without crash", () => {
-  const [text, setText] = useState("lorem ipsum");
+  let text = "lorem ipsum";
   const { getByText } = render(
     <TextfieldEdit
-      handleSave={(e) => setText(e)}
+      handleSave={() => {text = "a"}}
       rows={5}
       text={text}
       theme={theme}
