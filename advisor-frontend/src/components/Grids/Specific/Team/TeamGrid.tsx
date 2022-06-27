@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import RemoveIcon from "@mui/icons-material/HighlightOff";
 
@@ -12,7 +13,10 @@ import GenericGrid from "../../Generic/GenericGrid";
 
 import { UserRole } from "../../../../types/UserRole";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  handleError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 import {
   handleAdd,
@@ -28,13 +32,15 @@ import {
   usePatchTeam,
   usePostTeam,
 } from "../../../../api/TeamAPI";
+import { useDeleteMemberTeamTwo } from "../../../../api/UserAPI";
 
 type TeamGridProps = {
   theme: Theme;
   userRole: UserRole;
+  userId: number;
 };
 
-export default function TeamGrid({ theme, userRole }: TeamGridProps) {
+export default function TeamGrid({ theme, userRole, userId }: TeamGridProps) {
   const [rows, setRows] = React.useState<TeamAPP[]>([]);
 
   // Ref for error popup
@@ -47,6 +53,7 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
   const patchTeam = usePatchTeam(ref);
   const postTeam = usePostTeam(ref);
   const deleteTeam = useDeleteTeam(ref);
+  const deleteMemberTeam = useDeleteMemberTeamTwo(ref);
 
   // Called when "status" of teams query is changed
   React.useEffect(() => {
@@ -57,6 +64,24 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: TeamAPP, oldRow: TeamAPP) =>
       processRowUpdate(setRows, patchTeam as UseMutationResult, newRow, oldRow),
+    []
+  );
+
+  // Called when the "Delete" action is pressed in the menu
+  const handleDeleteMemberDecorator = React.useCallback(
+    (rowId: GridRowId) => () => {
+      deleteMemberTeam.mutate(
+        { teamId: rowId as number, userId },
+        {
+          onSuccess: () => {
+            setRows((prevRows) => prevRows.filter((row) => row.id !== rowId));
+          },
+          onError: (error: unknown) => {
+            handleError(ref, error);
+          },
+        }
+      );
+    },
     []
   );
 
@@ -103,9 +128,20 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
                 <RemoveIcon />
               </Tooltip>
             }
-            label="Remove"
-            onClick={handleDeleteDecorator(params.id)}
+            label="Leave"
+            onClick={handleDeleteMemberDecorator(params.id)}
+            showInMenu={userRole === "ASSESSOR"}
           />,
+          ...(userRole === "ASSESSOR"
+            ? [
+                <GridActionsCellItem
+                  icon={<DeleteIcon />}
+                  label="Delete"
+                  onClick={handleDeleteDecorator(params.id)}
+                  showInMenu
+                />,
+              ]
+            : []),
         ],
       },
     ],
