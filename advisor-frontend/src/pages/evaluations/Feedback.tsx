@@ -10,7 +10,7 @@ import ListOfCheckpoints from "../../components/ListOfCheckpoints/ListOfCheckpoi
 import TextfieldEdit from "../../components/TextfieldEdit/TextfieldEdit";
 import Textfield from "../../components/Textfield/Textfield";
 import { RootState } from "../../app/store";
-import createPDF  from "./pdf";
+import createPDF from "./pdf";
 import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
 import {
@@ -255,6 +255,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         <ListOfRecommendations
           theme={theme}
           assessmentId={Number(assessmentId)}
+          templateId={assessmentInfo?.templateId}
         />
       )}
 

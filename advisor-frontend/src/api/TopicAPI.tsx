@@ -50,7 +50,6 @@ export function useGetTopics(
 
       // Convert data to topicsAPP
       const topicsAPP = data.map((topicAPI: TopicAPI) => topicToAPP(topicAPI));
-
       // If defined, filter on enabled/disabled
       if (enabledFilter !== undefined) {
         const topicsFilteredAPP = topicsAPP.filter(
