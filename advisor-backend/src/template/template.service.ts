@@ -105,11 +105,7 @@ export class TemplateService {
         },
         data: updateTemplateDto,
         include: {
-          Category: {
-            include: {
-              Checkpoint: true,
-            },
-          },
+          Category: true,
         },
       })
       .catch((error) => {
