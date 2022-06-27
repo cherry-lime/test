@@ -282,14 +282,14 @@ export class AssessmentScoreService {
     // Calculating overall score for each category
     for (let i = 0; i < categoryIdsList.length; i++) {
       let sum = 0;
-      let nrMaturitiesWithScore = 0; // Number of maturities that have scores for this category
+      let sumWeights = 0;
       for (let j = 0; j < maturityIdsList.length; j++) {
         if (scores[j][i] !== -1) {
-          nrMaturitiesWithScore++;
-          sum += scores[j][i];
+          sumWeights += calculateScorePerCatoryPerMaturity[j][i][0];
+          sum += calculateScorePerCatoryPerMaturity[j][i][1];
         }
       }
-      scores[maturityIdsList.length][i] = sum / nrMaturitiesWithScore;
+      scores[maturityIdsList.length][i] = (sum / sumWeights) * 100;
       if (sum === 0) {
         scores[maturityIdsList.length][i] = -1;
       }
@@ -298,14 +298,14 @@ export class AssessmentScoreService {
     // Calculating overall score for each maturity
     for (let i = 0; i < maturityIdsList.length; i++) {
       let sum = 0;
-      let nrCategoriesWithScore = 0; // Number of categories that have scores for this maturity
+      let sumWeights = 0;
       for (let j = 0; j < categoryIdsList.length; j++) {
         if (scores[i][j] !== -1) {
-          nrCategoriesWithScore++;
-          sum += scores[i][j];
+          sumWeights += calculateScorePerCatoryPerMaturity[i][j][0];
+          sum += calculateScorePerCatoryPerMaturity[i][j][1];
         }
       }
-      scores[i][categoryIdsList.length] = sum / nrCategoriesWithScore;
+      scores[i][categoryIdsList.length] = (sum / sumWeights) * 100;
       if (sum === 0) {
         scores[i][categoryIdsList.length] = -1;
       }
