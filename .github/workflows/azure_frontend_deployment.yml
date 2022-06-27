@@ -37,4 +37,4 @@ jobs:
           app-name: "TestAdvisor"
           slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F063B1808AB34140BF8AF29010B4DE60 }}
-          package: ${{ github.workspace }}/advisor-frontend
+          package: ${{ github.workspace }}/advisor-frontend/build
