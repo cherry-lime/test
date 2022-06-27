@@ -79,9 +79,9 @@ export default function CheckpointGrid({
   );
 
   // Checkpoint mutations
-  const patchCheckpoint = usePatchCheckpoint();
-  const postCheckpoint = usePostCheckpoint(categoryId);
-  const deleteCheckpoint = useDeleteCheckpoint();
+  const patchCheckpoint = usePatchCheckpoint(ref);
+  const postCheckpoint = usePostCheckpoint(categoryId, ref);
+  const deleteCheckpoint = useDeleteCheckpoint(ref);
 
   // Called when "status" of checkpoints query is changed
   React.useEffect(() => {
