@@ -8,7 +8,6 @@ import {
   NotFoundException,
   InternalServerErrorException,
   ForbiddenException,
-  Post,
   Patch,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
