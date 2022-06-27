@@ -7,13 +7,14 @@ import {
   Tabs,
   ThemeOptions,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { AnswerAPP } from "../../api/AnswerAPI";
 import { CheckpointAPP, useGetCheckpoints } from "../../api/CheckpointAPI";
 import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI";
 import Checkpoint from "../Checkpoint/Checkpoint";
 import Subarea from "../Subarea/Subarea";
 import { TopicAPP } from "../../api/TopicAPI";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 
 /**
  * Page with a self evaluation that can be filled in
@@ -52,13 +53,16 @@ function AreaSpecificCheckpoints({
 
   // GET ASSESSMENT INFORMATION
 
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
   const [subareaList, setSubareaList] = useState<SubareaAPP[]>();
   const [checkpointList, setCheckpointList] = useState<CheckpointAPP[]>();
   // get answer list from API
-  const subareasResponse = useGetSubareas(areaId, true);
+  const subareasResponse = useGetSubareas(areaId, true, ref);
 
   // get checkpoint list from API
-  const checkpointResponse = useGetCheckpoints(areaId, true);
+  const checkpointResponse = useGetCheckpoints(areaId, true, ref);
 
   const [checkpointComponents, setCheckpointComponents] =
     useState<React.ReactElement[]>();
@@ -191,6 +195,7 @@ function AreaSpecificCheckpoints({
           </Grid>
         </Grid>
       )}
+      <ErrorPopup ref={ref} />
     </div>
   );
 }

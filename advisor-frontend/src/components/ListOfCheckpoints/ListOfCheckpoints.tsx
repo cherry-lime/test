@@ -5,11 +5,12 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { AssessmentAPP, useGetSaveAssessment } from "../../api/AssessmentAPI";
 import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
 
 /**
@@ -39,21 +40,27 @@ function ListOfCheckpoints({
   const [checkpointAnswerList, setCheckpointAnswerList] =
     useState<Record<number, number | undefined>>();
 
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
   // get area list from API
   const areasResponse = useGetCategories(
     Number(assessmentInfo.templateId),
-    true
+    true,
+    ref
   );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
     Number(assessmentInfo.templateId),
-    true
+    true,
+    ref
   );
 
   // get checkpoint answer list from API
   const checkpointAnswerResponse = useGetSaveAssessment(
-    Number(assessmentInfo.id)
+    Number(assessmentInfo.id),
+    ref
   );
 
   // set the area list value
@@ -167,6 +174,7 @@ function ListOfCheckpoints({
             assessmentId={Number(assessmentInfo.id)}
           />
         )}
+      <ErrorPopup ref={ref} />
     </div>
   );
 }

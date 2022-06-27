@@ -12,6 +12,7 @@ export type TemplateAPP = {
   description: string;
   templateType: AssessmentType;
   feedback: string;
+  // information: string;
   enabled: boolean;
   weightRangeMin: number;
   weightRangeMax: number;
@@ -25,6 +26,7 @@ type TemplateAPI = {
   template_description: string;
   template_type: AssessmentType;
   template_feedback: string;
+  // information: string;
   enabled: boolean;
   weight_range_min: number;
   weight_range_max: number;
@@ -39,6 +41,7 @@ function templateToAPP(templateAPI: TemplateAPI) {
     description: templateAPI.template_description,
     templateType: templateAPI.template_type,
     feedback: templateAPI.template_feedback,
+    // information: templateAPI.information,
     enabled: templateAPI.enabled,
     weightRangeMin: templateAPI.weight_range_min,
     weightRangeMax: templateAPI.weight_range_max,
@@ -54,6 +57,7 @@ function templateToAPI(templateAPP: TemplateAPP) {
     template_description: templateAPP.description,
     template_type: templateAPP.templateType,
     template_feedback: templateAPP.feedback,
+    // information: templateAPP.information,
     enabled: templateAPP.enabled,
     weight_range_min: templateAPP.weightRangeMin,
     weight_range_max: templateAPP.weightRangeMax,

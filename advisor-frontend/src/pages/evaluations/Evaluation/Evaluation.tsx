@@ -1,6 +1,6 @@
 import { Button, Theme } from "@mui/material";
 import { useSelector } from "react-redux";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ListOfCheckpoints from "../../../components/ListOfCheckpoints/ListOfCheckpoints";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
@@ -12,6 +12,9 @@ import {
   useGetAssessment,
   usePostCompleteAssessment,
 } from "../../../api/AssessmentAPI";
+import ErrorPopup, {
+  RefObject,
+} from "../../../components/ErrorPopup/ErrorPopup";
 
 /**
  * Page with a self evaluation that can be filled in
@@ -26,7 +29,10 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
     setCheckpointView((v) => !v);
   };
 
-  const postCompleteEval = usePostCompleteAssessment(Number(assessmentId));
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
+  const postCompleteEval = usePostCompleteAssessment(Number(assessmentId), ref);
 
   const handleClickFinish = useCallback(() => {
     postCompleteEval.mutate();
@@ -39,7 +45,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
     status: assessmentStatus,
     data: assessmentData,
     error: assessmentError,
-  } = useGetAssessment(Number(assessmentId));
+  } = useGetAssessment(Number(assessmentId), ref);
 
   // set assessment info value
   React.useEffect(() => {
@@ -111,6 +117,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
             Finish Assessment{" "}
           </Button>
         </Link>
+        <ErrorPopup ref={ref} />
       </div>
     </PageLayout>
   );
