@@ -1,39 +1,12 @@
 import { createTheme } from "@mui/material";
 import { render, cleanup, screen, fireEvent } from "@testing-library/react";
+import { QueryClientProvider } from "react-query";
 import Checkpoint from "../Checkpoint";
+import client from "../../../app/client";
+import Theme from "../../../Theme";
 
 //  cleanup after each testcase
 afterEach(cleanup);
-
-//  coloring theme aligned with UI design
-//  ING orange is ff6200
-//  darkgray is 5a534f
-//  the labels are darkgrey according style
-//  the radio buttons are ING orange according style
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: "#FFD6B1", // Light Orange
-      main: "#FF6200", // Orange
-      dark: "#AA3909", // Dark Orange
-    },
-    secondary: {
-      light: "#EDE6E2", // Light Grey
-      main: "#8B817C", // Grey
-      dark: "#5A534F", // Dark Grey
-    },
-    text: {
-      secondary: "#5A534F", // Dark Grey
-    },
-    info: {
-      light: "#FAF6F3", // Lightest Grey
-      main: "#ffffff", // White color for icons.
-    },
-    background: {
-      default: "#ffffff", // Used to define the custom sidebar text color.
-    },
-  },
-});
 
 //  a checkpoint consists of three radio buttons
 //  checking rendering of the radio-buttons
@@ -42,15 +15,22 @@ const theme = createTheme({
 //  only one button can be clicked at the same time
 it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 321 and 312 with 1=Yes, 2=No and 3=N/A", () => {
   const { getByText } = render(
-    <Checkpoint
-      feedback={false}
-      description="Checkpoint Description"
-      number={1}
-      theme={theme}
-      checkpointlabels={["Yes", "No", "N/A"]}
-      checkpointvalues={[0, 1, 2]}
-      topics={["Ready Work"]}
-    />
+    <QueryClientProvider client={client}>
+      <Checkpoint
+        feedback={false}
+        description="Checkpoint Description"
+        number={1}
+        theme={Theme}
+        selectedAnswer="-"
+        topicList={[]}
+        answers={[
+          { id: 1, label: "Yes", value: 1, templateId: 1, enabled: true },
+          { id: 2, label: "No", value: 2, templateId: 1, enabled: true },
+          { id: 3, label: "N/A", value: 3, templateId: 1, enabled: true },
+        ]}
+        topicIds={[]}
+      />
+    </QueryClientProvider>
   );
   expect(getByText("Checkpoint Description")).toBeInTheDocument();
 
@@ -93,7 +73,6 @@ it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 
     expect(radio3).toBeChecked();
   }
   //  all sequences are tested starting with the initial state
-  fireEvent.click(radio1);
   alloff();
   clickradio2();
   clickradio3();
