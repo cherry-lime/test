@@ -133,6 +133,20 @@ export class TemplateService {
       const categories = template.Category.map(
         (category) => category.category_id
       );
+
+      if (updateTemplateDto.weight_range_min) {
+        if (updateTemplateDto.weight_range_min > template.weight_range_max) {
+          throw new ConflictException(
+            'Weight range min must be less than weight range max'
+          );
+        } else if (
+          updateTemplateDto.weight_range_max < template.weight_range_min
+        ) {
+          throw new ConflictException(
+            'Weight range max must be greater than weight range min'
+          );
+        }
+      }
       await this.prisma.checkpoint.updateMany({
         where: {
           category_id: {
