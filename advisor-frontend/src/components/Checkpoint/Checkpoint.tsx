@@ -18,7 +18,7 @@ import { usePostSaveAssessment } from "../../api/AssessmentAPI";
 passing parameter of the optional description of the checkpoints
 description of checkpoint = description
 description might be empty string
-main function returning a checkpoint component 
+main function returning a checkpoint omponent 
 */
 function Checkpoint({
   description,
@@ -29,6 +29,7 @@ function Checkpoint({
   topicList,
   answers,
   selectedAnswer,
+  setCheckpointAnswerList,
   theme,
   feedback,
 }: {
@@ -40,6 +41,9 @@ function Checkpoint({
   topicList: TopicAPP[];
   answers: AnswerAPP[];
   selectedAnswer: string | undefined;
+  setCheckpointAnswerList: React.Dispatch<
+    React.SetStateAction<Record<number, number | undefined> | undefined>
+  >;
   theme: ThemeOptions;
   feedback: boolean;
 }) {
@@ -49,6 +53,18 @@ function Checkpoint({
   const [value, setValue] = useState(selectedAnswer || "");
 
   const postCheckpointAnswer = usePostSaveAssessment(assessmentId, value);
+
+  const changeAnswerList = (newAnswer: string) => {
+    setCheckpointAnswerList((old) => {
+      if (old) {
+        const newList = old;
+        newList[checkpointId] =
+          newAnswer !== "-" ? Number(newAnswer) : undefined;
+        return newList;
+      }
+      return old;
+    });
+  };
 
   const changeCheckpointAnswer = (newValue: string) => {
     const newAssessmentCheckpoint = {
@@ -64,6 +80,7 @@ function Checkpoint({
         console.log(err);
         if (context) {
           setValue(context.oldValue);
+          changeAnswerList(context.oldValue);
         }
       },
     });
@@ -74,6 +91,7 @@ function Checkpoint({
       const newValue = event.target.value;
       if (newValue && event.target.value !== value) {
         setValue(newValue);
+        changeAnswerList(newValue);
         changeCheckpointAnswer(event.target.value);
       }
     },

@@ -163,6 +163,7 @@ function ListOfCheckpoints({
             areaId={activeArea}
             answerList={answerList}
             checkpointAnswerList={checkpointAnswerList}
+            setCheckpointAnswerList={setCheckpointAnswerList}
             feedback={feedback}
             assessmentId={Number(assessmentInfo.id)}
           />
