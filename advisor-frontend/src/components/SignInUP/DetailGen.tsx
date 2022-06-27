@@ -21,7 +21,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { useLoginTwo } from "../../api/LoginAPI";
+import { useLogin } from "../../api/LoginAPI";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 
 export default function DetailGen({ theme }: { theme: Theme }) {
@@ -29,8 +30,12 @@ export default function DetailGen({ theme }: { theme: Theme }) {
   const { userPassword, userName } = useSelector(
     (state: RootState) => state.userData
   );
+
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Make Login API call available
-  const login = useLoginTwo();
+  const login = useLogin(ref);
 
   const [open, setOpen] = React.useState(false);
 
@@ -199,6 +204,7 @@ export default function DetailGen({ theme }: { theme: Theme }) {
             </Box>
           </Container>
         </Box>
+        <ErrorPopup ref={ref} />
       </div>
     </ThemeProvider>
   );

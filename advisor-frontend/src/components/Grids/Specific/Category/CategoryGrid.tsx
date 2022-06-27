@@ -36,6 +36,8 @@ import {
   usePostCategory,
 } from "../../../../api/CategoryAPI";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 type CategoryGridProps = {
   theme: Theme;
   templateId: number;
@@ -44,22 +46,26 @@ type CategoryGridProps = {
 export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   const [rows, setRows] = React.useState<CategoryAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Category query
-  const { status, data, error } = useGetCategories(templateId);
+  const { status, data } = useGetCategories(templateId, undefined, ref);
 
   // Category mutations
-  const patchCategory = usePatchCategory();
-  const postCategory = usePostCategory(templateId);
-  const deleteCategory = useDeleteCategory();
+  const patchCategory = usePatchCategory(ref);
+  const postCategory = usePostCategory(templateId, ref);
+  const deleteCategory = useDeleteCategory(ref);
 
   // Called when "status" of categories query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
-    (params: GridPreProcessEditCellProps) => preProcessEditOrder(rows, params),
+    (params: GridPreProcessEditCellProps) =>
+      preProcessEditOrder(rows, params, ref),
     [rows]
   );
 
@@ -240,16 +246,19 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={{
-        text: "CREATE NEW AREA",
-        handler: handleAddDecorator,
-      }}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={{
+          text: "CREATE NEW AREA",
+          handler: handleAddDecorator,
+        }}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

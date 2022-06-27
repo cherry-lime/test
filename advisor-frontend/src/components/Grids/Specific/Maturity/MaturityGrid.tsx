@@ -32,6 +32,8 @@ import {
   usePostMaturity,
 } from "../../../../api/MaturityAPI";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 type MaturityGridProps = {
   theme: Theme;
   templateId: number;
@@ -40,22 +42,26 @@ type MaturityGridProps = {
 export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   const [rows, setRows] = React.useState<MaturityAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Maturity query
-  const { status, data, error } = useGetMaturities(templateId);
+  const { status, data } = useGetMaturities(templateId, undefined, ref);
 
   // Maturity mutations
-  const patchMaturity = usePatchMaturity();
-  const postMaturity = usePostMaturity(templateId);
-  const deleteMaturity = useDeleteMaturity();
+  const patchMaturity = usePatchMaturity(ref);
+  const postMaturity = usePostMaturity(templateId, ref);
+  const deleteMaturity = useDeleteMaturity(ref);
 
   // Called when "status" of maturities query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
-    (params: GridPreProcessEditCellProps) => preProcessEditOrder(rows, params),
+    (params: GridPreProcessEditCellProps) =>
+      preProcessEditOrder(rows, params, ref),
     [rows]
   );
 
@@ -177,16 +183,19 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={{
-        text: "CREATE NEW MATURITY LEVEL",
-        handler: handleAddDecorator,
-      }}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={{
+          text: "CREATE NEW MATURITY LEVEL",
+          handler: handleAddDecorator,
+        }}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

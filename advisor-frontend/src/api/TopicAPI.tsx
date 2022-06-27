@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
+import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
 
 export type TopicAPP = {
   id: GridRowId;
@@ -36,7 +37,11 @@ function topicToAPI(topicAPP: TopicAPP) {
 }
 
 // Get all topics from database
-export function useGetTopics(templateId: number, enabledFilter?: boolean) {
+export function useGetTopics(
+  templateId: number,
+  enabledFilter?: boolean,
+  ref?: React.RefObject<RefObject>
+) {
   return useQuery(
     ["GET", "/template", templateId, "/topic", enabledFilter],
     async () => {
@@ -56,33 +61,63 @@ export function useGetTopics(templateId: number, enabledFilter?: boolean) {
       }
 
       return topicsAPP as TopicAPP[];
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Get topic with id from database
-export function useGetTopic() {
-  return useQuery(["GET", "/topic", "/{topic_id}"], async (topicId) => {
-    // Get data from database
-    const { data } = await API.get(`/topic/${topicId}`);
+export function useGetTopic(ref?: React.RefObject<RefObject>) {
+  return useQuery(
+    ["GET", "/topic", "/{topic_id}"],
+    async (topicId) => {
+      // Get data from database
+      const { data } = await API.get(`/topic/${topicId}`);
 
-    return topicToAPP(data) as TopicAPP;
-  });
+      return topicToAPP(data) as TopicAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Post topic to database
-export function usePostTopic(templateId: number) {
-  return useMutation(["POST", "/template", templateId, "/topic"], async () => {
-    // Get response data from database
-    const { data } = await API.post(`/template/${templateId}/topic`);
+export function usePostTopic(
+  templateId: number,
+  ref?: React.RefObject<RefObject>
+) {
+  return useMutation(
+    ["POST", "/template", templateId, "/topic"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.post(`/template/${templateId}/topic`);
 
-    // Convert data to topicAPP
-    return topicToAPP(data) as TopicAPP;
-  });
+      // Convert data to topicAPP
+      return topicToAPP(data) as TopicAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Patch topic in database
-export function usePatchTopic() {
+export function usePatchTopic(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["PATCH", "/topic", "/{topic_id}"],
     async (topicAPP: TopicAPP) => {
@@ -94,12 +129,19 @@ export function usePatchTopic() {
 
       // Convert data to topicAPP
       return topicToAPP(data) as TopicAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Delete topic from database
-export function useDeleteTopic() {
+export function useDeleteTopic(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["DELETE", "/topic", "/{topic_id}"],
     async (topicId: number) => {
@@ -108,6 +150,13 @@ export function useDeleteTopic() {
 
       // Convert data to topicAPP
       return topicToAPP(data) as TopicAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }

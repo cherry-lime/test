@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 import GenericGrid from "../../Generic/GenericGrid";
 import { AssessmentType } from "../../../../types/AssessmentType";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 import {
   TemplateAPP,
   useDeleteTemplate,
@@ -40,18 +42,21 @@ export default function TemplateGrid({
 }: TemplateGridProps) {
   const [rows, setRows] = React.useState<TemplateAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Template query
-  const { status, data, error } = useGetTemplates(templateType);
+  const { status, data } = useGetTemplates(templateType, undefined, ref);
 
   // Template mutations
-  const patchTemplate = usePatchTemplate();
-  const postTemplate = usePostTemplate(templateType);
-  const deleteTemplate = useDeleteTemplate();
-  const duplicateTemplate = useDuplicateTemplate();
+  const patchTemplate = usePatchTemplate(ref);
+  const postTemplate = usePostTemplate(templateType, ref);
+  const deleteTemplate = useDeleteTemplate(ref);
+  const duplicateTemplate = useDuplicateTemplate(ref);
 
   // Called when "status" of templates query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when a row is edited
@@ -148,16 +153,19 @@ export default function TemplateGrid({
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={{
-        text: `CREATE NEW ${templateType} EVALUATION TEMPLATE`,
-        handler: handleAddDecorator,
-      }}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={{
+          text: `CREATE NEW ${templateType} EVALUATION TEMPLATE`,
+          handler: handleAddDecorator,
+        }}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

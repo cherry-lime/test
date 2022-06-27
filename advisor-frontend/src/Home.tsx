@@ -7,22 +7,17 @@ import logo from "./logo.svg";
 import "./App.css";
 import { RootState } from "./app/store";
 import { resetUser, setUserId } from "./app/userDataSlice";
-import {
-  authProfile,
-  useLoginTwo,
-  userLogout,
-  userRegister,
-} from "./api/LoginAPI";
+import { authProfile, useLogin, useLogout, useRegister } from "./api/LoginAPI";
 
 function UserInterface() {
   const { userId, userRole } = useSelector(
     (state: RootState) => state.userData
   );
   // Import login API calls
-  const login = useLoginTwo();
+  const login = useLogin();
   const auth = authProfile();
-  const register = userRegister();
-  const logout = userLogout();
+  const register = useRegister();
+  const logout = useLogout();
   const dispatch = useDispatch();
   return (
     <div className="App-header">

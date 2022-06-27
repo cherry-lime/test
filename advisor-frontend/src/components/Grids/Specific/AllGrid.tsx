@@ -17,27 +17,18 @@ import INGTheme from "../../../Theme";
 import API from "../../../api/_API";
 
 export function useLogin() {
-  return useMutation(
-    ["Login Admin"],
-    () =>
-      API.post(`/auth/login`, {
-        username: "symbol_enemy_throat",
-        password: "1ed4d82c-5ccd-447c-938e-d3c1efec1044",
-      }),
-    {
-      onSuccess: (data: any) => {
-        console.log(data);
-      },
-      onError: (error: any) => {
-        console.log(error);
-      },
-    }
+  return useMutation(["Login Admin"], () =>
+    API.post(`/auth/login`, {
+      username: "symbol_enemy_throat",
+      password: "1ed4d82c-5ccd-447c-938e-d3c1efec1044",
+    })
   );
 }
 
 export default function AllGrid() {
-  // const login = useLogin();
-  // login.mutate();
+  const login = useLogin();
+  login.mutate();
+
   const userRole = "ASSESSOR";
   const teamId = 1;
   const templateId = 1;
@@ -88,6 +79,7 @@ export default function AllGrid() {
         theme={INGTheme}
         topicId={1}
         assessmentId={assessmentId}
+        isEditable
       />
       <strong>Individuals</strong>
       <IndividualGrid theme={INGTheme} />

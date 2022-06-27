@@ -32,6 +32,8 @@ import {
   useGetSubareas,
 } from "../../../../api/SubareaAPI";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 type SubareaGridProps = {
   theme: Theme;
   categoryId: number;
@@ -40,22 +42,26 @@ type SubareaGridProps = {
 export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
   const [rows, setRows] = React.useState<SubareaAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Subarea query
-  const { status, data, error } = useGetSubareas(categoryId);
+  const { status, data } = useGetSubareas(categoryId, undefined, ref);
 
   // Subarea mutations
-  const patchSubarea = usePatchSubarea();
-  const postSubarea = usePostSubarea(categoryId);
-  const deleteSubarea = useDeleteSubarea();
+  const patchSubarea = usePatchSubarea(ref);
+  const postSubarea = usePostSubarea(categoryId, ref);
+  const deleteSubarea = useDeleteSubarea(ref);
 
   // Called when "status" of subareas query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
-    (params: GridPreProcessEditCellProps) => preProcessEditOrder(rows, params),
+    (params: GridPreProcessEditCellProps) =>
+      preProcessEditOrder(rows, params, ref),
     [rows]
   );
 
@@ -191,16 +197,19 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={{
-        text: "CREATE NEW SUBAREA",
-        handler: handleAddDecorator,
-      }}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={{
+          text: "CREATE NEW SUBAREA",
+          handler: handleAddDecorator,
+        }}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

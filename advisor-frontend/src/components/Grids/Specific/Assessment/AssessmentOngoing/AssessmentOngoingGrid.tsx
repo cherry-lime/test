@@ -24,6 +24,8 @@ import {
   usePostAssessment,
 } from "../../../../../api/AssessmentAPI";
 
+import ErrorPopup, { RefObject } from "../../../../ErrorPopup/ErrorPopup";
+
 type AssessmentOngoingGridProps = {
   theme: Theme;
   userRole: UserRole;
@@ -40,21 +42,24 @@ export default function AssessmentOngoingGrid({
 }: AssessmentOngoingGridProps) {
   const [rows, setRows] = React.useState<AssessmentAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Assessment query
-  const { status, data, error } =
+  const { status, data } =
     assessmentType === "TEAM" && teamId !== undefined
-      ? useGetMyTeamAssessments(false, teamId)
-      : useGetMyIndividualAssessments(false);
+      ? useGetMyTeamAssessments(false, teamId, ref)
+      : useGetMyIndividualAssessments(false, ref);
 
   // Assessment mutation
   const postAssessment =
     assessmentType === "TEAM" && teamId !== undefined
-      ? usePostAssessment(assessmentType, teamId)
-      : usePostAssessment(assessmentType);
+      ? usePostAssessment(assessmentType, teamId, ref)
+      : usePostAssessment(assessmentType, undefined, ref);
 
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the "Add" button is pressed below the grid
@@ -107,20 +112,23 @@ export default function AssessmentOngoingGrid({
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      hasToolbar
-      add={
-        userRole === "USER" && assessmentType === "TEAM"
-          ? undefined
-          : {
-              text: "START NEW EVALUATION",
-              handler: handleAddDecorator,
-            }
-      }
-      sortModel={[{ field: "updatedAt", sort: "desc" }]}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        hasToolbar
+        add={
+          userRole === "USER" && assessmentType === "TEAM"
+            ? undefined
+            : {
+                text: "START NEW EVALUATION",
+                handler: handleAddDecorator,
+              }
+        }
+        sortModel={[{ field: "updatedAt", sort: "desc" }]}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

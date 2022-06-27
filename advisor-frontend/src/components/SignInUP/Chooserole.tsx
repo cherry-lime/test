@@ -17,7 +17,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { userRegister } from "../../api/LoginAPI";
+import { useRegister } from "../../api/LoginAPI";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 
 export default function Chooserole({ theme }: { theme: Theme }) {
@@ -26,8 +27,12 @@ export default function Chooserole({ theme }: { theme: Theme }) {
   const handleChange = (event: SelectChangeEvent) => {
     setUserRole(event.target.value as string);
   };
+
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Imports the API hook for registering
-  const userReg = userRegister();
+  const userReg = useRegister(ref);
 
   const [open, setOpen] = React.useState(false);
 
@@ -168,6 +173,7 @@ export default function Chooserole({ theme }: { theme: Theme }) {
             </Box>
           </Container>
         </Box>
+        <ErrorPopup ref={ref} />
       </div>
     </ThemeProvider>
   );
