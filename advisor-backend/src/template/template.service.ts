@@ -104,6 +104,13 @@ export class TemplateService {
           template_id: id,
         },
         data: updateTemplateDto,
+        include: {
+          Category: {
+            include: {
+              Checkpoint: true
+            }
+          },
+        }
       })
       .catch((error) => {
         if (error.code === 'P2002') {
@@ -118,6 +125,41 @@ export class TemplateService {
         console.log(error);
         throw new InternalServerErrorException();
       });
+
+    if (updateTemplateDto.weight_range_max || updateTemplateDto.weight_range_min) {
+      const categories = template.Category.map(category => category.category_id);
+      await this.prisma.checkpoint.updateMany({
+        where: {
+          category_id: {
+            in: categories
+          },
+          weight: {
+            gt: updateTemplateDto.weight_range_max,
+          }
+        },
+        data: {
+          weight: {
+            set: updateTemplateDto.weight_range_max,
+          }
+        }
+      });
+
+      await this.prisma.checkpoint.updateMany({
+        where: {
+          category_id: {
+            in: categories
+          },
+          weight: {
+            lt: updateTemplateDto.weight_range_min,
+          }
+        },
+        data: {
+          weight: {
+            set: updateTemplateDto.weight_range_min,
+          }
+        }
+      });
+    }
 
     if (updateTemplateDto.enabled) {
       // Disable all other templates with same type
@@ -134,6 +176,7 @@ export class TemplateService {
       });
     }
 
+    delete template.Category;
     return template;
   }
 
