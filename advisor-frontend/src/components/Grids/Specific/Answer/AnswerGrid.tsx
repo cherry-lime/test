@@ -29,6 +29,8 @@ import {
   usePostAnswer,
 } from "../../../../api/AnswerAPI";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 type AnswerGridProps = {
   theme: Theme;
   templateId: number;
@@ -37,17 +39,20 @@ type AnswerGridProps = {
 export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   const [rows, setRows] = React.useState<AnswerAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Answer query
-  const { status, data, error } = useGetAnswers(templateId);
+  const { status, data } = useGetAnswers(templateId, ref);
 
   // Answer mutations
-  const patchAnswer = usePatchAnswer();
-  const postAnswer = usePostAnswer(templateId);
-  const deleteAnswer = useDeleteAnswer();
+  const patchAnswer = usePatchAnswer(ref);
+  const postAnswer = usePostAnswer(templateId, ref);
+  const deleteAnswer = useDeleteAnswer(ref);
 
   // Called when "status" of answers query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when the 'Value' column is edited
@@ -137,16 +142,19 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={{
-        text: "ADD ANSWER OPTION",
-        handler: handleAddDecorator,
-      }}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={{
+          text: "ADD ANSWER OPTION",
+          handler: handleAddDecorator,
+        }}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

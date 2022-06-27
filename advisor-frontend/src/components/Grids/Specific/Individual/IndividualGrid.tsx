@@ -20,6 +20,8 @@ import {
   usePatchUser,
 } from "../../../../api/UserAPI";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 // Define type for the rows in the grid
 type Row = {
   id: number;
@@ -36,16 +38,19 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   const [rows, setRows] = React.useState<Row[]>([]);
   const roles = ["USER", "ASSESSOR", "ADMIN"];
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // User query
-  const { status, data, error } = useGetUsers();
+  const { status, data } = useGetUsers(undefined, ref);
 
   // User mutations
-  const patchUser = usePatchUser();
-  const deleteUser = useDeleteUser();
+  const patchUser = usePatchUser(ref);
+  const deleteUser = useDeleteUser(ref);
 
   // Called when "status" of user query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when maturity level changes
@@ -120,12 +125,15 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      hasToolbar
-      sortModel={[{ field: "name", sort: "asc" }]}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        hasToolbar
+        sortModel={[{ field: "name", sort: "asc" }]}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

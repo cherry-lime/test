@@ -94,6 +94,7 @@ export class CheckpointService {
           // Throw error if category not found
           throw new NotFoundException('Maturity not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
     return this.formatTopics(createdCheckpoint);
@@ -337,6 +338,7 @@ export class CheckpointService {
           // Throw error if checkpoint not found
           throw new NotFoundException('Checkpoint not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 

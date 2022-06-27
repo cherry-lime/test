@@ -40,6 +40,7 @@ export class SubareaService {
         } else if (error.code === 'P2003') {
           throw new NotFoundException('Category not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -133,6 +134,7 @@ export class SubareaService {
         if (error.code === 'P2002') {
           throw new ConflictException('Subarea with this name already exists');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 
@@ -197,6 +199,7 @@ export class SubareaService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Subarea not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 

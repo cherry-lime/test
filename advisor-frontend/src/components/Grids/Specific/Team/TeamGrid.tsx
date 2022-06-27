@@ -12,6 +12,8 @@ import GenericGrid from "../../Generic/GenericGrid";
 
 import { UserRole } from "../../../../types/UserRole";
 
+import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+
 import {
   handleAdd,
   handleDelete,
@@ -35,17 +37,20 @@ type TeamGridProps = {
 export default function TeamGrid({ theme, userRole }: TeamGridProps) {
   const [rows, setRows] = React.useState<TeamAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Team query
-  const { status, data, error } = useGetMyTeams();
+  const { status, data } = useGetMyTeams(ref);
 
   // Team mutations
-  const patchTeam = usePatchTeam();
-  const postTeam = usePostTeam();
-  const deleteTeam = useDeleteTeam();
+  const patchTeam = usePatchTeam(ref);
+  const postTeam = usePostTeam(ref);
+  const deleteTeam = useDeleteTeam(ref);
 
   // Called when "status" of teams query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data);
   }, [status]);
 
   // Called when a row is edited
@@ -108,17 +113,20 @@ export default function TeamGrid({ theme, userRole }: TeamGridProps) {
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      processRowUpdate={processRowUpdateDecorator}
-      hasToolbar
-      add={
-        userRole === "ASSESSOR"
-          ? { text: "CREATE NEW TEAM", handler: handleAddDecorator }
-          : undefined
-      }
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
+        add={
+          userRole === "ASSESSOR"
+            ? { text: "CREATE NEW TEAM", handler: handleAddDecorator }
+            : undefined
+        }
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

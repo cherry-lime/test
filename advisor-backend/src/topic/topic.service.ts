@@ -34,6 +34,7 @@ export class TopicService {
           // Throw error if topic not found
           throw new NotFoundException('Topic not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -106,6 +107,7 @@ export class TopicService {
           // Throw error if topic not found
           throw new NotFoundException('Topic not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -128,6 +130,7 @@ export class TopicService {
           // Throw error if topic not found
           throw new NotFoundException('Topic not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }

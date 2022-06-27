@@ -84,15 +84,6 @@ describe('TemplateService', () => {
         NotFoundException
       );
     });
-
-    it('Should reject with unknown error', async () => {
-      jest
-        .spyOn(prisma.template, 'findUnique')
-        .mockRejectedValueOnce({ code: 'TEST' });
-      expect(templateService.findOne(1)).rejects.toThrowError(
-        InternalServerErrorException
-      );
-    });
   });
 
   describe('update', () => {

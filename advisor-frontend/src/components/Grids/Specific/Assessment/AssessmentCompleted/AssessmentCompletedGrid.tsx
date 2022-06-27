@@ -21,6 +21,8 @@ import {
   useGetMyTeamAssessments,
 } from "../../../../../api/AssessmentAPI";
 
+import ErrorPopup, { RefObject } from "../../../../ErrorPopup/ErrorPopup";
+
 type AssessmentCompletedGridProps = {
   theme: Theme;
   // eslint-disable-next-line react/require-default-props
@@ -35,15 +37,18 @@ export default function AssessmentCompletedGrid({
 }: AssessmentCompletedGridProps) {
   const [rows, setRows] = React.useState<AssessmentAPP[]>([]);
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Assessment query
-  const { status, data, error } =
+  const { status, data } =
     assessmentType === "TEAM" && teamId !== undefined
-      ? useGetMyTeamAssessments(true, teamId)
-      : useGetMyIndividualAssessments(true);
+      ? useGetMyTeamAssessments(true, teamId, ref)
+      : useGetMyIndividualAssessments(true, ref);
 
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data, error);
+    handleInit(setRows, status, data);
   }, [status]);
 
   const columns = React.useMemo<GridColumns<AssessmentAPP>>(
@@ -88,12 +93,15 @@ export default function AssessmentCompletedGrid({
   );
 
   return (
-    <GenericGrid
-      theme={theme}
-      rows={rows}
-      columns={columns}
-      hasToolbar
-      sortModel={[{ field: "completedAt", sort: "desc" }]}
-    />
+    <>
+      <GenericGrid
+        theme={theme}
+        rows={rows}
+        columns={columns}
+        hasToolbar
+        sortModel={[{ field: "completedAt", sort: "desc" }]}
+      />
+      <ErrorPopup ref={ref} />
+    </>
   );
 }

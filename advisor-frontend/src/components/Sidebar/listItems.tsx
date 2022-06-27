@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -7,11 +8,13 @@ import HomeIcon from "@mui/icons-material/Home";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EditIcon from "@mui/icons-material/Edit";
+import PersonIcon from "@mui/icons-material/Person";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { resetUser } from "../../app/userDataSlice";
-import { userLogout } from "../../api/LoginAPI";
+import { useLogout } from "../../api/LoginAPI";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 
 type SidebarListProps = {
   userType: Map<string, boolean>;
@@ -20,7 +23,12 @@ type SidebarListProps = {
 export default function SidebarList({ userType }: SidebarListProps) {
   const { userRole } = useSelector((state: RootState) => state.userData);
   const dispatch = useDispatch();
-  const logout = userLogout();
+
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
+  const logout = useLogout(ref);
+
   return (
     <>
       {userType.get("home") && (
@@ -37,6 +45,14 @@ export default function SidebarList({ userType }: SidebarListProps) {
             <BarChartIcon color="info" />
           </ListItemIcon>
           <ListItemText primary="Evaluations" style={{ color: "background" }} />
+        </ListItemButton>
+      )}
+      {userType.get("individuals") && (
+        <ListItemButton component={Link} to="/admin/individuals">
+          <ListItemIcon>
+            <PersonIcon color="info" />
+          </ListItemIcon>
+          <ListItemText primary="Individuals" style={{ color: "background" }} />
         </ListItemButton>
       )}
       {userType.get("teams") && (
@@ -78,6 +94,7 @@ export default function SidebarList({ userType }: SidebarListProps) {
           <ListItemText primary="Sign Out" style={{ color: "background" }} />
         </ListItemButton>
       )}
+      <ErrorPopup ref={ref} />
     </>
   );
 }

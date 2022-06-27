@@ -91,6 +91,7 @@ export class AssessmentService {
             'Assessment with this name and type already exists'
           );
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -134,7 +135,8 @@ export class AssessmentService {
           assessment_id: id,
         },
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         throw new InternalServerErrorException();
       });
 
@@ -172,6 +174,7 @@ export class AssessmentService {
             'Assessment with this name and type already exists'
           );
         } else {
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -194,6 +197,7 @@ export class AssessmentService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Assessment not found');
         } else {
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -229,6 +233,7 @@ export class AssessmentService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Assessment not found');
         } else {
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -311,6 +316,7 @@ export class AssessmentService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Assessment not found');
         } else {
+          console.log(error);
           throw new InternalServerErrorException();
         }
       });

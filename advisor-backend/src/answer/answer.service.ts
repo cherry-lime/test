@@ -34,6 +34,7 @@ export class AnswerService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -105,6 +106,7 @@ export class AnswerService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -127,6 +129,7 @@ export class AnswerService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
