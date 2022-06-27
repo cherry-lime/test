@@ -5,7 +5,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import React, { Dispatch, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import { RootState } from "../../app/store";
@@ -36,13 +36,9 @@ function ListOfRecommendations({
   // Fetch the GetTopics API
   const { status, data } = useGetTopics(templateId, undefined, ref);
 
-  const [topicList, setTopicList]: [
-    TopicAPP[] | undefined,
-    Dispatch<TopicAPP[] | undefined>
-  ] = useState();
+  const [topicList, setTopicList] = useState<TopicAPP[]>();
 
-  const [topic, setTopic]: [number | undefined, Dispatch<number | undefined>] =
-    useState();
+  const [topic, setTopic] = useState<number>();
 
   const handleTopicChange = (event: SelectChangeEvent<number>) => {
     setTopic(Number(event.target.value));
@@ -52,7 +48,6 @@ function ListOfRecommendations({
   React.useEffect(() => {
     if (status === "success") {
       setTopicList(data);
-      setTopic(data[0].id as number);
     }
   }, [status]);
 
