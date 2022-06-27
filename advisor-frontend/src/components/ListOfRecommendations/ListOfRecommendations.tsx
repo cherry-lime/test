@@ -70,7 +70,7 @@ function ListOfRecommendations({
       {topic !== undefined && (
         <RecommendationGrid
           theme={theme}
-          assessmentId={assessmentId} 
+          assessmentId={assessmentId}
           topicId={topic}
           isEditable={userRole === "ASSESSOR"} // TODO: Add && assessment === done later
         />

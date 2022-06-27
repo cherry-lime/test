@@ -19,11 +19,14 @@ function TextfieldEdit({
   theme,
   rows,
   handleSave,
+  label = "",
 }: {
   text: string;
   theme: ThemeOptions;
   rows: number;
   handleSave: (intermediateValue: string) => void;
+  // eslint-disable-next-line react/require-default-props
+  label?: string;
 }) {
   /*
   initial value of the textfield is set to the bodytext passed as parameter
@@ -67,6 +70,7 @@ function TextfieldEdit({
           }}
           variant="outlined"
           multiline={multiline}
+          label={label}
           rows={rows}
           size="small"
           value={intermediateValue}
