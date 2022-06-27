@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useLogin } from "../../api/LoginAPI";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import INGTheme from "../../Theme";
 
 export default function DetailGen({ theme }: { theme: Theme }) {
   // Make global state variables accessible

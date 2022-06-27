@@ -20,6 +20,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useLogin } from "../../api/LoginAPI";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import INGTheme from "../../Theme";
 
 // Sign in functionality to be used later
 export default function SignIn({ theme }: { theme: Theme }) {

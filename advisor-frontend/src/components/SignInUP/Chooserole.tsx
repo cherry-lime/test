@@ -19,6 +19,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useRegister } from "../../api/LoginAPI";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import INGTheme from "../../Theme";
 
 export default function Chooserole({ theme }: { theme: Theme }) {
   // Defines the role state to keep track of the selected role
