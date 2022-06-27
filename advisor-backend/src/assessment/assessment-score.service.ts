@@ -105,6 +105,7 @@ export class AssessmentScoreService {
           assessment_id: true,
         },
       },
+      CheckpointInTopic: {},
     };
 
     if (topic_id) {
@@ -136,10 +137,7 @@ export class AssessmentScoreService {
         },
       };
     }
-
-    // Getting the ids of checkpoints which have are not disabled and are in
-    //   maturityIds and categoryIds
-    const checkpoints = await this.prisma.checkpoint.findMany({
+    let checkpoints = await this.prisma.checkpoint.findMany({
       where: {
         disabled: false,
         maturity_id: {
@@ -151,6 +149,13 @@ export class AssessmentScoreService {
       },
       select: selectParam,
     });
+
+    checkpoints = checkpoints.filter(
+      (c) =>
+        maturityIds.some((m) => m.maturity_id === c.maturity_id) &&
+        categoryIds.some((c) => c.category_id === c.category_id) &&
+        (!topic_id || c.CheckpointInTopic.length > 0)
+    );
 
     if (checkpoints.length === 0) {
       return new BadRequestException(
@@ -202,6 +207,11 @@ export class AssessmentScoreService {
       ...categoryIdsList.map((id, index) => ({ [id]: index }))
     );
 
+    console.log(maturityIdsPositionInList);
+    console.log(categoryIdsPositionInList);
+    console.log(possibleAnswers);
+    console.log(checkpoints);
+
     // Creating dictionary with possible answers for quicker lookup of answer
     // weights
     const possibleAnswersDictionary = Object.assign(
@@ -231,29 +241,27 @@ export class AssessmentScoreService {
         categoryIdsPositionInList[checkpoint.category_id];
 
       if (
-        !topic_id || // If topic_id is not specified, calculate score for all topics
-        (checkpoint.CheckpointInTopic && // If topic_id is specified, calculate score for one topic
-          checkpoint.CheckpointInTopic.length > 0 && // should be at least one checkpoint in topic
-          Object.keys(possibleAnswersDictionary).includes(
-            checkpoint.CheckpointAndAnswersInAssessments.map(
-              (answer) => answer.answer_id
-            )[0].toString()
-          )) // Checkpoint asnwer has to be in possible answers
+        (!topic_id || // If topic_id is not specified, calculate score for all topics
+          (checkpoint.CheckpointInTopic && // If topic_id is specified, calculate score for one topic
+            checkpoint.CheckpointInTopic.length > 0)) && // should be at least one checkpoint in topic
+        Object.keys(possibleAnswersDictionary).includes(
+          checkpoint.CheckpointAndAnswersInAssessments.map(
+            (answer) => answer.answer_id
+          )[0].toString()
+        ) // Checkpoint asnwer has to be in possible answers
       ) {
         calculateScorePerCatoryPerMaturity[specificMaturityIndex][
           specificCategoryIndex
-        ][0] = +checkpoint.weight; // Weights of checkpoints per category per maturity
+        ][0] += checkpoint.weight; // Weights of checkpoints per category per maturity
         calculateScorePerCatoryPerMaturity[specificMaturityIndex][
           specificCategoryIndex
-        ][1] =
-          (+(
-            // Score per category per maturity
-            possibleAnswersDictionary[
-              checkpoint.CheckpointAndAnswersInAssessments.map(
-                (answer) => answer.answer_id
-              )[0]
-            ]
-          ) *
+        ][1] +=
+          // Score per category per maturity
+          (possibleAnswersDictionary[
+            checkpoint.CheckpointAndAnswersInAssessments.map(
+              (answer) => answer.answer_id
+            )[0]
+          ] *
             checkpoint.weight) /
           100;
       } else {
@@ -329,6 +337,8 @@ export class AssessmentScoreService {
       category_total: {},
       total: 0,
     };
+
+    console.log(scores);
 
     for (let i = 0; i < maturityIdsList.length; i++) {
       for (let j = 0; j < categoryIdsList.length; j++) {
