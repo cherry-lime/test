@@ -32,7 +32,7 @@ import {
   usePatchTeam,
   usePostTeam,
 } from "../../../../api/TeamAPI";
-import { useDeleteMemberTeam } from "../../../../api/UserAPI";
+import { useDeleteMemberTeamTwo } from "../../../../api/UserAPI";
 
 type TeamGridProps = {
   theme: Theme;
@@ -53,7 +53,7 @@ export default function TeamGrid({ theme, userRole, userId }: TeamGridProps) {
   const patchTeam = usePatchTeam(ref);
   const postTeam = usePostTeam(ref);
   const deleteTeam = useDeleteTeam(ref);
-  const deleteMemberTeam = useDeleteMemberTeam(ref);
+  const deleteMemberTeam = useDeleteMemberTeamTwo(ref);
 
   // Called when "status" of teams query is changed
   React.useEffect(() => {
