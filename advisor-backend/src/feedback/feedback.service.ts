@@ -214,9 +214,9 @@ export class FeedbackService {
   private async getAnswersObject(
     answeredCheckpoints: CheckpointAndAnswersInAssessments[]
   ) {
-    const answerIds = answeredCheckpoints.map(
-      (checkpoint) => checkpoint.answer_id
-    );
+    const answerIds = answeredCheckpoints
+      .map((checkpoint) => checkpoint.answer_id)
+      .filter((answer_id) => answer_id);
 
     const answersList = await this.prisma.answer.findMany({
       where: {
