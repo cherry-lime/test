@@ -19,7 +19,6 @@ import {
   useGetSaveAssessment,
   usePostFeedbackAssessment,
 } from "../../api/AssessmentAPI";
-import ProgressOverallCard from "../../components/PageCard/SpecificPageCards/ProgressOverallCard";
 import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
@@ -224,7 +223,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           </Tabs>
         </Stack>
       </Card>
-      {value === "Recommendations" && <ProgressOverallCard />}
 
       {/* this is not actually a subarea, it's the automated feedback */}
       {value !== "Progress" && (

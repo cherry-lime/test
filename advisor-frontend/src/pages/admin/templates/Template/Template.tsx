@@ -80,7 +80,7 @@ function Template({ theme }: { theme: Theme }) {
           title={`Template "${templateInfo && templateInfo.name}"`}
           sidebarType={userType.ADMIN}
         >
-          <h2> Feedback Textbox </h2>
+          <h2> Feedback Information Textbox </h2>
           <p style={{ margin: "0px" }}>
             This is the automated textfield that appears at the top of every
             assessment. It might contain an explanation of the recommendations
