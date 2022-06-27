@@ -97,7 +97,7 @@ function ListOfCheckpoints({
           const answerDictionary: Record<number, number | undefined> = {};
           checkpointAnswerResponse.data.forEach((a) => {
             answerDictionary[a.checkpointId] = a.answerId;
-          })
+          });
           setCheckpointAnswerList(answerDictionary);
           break;
         }
