@@ -118,6 +118,7 @@ model Assessment {
   country_name                      String                              @default("")
   department_name                   String                              @default("")
   feedback_text                     String                              @default("")
+  information                       String
   created_at                        DateTime                            @default(now())
   updated_at                        DateTime                            @updatedAt
   completed_at                      DateTime?
@@ -151,6 +152,7 @@ model Template {
   template_description String         @default("")
   template_type        AssessmentType
   template_feedback    String         @default("")
+  information          String         @default("")
   enabled              Boolean        @default(false)
   weight_range_min     Int            @default(1)
   weight_range_max     Int            @default(3)
