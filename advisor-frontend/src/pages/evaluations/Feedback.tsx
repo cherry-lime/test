@@ -24,6 +24,18 @@ import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 
+const showFeedbackText = (
+  team: boolean,
+  userRole: string,
+  value: string,
+  assessmentInfo: AssessmentAPP
+) =>
+  team &&
+  userRole === "ASSESSOR" &&
+  value === "Recommendations" &&
+  assessmentInfo &&
+  assessmentInfo.feedbackText;
+
 /**
  * Page with the feedback related to a self assessment
  * This should only be accessible to the user whose assement this belongs to
@@ -132,7 +144,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   }, [answersResponse]);
 
   React.useEffect(() => {
-    console.log(checkpointAnswerResponse.status);
     if (checkpointAnswerResponse.data) {
       switch (checkpointAnswerResponse.status) {
         case "success":
@@ -171,7 +182,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   }, [topicResponse.status, topicResponse.data]);
 
   const download = () => {
-    console.log(checkpointAnswerList);
     if (
       assessmentId &&
       areaList &&
@@ -229,10 +239,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
       {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
 
-      {team &&
-        userRole === "ASSESSOR" &&
-        value === "Recommendations" &&
-        assessmentInfo && (
+      {assessmentInfo &&
+        showFeedbackText(team, userRole, value, assessmentInfo) && (
           <TextfieldEdit
             rows={5}
             theme={theme}
@@ -244,7 +252,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       {team &&
         userRole === "USER" &&
         value === "Recommendations" &&
-        assessmentInfo && (
+        assessmentInfo &&
+        assessmentInfo.feedbackText !== "" && (
           <Textfield
             rows={5}
             columns="inherit"

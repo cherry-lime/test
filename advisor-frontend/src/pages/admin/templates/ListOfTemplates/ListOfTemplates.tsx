@@ -44,7 +44,7 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         setActiveIndividualTemplate(activeIndividual);
       }
     }
-  }, [statusIndividual]);
+  }, [statusIndividual, dataIndividual]);
 
   useEffect(() => {
     if (statusTeam === "success") {
@@ -58,7 +58,7 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         setActiveTeamTemplate(activeTeam);
       }
     }
-  }, [statusTeam]);
+  }, [statusTeam, dataTeam]);
 
   const handleActiveIndividualTemplateChange = useCallback(
     (event) => {
