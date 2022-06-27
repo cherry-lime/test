@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
+import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircle";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import IconButton from "@mui/material/IconButton";
 import { Theme, ThemeProvider } from "@mui/material";
@@ -47,8 +47,9 @@ export default function SignIn({ theme }: { theme: Theme }) {
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={INGTheme}>
       <div
         // ING colored image for background
         style={{
@@ -66,6 +67,7 @@ export default function SignIn({ theme }: { theme: Theme }) {
           onClick={handleClickOpen}
           sx={{
             color: "white",
+            mr: 250,
             mt: 1,
             float: "left",
             marginLeft: 2,
@@ -98,118 +100,120 @@ export default function SignIn({ theme }: { theme: Theme }) {
             <Button onClick={handleClose}>Go to Login</Button>
           </DialogActions>
         </Dialog>
-        <Typography
-          variant="h2"
-          align="center"
-          color="white"
-          fontWeight="fontWeightBold"
-          sx={{
-            pt: 5,
-          }}
-        >
-          TestING Advisor
-        </Typography>
-        {/* Container is where all functionality exists */}
-        <Container
-          component="main"
-          maxWidth="xs"
-          sx={{
-            pt: 10,
-          }}
-        >
-          <Box
+        <Box sx={{ height: "25vh" }}>
+          <Typography
+            variant="h2"
+            align="center"
+            color="white"
+            fontWeight="fontWeightBold"
             sx={{
-              pt: 0,
-              marginBottom: 0,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              border: 4,
-              padding: "20px 5px 0",
-              borderColor: theme.palette.primary.main,
-              borderRadius: "16px",
-              bgcolor: "white",
+              pt: 5,
             }}
           >
-            {/* Contact icon on top of username */}
-            <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
-              <AccountCircleRoundedIcon />
-            </Avatar>
+            TestING Advisor
+          </Typography>
+        </Box>
+        {/* Container is where all functionality exists */}
+        <Box sx={{ height: "25vh" }}>
+          <Container
+            component="main"
+            maxWidth="xs"
+            sx={{
+              pt: 10,
+            }}
+          >
             <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{ p: 4, pt: 1.5 }}
+              sx={{
+                pt: 0,
+                marginBottom: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "20px 5px 0",
+                borderRadius: "16px",
+                bgcolor: "white",
+              }}
             >
-              {/* Textfield for username and password */}
-              <TextField
-                margin="normal"
-                fullWidth
-                id="Username"
-                label="Username"
-                name="Username"
-                autoComplete="email"
-                variant="filled"
-                sx={{ bgcolor: theme.palette.primary.light }}
-                value={inputUserName}
-                onChange={(e) => {
-                  setInputUserName(e.target.value);
-                }}
-              />
-              <TextField
-                margin="normal"
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                variant="filled"
-                value={inputPassword}
-                sx={{ bgcolor: theme.palette.primary.light }}
-                onChange={(e) => {
-                  setInputPassword(e.target.value);
-                }}
-              />
-              {/* Buttons that log in and a button that goes to the sign up page */}
-              <Grid container columns={2} spacing={0} sx={{ marginTop: 2 }}>
-                <Grid>
-                  <Button
-                    size="medium"
-                    variant="contained"
-                    sx={{
-                      p: 2,
-                      m: 2,
-                      ml: 6,
-                    }}
-                    onClick={() => {
-                      login.mutate({
-                        username: inputUserName,
-                        password: inputPassword,
-                      });
-                    }}
-                  >
-                    Log In
-                  </Button>
-                </Grid>
-                <Grid>
-                  <Link to="/signup">
+              {/* Contact icon on top of username */}
+              <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
+                <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
+              </Avatar>
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
+                sx={{ p: 4, pt: 1.5 }}
+              >
+                {/* Textfield for username and password */}
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  id="Username"
+                  label="Username"
+                  name="Username"
+                  autoComplete="email"
+                  variant="filled"
+                  sx={{ bgcolor: theme.palette.primary.light }}
+                  value={inputUserName}
+                  onChange={(e) => {
+                    setInputUserName(e.target.value);
+                  }}
+                />
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  variant="filled"
+                  value={inputPassword}
+                  sx={{ bgcolor: theme.palette.primary.light }}
+                  onChange={(e) => {
+                    setInputPassword(e.target.value);
+                  }}
+                />
+                {/* Buttons that log in and a button that goes to the sign up page */}
+                <Grid container columns={2} spacing={0} sx={{ marginTop: 2 }}>
+                  <Grid>
                     <Button
+                      size="medium"
+                      variant="contained"
                       sx={{
                         p: 2,
                         m: 2,
+                        ml: 6,
                       }}
-                      variant="outlined"
-                      size="medium"
+                      onClick={() => {
+                        login.mutate({
+                          username: inputUserName,
+                          password: inputPassword,
+                        });
+                      }}
                     >
-                      Sign Up
+                      Log In
                     </Button>
-                  </Link>
+                  </Grid>
+                  <Grid>
+                    <Link to="/signup">
+                      <Button
+                        sx={{
+                          p: 2,
+                          m: 2,
+                        }}
+                        variant="outlined"
+                        size="medium"
+                      >
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </Grid>
                 </Grid>
-              </Grid>
+              </Box>
             </Box>
-          </Box>
-        </Container>
+          </Container>
+        </Box>
         <ErrorPopup ref={ref} />
       </div>
     </ThemeProvider>
