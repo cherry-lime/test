@@ -47,7 +47,7 @@ export function useGetUsers(
   ref?: React.RefObject<RefObject>
 ) {
   return useQuery(
-    ["GET", "/user"],
+    roleFilter === undefined ? ["GET", "/user"] : ["GET", "/user", roleFilter],
     async () => {
       // Get data from database
       const { data } = await API.get(`/user`);
@@ -169,7 +169,9 @@ export function useGetMembersTeam(
   ref?: React.RefObject<RefObject>
 ) {
   return useQuery(
-    ["GET", "/teams", teamId, "/members"],
+    roleFilter === undefined
+      ? ["GET", "/teams", teamId, "/members"]
+      : ["GET", "/teams", teamId, "/members", roleFilter],
     async () => {
       // Get data from database
       const { data } = await API.get(`/teams/${teamId}/members`);

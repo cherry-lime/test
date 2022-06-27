@@ -38,7 +38,9 @@ export default function MemberGrid({
   const ref = React.useRef<RefObject>(null);
 
   // Member query
-  const { status, data } = useGetMembersTeam(teamId, userRole, ref);
+  const { status, data } = forAssessors
+    ? useGetMembersTeam(teamId, "ASSESSOR", ref)
+    : useGetMembersTeam(teamId, "USER", ref);
 
   // Member mutation
   const deleteMember = useDeleteMemberTeam(teamId, ref);
