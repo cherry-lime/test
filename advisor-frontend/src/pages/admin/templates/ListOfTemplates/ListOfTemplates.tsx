@@ -1,31 +1,105 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FormControl, MenuItem, Select, Theme } from "@mui/material";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
 import TemplateGrid from "../../../../components/Grids/Specific/Template/TemplateGrid";
+import {
+  TemplateAPP,
+  useGetTemplates,
+  usePatchTemplate,
+} from "../../../../api/TemplateAPI";
 
 /**
  * Page containing the list of all existing templates
  * This should only be accessible to admins
  */
 function ListOfTemplates({ theme }: { theme: Theme }) {
-  const [activeIndividual, setActiveIndividual] = useState("123");
-  const [activeTeam, setActiveTeam] = useState("abc");
-  const individualTemplateList = ["123", "456", "789"];
-  const teamTemplateList = ["abc", "def", "ghi"];
+  const [individualTemplates, setIndividualTemplates] = useState<TemplateAPP[]>(
+    []
+  );
+  const [teamTemplates, setTeamTemplates] = useState<TemplateAPP[]>([]);
 
-  const handleActiveIndividualChange = useCallback(
+  const [activeIndividualTemplate, setActiveIndividualTemplate] =
+    useState<TemplateAPP>();
+  const [activeTeamTemplate, setActiveTeamTemplate] = useState<TemplateAPP>();
+
+  // Template queries
+  const { status: statusIndividual, data: dataIndividual } =
+    useGetTemplates("INDIVIDUAL");
+
+  const { status: statusTeam, data: dataTeam } = useGetTemplates("TEAM");
+
+  // Template mutation
+  const patchTemplate = usePatchTemplate();
+
+  useEffect(() => {
+    if (statusIndividual === "success") {
+      setIndividualTemplates(dataIndividual);
+
+      const activeIndividual = dataIndividual.find(
+        (templateAPP: TemplateAPP) => templateAPP.enabled
+      );
+
+      if (activeIndividual) {
+        setActiveIndividualTemplate(activeIndividual);
+      }
+    }
+  }, [statusIndividual]);
+
+  useEffect(() => {
+    if (statusTeam === "success") {
+      setTeamTemplates(dataTeam);
+
+      const activeTeam = dataTeam.find(
+        (templateAPP: TemplateAPP) => templateAPP.enabled
+      );
+
+      if (activeTeam) {
+        setActiveTeamTemplate(activeTeam);
+      }
+    }
+  }, [statusTeam]);
+
+  const handleActiveIndividualTemplateChange = useCallback(
     (event) => {
-      setActiveIndividual(event.target.value);
+      const templateId = parseInt(event.target.value, 10);
+
+      const oldTemplate = individualTemplates.find(
+        (template) => template.id === templateId
+      );
+
+      if (oldTemplate) {
+        const newTemplate = { ...oldTemplate, enabled: true };
+
+        patchTemplate.mutate(newTemplate, {
+          onSuccess: (templateAPP: TemplateAPP) => {
+            setActiveIndividualTemplate(templateAPP);
+          },
+        });
+      }
     },
-    [activeIndividual]
+    [activeIndividualTemplate]
   );
 
-  const handleActiveTeamChange = useCallback(
+  const handleActiveTeamTemplateChange = useCallback(
     (event) => {
-      setActiveTeam(event.target.value);
+      const templateId = parseInt(event.target.value, 10);
+
+      const oldTemplate = teamTemplates.find(
+        (template) => template.id === templateId
+      );
+
+      if (oldTemplate) {
+        const newTemplate = { ...oldTemplate, enabled: true };
+
+        patchTemplate.mutate(newTemplate, {
+          onSuccess: (templateAPP: TemplateAPP) => {
+            setActiveTeamTemplate(templateAPP);
+          },
+        });
+      }
     },
-    [activeTeam]
+    [activeIndividualTemplate]
   );
 
   return (
@@ -37,12 +111,12 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         </p>
         <FormControl sx={{ width: "inherit" }}>
           <Select
-            value={activeIndividual}
-            onChange={handleActiveIndividualChange}
+            value={activeIndividualTemplate ? activeIndividualTemplate.id : ""}
+            onChange={handleActiveIndividualTemplateChange}
           >
-            {individualTemplateList.map((t) => (
-              <MenuItem key={t} value={t}>
-                {t}
+            {individualTemplates.map((template) => (
+              <MenuItem key={template.name} value={template.id.toString()}>
+                {template.name}
               </MenuItem>
             ))}
           </Select>
@@ -55,10 +129,13 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
           Active template for team evaluations:
         </p>
         <FormControl sx={{ width: "inherit" }}>
-          <Select value={activeTeam} onChange={handleActiveTeamChange}>
-            {teamTemplateList.map((t) => (
-              <MenuItem key={t} value={t}>
-                {t}
+          <Select
+            value={activeTeamTemplate ? activeTeamTemplate.id : ""}
+            onChange={handleActiveTeamTemplateChange}
+          >
+            {teamTemplates.map((template) => (
+              <MenuItem key={template.name} value={template.id.toString()}>
+                {template.name}
               </MenuItem>
             ))}
           </Select>
