@@ -67,12 +67,12 @@ function assessmentToAPI(assessmentAPP: AssessmentAPP) {
 
 export type AssessmentCheckpointAPP = {
   checkpointId: number;
-  answerId: number;
+  answerId: number | undefined;
 };
 
 type AssessmentCheckpointAPI = {
   checkpoint_id: number;
-  answer_id: number;
+  answer_id: number | undefined;
 };
 
 function assessmentCheckpointToAPP(
@@ -198,10 +198,13 @@ export function useGetMyTeamAssessments(
 }
 
 // Get assessment with id from database
-export function useGetAssessment(ref?: React.RefObject<RefObject>) {
+export function useGetAssessment(
+  assessmentId: number,
+  ref?: React.RefObject<RefObject>
+) {
   return useQuery(
-    ["GET", "/assessment", "/{assessment_id}"],
-    async (assessmentId) => {
+    ["GET", "/assessment", assessmentId],
+    async () => {
       // Get data from database
       const { data } = await API.get(`/assessment/${assessmentId}`);
 
@@ -213,6 +216,7 @@ export function useGetAssessment(ref?: React.RefObject<RefObject>) {
           handleError(ref, error);
         }
       },
+      enabled: !!assessmentId,
     }
   );
 }
@@ -325,8 +329,10 @@ export function usePostCompleteAssessment(
 }
 
 // Save assessment checkpoint in database
+
 export function usePostSaveAssessment(
   assessmentId: number,
+  oldValue: string,
   ref?: React.RefObject<RefObject>
 ) {
   return useMutation(
@@ -351,6 +357,7 @@ export function usePostSaveAssessment(
           handleError(ref, error);
         }
       },
+      onMutate: () => ({ oldValue }),
     }
   );
 }
@@ -360,12 +367,12 @@ export function useGetSaveAssessment(
   assessmentId: number,
   ref?: React.RefObject<RefObject>
 ) {
-  return useMutation(
+  return useQuery(
     ["GET", "/assessment", assessmentId, "/save"],
     async () => {
       // Get response data from database
       const { data } = await API.get(`/assessment/${assessmentId}/save`);
-
+      // console.log(data);
       // Convert data to checkpointsAPP
       const checkpointsAPP = data.map(
         (assessmentCheckpointAPI: AssessmentCheckpointAPI) =>
@@ -381,6 +388,7 @@ export function useGetSaveAssessment(
           handleError(ref, error);
         }
       },
+      enabled: !!assessmentId,
     }
   );
 }

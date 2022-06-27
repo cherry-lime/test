@@ -3,8 +3,6 @@ import { UseMutationResult } from "react-query";
 
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
-import { Tooltip } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import GenericGrid from "../../Generic/GenericGrid";
@@ -62,15 +60,6 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
     []
   );
 
-  // Called when the "Visit" action is pressed
-  const handleVisit = React.useCallback(
-    (rowId: GridRowId) => () => {
-      // TODO Replace this by correct link
-      window.location.href = `http://google.com/search?q=${rowId}`;
-    },
-    []
-  );
-
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
@@ -106,15 +95,6 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
         width: 100,
         getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
-            icon={
-              <Tooltip title="Visit">
-                <ArrowForwardIcon />
-              </Tooltip>
-            }
-            label="Visit"
-            onClick={handleVisit(params.id)}
-          />,
-          <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteDecorator(params.id)}
@@ -123,7 +103,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
         ],
       },
     ],
-    [handleVisit, handleDeleteDecorator]
+    [handleDeleteDecorator]
   );
 
   return (

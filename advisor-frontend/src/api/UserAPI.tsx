@@ -47,7 +47,7 @@ export function useGetUsers(
   ref?: React.RefObject<RefObject>
 ) {
   return useQuery(
-    ["GET", "/user"],
+    roleFilter === undefined ? ["GET", "/user"] : ["GET", "/user", roleFilter],
     async () => {
       // Get data from database
       const { data } = await API.get(`/user`);
@@ -169,7 +169,9 @@ export function useGetMembersTeam(
   ref?: React.RefObject<RefObject>
 ) {
   return useQuery(
-    ["GET", "/teams", teamId, "/members"],
+    roleFilter === undefined
+      ? ["GET", "/teams", teamId, "/members"]
+      : ["GET", "/teams", teamId, "/members", roleFilter],
     async () => {
       // Get data from database
       const { data } = await API.get(`/teams/${teamId}/members`);
@@ -201,7 +203,7 @@ export function useGetMembersTeam(
 }
 
 // Delete user from team with team id from database
-export function useDeleteMemberTeam(
+export function useDeleteMemberTeamOne(
   teamId: number,
   ref?: React.RefObject<RefObject>
 ) {
@@ -210,6 +212,27 @@ export function useDeleteMemberTeam(
     async (userId: number) => {
       // Get response data from database
       const { data } = await API.delete(`/teams/${teamId}/members/${userId}`);
+
+      // Convert data to userAPP
+      return userToAPP(data) as UserAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
+}
+
+// Delete user from team with team id from database
+export function useDeleteMemberTeamTwo(ref?: React.RefObject<RefObject>) {
+  return useMutation(
+    ["DELETE", "/teams", "{team_id}", "/members", "/{user_id}"],
+    async ({ teamId, userId }: { teamId: number; userId: number }) => {
+      // Get response data from database
+      const { data } = await API.delete(`/teams/${teamId}/member/${userId}`);
 
       // Convert data to userAPP
       return userToAPP(data) as UserAPP;

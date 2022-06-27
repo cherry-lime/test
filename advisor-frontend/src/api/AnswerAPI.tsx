@@ -43,6 +43,7 @@ function answerToAPI(answerAPP: AnswerAPP) {
 // Get all answers from database
 export function useGetAnswers(
   templateId: number,
+  enabledFilter?: boolean,
   ref?: React.RefObject<RefObject>
 ) {
   return useQuery(
@@ -55,6 +56,14 @@ export function useGetAnswers(
       const answersAPP = data.map((answerAPI: AnswerAPI) =>
         answerToAPP(answerAPI)
       );
+      // If defined, filter on enabled/disabled
+      if (enabledFilter !== undefined) {
+        const answersFilteredAPP = answersAPP.filter(
+          (answerAPP: AnswerAPP) => answerAPP.enabled === enabledFilter
+        );
+
+        return answersFilteredAPP as AnswerAPP[];
+      }
 
       // Convert data to answerAPP
       return answersAPP as AnswerAPP[];
@@ -65,6 +74,7 @@ export function useGetAnswers(
           handleError(ref, error);
         }
       },
+      enabled: !!templateId,
     }
   );
 }

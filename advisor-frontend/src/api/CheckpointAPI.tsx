@@ -16,7 +16,7 @@ export type CheckpointAPP = {
   enabled: boolean;
 };
 
-type CheckpointAPI = {
+export type CheckpointAPI = {
   checkpoint_id: number;
   checkpoint_description: string;
   checkpoint_additional_information: number;
@@ -28,7 +28,7 @@ type CheckpointAPI = {
   disabled: boolean;
 };
 
-function checkpointToAPP(checkpointAPI: CheckpointAPI) {
+export function checkpointToAPP(checkpointAPI: CheckpointAPI) {
   return {
     id: checkpointAPI.checkpoint_id,
     description: checkpointAPI.checkpoint_description,
@@ -91,6 +91,7 @@ export function useGetCheckpoints(
           handleError(ref, error);
         }
       },
+      enabled: !!categoryId,
     }
   );
 }

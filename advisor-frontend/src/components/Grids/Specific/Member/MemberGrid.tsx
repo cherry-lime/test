@@ -14,7 +14,7 @@ import { handleDelete, handleInit } from "../handlers";
 import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
 
 import {
-  useDeleteMemberTeam,
+  useDeleteMemberTeamOne,
   useGetMembersTeam,
   UserAPP,
 } from "../../../../api/UserAPI";
@@ -38,10 +38,12 @@ export default function MemberGrid({
   const ref = React.useRef<RefObject>(null);
 
   // Member query
-  const { status, data } = useGetMembersTeam(teamId, userRole, ref);
+  const { status, data } = forAssessors
+    ? useGetMembersTeam(teamId, "ASSESSOR", ref)
+    : useGetMembersTeam(teamId, "USER", ref);
 
   // Member mutation
-  const deleteMember = useDeleteMemberTeam(teamId, ref);
+  const deleteMember = useDeleteMemberTeamOne(teamId, ref);
 
   // Called when "status" of member query is changed
   React.useEffect(() => {

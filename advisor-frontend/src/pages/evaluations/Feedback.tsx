@@ -1,6 +1,6 @@
 import { Card, Stack, Tab, Tabs, Theme, Button, Box } from "@mui/material";
 import React, { useState } from "react";
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import userTypes from "../../components/Sidebar/listUsersTypes";
@@ -10,88 +10,178 @@ import ListOfCheckpoints from "../../components/ListOfCheckpoints/ListOfCheckpoi
 import TextfieldEdit from "../../components/TextfieldEdit/TextfieldEdit";
 import Textfield from "../../components/Textfield/Textfield";
 import { RootState } from "../../app/store";
-import pdf from "./pdf";
+import createPDF from "./pdf";
 import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
+import {
+  AssessmentAPP,
+  useGetAssessment,
+  useGetSaveAssessment,
+  usePostFeedbackAssessment,
+} from "../../api/AssessmentAPI";
 import ProgressOverallCard from "../../components/PageCard/SpecificPageCards/ProgressOverallCard";
+import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
+import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
+import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 
 /**
  * Page with the feedback related to a self assessment
  * This should only be accessible to the user whose assement this belongs to
  */
 function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
-  // const { assessmentId } = useParams();
-  const assessmentId = 1;
+  const { assessmentId } = useParams();
 
   const { userRole } = useSelector((state: RootState) => state.userData);
-
-  // hardcoded to test pdf generation
-  const recs = [
-    { order: 1, description: "bla", additionalInfo: "hello" },
-    { order: 2, description: "bla", additionalInfo: "hello" },
-  ];
-  // hardcoded to test pdf generation
-  const checkpoints = [
-    {
-      number: 1,
-      description:
-        "this is a checkpoint description this is supposed to be quite long in order to test how it will look like in a table, so i'm just writing random things in hopes that it will work properly and none of the text disappears or goes over another",
-      topics: "topic 1, topic 2",
-      answer: "yes",
-    },
-    {
-      number: 1,
-      description: "this is a checkpoint description",
-      topics: "topic 4",
-      answer: "no",
-    },
-  ];
-
-  const createPDF = () => {
-    const filename = `Feedback-${assessmentId}.pdf`;
-    const recsHeaders = ["Priority", "Recommendation", "Additional Info"];
-    const recsArray = recs.map((r) => [
-      r.order,
-      r.description,
-      r.additionalInfo,
-    ]);
-    const recsSections = [
-      { title: "", text: "here is the automated feedback" },
-      { title: "Assessor Feedback", text: "here is the assessor feedback" },
-    ];
-    const recsTable = {
-      title: "Recommendations",
-      sections: recsSections,
-      data: recsArray,
-      headers: recsHeaders,
-    };
-
-    const checkpointHeaders = ["Number", "Description", "Topics", "Answer"];
-    const checkArray = checkpoints.map((c) => [
-      c.number,
-      c.description,
-      c.topics,
-      c.answer,
-    ]);
-    const checkSections = [
-      { title: "Subarea", text: "here is the subarea description" },
-    ];
-    const checkAreaTable = {
-      title: "Checkpoints: Area Name",
-      sections: checkSections,
-      data: checkArray,
-      headers: checkpointHeaders,
-    };
-    pdf({
-      title: `Feedback for assessment ${assessmentId}`,
-      tables: [recsTable, checkAreaTable, checkAreaTable],
-      filename,
-    });
-  };
 
   const [value, setValue] = useState("Recommendations");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+  };
+
+  const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
+  const assessmentResponse = useGetAssessment(Number(assessmentId));
+
+  React.useEffect(() => {
+    switch (assessmentResponse.status) {
+      case "error":
+        // eslint-disable-next-line no-console
+        console.log(assessmentResponse.error);
+        break;
+      case "success":
+        if (assessmentResponse.data) {
+          setAssessmentInfo(assessmentResponse.data);
+        }
+        break;
+      default:
+        break;
+    }
+  }, [assessmentResponse.status, assessmentResponse.data]);
+
+  const postFeedback = usePostFeedbackAssessment(Number(assessmentId));
+
+  const changeFeedback = (newFeedback: string) => {
+    postFeedback.mutate(newFeedback, {
+      onSuccess: (newAssessmentInfo: AssessmentAPP) => {
+        setAssessmentInfo(newAssessmentInfo);
+      },
+      onError: (e: unknown) => {
+        // eslint-disable-next-line no-console
+        console.log(e);
+      },
+    });
+  };
+
+  const [areaList, setAreaList] = useState<CategoryAPP[]>();
+  const [answerList, setAnswerList] = useState<AnswerAPP[]>();
+  const [checkpointAnswerList, setCheckpointAnswerList] =
+    useState<Record<number, number | undefined>>();
+
+  // get area list from API
+  const areasResponse = useGetCategories(
+    Number(assessmentInfo?.templateId),
+    true
+  );
+
+  // get answer list from API
+  const answersResponse = useGetAnswers(
+    Number(assessmentInfo?.templateId),
+    true
+  );
+
+  // get checkpoint answer list from API
+  const checkpointAnswerResponse = useGetSaveAssessment(
+    Number(assessmentInfo?.id)
+  );
+
+  // set the area list value
+  React.useEffect(() => {
+    if (areasResponse.data) {
+      switch (areasResponse.status) {
+        case "error":
+          // eslint-disable-next-line no-console
+          console.log(areasResponse.error);
+          break;
+        case "success":
+          setAreaList(areasResponse.data);
+          break;
+        default:
+          break;
+      }
+    }
+  }, [areasResponse]);
+
+  // set the answer list value
+  React.useEffect(() => {
+    if (answersResponse.data) {
+      switch (answersResponse.status) {
+        case "error":
+          // eslint-disable-next-line no-console
+          console.log(answersResponse.error);
+          break;
+        case "success":
+          setAnswerList(answersResponse.data);
+          break;
+        default:
+          break;
+      }
+    }
+  }, [answersResponse]);
+
+  React.useEffect(() => {
+    // console.log(checkpointAnswerResponse.status);
+    if (checkpointAnswerResponse.data) {
+      switch (checkpointAnswerResponse.status) {
+        case "success": {
+          const answerDictionary: Record<number, number | undefined> = {};
+          checkpointAnswerResponse.data.forEach((a) => {
+            answerDictionary[a.checkpointId] = a.answerId;
+          });
+          setCheckpointAnswerList(answerDictionary);
+          break;
+        }
+        default:
+          break;
+      }
+    }
+  }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
+
+  const [topicList, setTopicList] = useState<TopicAPP[]>([]);
+  const topicResponse = useGetTopics(Number(assessmentInfo?.templateId), true);
+
+  // set assessment info value
+  React.useEffect(() => {
+    switch (topicResponse.status) {
+      case "error":
+        // eslint-disable-next-line no-console
+        console.log(topicResponse.error);
+        break;
+      case "success":
+        if (topicResponse.data) {
+          setTopicList(topicResponse.data);
+        }
+        break;
+      default:
+        break;
+    }
+  }, [topicResponse.status, topicResponse.data]);
+
+  const download = () => {
+    // console.log(checkpointAnswerList);
+    if (
+      assessmentId &&
+      areaList &&
+      answerList &&
+      checkpointAnswerList &&
+      topicList
+    ) {
+      createPDF(
+        Number(assessmentId),
+        areaList,
+        checkpointAnswerList,
+        topicList,
+        answerList
+      );
+    }
   };
 
   return (
@@ -133,41 +223,49 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
       {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
 
-      {team && userRole === "ASSESSOR" && value === "Recommendations" && (
-        <TextfieldEdit rows={5} theme={theme} text="assessor feedback here" />
-      )}
+      {team &&
+        userRole === "ASSESSOR" &&
+        value === "Recommendations" &&
+        assessmentInfo && (
+          <TextfieldEdit
+            rows={5}
+            theme={theme}
+            text={assessmentInfo.feedbackText}
+            handleSave={changeFeedback}
+          />
+        )}
 
-      {team && userRole === "USER" && value === "Recommendations" && (
-        <Textfield
-          rows={5}
-          columns="inherit"
-          theme={theme}
-          text="assessor feedback here"
-        />
-      )}
+      {team &&
+        userRole === "USER" &&
+        value === "Recommendations" &&
+        assessmentInfo && (
+          <Textfield
+            rows={5}
+            columns="inherit"
+            theme={theme}
+            text={assessmentInfo.feedbackText}
+          />
+        )}
 
-      {value === "Recommendations" && (
+      {value === "Recommendations" && assessmentInfo && (
         <ListOfRecommendations
           theme={theme}
-          assessmentId={assessmentId.toString()}
+          assessmentId={Number(assessmentId)}
+          templateId={Number(assessmentInfo.templateId)}
         />
       )}
 
-      {value === "Checkpoints" && (
+      {value === "Checkpoints" && assessmentInfo && (
         <ListOfCheckpoints
           feedback
           theme={theme}
-          assessmentId={assessmentId.toString()}
+          assessmentInfo={assessmentInfo}
         />
       )}
 
       {value === "Progress" && <ProgressEvaluationCard />}
 
-      <Button
-        className="widthInherited"
-        variant="contained"
-        onClick={createPDF}
-      >
+      <Button className="widthInherited" variant="contained" onClick={download}>
         <Stack direction="row">
           <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />
           <Box sx={{ p: 1.0 }}>

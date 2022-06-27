@@ -50,7 +50,6 @@ export function useGetTopics(
 
       // Convert data to topicsAPP
       const topicsAPP = data.map((topicAPI: TopicAPI) => topicToAPP(topicAPI));
-
       // If defined, filter on enabled/disabled
       if (enabledFilter !== undefined) {
         const topicsFilteredAPP = topicsAPP.filter(
@@ -68,15 +67,16 @@ export function useGetTopics(
           handleError(ref, error);
         }
       },
+      enabled: !!templateId,
     }
   );
 }
 
 // Get topic with id from database
-export function useGetTopic(ref?: React.RefObject<RefObject>) {
+export function useGetTopic(topicId: number, ref?: React.RefObject<RefObject>) {
   return useQuery(
     ["GET", "/topic", "/{topic_id}"],
-    async (topicId) => {
+    async () => {
       // Get data from database
       const { data } = await API.get(`/topic/${topicId}`);
 
@@ -88,6 +88,7 @@ export function useGetTopic(ref?: React.RefObject<RefObject>) {
           handleError(ref, error);
         }
       },
+      enabled: !!topicId,
     }
   );
 }

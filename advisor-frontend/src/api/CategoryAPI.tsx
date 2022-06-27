@@ -22,7 +22,7 @@ type CategoryAPI = {
   template_id: number;
 };
 
-function categoryToAPP(categoryAPI: CategoryAPI) {
+export function categoryToAPP(categoryAPI: CategoryAPI) {
   return {
     id: categoryAPI.category_id,
     name: categoryAPI.category_name,
@@ -56,7 +56,7 @@ export function useGetCategories(
       // Get response data from database
       const { data } = await API.get(`/template/${templateId}/category`);
 
-      // Convert data to categoriesAPP
+      // Convert data to csategoriesAPP
       const categoriesAPP = data.map((categoryAPI: CategoryAPI) =>
         categoryToAPP(categoryAPI)
       );
@@ -64,7 +64,7 @@ export function useGetCategories(
       // If defined, filter on enabled/disabled
       if (enabledFilter !== undefined) {
         const categoriesFilteredAPP = categoriesAPP.filter(
-          (categoryAPP: CategoryAPP) => categoryAPP.enabled !== enabledFilter
+          (categoryAPP: CategoryAPP) => categoryAPP.enabled === enabledFilter
         );
 
         return categoriesFilteredAPP as CategoryAPP[];
@@ -78,6 +78,7 @@ export function useGetCategories(
           handleError(ref, error);
         }
       },
+      enabled: !!templateId,
     }
   );
 }

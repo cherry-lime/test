@@ -1,11 +1,110 @@
+/* eslint-disable max-lines */
 import JsPDF from "jspdf";
+import { AnswerAPP } from "../../api/AnswerAPI";
+import { RecommendationAPP } from "../../api/RecommendationAPI";
+import { CategoryAPP } from "../../api/CategoryAPI";
+import { CheckpointAPP } from "../../api/CheckpointAPI";
+import { TopicAPP } from "../../api/TopicAPI";
+import {
+  getAreas,
+  getCheckpoints,
+  getRecommendations,
+  getSubareas,
+} from "./pdfHelpers";
 
 type Table = {
   title: string;
-  sections: { title: string; text: string }[];
+  sections: { title: string; text: string[] }[];
   data: (string | number)[][];
   headers: string[];
 };
+
+type CheckpointAnswer = {
+  id: number;
+  description: string;
+  order: number;
+  topics: string;
+  answer: string;
+};
+
+const transformCheckpoints = (
+  checkpoints: CheckpointAPP[],
+  answers: Record<number, number | undefined>,
+  answerList: AnswerAPP[],
+  topicList: TopicAPP[]
+) =>
+  checkpoints.map((c) => {
+    const object: CheckpointAnswer = {
+      id: Number(c.id),
+      description: c.description,
+      order: c.order,
+      topics: topicList
+        .filter((t) => c.topics.includes(Number(t.id)))
+        .map((t) => t.name)
+        .join(", "),
+      answer: answerList
+        .filter((a) => a.id === answers[Number(c.id)])
+        .map((a) => a.label)
+        .join(""),
+    };
+    return object;
+  });
+
+async function getAreaTables(
+  allAreas: CategoryAPP[],
+  checkpointHeaders: string[],
+  checkpointAnswers: Record<number, number | undefined>,
+  answerList: AnswerAPP[],
+  topics: TopicAPP[]
+) {
+  const tables: Table[] = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for (const a of allAreas) {
+    // eslint-disable-next-line no-await-in-loop
+    const checkpoints = await getCheckpoints(Number(a.id));
+    const tCheckpoints = transformCheckpoints(
+      checkpoints,
+      checkpointAnswers,
+      answerList,
+      topics
+    );
+
+    // eslint-disable-next-line no-await-in-loop
+    const subareas = await getSubareas(Number(a.id));
+    tables.push({
+      title: `Checkpoints: ${a.name}`,
+      sections: subareas.map((s) => ({
+        title: s.name,
+        text: [s.summary, s.description],
+      })),
+      data: tCheckpoints.map((c) => [
+        c.order,
+        c.description,
+        c.topics,
+        c.answer,
+      ]),
+      headers: checkpointHeaders,
+    });
+  }
+  return tables;
+}
+
+function getRecTables(
+  recs: Record<string, RecommendationAPP[]>,
+  topics: TopicAPP[],
+  recsHeaders: string[]
+) {
+  const tables: Table[] = [];
+  topics.forEach((t) => {
+    tables.push({
+      title: `Recommendations: ${t.name}`,
+      sections: [],
+      data: recs[t.name].map((c) => [c.order, c.description, c.additionalInfo]),
+      headers: recsHeaders,
+    });
+  });
+  return tables;
+}
 
 function addTable(
   doc: JsPDF,
@@ -62,17 +161,22 @@ function addTable(
 
     doc.setFontSize(textFontSize).setFont(doc.getFont().fontName, "normal");
 
-    const sectText = doc.splitTextToSize(String(section.text), liveArea.width);
-    const sectTextHeight = sectText.length * doc.getLineHeight();
+    section.text.forEach((t) => {
+      if (t === "") return;
+      const sectText = doc.splitTextToSize(String(t), liveArea.width);
+      const sectTextHeight = sectText.length * doc.getLineHeight();
 
-    if (nextY + sectTextHeight > liveArea.height) {
-      doc.addPage();
-      nextY = pageMargin;
-    }
+      if (nextY + sectTextHeight > liveArea.height) {
+        doc.addPage();
+        nextY = pageMargin;
+      }
 
-    doc.text(sectText, pageMargin, nextY);
+      doc.text(sectText, pageMargin, nextY);
 
-    nextY += padding + sectTextHeight + 10;
+      nextY += sectTextHeight + 3;
+    });
+
+    nextY += 7 + padding;
   });
 
   const firstColWidth = 50;
@@ -142,15 +246,7 @@ function addTable(
   return nextY;
 }
 
-export default function pdf({
-  tables,
-  title,
-  filename,
-}: {
-  tables: Table[];
-  title: string;
-  filename: string;
-}) {
+function pdf(tables: Table[], title: string, filename: string) {
   const doc = new JsPDF({
     orientation: "l",
     unit: "pt",
@@ -213,4 +309,35 @@ export default function pdf({
   });
 
   doc.save(filename);
+}
+
+export default async function createPDF(
+  assessmentId: number,
+  areas: CategoryAPP[],
+  checkpointAnswers: Record<number, number | undefined>,
+  topics: TopicAPP[],
+  answerList: AnswerAPP[]
+) {
+  const filename = `Feedback-${assessmentId}.pdf`;
+  const recsHeaders = ["Priority", "Recommendation", "Additional Info"];
+  const checkpointHeaders = ["Order", "Description", "Topics", "Answer"];
+
+  const tables: Table[] = [];
+  const recs = await getRecommendations(assessmentId, topics);
+
+  getRecTables(recs, topics, recsHeaders).forEach((s) => tables.push(s));
+
+  const allAreas = await getAreas(areas.map((a) => Number(a.id)));
+  (
+    await getAreaTables(
+      allAreas,
+      checkpointHeaders,
+      checkpointAnswers,
+      answerList,
+      topics
+    )
+  ).forEach((s) => tables.push(s));
+  // console.log(allAreas);
+
+  pdf(tables, `Feedback for assessment ${assessmentId}`, filename);
 }

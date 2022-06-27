@@ -64,10 +64,10 @@ export function useGetMyTeams(ref?: React.RefObject<RefObject>) {
 }
 
 // Get team with id from database
-export function useGetTeam(ref?: React.RefObject<RefObject>) {
+export function useGetTeam(teamId: number, ref?: React.RefObject<RefObject>) {
   return useQuery(
-    ["GET", "/teams", "/{team_id}"],
-    async (teamId) => {
+    ["GET", "/teams", teamId],
+    async () => {
       // Get data from database
       const { data } = await API.get(`/teams/${teamId}`);
 
@@ -150,10 +150,13 @@ export function useDeleteTeam(ref?: React.RefObject<RefObject>) {
 }
 
 // Get team with id from database
-export function useGetInviteTokenTeam(ref?: React.RefObject<RefObject>) {
+export function useGetInviteTokenTeam(
+  teamId: number,
+  ref?: React.RefObject<RefObject>
+) {
   return useQuery(
-    ["GET", "/teams", "/{team_id}", "invite_token"],
-    async (teamId) => {
+    ["GET", "/teams", teamId, "invite_token"],
+    async () => {
       // Get data from database
       const { data } = await API.get(`/teams/${teamId}/invite_token`);
 
@@ -170,10 +173,13 @@ export function useGetInviteTokenTeam(ref?: React.RefObject<RefObject>) {
 }
 
 // Patch team in database
-export function useJoinInviteTokenTeam(ref?: React.RefObject<RefObject>) {
+export function useJoinInviteTokenTeam(
+  inviteToken: string,
+  ref?: React.RefObject<RefObject>
+) {
   return useMutation(
-    ["PATCH", "/teams", "/join", "invite_token"],
-    async (inviteToken) => {
+    ["PATCH", "/teams", "/join", inviteToken],
+    async () => {
       // Get response data from database
       const { data } = await API.patch(`/teams/join/${inviteToken}`);
 
