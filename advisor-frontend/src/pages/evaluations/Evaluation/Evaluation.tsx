@@ -87,6 +87,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
         <ListOfRecommendations
           theme={theme}
           assessmentId={Number(assessmentId)}
+          templateId={assessmentInfo.templateId}
         />
       )}
 

@@ -253,11 +253,11 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           />
         )}
 
-      {value === "Recommendations" && (
+      {value === "Recommendations" && assessmentInfo && (
         <ListOfRecommendations
           theme={theme}
           assessmentId={Number(assessmentId)}
-          templateId={assessmentInfo?.templateId}
+          templateId={Number(assessmentInfo.templateId)}
         />
       )}
 
