@@ -16,9 +16,6 @@ function TeamList({ theme }: { theme: Theme }) {
   );
 
   const [token, setToken] = useState("");
-  const saveToken = (newToken: string) => {
-    setToken(newToken);
-  };
 
   const patchToken = useJoinInviteTokenTeam(token);
 
