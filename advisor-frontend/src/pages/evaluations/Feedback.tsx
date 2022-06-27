@@ -150,7 +150,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
 
   const [topicList, setTopicList] = useState<TopicAPP[]>([]);
-  const topicResponse = useGetTopics(assessmentInfo?.templateId);
+  const topicResponse = useGetTopics(Number(assessmentInfo?.templateId));
 
   // set assessment info value
   React.useEffect(() => {

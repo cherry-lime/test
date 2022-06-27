@@ -40,7 +40,7 @@ function Template({ theme }: { theme: Theme }) {
       onSuccess: (templateAPP: TemplateAPP) => {
         setTemplateInfo(templateAPP);
       },
-      onError: (error: unknown) => {
+      onError: () => {
         // handle error
       },
     });
@@ -51,7 +51,7 @@ function Template({ theme }: { theme: Theme }) {
     setTemplateInfo(newInfo);
 
     patchTemplate.mutate(newInfo, {
-      onError: (error: unknown) => {
+      onError: () => {
         // handle error
         setTemplateInfo(oldInfo);
       },

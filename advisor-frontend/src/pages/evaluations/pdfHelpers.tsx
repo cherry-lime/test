@@ -11,7 +11,7 @@ import {
   RecommendationAPI,
   RecommendationAPP,
   recommendationToAPP,
-} from "../../api/AssessmentAPI";
+} from "../../api/RecommendationAPI";
 import { TopicAPP } from "../../api/TopicAPI";
 
 export async function getArea(areaId: number) {

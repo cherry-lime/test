@@ -12,14 +12,14 @@ export type RecommendationAPP = {
   additionalInfo: string;
 };
 
-type RecommendationAPI = {
+export type RecommendationAPI = {
   feedback_id: number;
   order: number;
   feedback_text: string;
   feedback_additional_information: string;
 };
 
-function recommendationToAPP(recommendationAPI: RecommendationAPI) {
+export function recommendationToAPP(recommendationAPI: RecommendationAPI) {
   return {
     id: recommendationAPI.feedback_id,
     order: recommendationAPI.order,
@@ -28,7 +28,7 @@ function recommendationToAPP(recommendationAPI: RecommendationAPI) {
   } as RecommendationAPP;
 }
 
-function recommendationToAPI(recommendationAPP: RecommendationAPP) {
+export function recommendationToAPI(recommendationAPP: RecommendationAPP) {
   return {
     feedback_id: recommendationAPP.id,
     order: recommendationAPP.order,

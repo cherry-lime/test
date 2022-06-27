@@ -43,7 +43,7 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   const ref = React.useRef<RefObject>(null);
 
   // Answer query
-  const { status, data } = useGetAnswers(templateId, ref);
+  const { status, data } = useGetAnswers(templateId, undefined, ref);
 
   // Answer mutations
   const patchAnswer = usePatchAnswer(ref);

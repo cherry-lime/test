@@ -168,10 +168,10 @@ export function useGetInviteTokenTeam(teamId: number, ref?: React.RefObject<RefO
 }
 
 // Patch team in database
-export function useJoinInviteTokenTeam(ref?: React.RefObject<RefObject>) {
+export function useJoinInviteTokenTeam(inviteToken: string, ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["PATCH", "/teams", "/join", "invite_token"],
-    async (inviteToken) => {
+    async () => {
       // Get response data from database
       const { data } = await API.patch(`/teams/join/${inviteToken}`);
 
