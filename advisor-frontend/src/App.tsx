@@ -34,8 +34,14 @@ function App() {
 
   // Call authentication API on pageload once
   const auth = authProfile(ref);
-  useEffect(() => auth.mutate(), []);
+  useEffect(() => {auth.mutate(); console.log(userRole)}, []);
 
+  // If the authentication is in progress, show blank page
+  if(auth.isLoading){
+    return (<>  </>)
+  }
+  // If the authentication is done, render the routing
+  if (auth.isSuccess || auth.isError) {  
   return (
     <div className="App">
       <GlobalStyles />
@@ -137,13 +143,13 @@ function App() {
         {/* Redirect to initial page if there is an invalid URL */}
         <Route
           path="/*"
-          element={userRole !== "NONE" ? <Navigate to="/error" /> : <> </>}
+          element={userRole !== "NONE" ? <Navigate to="/error" /> : <><Navigate to="/login" /> </>}
         />
         <Route path="/error" element={<ErrorPage />} />
       </Routes>
       <ErrorPopup ref={ref} />
     </div>
   );
-}
+}}
 
 export default App;
