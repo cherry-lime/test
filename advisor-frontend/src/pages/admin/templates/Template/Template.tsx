@@ -62,7 +62,7 @@ function Template({ theme }: { theme: Theme }) {
     <div>
       {templateInfo && (
         <PageLayout
-          title={`Template "${templateInfo && templateInfo.name}"`}
+          title={`Template "${templateInfo.name}"`}
           sidebarType={userType.ADMIN}
         >
           <h2> Feedback Textbox </h2>

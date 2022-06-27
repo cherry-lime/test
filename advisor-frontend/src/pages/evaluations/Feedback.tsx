@@ -102,9 +102,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           console.log(areasResponse.error);
           break;
         case "success":
-          if (areasResponse.data) {
-            setAreaList(areasResponse.data);
-          }
+          setAreaList(areasResponse.data);
           break;
         default:
           break;
@@ -121,9 +119,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           console.log(answersResponse.error);
           break;
         case "success":
-          if (answersResponse.data) {
-            setAnswerList(answersResponse.data);
-          }
+          setAnswerList(answersResponse.data);
           break;
         default:
           break;
@@ -136,13 +132,11 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     if (checkpointAnswerResponse.data) {
       switch (checkpointAnswerResponse.status) {
         case "success":
-          if (checkpointAnswerResponse.data) {
-            const answerDictionary: Record<number, number | undefined> = {};
-            checkpointAnswerResponse.data.forEach((a) => {
-              answerDictionary[a.checkpointId] = a.answerId;
-            });
-            setCheckpointAnswerList(answerDictionary);
-          }
+          const answerDictionary: Record<number, number | undefined> = {};
+          checkpointAnswerResponse.data.forEach((a) => {
+            answerDictionary[a.checkpointId] = a.answerId;
+          });
+          setCheckpointAnswerList(answerDictionary);
           break;
         default:
           break;
@@ -177,8 +171,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       areaList &&
       answerList &&
       checkpointAnswerList &&
-      topicList &&
-      answerList
+      topicList
     ) {
       createPDF(
         Number(assessmentId),

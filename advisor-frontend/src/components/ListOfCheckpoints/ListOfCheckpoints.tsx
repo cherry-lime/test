@@ -41,19 +41,19 @@ function ListOfCheckpoints({
 
   // get area list from API
   const areasResponse = useGetCategories(
-    Number(assessmentInfo.templateId),
+    Number(assessmentInfo?.templateId),
     true
   );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
-    Number(assessmentInfo.templateId),
+    Number(assessmentInfo?.templateId),
     true
   );
 
   // get checkpoint answer list from API
   const checkpointAnswerResponse = useGetSaveAssessment(
-    Number(assessmentInfo.id)
+    Number(assessmentInfo?.id)
   );
 
   // set the area list value
@@ -65,9 +65,7 @@ function ListOfCheckpoints({
           console.log(areasResponse.error);
           break;
         case "success":
-          if (areasResponse.data) {
-            setAreaList(areasResponse.data);
-          }
+          setAreaList(areasResponse.data);
           break;
         default:
           break;
@@ -84,9 +82,7 @@ function ListOfCheckpoints({
           console.log(answersResponse.error);
           break;
         case "success":
-          if (answersResponse.data) {
-            setAnswerList(answersResponse.data);
-          }
+          setAnswerList(answersResponse.data);
           break;
         default:
           break;
@@ -98,13 +94,11 @@ function ListOfCheckpoints({
     if (checkpointAnswerResponse.data) {
       switch (checkpointAnswerResponse.status) {
         case "success":
-          if (checkpointAnswerResponse.data) {
-            const answerDictionary: Record<number, number | undefined> = {};
-            checkpointAnswerResponse.data.forEach((a) => {
-              answerDictionary[a.checkpointId] = a.answerId;
-            });
-            setCheckpointAnswerList(answerDictionary);
-          }
+          const answerDictionary: Record<number, number | undefined> = {};
+          checkpointAnswerResponse.data.forEach((a) => {
+            answerDictionary[a.checkpointId] = a.answerId;
+          })
+          setCheckpointAnswerList(answerDictionary);
           break;
         default:
           break;
