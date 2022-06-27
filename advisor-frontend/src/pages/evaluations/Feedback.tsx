@@ -237,15 +237,16 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       </Card>
 
       {/* this is not actually a subarea, it's the automated feedback */}
-      {value !== "Progress" && (
-        <Subarea
-          theme={theme}
-          title=""
-          summary="Below you will find a list of items that you or your squad can review in order to start improving your testing maturity. This list is based on your answers and prioritized to maximize your testing maturity."
-          description="Only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
-          tip
-        />
-      )}
+      {value !== "Progress" &&
+        assessmentInfo &&
+        assessmentInfo.information !== "" && (
+          <Subarea
+            theme={theme}
+            title=""
+            summary=""
+            description={assessmentInfo.information}
+          />
+        )}
 
       {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
 

@@ -90,11 +90,11 @@ function Template({ theme }: { theme: Theme }) {
           <TextfieldEdit
             rows={5}
             theme={theme}
-            text={templateInfo.feedback}
+            text={templateInfo.information}
             handleSave={(intermediateStringValue) =>
               changeInfo({
                 ...templateInfo,
-                feedback: intermediateStringValue,
+                information: intermediateStringValue,
               })
             }
           />
