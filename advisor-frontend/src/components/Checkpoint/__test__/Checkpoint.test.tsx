@@ -17,6 +17,8 @@ it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 
     <QueryClientProvider client={client}>
       <Checkpoint
         feedback={false}
+        assessmentId={2}
+        checkpointId={1}
         description="Checkpoint Description"
         number={1}
         theme={Theme}
