@@ -103,7 +103,13 @@ export class TeamsService {
       })
       .catch((error) => {
         console.log(error);
-        throw new InternalServerErrorException();
+        if (error.code === 'P2002') {
+          throw new InternalServerErrorException(
+            'User is already associated to the team'
+          );
+        } else {
+          throw new InternalServerErrorException();
+        }
       });
 
     return await this.findTeamMembers(temp.team_id).catch((error) => {
