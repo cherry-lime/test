@@ -78,7 +78,7 @@ export function useGetCategories(
           handleError(ref, error);
         }
       },
-      enabled: !!templateId
+      enabled: !!templateId,
     }
   );
 }
