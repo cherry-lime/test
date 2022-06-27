@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { AssessmentType, User } from '@prisma/client';
-import { SaveService } from 'src/save/save.service';
+import { SaveService } from '../save/save.service';
 import { FeedbackService } from '../feedback/feedback.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
