@@ -198,7 +198,10 @@ export function useGetMyTeamAssessments(
 }
 
 // Get assessment with id from database
-export function useGetAssessment(assessmentId: number, ref?: React.RefObject<RefObject>) {
+export function useGetAssessment(
+  assessmentId: number,
+  ref?: React.RefObject<RefObject>
+) {
   return useQuery(
     ["GET", "/assessment", assessmentId],
     async () => {
@@ -213,7 +216,7 @@ export function useGetAssessment(assessmentId: number, ref?: React.RefObject<Ref
           handleError(ref, error);
         }
       },
-      enabled: !!assessmentId
+      enabled: !!assessmentId,
     }
   );
 }
@@ -354,7 +357,7 @@ export function usePostSaveAssessment(
           handleError(ref, error);
         }
       },
-      onMutate: () => ({ oldValue })
+      onMutate: () => ({ oldValue }),
     }
   );
 }
@@ -364,12 +367,12 @@ export function useGetSaveAssessment(
   assessmentId: number,
   ref?: React.RefObject<RefObject>
 ) {
-  return useMutation(
+  return useQuery(
     ["GET", "/assessment", assessmentId, "/save"],
     async () => {
       // Get response data from database
       const { data } = await API.get(`/assessment/${assessmentId}/save`);
-
+      console.log(data);
       // Convert data to checkpointsAPP
       const checkpointsAPP = data.map(
         (assessmentCheckpointAPI: AssessmentCheckpointAPI) =>
@@ -385,6 +388,7 @@ export function useGetSaveAssessment(
           handleError(ref, error);
         }
       },
+      enabled: !!assessmentId,
     }
   );
 }
