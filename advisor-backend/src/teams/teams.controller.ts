@@ -21,7 +21,6 @@ import { Team } from './dto/team.dto';
 import { TeamMembers } from './dto/team-member.dto';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
-import { Roles } from '../common/decorators/roles.decorator';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
 
