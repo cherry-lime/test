@@ -203,13 +203,10 @@ export function useGetMembersTeam(
 }
 
 // Delete user from team with team id from database
-export function useDeleteMemberTeam(
-  teamId: number,
-  ref?: React.RefObject<RefObject>
-) {
+export function useDeleteMemberTeam(ref?: React.RefObject<RefObject>) {
   return useMutation(
-    ["DELETE", "/teams", teamId, "/members", "/user_id"],
-    async (userId: number) => {
+    ["DELETE", "/teams", "{team_id}", "/members", "/{user_id}"],
+    async ({ teamId, userId }: { teamId: number; userId: number }) => {
       // Get response data from database
       const { data } = await API.delete(`/teams/${teamId}/members/${userId}`);
 

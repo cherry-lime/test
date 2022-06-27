@@ -12,7 +12,9 @@ import { useJoinInviteTokenTeam } from "../../../api/TeamAPI";
  * Page with the list of teams that the user or assessor is part of
  */
 function TeamList({ theme }: { theme: Theme }) {
-  const { userRole } = useSelector((state: RootState) => state.userData);
+  const { userRole, userId } = useSelector(
+    (state: RootState) => state.userData
+  );
 
   const [token, setToken] = useState("Enter token here");
   const saveToken = (newToken: string) => {
@@ -45,7 +47,7 @@ function TeamList({ theme }: { theme: Theme }) {
         </Stack>
       )}
 
-      <TeamGrid theme={theme} userRole={userRole} />
+      <TeamGrid theme={theme} userRole={userRole} userId={Number(userId)} />
     </PageLayout>
   );
 }
