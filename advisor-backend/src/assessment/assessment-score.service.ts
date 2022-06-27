@@ -210,11 +210,6 @@ export class AssessmentScoreService {
       ...categoryIdsList.map((id, index) => ({ [id]: index }))
     );
 
-    console.log(maturityIdsPositionInList);
-    console.log(categoryIdsPositionInList);
-    console.log(possibleAnswers);
-    console.log(checkpoints);
-
     // Creating dictionary with possible answers for quicker lookup of answer
     // weights
     const possibleAnswersDictionary = Object.assign(
@@ -340,8 +335,6 @@ export class AssessmentScoreService {
       category_total: {},
       total: 0,
     };
-
-    console.log(scores);
 
     for (let i = 0; i < maturityIdsList.length; i++) {
       for (let j = 0; j < categoryIdsList.length; j++) {
