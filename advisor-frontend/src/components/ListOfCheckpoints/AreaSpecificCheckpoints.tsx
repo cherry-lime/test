@@ -26,6 +26,7 @@ function AreaSpecificCheckpoints({
   areaId,
   answerList,
   checkpointAnswerList,
+  setCheckpointAnswerList,
   theme,
   feedback,
 }: {
@@ -34,6 +35,9 @@ function AreaSpecificCheckpoints({
   areaId: number;
   answerList: AnswerAPP[];
   checkpointAnswerList: Record<number, number | undefined>;
+  setCheckpointAnswerList: React.Dispatch<
+    React.SetStateAction<Record<number, number | undefined> | undefined>
+  >;
   theme: ThemeOptions;
   feedback: boolean;
 }) {
@@ -63,9 +67,6 @@ function AreaSpecificCheckpoints({
 
   // get checkpoint list from API
   const checkpointResponse = useGetCheckpoints(areaId, true, ref);
-
-  const [checkpointComponents, setCheckpointComponents] =
-    useState<React.ReactElement[]>();
 
   const [subareaComponents, setSubareaComponents] =
     useState<React.ReactElement[]>();
@@ -108,37 +109,6 @@ function AreaSpecificCheckpoints({
     }
   }, [checkpointResponse]);
 
-  // create checkpoint card components
-  React.useEffect(() => {
-    if (checkpointList && answerList && checkpointAnswerList) {
-      return setCheckpointComponents(
-        checkpointList.map((checkpoint) => (
-          <Checkpoint
-            key={`checkpoint-card-${checkpoint.id}`}
-            feedback={feedback}
-            checkpointId={Number(checkpoint.id)}
-            assessmentId={assessmentId}
-            topicList={topicList}
-            number={checkpoint.order}
-            topicIds={checkpoint.topics}
-            selectedAnswer={
-              // eslint-disable-next-line no-nested-ternary
-              Number(checkpoint.id) in checkpointAnswerList
-                ? checkpointAnswerList[Number(checkpoint.id)]
-                  ? checkpointAnswerList[Number(checkpoint.id)]?.toString()
-                  : "-"
-                : "-"
-            }
-            theme={theme}
-            description={checkpoint.description}
-            answers={answerList}
-          />
-        ))
-      );
-    }
-    return undefined;
-  }, [checkpointList, checkpointAnswerList]);
-
   React.useEffect(() => {
     if (subareaList !== undefined) {
       setSubareaComponents(
@@ -154,6 +124,31 @@ function AreaSpecificCheckpoints({
       );
     }
   }, [subareaList]);
+
+  const checkpointIdToAnswerLabel = (checkpointId: number) => {
+    if (checkpointId in checkpointAnswerList) {
+      const answer = checkpointAnswerList[checkpointId] || "-";
+      return answer.toString() || "-";
+    }
+    return "-";
+  };
+
+  const createCheckpointCard = (checkpoint: CheckpointAPP) => (
+    <Checkpoint
+      key={`checkpoint-card-${checkpoint.id}`}
+      feedback={feedback}
+      checkpointId={Number(checkpoint.id)}
+      assessmentId={assessmentId}
+      topicList={topicList}
+      number={checkpoint.order}
+      topicIds={checkpoint.topics}
+      selectedAnswer={checkpointIdToAnswerLabel(checkpoint.id)}
+      setCheckpointAnswerList={setCheckpointAnswerList}
+      theme={theme}
+      description={checkpoint.description}
+      answers={answerList}
+    />
+  );
 
   return (
     <div style={{ width: "inherit", display: "contents" }}>
@@ -172,12 +167,15 @@ function AreaSpecificCheckpoints({
         </Stack>
       </Card>
       {subareaComponents !== undefined && subareaComponents}
+
       {value === "Single" &&
-        checkpointComponents !== undefined &&
-        checkpointComponents[page - 1]}
+        checkpointList !== undefined &&
+        createCheckpointCard(checkpointList[page - 1])}
+
       {value === "List" &&
-        checkpointComponents !== undefined &&
-        checkpointComponents}
+        checkpointList !== undefined &&
+        checkpointList.map((checkpoint) => createCheckpointCard(checkpoint))}
+
       {checkpointList !== undefined && (
         <Grid item container direction="column" alignItems="center">
           <Grid item>
