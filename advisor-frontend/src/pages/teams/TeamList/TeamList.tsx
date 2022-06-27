@@ -1,11 +1,10 @@
-import { Box, Button, Stack, Theme } from "@mui/material";
+import { Box, Button, Stack, TextField, Theme } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useCallback, useState } from "react";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import TeamGrid from "../../../components/Grids/Specific/Team/TeamGrid";
 import { RootState } from "../../../app/store";
-import TextfieldEdit from "../../../components/TextfieldEdit/TextfieldEdit";
 import { useJoinInviteTokenTeam } from "../../../api/TeamAPI";
 
 /**
@@ -17,9 +16,6 @@ function TeamList({ theme }: { theme: Theme }) {
   );
 
   const [token, setToken] = useState("");
-  const saveToken = (newToken: string) => {
-    setToken(newToken);
-  };
 
   const patchToken = useJoinInviteTokenTeam(token);
 
@@ -32,10 +28,9 @@ function TeamList({ theme }: { theme: Theme }) {
       {userRole !== "ADMIN" && (
         <Stack direction="row" sx={{ width: "inherit" }}>
           <Box>
-            <TextfieldEdit
-              handleSave={saveToken}
-              text={token}
-              theme={theme}
+            <TextField
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
               label="Enter token"
               rows={1}
             />
