@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Patch,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -9,6 +8,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   ForbiddenException,
+  Post,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import {
@@ -85,11 +85,11 @@ export class TeamsController {
   }
 
   /**
-   * [PATCH] /team/join/:invite_token - Join team via invite_token
+   * [POST] /team/join/:invite_token - Join team via invite_token
    * @param invite_token invite_token
    * @returns Udated team members object
    */
-  @Patch('join/:invite_token')
+  @Post('join/:invite_token')
   @ApiResponse({
     description: 'Join team via invite_token',
     type: TeamMembers,
