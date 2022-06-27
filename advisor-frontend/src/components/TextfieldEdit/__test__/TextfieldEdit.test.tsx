@@ -35,7 +35,9 @@ it("Rendering without crash", () => {
   let text = "lorem ipsum";
   const { getByText } = render(
     <TextfieldEdit
-      handleSave={() => {text = "a"}}
+      handleSave={() => {
+        text = "a";
+      }}
       rows={5}
       text={text}
       theme={theme}
