@@ -46,7 +46,9 @@ export class TeamsService {
 
     if (teamMemberIds.length === 0) {
       // Throw error if no members are associated to the team
-      throw new NotFoundException('No members are associated to the team');
+      // throw new NotFoundException('No members are associated to the team');
+      // TODO
+      return { team_members: [] };
     }
 
     // Get team member information from team with team_member_ids from prisma
@@ -106,10 +108,7 @@ export class TeamsService {
 
     return await this.findTeamMembers(temp.team_id).catch((error) => {
       if (error === NotFoundException) {
-        throw new NotFoundException(
-          'Team with given team id not found or no \
-         members are associated to the team'
-        );
+        throw new NotFoundException('Team with given team id not found');
       } else {
         console.log(error);
         throw new InternalServerErrorException();
