@@ -9,6 +9,7 @@ import {
   InternalServerErrorException,
   ForbiddenException,
   Post,
+  Patch,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import {
@@ -85,11 +86,11 @@ export class TeamsController {
   }
 
   /**
-   * [POST] /team/join/:invite_token - Join team via invite_token
+   * [PATCH] /team/join/:invite_token - Join team via invite_token
    * @param invite_token invite_token
    * @returns Udated team members object
    */
-  @Post('join/:invite_token')
+  @Patch('join/:invite_token')
   @ApiResponse({
     description: 'Join team via invite_token',
     type: TeamMembers,
