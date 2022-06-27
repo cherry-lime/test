@@ -201,12 +201,15 @@ export class TeamsController {
     description: 'Team member with given user id not found',
   })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  @Roles(Role.ADMIN, Role.ASSESSOR)
   async deleteTeamMember(
     @AuthUser() user: User,
     @Param('team_id', ParseIntPipe) team_id: number,
     @Param('user_id', ParseIntPipe) user_id: number
   ): Promise<TeamMembers> {
+    if (user.role === Role.USER && user.user_id !== user_id) {
+      throw new ForbiddenException();
+    }
+
     const isUserInTeam = await this.teamsService
       .isUserInTeam(user.user_id, team_id)
       .catch((error) => {
