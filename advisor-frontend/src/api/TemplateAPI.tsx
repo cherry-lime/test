@@ -4,6 +4,7 @@ import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
 import { AssessmentType } from "../types/AssessmentType";
+import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
 
 export type TemplateAPP = {
   id: GridRowId;
@@ -64,7 +65,8 @@ function templateToAPI(templateAPP: TemplateAPP) {
 // Get all templates from database
 export function useGetTemplates(
   templateType: AssessmentType,
-  enabledFilter?: boolean
+  enabledFilter?: boolean,
+  ref?: React.RefObject<RefObject>
 ) {
   return useQuery(
     ["GET", "/template", templateType, enabledFilter],
@@ -92,35 +94,65 @@ export function useGetTemplates(
       }
 
       return templatesAPP as TemplateAPP[];
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Get template with id from database
-export function useGetTemplate(templateId: number) {
-  return useQuery(["GET", "/template", templateId], async () => {
-    // Get data from database
-    const { data } = await API.get(`/template/${templateId}`);
+export function useGetTemplate(templateId: number, ref?: React.RefObject<RefObject>) {
+  return useQuery(
+    ["GET", "/template", templateId],
+    async () => {
+      // Get data from database
+      const { data } = await API.get(`/template/${templateId}`);
 
-    return templateToAPP(data) as TemplateAPP;
-  });
+      return templateToAPP(data) as TemplateAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Post template to database
-export function usePostTemplate(templateType: AssessmentType) {
-  return useMutation(["POST", "/template"], async () => {
-    // Get response data from database
-    const { data } = await API.post(`/template`, {
-      template_type: templateType,
-    });
+export function usePostTemplate(
+  templateType: AssessmentType,
+  ref?: React.RefObject<RefObject>
+) {
+  return useMutation(
+    ["POST", "/template"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.post(`/template`, {
+        template_type: templateType,
+      });
 
-    // Convert data to templateAPP
-    return templateToAPP(data) as TemplateAPP;
-  });
+      // Convert data to templateAPP
+      return templateToAPP(data) as TemplateAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Patch template in database
-export function usePatchTemplate() {
+export function usePatchTemplate(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["PATCH", "/template", "/{template_id}"],
     async (templateAPP: TemplateAPP) => {
@@ -135,12 +167,19 @@ export function usePatchTemplate() {
 
       // Convert data to templateAPP
       return templateToAPP(data) as TemplateAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Delete template from database
-export function useDeleteTemplate() {
+export function useDeleteTemplate(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["DELETE", "/template", "/{template_id}"],
     async (templateId: number) => {
@@ -149,18 +188,32 @@ export function useDeleteTemplate() {
 
       // Convert data to templateAPP
       return templateToAPP(data) as TemplateAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Duplicate template to database
-export function useDuplicateTemplate() {
+export function useDuplicateTemplate(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["POST", "/template", "/{template_id}", "/clone"],
     async (templateId: number) => {
       const { data } = await API.post(`/template/${templateId}/clone`);
 
       return templateToAPP(data) as TemplateAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }

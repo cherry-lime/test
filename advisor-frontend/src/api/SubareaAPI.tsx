@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
+import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
 
 export type SubareaAPP = {
   id: GridRowId;
@@ -48,7 +49,11 @@ function subareaToAPI(subareaAPP: SubareaAPP) {
 }
 
 // Get all subareas from database
-export function useGetSubareas(categoryId: number, enabledFilter?: boolean) {
+export function useGetSubareas(
+  categoryId: number,
+  enabledFilter?: boolean,
+  ref?: React.RefObject<RefObject>
+) {
   return useQuery(
     ["GET", "/category", categoryId, "/subarea", enabledFilter],
     async () => {
@@ -71,23 +76,43 @@ export function useGetSubareas(categoryId: number, enabledFilter?: boolean) {
 
       return subareasAPP as SubareaAPP[];
     },
-    { enabled: !!categoryId }
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+      enabled: !!categoryId
+    }
   );
 }
 
 // Get subarea with id from database
-export function useGetSubarea() {
-  return useQuery(["GET", "/subarea", "/{subarea_id}"], async (subareaId) => {
-    // Get data from database
-    const { data } = await API.get(`/subarea/${subareaId}`);
+export function useGetSubarea(ref?: React.RefObject<RefObject>) {
+  return useQuery(
+    ["GET", "/subarea", "/{subarea_id}"],
+    async (subareaId) => {
+      // Get data from database
+      const { data } = await API.get(`/subarea/${subareaId}`);
 
-    // Covert data to subareaAPP
-    return subareaToAPP(data) as SubareaAPP;
-  });
+      // Covert data to subareaAPP
+      return subareaToAPP(data) as SubareaAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Post subarea to database
-export function usePostSubarea(categoryId: number) {
+export function usePostSubarea(
+  categoryId: number,
+  ref?: React.RefObject<RefObject>
+) {
   return useMutation(
     ["POST", "/category", categoryId, "/subarea"],
     async () => {
@@ -96,12 +121,19 @@ export function usePostSubarea(categoryId: number) {
 
       // Convert data to subareaAPP
       return subareaToAPP(data) as SubareaAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Patch subarea in database
-export function usePatchSubarea() {
+export function usePatchSubarea(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["PATCH", "/subarea", "/{subarea_id}"],
     async (subareaAPP: SubareaAPP) => {
@@ -116,12 +148,19 @@ export function usePatchSubarea() {
 
       // Convert data to subareaAPP
       return subareaToAPP(data) as SubareaAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Delete subarea from database
-export function useDeleteSubarea() {
+export function useDeleteSubarea(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["DELETE", "/subarea", "/{subarea_id}"],
     async (subareaId: number) => {
@@ -130,6 +169,13 @@ export function useDeleteSubarea() {
 
       // Convert data to subareaAPP
       return subareaToAPP(data) as SubareaAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }

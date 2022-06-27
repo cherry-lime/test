@@ -45,6 +45,7 @@ export class CategoryService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -142,6 +143,7 @@ export class CategoryService {
           // Throw error if template not found
           throw new NotFoundException('Template not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 
@@ -207,6 +209,7 @@ export class CategoryService {
           // Throw error if category not found
           throw new NotFoundException('Category not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
 

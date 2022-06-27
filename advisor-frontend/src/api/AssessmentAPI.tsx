@@ -1,9 +1,9 @@
+/* eslint-disable max-lines */
 import { useQuery, useMutation } from "react-query";
-
 import { GridRowId } from "@mui/x-data-grid";
-
 import API from "./_API";
 import { AssessmentType } from "../types/AssessmentType";
+import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
 
 export type AssessmentAPP = {
   id: GridRowId;
@@ -93,69 +93,76 @@ function assessmentCheckpointToAPI(
   } as AssessmentCheckpointAPI;
 }
 
-export type RecommendationAPP = {
-  id: GridRowId;
-  order: number;
-  description: string;
-  additionalInfo: string;
-};
-
-export type RecommendationAPI = {
-  order: number;
-  feedback_text: string;
-  feedback_additional_information: string;
-};
-
-export function recommendationToAPP(recommendationAPI: RecommendationAPI) {
-  return {
-    id: recommendationAPI.order,
-    order: recommendationAPI.order,
-    description: recommendationAPI.feedback_text,
-    additionalInfo: recommendationAPI.feedback_additional_information,
-  } as RecommendationAPP;
-}
-
 // Get all assessments from database
-export function useGetAssessments() {
-  return useQuery(["GET", "/assessment"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/assessment`);
+export function useGetAssessments(ref?: React.RefObject<RefObject>) {
+  return useQuery(
+    ["GET", "/assessment"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/assessment`);
 
-    // Convert filtered data to assessmentsAPP
-    const assessmentsAPP = data.map((assessmentAPI: AssessmentAPI) =>
-      assessmentToAPP(assessmentAPI)
-    );
+      // Convert filtered data to assessmentsAPP
+      const assessmentsAPP = data.map((assessmentAPI: AssessmentAPI) =>
+        assessmentToAPP(assessmentAPI)
+      );
 
-    return assessmentsAPP as AssessmentAPP[];
-  });
+      return assessmentsAPP as AssessmentAPP[];
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Get all my individual assessments from database
-export function useGetMyIndividualAssessments(isCompleted: boolean) {
-  return useQuery(["GET", "/assessment/my", isCompleted], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/assessment/my`);
+export function useGetMyIndividualAssessments(
+  isCompleted: boolean,
+  ref?: React.RefObject<RefObject>
+) {
+  return useQuery(
+    ["GET", "/assessment/my", isCompleted],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/assessment/my`);
 
-    // Filter data on whether it is completed
-    const dataFiltered = isCompleted
-      ? data.filter(
-          (assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at !== null
-        )
-      : data.filter(
-          (assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at === null
-        );
+      // Filter data on whether it is completed
+      const dataFiltered = isCompleted
+        ? data.filter(
+            (assessmentAPI: AssessmentAPI) =>
+              assessmentAPI.completed_at !== null
+          )
+        : data.filter(
+            (assessmentAPI: AssessmentAPI) =>
+              assessmentAPI.completed_at === null
+          );
 
-    // Convert filtered data to assessmentsAPP
-    const assessmentsAPP = dataFiltered.map((assessmentAPI: AssessmentAPI) =>
-      assessmentToAPP(assessmentAPI)
-    );
+      // Convert filtered data to assessmentsAPP
+      const assessmentsAPP = dataFiltered.map((assessmentAPI: AssessmentAPI) =>
+        assessmentToAPP(assessmentAPI)
+      );
 
-    return assessmentsAPP as AssessmentAPP[];
-  });
+      return assessmentsAPP as AssessmentAPP[];
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Get all my team assessments from database
-export function useGetMyTeamAssessments(isCompleted: boolean, teamId: number) {
+export function useGetMyTeamAssessments(
+  isCompleted: boolean,
+  teamId: number,
+  ref?: React.RefObject<RefObject>
+) {
   return useQuery(
     ["GET", "/teams", teamId, "/assessments", isCompleted],
     async () => {
@@ -179,12 +186,19 @@ export function useGetMyTeamAssessments(isCompleted: boolean, teamId: number) {
       );
 
       return assessmentsAPP as AssessmentAPP[];
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Get assessment with id from database
-export function useGetAssessment(assessmentId: number) {
+export function useGetAssessment(assessmentId: number, ref?: React.RefObject<RefObject>) {
   return useQuery(
     ["GET", "/assessment", assessmentId],
     async () => {
@@ -193,36 +207,54 @@ export function useGetAssessment(assessmentId: number) {
 
       return assessmentToAPP(data) as AssessmentAPP;
     },
-    { enabled: !!assessmentId }
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+      enabled: !!assessmentId
+    }
   );
 }
 
 // Post assessment to database
 export function usePostAssessment(
   assessmentType: AssessmentType,
-  teamId?: number
+  teamId?: number,
+  ref?: React.RefObject<RefObject>
 ) {
-  return useMutation(["POST", "/assessment"], async () => {
-    // Get response data from database
-    const { data } = await API.post(
-      `/assessment`,
-      teamId
-        ? {
-            assessment_type: assessmentType,
-            team_id: teamId,
-          }
-        : {
-            assessment_type: assessmentType,
-          }
-    );
+  return useMutation(
+    ["POST", "/assessment"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.post(
+        `/assessment`,
+        teamId
+          ? {
+              assessment_type: assessmentType,
+              team_id: teamId,
+            }
+          : {
+              assessment_type: assessmentType,
+            }
+      );
 
-    // Convert data to assessmentAPP
-    return assessmentToAPP(data) as AssessmentAPP;
-  });
+      // Convert data to assessmentAPP
+      return assessmentToAPP(data) as AssessmentAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Patch assessment in database
-export function usePatchAssessment() {
+export function usePatchAssessment(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["PATCH", "/assessment", "/{assessment_id}"],
     async (assessmentAPP: AssessmentAPP) => {
@@ -237,12 +269,19 @@ export function usePatchAssessment() {
 
       // Convert data to assessmentAPP
       return assessmentToAPP(data) as AssessmentAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Delete assessment from database
-export function useDeleteAssessment() {
+export function useDeleteAssessment(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["DELETE", "/assessment", "/{assessment_id}"],
     async (assessmentId: number) => {
@@ -251,12 +290,22 @@ export function useDeleteAssessment() {
 
       // Convert data to assessmentAPP
       return assessmentToAPP(data) as AssessmentAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Complete assessment in database
-export function usePostCompleteAssessment(assessmentId: number) {
+export function usePostCompleteAssessment(
+  assessmentId: number,
+  ref?: React.RefObject<RefObject>
+) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/complete"],
     async () => {
@@ -265,12 +314,24 @@ export function usePostCompleteAssessment(assessmentId: number) {
 
       // Convert data to assessmentAPP
       return assessmentToAPP(data) as AssessmentAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Save assessment checkpoint in database
-export function usePostSaveAssessment(assessmentId: number, oldValue: string) {
+
+export function usePostSaveAssessment(
+  assessmentId: number,
+  oldValue: string,
+  ref?: React.RefObject<RefObject>
+) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/save"],
     async (assessmentCheckpointAPP: AssessmentCheckpointAPP) => {
@@ -287,13 +348,23 @@ export function usePostSaveAssessment(assessmentId: number, oldValue: string) {
       // Return response
       return data;
     },
-    { onMutate: () => ({ oldValue }) }
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+      onMutate: () => ({ oldValue })
+    }
   );
 }
 
 // Get saved assessment checkpoints from database
-export function useGetSaveAssessment(assessmentId: number) {
-  return useQuery(
+export function useGetSaveAssessment(
+  assessmentId: number,
+  ref?: React.RefObject<RefObject>
+) {
+  return useMutation(
     ["GET", "/assessment", assessmentId, "/save"],
     async () => {
       // Get response data from database
@@ -308,12 +379,21 @@ export function useGetSaveAssessment(assessmentId: number) {
       // Return response
       return checkpointsAPP as AssessmentCheckpointAPP[];
     },
-    { enabled: !!assessmentId }
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
   );
 }
 
 // Post feedback of assessment to database
-export function usePostFeedbackAssessment(assessmentId: number) {
+export function usePostFeedbackAssessment(
+  assessmentId: number,
+  ref?: React.RefObject<RefObject>
+) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/feedback"],
     async (feedbackText: string) => {
@@ -327,31 +407,13 @@ export function usePostFeedbackAssessment(assessmentId: number) {
 
       // Return response
       return assessmentAPP as AssessmentAPP;
-    }
-  );
-}
-
-// Get feedback of assessment from database
-export function useGetFeedbackAssessment(
-  assessmentId: number,
-  topicId: number
-) {
-  return useMutation(
-    ["GET", "/assessment", assessmentId, "/feedback", topicId],
-    async () => {
-      // Get response data from database
-      const { data } = await API.get(`/assessment/${assessmentId}/feedback`, {
-        params: { topic_id: topicId },
-      });
-
-      // Convert data to recommendationAPP
-      const recommendationsAPP = data.map(
-        (recommendationAPI: RecommendationAPI) =>
-          recommendationToAPP(recommendationAPI)
-      );
-
-      // Return response
-      return recommendationsAPP as RecommendationAPP[];
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }

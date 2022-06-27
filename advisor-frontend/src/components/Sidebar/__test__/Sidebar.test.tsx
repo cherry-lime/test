@@ -69,7 +69,7 @@ it("admin sidebar rendering without crash", () => {
     "Evaluations"
   );
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Templates");
-  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Teams");
+  expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Individuals");
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Settings");
   expect(screen.getByTestId("SidebarTest")).toHaveTextContent("Sign Out");
   fireEvent.click(screen.getByTestId("DrawerButton"));

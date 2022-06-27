@@ -17,7 +17,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { userRegister } from "../../api/LoginAPI";
+import { useRegister } from "../../api/LoginAPI";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import INGTheme from "../../Theme";
 
 export default function Chooserole({ theme }: { theme: Theme }) {
   // Defines the role state to keep track of the selected role
@@ -25,8 +27,12 @@ export default function Chooserole({ theme }: { theme: Theme }) {
   const handleChange = (event: SelectChangeEvent) => {
     setUserRole(event.target.value as string);
   };
+
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   // Imports the API hook for registering
-  const userReg = userRegister();
+  const userReg = useRegister(ref);
 
   const [open, setOpen] = React.useState(false);
 
@@ -39,7 +45,7 @@ export default function Chooserole({ theme }: { theme: Theme }) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={INGTheme}>
       <div
         // ING colored image for background
         style={{
@@ -90,85 +96,84 @@ export default function Chooserole({ theme }: { theme: Theme }) {
             <Button onClick={handleClose}>Go back to sign up</Button>
           </DialogActions>
         </Dialog>
-        <Typography
-          variant="h2"
-          align="center"
-          color="white"
-          fontWeight="fontWeightBold"
-          sx={{
-            pt: 5,
-          }}
-        >
-          TestING Advisor
-        </Typography>
-        {/* Container is where all functionality exists */}
-        <Container
-          maxWidth="xs"
-          sx={{
-            pt: 10,
-          }}
-        >
-          <Box
+        <Box sx={{ height: "25vh" }}>
+          <Typography
+            variant="h2"
+            align="center"
+            color="white"
+            fontWeight="fontWeightBold"
             sx={{
-              pt: 0,
-              marginBottom: 0,
-              padding: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              border: 4,
-              borderColor: theme.palette.primary.main,
-              borderRadius: "16px",
-              bgcolor: "white",
+              pt: 5,
             }}
           >
-            {/* Conact rounded circle */}
-            <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
-              <AccountCircleRoundedIcon />
-            </Avatar>
-            <Typography
-              variant="h6"
-              align="center"
-              color="black"
-              fontWeight="fontWeightBold"
+            TestING Advisor
+          </Typography>
+        </Box>
+        {/* Container is where all functionality exists */}
+        <Box sx={{ height: "50vh" }}>
+          <Container
+            maxWidth="xs"
+            sx={{
+              pt: 10,
+              alignContent: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Box
               sx={{
                 pt: 0,
-                marginTop: 2,
-                marginBottom: 2,
+                marginBottom: 0,
+                padding: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                borderRadius: "16px",
+                bgcolor: "white",
               }}
             >
-              Please, select your role
-            </Typography>
-            {/* The form for the drop down menu to pick a role */}
-            <FormControl fullWidth>
-              <Select
-                variant="filled"
-                sx={{ m: 2 }}
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={userRole}
-                onChange={handleChange}
+              {/* Conact rounded circle */}
+              <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
+                <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
+              </Avatar>
+              <Typography
+                variant="h6"
+                align="center"
+                color="text.secondary"
+                fontWeight="fontWeightBold"
+                sx={{
+                  pt: 0,
+                  marginTop: 2,
+                  marginBottom: 2,
+                }}
               >
-                <MenuItem value="USER">User</MenuItem>
-                <MenuItem value="ASSESSOR">Assessor</MenuItem>
-              </Select>
-            </FormControl>
-            <Button
-              size="medium"
-              variant="contained"
-              color="primary"
-              sx={{
-                p: 2,
-                m: 2,
-              }}
-              onClick={() => {
-                userReg.mutate({ role: userRole });
-              }}
-            >
-              Continue
-            </Button>
-          </Box>
-        </Container>
+                Please, select your role
+              </Typography>
+              {/* The form for the drop down menu to pick a role */}
+              <FormControl fullWidth>
+                <Select sx={{ m: 2 }} value={userRole} onChange={handleChange}>
+                  <MenuItem value="USER">User</MenuItem>
+                  <MenuItem value="ASSESSOR">Assessor</MenuItem>
+                </Select>
+              </FormControl>
+              <Button
+                size="medium"
+                variant="contained"
+                color="primary"
+                sx={{
+                  p: 2,
+                  m: 2,
+                }}
+                onClick={() => {
+                  userReg.mutate({ role: userRole });
+                }}
+              >
+                Continue
+              </Button>
+            </Box>
+          </Container>
+        </Box>
+        <ErrorPopup ref={ref} />
       </div>
     </ThemeProvider>
   );

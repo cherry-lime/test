@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
+import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
 
 export type CheckpointAPP = {
   id: GridRowId;
@@ -57,8 +58,9 @@ function checkpointToAPI(checkpointAPP: CheckpointAPP) {
 
 // Get all checkpoints from database
 export function useGetCheckpoints(
-  categoryId: number | undefined,
-  enabledFilter?: boolean
+  categoryId: number,
+  enabledFilter?: boolean,
+  ref?: React.RefObject<RefObject>
 ) {
   return useQuery(
     ["GET", "/category", categoryId, "/checkpoint"],
@@ -83,12 +85,19 @@ export function useGetCheckpoints(
 
       return checkpointsAPP as CheckpointAPP[];
     },
-    { enabled: !!categoryId }
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+      enabled: !!categoryId
+    }
   );
 }
 
 // Get checkpoint with id from database
-export function useGetCheckpoint() {
+export function useGetCheckpoint(ref?: React.RefObject<RefObject>) {
   return useQuery(
     ["GET", "/checkpoint", "/{checkpoint_id}"],
     async (checkpointId) => {
@@ -96,12 +105,22 @@ export function useGetCheckpoint() {
       const { data } = await API.get(`/checkpoint/${checkpointId}`);
 
       return checkpointToAPP(data) as CheckpointAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Post checkpoint to database
-export function usePostCheckpoint(categoryId: number) {
+export function usePostCheckpoint(
+  categoryId: number,
+  ref?: React.RefObject<RefObject>
+) {
   return useMutation(
     ["POST", "/category", categoryId, "/checkpoint"],
     async () => {
@@ -110,12 +129,19 @@ export function usePostCheckpoint(categoryId: number) {
 
       // Convert data to checkpointAPP
       return checkpointToAPP(data) as CheckpointAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Patch checkpoint in database
-export function usePatchCheckpoint() {
+export function usePatchCheckpoint(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["PATCH", "/checkpoint", "/{checkpoint_id}"],
     async (checkpointAPP: CheckpointAPP) => {
@@ -130,12 +156,19 @@ export function usePatchCheckpoint() {
 
       // Convert data to checkpointAPP
       return checkpointToAPP(data) as CheckpointAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Delete checkpoint from database
-export function useDeleteCheckpoint() {
+export function useDeleteCheckpoint(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["DELETE", "/checkpoint", "/{checkpoint_id}"],
     async (checkpointId: number) => {
@@ -144,6 +177,13 @@ export function useDeleteCheckpoint() {
 
       // Convert data to checkpointAPP
       return checkpointToAPP(data) as CheckpointAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }

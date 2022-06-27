@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
 import API from "./_API";
+import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
 
 export type TeamAPP = {
   id: GridRowId;
@@ -40,41 +41,69 @@ function teamToAPI(teamAPP: TeamAPP) {
 }
 
 // Get all teams from database
-export function useGetMyTeams() {
-  return useQuery(["GET", "/teams", "/my-teams"], async () => {
-    // Get response data from database
-    const { data } = await API.get(`/teams/my-teams`);
+export function useGetMyTeams(ref?: React.RefObject<RefObject>) {
+  return useQuery(
+    ["GET", "/teams", "/my-teams"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/teams/my-teams`);
 
-    // Convert data to teamsAPP
-    const teamsAPP = data.map((teamAPI: TeamAPI) => teamToAPP(teamAPI));
+      // Convert data to teamsAPP
+      const teamsAPP = data.map((teamAPI: TeamAPI) => teamToAPP(teamAPI));
 
-    return teamsAPP as TeamAPP[];
-  });
+      return teamsAPP as TeamAPP[];
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Get team with id from database
-export function useGetTeam(teamId: number) {
+export function useGetTeam(teamId: number, ref?: React.RefObject<RefObject>) {
   return useQuery(["GET", "/teams", teamId], async () => {
     // Get data from database
     const { data } = await API.get(`/teams/${teamId}`);
 
-    return teamToAPP(data) as TeamAPP;
-  });
+      return teamToAPP(data) as TeamAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Post team to database
-export function usePostTeam() {
-  return useMutation(["POST", "/teams", "/create"], async () => {
-    // Get response data from database
-    const { data } = await API.post(`/teams/create`);
+export function usePostTeam(ref?: React.RefObject<RefObject>) {
+  return useMutation(
+    ["POST", "/teams", "/create"],
+    async () => {
+      // Get response data from database
+      const { data } = await API.post(`/teams/create`);
 
-    // Convert data to teamAPP
-    return teamToAPP(data) as TeamAPP;
-  });
+      // Convert data to teamAPP
+      return teamToAPP(data) as TeamAPP;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Patch team in database
-export function usePatchTeam() {
+export function usePatchTeam(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["PATCH", "/teams", "/{team_id}"],
     async (teamAPP: TeamAPP) => {
@@ -86,12 +115,19 @@ export function usePatchTeam() {
 
       // Convert data to teamAPP
       return teamToAPP(data);
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Delete team from database
-export function useDeleteTeam() {
+export function useDeleteTeam(ref?: React.RefObject<RefObject>) {
   return useMutation(
     ["DELETE", "/teams", "/{team_id}"],
     async (teamId: number) => {
@@ -100,26 +136,53 @@ export function useDeleteTeam() {
 
       // Convert data to teamAPP
       return teamToAPP(data);
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
     }
   );
 }
 
 // Get team with id from database
-export function useGetInviteTokenTeam(teamId: number) {
-  return useQuery(["GET", "/teams", teamId, "invite_token"], async () => {
-    // Get data from database
-    const { data } = await API.get(`/teams/${teamId}/invite_token`);
+export function useGetInviteTokenTeam(teamId: number, ref?: React.RefObject<RefObject>) {
+  return useQuery(
+    ["GET", "/teams", teamId, "invite_token"],
+    async () => {
+      // Get data from database
+      const { data } = await API.get(`/teams/${teamId}/invite_token`);
 
-    return data as string;
-  });
+      return data as string;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
 
 // Patch team in database
-export function useJoinInviteTokenTeam(inviteToken: string) {
-  return useMutation(["PATCH", "/teams", "/join", inviteToken], async () => {
-    // Get response data from database
-    const { data } = await API.patch(`/teams/join/${inviteToken}`);
+export function useJoinInviteTokenTeam(ref?: React.RefObject<RefObject>) {
+  return useMutation(
+    ["PATCH", "/teams", "/join", "invite_token"],
+    async (inviteToken) => {
+      // Get response data from database
+      const { data } = await API.patch(`/teams/join/${inviteToken}`);
 
-    return data;
-  });
+      return data;
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }

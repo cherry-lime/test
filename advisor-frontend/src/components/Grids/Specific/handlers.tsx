@@ -4,19 +4,21 @@ import { UseMutationResult } from "react-query";
 import { GridPreProcessEditCellProps, GridRowModel } from "@mui/x-data-grid";
 
 import { initRows, addRow, deleteRow, updateRow, moveRow } from "./helpers";
-
-function processError(error: unknown) {
-  console.log(error);
-}
+import { RefObject, handleError } from "../../ErrorPopup/ErrorPopup";
 
 export function preProcessEditOrder(
   rows: GridRowModel[],
-  params: GridPreProcessEditCellProps
+  params: GridPreProcessEditCellProps,
+  ref: React.RefObject<RefObject>
 ) {
   const { value } = params.props;
 
   // If order is below 0, above row length, or null: reject
   const hasError = value < 1 || value > rows.length || value === null;
+
+  if (hasError) {
+    handleError(ref, "Error: Order out of bounds");
+  }
 
   return { ...params.props, error: hasError };
 }
@@ -24,21 +26,12 @@ export function preProcessEditOrder(
 export function handleInit(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   status: "error" | "idle" | "loading" | "success",
-  data: GridRowModel[] | undefined,
-  error: unknown
+  data: GridRowModel[] | undefined
 ) {
-  switch (status) {
-    case "error":
-      processError(error);
-      break;
-    case "success":
-      if (data) {
-        initRows(setRows, data);
-        console.log(data);
-      }
-      break;
-    default:
-      break;
+  if (status === "success") {
+    if (data) {
+      initRows(setRows, data);
+    }
   }
 }
 
@@ -65,8 +58,6 @@ export async function processRowUpdate(
     // Update internal state
     return newRow;
   } catch (error) {
-    processError(error);
-
     // Keep internal state
     return oldRow;
   }
@@ -81,9 +72,6 @@ export function handleMove(
     onSuccess: (movedRow: GridRowModel) => {
       moveRow(setRows, movedRow, movedRow.order);
     },
-    onError: (error: unknown) => {
-      processError(error);
-    },
   });
 }
 
@@ -94,9 +82,6 @@ export function handleAdd(
   addMutation.mutate(undefined, {
     onSuccess: (addedRow: GridRowModel) => {
       addRow(setRows, addedRow);
-    },
-    onError: (error: unknown) => {
-      processError(error);
     },
   });
 }
@@ -110,9 +95,6 @@ export function handleDelete(
     onSuccess: (deletedRow: GridRowModel) => {
       deleteRow(setRows, deletedRow);
     },
-    onError: (error: unknown) => {
-      processError(error);
-    },
   });
 }
 
@@ -124,9 +106,6 @@ export function handleDuplicate(
   duplicateMutation.mutate(row, {
     onSuccess: (duplicatedRow: GridRowModel) => {
       addRow(setRows, duplicatedRow);
-    },
-    onError: (error: unknown) => {
-      processError(error);
     },
   });
 }
@@ -140,9 +119,6 @@ export function handleChange(
   patchMutation.mutate(newRow, {
     onSuccess: (changedRow: GridRowModel) => {
       updateRow(setRows, changedRow, oldRow);
-    },
-    onError: (error: unknown) => {
-      processError(error);
     },
   });
 }
