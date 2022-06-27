@@ -107,10 +107,10 @@ export class TemplateService {
         include: {
           Category: {
             include: {
-              Checkpoint: true
-            }
+              Checkpoint: true,
+            },
           },
-        }
+        },
       })
       .catch((error) => {
         if (error.code === 'P2002') {
@@ -126,38 +126,43 @@ export class TemplateService {
         throw new InternalServerErrorException();
       });
 
-    if (updateTemplateDto.weight_range_max || updateTemplateDto.weight_range_min) {
-      const categories = template.Category.map(category => category.category_id);
+    if (
+      updateTemplateDto.weight_range_max ||
+      updateTemplateDto.weight_range_min
+    ) {
+      const categories = template.Category.map(
+        (category) => category.category_id
+      );
       await this.prisma.checkpoint.updateMany({
         where: {
           category_id: {
-            in: categories
+            in: categories,
           },
           weight: {
             gt: updateTemplateDto.weight_range_max,
-          }
+          },
         },
         data: {
           weight: {
             set: updateTemplateDto.weight_range_max,
-          }
-        }
+          },
+        },
       });
 
       await this.prisma.checkpoint.updateMany({
         where: {
           category_id: {
-            in: categories
+            in: categories,
           },
           weight: {
             lt: updateTemplateDto.weight_range_min,
-          }
+          },
         },
         data: {
           weight: {
             set: updateTemplateDto.weight_range_min,
-          }
-        }
+          },
+        },
       });
     }
 
@@ -205,7 +210,7 @@ export class TemplateService {
   }
 
   async checkWeightRange(template_id, weight) {
-    if (!weight) {
+    if (weight === undefined) {
       return true;
     }
 
@@ -214,7 +219,7 @@ export class TemplateService {
     });
 
     return (
-      weight >= template.weight_range_min || weight <= template.weight_range_max
+      weight >= template.weight_range_min && weight <= template.weight_range_max
     );
   }
 }
