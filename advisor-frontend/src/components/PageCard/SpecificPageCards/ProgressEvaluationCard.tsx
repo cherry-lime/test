@@ -312,12 +312,12 @@ export default function ProgressEvaluationCard({
                             score.maturityId !== null &&
                             score.score !== -1
                         )
-                        .map((score: ScoreAPP) => {
-                          console.log(score);
-                          return `rgba(${Math.floor(
-                            (255 / 100) * (100 - score.score)
-                          )},${Math.floor((255 / 100) * score.score)},0,0.4)`;
-                        }),
+                        .map(
+                          (score: ScoreAPP) =>
+                            `rgba(${Math.floor(
+                              (255 / 100) * (100 - score.score)
+                            )},${Math.floor((255 / 100) * score.score)},0,0.4)`
+                        ),
                     },
                   ],
                 }}
