@@ -5,7 +5,12 @@ import { RootState } from "../app/store";
 import ButtonRegular from "../components/ButtonRegular/ButtonRegular";
 import userTypes from "../components/Sidebar/listUsersTypes";
 import PageLayout from "./PageLayout";
+import sadLion from "./sadLion.png"
 
+/**
+ * 
+ * @returns An error 404 page, that includes a redirection button back to home. Shown when an user accesses an invalid URL.
+ */
 export default function ErrorPage() {
   const { userRole } = useSelector((state: RootState) => state.userData);
   return (
@@ -25,6 +30,7 @@ export default function ErrorPage() {
           </Link>
         </Grid>
       </Grid>
+      <img alt="404Page" src={sadLion}/>
     </PageLayout>
   );
 }

@@ -28,8 +28,13 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PolarArea } from "react-chartjs-2";
+import { CategoryAPP, useGetCategories } from "../../../api/CategoryAPI";
+import { MaturityAPP, useGetMaturities } from "../../../api/MaturityAPI";
+import { ScoreAPP, useGetScores } from "../../../api/ScoreAPI";
+import { TopicAPP, useGetTopics } from "../../../api/TopicAPI";
+import ErrorPopup, { RefObject } from "../../ErrorPopup/ErrorPopup";
 
 Chart.register(
   ArcElement,
@@ -57,88 +62,89 @@ Chart.register(
   Tooltip
 );
 
-export default function ProgressEvaluationCard() {
-  const topics: string[] = [
-    "Ready Work",
-    "Alignment",
-    "Testware",
-    "Test Environment",
-    "Mastery",
-    "Metrics",
-    "Reporting",
-  ];
-  const areas: string[] = [
-    "View Topic",
-    "Risk Analysis",
-    "Test Strategy",
-    "Agile Development Approach",
-    "Way of Working Agile Testing",
-    "E2E Testing",
-    "Test Training and Skills",
-    "(Automated) Tooling",
-    "Testguild or Testchapter",
-    "Monitoring",
-  ];
-  const maturitylevels: string[] = [
-    "Novice",
-    "Advanced",
-    "Competent",
-    "Proficient",
-    "Expert",
-    "Overall",
-  ];
-  const maturitylevelvalues: number[] = [56, 13, 90, 26, 49, 45];
-  const [topic, setTopic] = useState(topics[0]);
-  const [area, setArea] = useState(areas[0]);
+type ProgressEvaluationCardProps = {
+  assessmentId: number;
+  templateId: number;
+};
 
-  const handleChangeTopic = (event: SelectChangeEvent) => {
-    setTopic(event.target.value);
+export default function ProgressEvaluationCard({
+  assessmentId,
+  templateId,
+}: ProgressEvaluationCardProps) {
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
+  const [topics, setTopics] = useState<TopicAPP[]>();
+  const [categories, setCategories] = useState<CategoryAPP[]>();
+  const [maturities, setMaturities] = useState<MaturityAPP[]>();
+
+  const [topicSelected, setTopicSelected] = useState<number | undefined>(
+    undefined
+  );
+  const [categorySelected, setCategorySelected] = useState<number | null>();
+
+  const [scores, setScores] = useState<ScoreAPP[]>();
+
+  const { status: statusTopics, data: dataTopics } = useGetTopics(
+    templateId,
+    true,
+    ref
+  );
+
+  const { status: statusCategories, data: dataCategories } = useGetCategories(
+    templateId,
+    true,
+    ref
+  );
+
+  const { status: statusMaturities, data: dataMaturities } = useGetMaturities(
+    templateId,
+    true,
+    ref
+  );
+
+  const { status: statusScores, data: dataScores } = useGetScores(
+    assessmentId,
+    topicSelected
+  );
+
+  useEffect(() => {
+    if (statusTopics === "success") {
+      setTopics(dataTopics);
+    }
+  }, [statusTopics, dataTopics]);
+
+  useEffect(() => {
+    if (statusCategories === "success") {
+      setCategories(dataCategories);
+      setCategorySelected(Number(dataCategories[0].id));
+    }
+  }, [statusCategories, dataCategories]);
+
+  useEffect(() => {
+    if (statusMaturities === "success") {
+      setMaturities(dataMaturities);
+    }
+  }, [statusMaturities, dataMaturities]);
+
+  useEffect(() => {
+    if (statusScores === "success") {
+      setScores(dataScores);
+    }
+  }, [statusScores, dataScores]);
+
+  const handleTopicChange = (event: SelectChangeEvent<string>) => {
+    if (event.target.value !== "-")
+      setTopicSelected(Number(event.target.value));
+    else setTopicSelected(undefined);
   };
 
-  const handleChangeArea = (event: SelectChangeEvent) => {
-    setArea(event.target.value);
+  const handleCategoryChange = (event: SelectChangeEvent<string>) => {
+    if (event.target.value !== "total")
+      setCategorySelected(Number(event.target.value));
+    else setCategorySelected(null);
   };
 
-  const topicitems = [];
-  const areaitems = [];
-  const maturitylevelitems = [];
-
-  for (let i = 0; i < topics.length; i += 1) {
-    topicitems.push(<MenuItem value={topics[i]}> {topics[i]} </MenuItem>);
-  }
-
-  for (let i = 0; i < areas.length; i += 1) {
-    areaitems.push(<MenuItem value={areas[i]}> {areas[i]} </MenuItem>);
-  }
-
-  for (let i = 0; i < maturitylevels.length - 1; i += 1) {
-    maturitylevelitems.push(
-      <h2>
-        {maturitylevels[i]} {maturitylevelvalues[i]} %
-        <br />
-      </h2>
-    );
-  }
-
-  const backgroundcolor = [];
-  for (let i = 0; i < maturitylevelvalues.length; i += 1) {
-    const r = Math.floor((255 / 100) * (100 - maturitylevelvalues[i]));
-    const g = Math.floor((255 / 100) * maturitylevelvalues[i]);
-    const b = 0;
-    backgroundcolor.push(`rgba(${r},${g},${b},0.4)`);
-  }
-
-  const data = {
-    labels: maturitylevels,
-    datasets: [
-      {
-        label: "My First Dataset",
-        data: maturitylevelvalues,
-        fill: false,
-        backgroundColor: backgroundcolor,
-      },
-    ],
-  };
   const options = {
     scales: {
       r: {
@@ -147,6 +153,7 @@ export default function ProgressEvaluationCard() {
       },
     },
   };
+
   return (
     <Card
       sx={{
@@ -168,19 +175,52 @@ export default function ProgressEvaluationCard() {
       >
         <Box width="50vw" height="50vw" bgcolor="white">
           <CardContent>
-            <Stack direction="row">
+            <Stack direction="column">
               <Box width="15vw">
                 <h2>View Topic</h2>
-                <Select value={topic} onChange={handleChangeTopic} displayEmpty>
-                  {topicitems}
-                </Select>
+                {topics && (
+                  <Select
+                    value={topicSelected ? topicSelected.toString() : "-"}
+                    onChange={handleTopicChange}
+                  >
+                    {[
+                      <MenuItem key="menu-no-topic" value="-">
+                        -
+                      </MenuItem>,
+                      topics.map((topic) => (
+                        <MenuItem
+                          key={`menu-topic-${topic.id}`}
+                          value={topic.id.toString()}
+                        >
+                          {topic.name}
+                        </MenuItem>
+                      )),
+                    ]}
+                  </Select>
+                )}
               </Box>
 
               <Box width="15vw">
                 <h2>View Area</h2>
-                <Select value={area} onChange={handleChangeArea} displayEmpty>
-                  {areaitems}
-                </Select>
+                {categories && categorySelected && (
+                  <Select
+                    value={categorySelected.toString()}
+                    onChange={handleCategoryChange}
+                  >
+                    <MenuItem key="menu-total-category" value="total">
+                      Total
+                    </MenuItem>
+                    ,
+                    {categories.map((category) => (
+                      <MenuItem
+                        key={category.name}
+                        value={category.id.toString()}
+                      >
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
               </Box>
             </Stack>
             <Box width="inherit">
@@ -188,30 +228,106 @@ export default function ProgressEvaluationCard() {
               <Divider textAlign="left" />
               <br />
             </Box>
-            <Box>{maturitylevelitems}</Box>
+            {scores && maturities && categories && (
+              <Box>
+                {scores
+                  .filter(
+                    (score: ScoreAPP) =>
+                      score.categoryId === categorySelected &&
+                      score.maturityId !== null &&
+                      score.score !== -1
+                  )
+                  .map((score: ScoreAPP) => {
+                    const maturityWithId = maturities.find(
+                      (maturity: MaturityAPP) =>
+                        maturity.id === score.maturityId
+                    );
+
+                    if (maturityWithId) {
+                      return `${maturityWithId.name}: ${score.score}%`;
+                    }
+
+                    return "";
+                  })}
+              </Box>
+            )}
             <Box width="inherit">
               <br />
               <Divider textAlign="left" />
               <br />
             </Box>
-            <Box width="inherit">
-              <h2>
-                {maturitylevels[maturitylevelitems.length]}{" "}
-                {maturitylevelvalues[maturitylevelitems.length]}
-                {" %"}
-                <br />
-              </h2>
-            </Box>
+            {scores && maturities && categories && (
+              <Box width="inherit">
+                <h2>
+                  {scores
+                    .filter(
+                      (score: ScoreAPP) =>
+                        score.categoryId === categorySelected &&
+                        score.maturityId === null &&
+                        score.score !== -1
+                    )
+                    .map((score: ScoreAPP) => `Overall: ${score.score}%`)}
+                  <br />
+                </h2>
+              </Box>
+            )}
           </CardContent>
           <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }} />
         </Box>
         <Divider orientation="vertical" variant="middle" flexItem />
         <Box width="50vw" height="50vw" bgcolor="white">
           <CardContent>
-            <PolarArea data={data} options={options} />
+            {scores && maturities && categories && (
+              <PolarArea
+                data={{
+                  labels: scores
+                    .filter((score: ScoreAPP) => score.score !== -1)
+                    .map((score: ScoreAPP) => {
+                      const maturityWithId = maturities.find(
+                        (maturity: MaturityAPP) =>
+                          maturity.id === score.maturityId
+                      );
+
+                      if (maturityWithId) {
+                        return maturityWithId.name;
+                      }
+
+                      return "";
+                    }),
+                  datasets: [
+                    {
+                      label: "Progress Scores",
+                      data: scores
+                        .filter(
+                          (score: ScoreAPP) =>
+                            score.categoryId === categorySelected &&
+                            score.maturityId !== null &&
+                            score.score !== -1
+                        )
+                        .map((score: ScoreAPP) => score.score),
+                      backgroundColor: scores
+                        .filter(
+                          (score: ScoreAPP) =>
+                            score.categoryId === categorySelected &&
+                            score.maturityId !== null &&
+                            score.score !== -1
+                        )
+                        .map((score: ScoreAPP) => {
+                          console.log(score);
+                          return `rgba(${Math.floor(
+                            (255 / 100) * (100 - score.score)
+                          )},${Math.floor((255 / 100) * score.score)},0,0.4)`;
+                        }),
+                    },
+                  ],
+                }}
+                options={options}
+              />
+            )}
           </CardContent>
         </Box>
       </CardContent>
+      <ErrorPopup ref={ref} />
     </Card>
   );
 }

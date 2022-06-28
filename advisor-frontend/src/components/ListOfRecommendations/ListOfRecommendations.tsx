@@ -61,7 +61,7 @@ function ListOfRecommendations({
             onChange={handleTopicChange}
           >
             {[
-              <MenuItem key="menu-notopic" value="-">
+              <MenuItem key="menu-no-topic" value="-">
                 No topic prioritization
               </MenuItem>,
               ...topicList.map((t) => (
