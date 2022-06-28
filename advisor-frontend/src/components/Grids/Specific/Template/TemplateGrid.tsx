@@ -1,5 +1,5 @@
 import * as React from "react";
-import { UseMutationResult } from "react-query";
+import { UseMutationResult, UseQueryResult } from "react-query";
 
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
@@ -18,7 +18,6 @@ import {
   TemplateAPP,
   useDeleteTemplate,
   useDuplicateTemplate,
-  useGetTemplates,
   usePatchTemplate,
   usePostTemplate,
 } from "../../../../api/TemplateAPI";
@@ -34,19 +33,18 @@ import {
 type TemplateGridProps = {
   theme: Theme;
   templateType: AssessmentType;
+  templateResponse: UseQueryResult<TemplateAPP[], unknown>;
 };
 
 export default function TemplateGrid({
   theme,
   templateType,
+  templateResponse,
 }: TemplateGridProps) {
   const [rows, setRows] = React.useState<TemplateAPP[]>([]);
 
   // Ref for error popup
   const ref = React.useRef<RefObject>(null);
-
-  // Template query
-  const { status, data } = useGetTemplates(templateType, undefined, ref);
 
   // Template mutations
   const patchTemplate = usePatchTemplate(ref);
@@ -56,8 +54,8 @@ export default function TemplateGrid({
 
   // Called when "status" of templates query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data);
-  }, [status, data]);
+    handleInit(setRows, templateResponse.status, templateResponse.data);
+  }, [templateResponse.status, templateResponse.data]);
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(

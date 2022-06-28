@@ -30,23 +30,18 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
   const ref = useRef<RefObject>(null);
 
   // Template queries
-  const { status: statusIndividual, data: dataIndividual } =
-    useGetTemplates("INDIVIDUAL");
+  const individualResponse = useGetTemplates("INDIVIDUAL");
 
-  const { status: statusTeam, data: dataTeam } = useGetTemplates(
-    "TEAM",
-    undefined,
-    ref
-  );
+  const teamResponse = useGetTemplates("TEAM", undefined, ref);
 
   // Template mutation
   const patchTemplate = usePatchTemplate(ref);
 
   useEffect(() => {
-    if (statusIndividual === "success") {
-      setIndividualTemplates(dataIndividual);
+    if (individualResponse.status === "success") {
+      setIndividualTemplates(individualResponse.data);
 
-      const activeIndividual = dataIndividual.find(
+      const activeIndividual = individualResponse.data.find(
         (templateAPP: TemplateAPP) => templateAPP.enabled
       );
 
@@ -54,13 +49,13 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         setActiveIndividualTemplate(activeIndividual);
       }
     }
-  }, [statusIndividual, dataIndividual]);
+  }, [individualResponse.data, individualResponse.status]);
 
   useEffect(() => {
-    if (statusTeam === "success") {
-      setTeamTemplates(dataTeam);
+    if (teamResponse.status === "success") {
+      setTeamTemplates(teamResponse.data);
 
-      const activeTeam = dataTeam.find(
+      const activeTeam = teamResponse.data.find(
         (templateAPP: TemplateAPP) => templateAPP.enabled
       );
 
@@ -68,7 +63,7 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         setActiveTeamTemplate(activeTeam);
       }
     }
-  }, [statusTeam, dataTeam]);
+  }, [teamResponse.status, teamResponse.data]);
 
   const handleActiveIndividualTemplateChange = useCallback(
     (event) => {
@@ -132,7 +127,11 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
           </Select>
         </FormControl>
 
-        <TemplateGrid theme={theme} templateType="INDIVIDUAL" />
+        <TemplateGrid
+          theme={theme}
+          templateType="INDIVIDUAL"
+          templateResponse={individualResponse}
+        />
 
         <h2>Team Templates</h2>
         <p style={{ marginBottom: "0px" }}>
@@ -150,7 +149,11 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
             ))}
           </Select>
         </FormControl>
-        <TemplateGrid theme={theme} templateType="TEAM" />
+        <TemplateGrid
+          theme={theme}
+          templateType="TEAM"
+          templateResponse={teamResponse}
+        />
       </PageLayout>
       <ErrorPopup ref={ref} />
     </div>
