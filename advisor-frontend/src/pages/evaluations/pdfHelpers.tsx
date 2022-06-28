@@ -34,9 +34,9 @@ export async function getAreas(areaIds: number[]) {
 export async function getCheckpoints(areaId: number) {
   const { data } = await API.get(`/category/${areaId}/checkpoint`);
   // Convert data to checkpointsAPP
-  const checkpointsAPP = data.map((checkpointAPI: CheckpointAPI) =>
-    checkpointToAPP(checkpointAPI)
-  );
+  const checkpointsAPP = data
+    .map((checkpointAPI: CheckpointAPI) => checkpointToAPP(checkpointAPI))
+    .sort((a: CheckpointAPI, b: CheckpointAPI) => a.order - b.order);
 
   const checkpointsFilteredAPP = checkpointsAPP.filter(
     (checkpointAPP: CheckpointAPP) => checkpointAPP.enabled
