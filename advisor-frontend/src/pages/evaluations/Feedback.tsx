@@ -23,6 +23,7 @@ import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import ErrorPopup, { RefObject } from "../../components/ErrorPopup/ErrorPopup";
+import { AssessmentCheckpointAPP } from "../../api/AssessmentAPI";
 
 const showFeedbackText = (
   team: boolean,
@@ -156,9 +157,11 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         case "success":
           if (checkpointAnswerResponse.data) {
             const answerDictionary: Record<number, number | undefined> = {};
-            checkpointAnswerResponse.data.forEach((a) => {
-              answerDictionary[a.checkpointId] = a.answerId;
-            });
+            checkpointAnswerResponse.data.forEach(
+              (a: AssessmentCheckpointAPP) => {
+                answerDictionary[a.checkpointId] = a.answerId;
+              }
+            );
             setCheckpointAnswerList(answerDictionary);
           }
           break;

@@ -8,8 +8,8 @@ import { TopicAPP } from "../../api/TopicAPI";
 import {
   getAreas,
   getCheckpoints,
-  getRecommendations,
   getSubareas,
+  getTopicRecommendations,
 } from "./pdfHelpers";
 
 type Table = {
@@ -89,21 +89,13 @@ async function getAreaTables(
   return tables;
 }
 
-function getRecTables(
-  recs: Record<string, RecommendationAPP[]>,
-  topics: TopicAPP[],
-  recsHeaders: string[]
-) {
-  const tables: Table[] = [];
-  topics.forEach((t) => {
-    tables.push({
-      title: `Recommendations: ${t.name}`,
-      sections: [],
-      data: recs[t.name].map((c) => [c.order, c.description, c.additionalInfo]),
-      headers: recsHeaders,
-    });
-  });
-  return tables;
+function getRecTable(recs: RecommendationAPP[], recsHeaders: string[]) {
+  return {
+    title: `Recommendations`,
+    sections: [],
+    data: recs.map((c) => [c.order, c.description, c.additionalInfo]),
+    headers: recsHeaders,
+  };
 }
 
 function addTable(
@@ -323,9 +315,9 @@ export default async function createPDF(
   const checkpointHeaders = ["Order", "Description", "Topics", "Answer"];
 
   const tables: Table[] = [];
-  const recs = await getRecommendations(assessmentId, topics);
+  const recs = await getTopicRecommendations(assessmentId, undefined);
 
-  getRecTables(recs, topics, recsHeaders).forEach((s) => tables.push(s));
+  tables.push(getRecTable(recs, recsHeaders));
 
   const allAreas = await getAreas(areas.map((a) => Number(a.id)));
   (
@@ -337,7 +329,6 @@ export default async function createPDF(
       topics
     )
   ).forEach((s) => tables.push(s));
-  console.log(allAreas);
 
   pdf(tables, `Feedback for assessment ${assessmentId}`, filename);
 }

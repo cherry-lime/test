@@ -12,7 +12,6 @@ import {
   RecommendationAPP,
   recommendationToAPP,
 } from "../../api/RecommendationAPI";
-import { TopicAPP } from "../../api/TopicAPI";
 
 export async function getArea(areaId: number) {
   const area = await API.get(`/category/${areaId}`);
@@ -61,7 +60,7 @@ export async function getSubareas(areaId: number) {
 
 export async function getTopicRecommendations(
   assessmentId: number,
-  topicId: number
+  topicId: number | undefined
 ) {
   // Get response data from database
   const { data } = await API.get(`/assessment/${assessmentId}/feedback`, {
@@ -75,18 +74,4 @@ export async function getTopicRecommendations(
 
   // Return response
   return recommendationsAPP as RecommendationAPP[];
-}
-
-export async function getRecommendations(
-  assessmentId: number,
-  topicIds: TopicAPP[]
-) {
-  const recList: Record<string, RecommendationAPP[]> = {};
-  // eslint-disable-next-line no-restricted-syntax
-  for (const t of topicIds) {
-    // eslint-disable-next-line no-await-in-loop
-    const rec = await getTopicRecommendations(assessmentId, Number(t.id));
-    recList[t.name] = rec;
-  }
-  return recList;
 }
