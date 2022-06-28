@@ -4,7 +4,7 @@ import { IsNumber, Max, Min } from 'class-validator';
 export class AnswerDto {
   @ApiProperty({ default: 1 })
   @IsNumber()
-  answer_id: number;
+  answer_id?: number;
 
   @ApiProperty({ default: 'New Answer' })
   answer_text: string;
@@ -13,7 +13,7 @@ export class AnswerDto {
   @IsNumber()
   @Min(0)
   @Max(100)
-  answer_weight: number;
+  answer_weight?: number;
 
   @ApiProperty({ default: 1 })
   @IsNumber()
