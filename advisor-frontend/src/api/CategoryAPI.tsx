@@ -84,10 +84,13 @@ export function useGetCategories(
 }
 
 // Get category with id from database
-export function useGetCategory(ref?: React.RefObject<RefObject>) {
+export function useGetCategory(
+  categoryId: number,
+  ref?: React.RefObject<RefObject>
+) {
   return useQuery(
     ["GET", "/category", "/{category_id}"],
-    async (categoryId) => {
+    async () => {
       // Get data from database
       const { data } = await API.get(`/category/${categoryId}`);
 
@@ -99,6 +102,7 @@ export function useGetCategory(ref?: React.RefObject<RefObject>) {
           handleError(ref, error);
         }
       },
+      enabled: !!categoryId,
     }
   );
 }

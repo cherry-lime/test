@@ -9,6 +9,7 @@ import React, { useRef, useState } from "react";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { AssessmentAPP, useGetSaveAssessment } from "../../api/AssessmentAPI";
 import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
+import { useGetTemplate } from "../../api/TemplateAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
@@ -36,7 +37,8 @@ function ListOfCheckpoints({
   // GET ASSESSMENT INFORMATION
 
   const [areaList, setAreaList] = useState<CategoryAPP[]>();
-  const [answerList, setAnswerList] = useState<AnswerAPP[]>();
+  const [answerList, setAnswerList] = useState<AnswerAPP[]>([]);
+  const [allowNa, setAllowNa] = useState<boolean>();
   const [checkpointAnswerList, setCheckpointAnswerList] =
     useState<Record<number, number | undefined>>();
 
@@ -63,58 +65,42 @@ function ListOfCheckpoints({
     ref
   );
 
+  const templateResponse = useGetTemplate(Number(assessmentInfo.templateId));
+
   // set the area list value
   React.useEffect(() => {
-    if (areasResponse.data) {
-      switch (areasResponse.status) {
-        case "error":
-          // eslint-disable-next-line no-console
-          console.log(areasResponse.error);
-          break;
-        case "success":
-          if (areasResponse.data) {
-            setAreaList(areasResponse.data);
-          }
-          break;
-        default:
-          break;
-      }
+    if (areasResponse.data && areasResponse.status === "success") {
+      setAreaList(areasResponse.data);
     }
   }, [areasResponse]);
 
   // set the answer list value
   React.useEffect(() => {
-    if (answersResponse.data) {
-      switch (answersResponse.status) {
-        case "error":
-          // eslint-disable-next-line no-console
-          console.log(answersResponse.error);
-          break;
-        case "success":
-          if (answersResponse.data) {
-            setAnswerList(answersResponse.data);
-          }
-          break;
-        default:
-          break;
-      }
+    if (answersResponse.data && answersResponse.status === "success") {
+      setAnswerList(answersResponse.data);
     }
   }, [answersResponse]);
 
   React.useEffect(() => {
-    if (checkpointAnswerResponse.data) {
-      switch (checkpointAnswerResponse.status) {
-        case "success":
-          if (checkpointAnswerResponse.data) {
-            const answerDictionary: Record<number, number | undefined> = {};
-            checkpointAnswerResponse.data.forEach((a) => {
-              answerDictionary[a.checkpointId] = a.answerId;
-            });
-            setCheckpointAnswerList(answerDictionary);
-          }
-          break;
-        default:
-          break;
+    if (templateResponse.data && answersResponse.status === "success") {
+      const templateInfo = templateResponse.data;
+      if (templateInfo.includeNoAnswer) {
+        setAnswerList((list) => [...list, { label: "N/A", value: undefined }]);
+      }
+    }
+  }, [templateResponse]);
+
+  React.useEffect(() => {
+    if (
+      checkpointAnswerResponse.data &&
+      checkpointAnswerResponse.status === "success"
+    ) {
+      if (checkpointAnswerResponse.data) {
+        const answerDictionary: Record<number, number | undefined> = {};
+        checkpointAnswerResponse.data.forEach((a) => {
+          answerDictionary[a.checkpointId] = a.answerId;
+        });
+        setCheckpointAnswerList(answerDictionary);
       }
     }
   }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
@@ -124,18 +110,8 @@ function ListOfCheckpoints({
 
   // set assessment info value
   React.useEffect(() => {
-    switch (topicResponse.status) {
-      case "error":
-        // eslint-disable-next-line no-console
-        console.log(topicResponse.error);
-        break;
-      case "success":
-        if (topicResponse.data) {
-          setTopicList(topicResponse.data);
-        }
-        break;
-      default:
-        break;
+    if (topicResponse.status === "success" && topicResponse.data) {
+      setTopicList(topicResponse.data);
     }
   }, [topicResponse.status, topicResponse.data]);
 

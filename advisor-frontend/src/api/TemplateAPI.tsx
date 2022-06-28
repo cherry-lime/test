@@ -128,6 +128,7 @@ export function useGetTemplate(
           handleError(ref, error);
         }
       },
+      enabled: !!templateId,
     }
   );
 }
