@@ -34,12 +34,16 @@ type TemplateGridProps = {
   theme: Theme;
   templateType: AssessmentType;
   templateResponse: UseQueryResult<TemplateAPP[], unknown>;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+  setTemplates: React.Dispatch<React.SetStateAction<TemplateAPP[]>>;
 };
 
 export default function TemplateGrid({
   theme,
   templateType,
   templateResponse,
+  setRefresh,
+  setTemplates,
 }: TemplateGridProps) {
   const [rows, setRows] = React.useState<TemplateAPP[]>([]);
 
@@ -59,13 +63,23 @@ export default function TemplateGrid({
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
-    async (newRow: TemplateAPP, oldRow: TemplateAPP) =>
+    async (newRow: TemplateAPP, oldRow: TemplateAPP) => {
       processRowUpdate(
         setRows,
         patchTemplate as UseMutationResult,
         newRow,
         oldRow
-      ),
+      );
+      setTemplates((templates) =>
+        templates.map((t) => {
+          const newT = t;
+          if (t.id === oldRow.id) {
+            newT.name = newRow.name;
+          }
+          return newT;
+        })
+      );
+    },
     []
   );
 
@@ -96,6 +110,7 @@ export default function TemplateGrid({
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postTemplate as UseMutationResult);
+    setRefresh((b) => !b);
   }, []);
 
   const columns = React.useMemo<GridColumns<TemplateAPP>>(

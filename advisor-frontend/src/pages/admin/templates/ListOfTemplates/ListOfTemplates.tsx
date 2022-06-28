@@ -37,6 +37,18 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
   // Template mutation
   const patchTemplate = usePatchTemplate(ref);
 
+  const [refreshInd, setRefreshInd] = useState<boolean>();
+
+  useEffect(() => {
+    individualResponse.refetch();
+  }, [refreshInd]);
+
+  const [refreshTeam, setRefreshTeam] = useState<boolean>();
+
+  useEffect(() => {
+    teamResponse.refetch();
+  }, [refreshTeam]);
+
   useEffect(() => {
     if (individualResponse.status === "success") {
       setIndividualTemplates(individualResponse.data);
@@ -131,6 +143,8 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
           theme={theme}
           templateType="INDIVIDUAL"
           templateResponse={individualResponse}
+          setRefresh={setRefreshInd}
+          setTemplates={setIndividualTemplates}
         />
 
         <h2>Team Templates</h2>
@@ -153,6 +167,8 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
           theme={theme}
           templateType="TEAM"
           templateResponse={teamResponse}
+          setRefresh={setRefreshTeam}
+          setTemplates={setTeamTemplates}
         />
       </PageLayout>
       <ErrorPopup ref={ref} />
