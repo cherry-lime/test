@@ -46,8 +46,7 @@ const showFeedbackTextAssessor = (
   team &&
   userRole === "ASSESSOR" &&
   value === "Recommendations" &&
-  assessmentInfo &&
-  assessmentInfo.feedbackText;
+  assessmentInfo;
 
 /**
  * Page with the feedback related to a self assessment
