@@ -169,7 +169,8 @@ function AreaSpecificCheckpoints({
       {subareaComponents !== undefined && subareaComponents}
 
       {value === "Single" &&
-        checkpointList !== undefined &&
+        checkpointList &&
+        checkpointList[page - 1] !== undefined &&
         createCheckpointCard(checkpointList[page - 1])}
 
       {value === "List" &&

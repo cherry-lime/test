@@ -26,7 +26,7 @@ import {
 type RecommendationGridProps = {
   theme: Theme;
   assessmentId: number;
-  topicId: number;
+  topicId: number | undefined;
   isEditable: boolean;
 };
 
