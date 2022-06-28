@@ -15,6 +15,7 @@ import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/
 import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
 import {
   AssessmentAPP,
+  AssessmentCheckpointAPP,
   useGetAssessment,
   useGetSaveAssessment,
   usePostFeedbackAssessment,
@@ -23,7 +24,6 @@ import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import ErrorPopup, { RefObject } from "../../components/ErrorPopup/ErrorPopup";
-import { AssessmentCheckpointAPP } from "../../api/AssessmentAPI";
 
 const showFeedbackText = (
   team: boolean,
