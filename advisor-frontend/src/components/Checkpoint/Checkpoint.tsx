@@ -132,11 +132,13 @@ function Checkpoint({
               float: "left",
               fontSize: "24px",
               fontWeight: "bold",
+              pb: "125px",
             }}
             id="checkpointnrlabel"
           >
             {number}
           </Typography>
+
           {topicIds.length > 0 && (
             <Typography sx={{ textAlign: "left" }} id="checkpoint-topics">
               {`Topics: ${topicList
