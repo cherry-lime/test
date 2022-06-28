@@ -87,7 +87,8 @@ export default function TemplateGrid({
       handleDelete(
         setRows,
         deleteTemplate as UseMutationResult,
-        rowId as number
+        rowId as number,
+        templateResponse
       );
     },
     []
@@ -107,8 +108,7 @@ export default function TemplateGrid({
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postTemplate as UseMutationResult);
-    templateResponse.refetch();
+    handleAdd(setRows, postTemplate as UseMutationResult, templateResponse);
   }, []);
 
   const columns = React.useMemo<GridColumns<TemplateAPP>>(

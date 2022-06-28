@@ -1,10 +1,11 @@
 import * as React from "react";
-import { UseMutationResult } from "react-query";
+import { UseMutationResult, UseQueryResult } from "react-query";
 
 import { GridPreProcessEditCellProps, GridRowModel } from "@mui/x-data-grid";
 
 import { initRows, addRow, deleteRow, updateRow, moveRow } from "./helpers";
 import { RefObject, handleError } from "../../ErrorPopup/ErrorPopup";
+import { TemplateAPP } from "../../../api/TemplateAPI";
 
 export function preProcessEditOrder(
   rows: GridRowModel[],
@@ -77,11 +78,13 @@ export function handleMove(
 
 export function handleAdd(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  addMutation: UseMutationResult
+  addMutation: UseMutationResult,
+  templateResponse: UseQueryResult<TemplateAPP[], unknown>
 ) {
   addMutation.mutate(undefined, {
     onSuccess: (addedRow: GridRowModel) => {
       addRow(setRows, addedRow);
+      templateResponse.refetch();
     },
   });
 }
@@ -89,11 +92,13 @@ export function handleAdd(
 export function handleDelete(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   deleteMutation: UseMutationResult,
-  rowId: number
+  rowId: number,
+  templateResponse: UseQueryResult<TemplateAPP[], unknown>
 ) {
   deleteMutation.mutate(rowId, {
     onSuccess: (deletedRow: GridRowModel) => {
       deleteRow(setRows, deletedRow);
+      templateResponse.refetch();
     },
   });
 }

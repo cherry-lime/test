@@ -38,8 +38,10 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
   const patchTemplate = usePatchTemplate(ref);
 
   useEffect(() => {
+    console.log("updating");
     if (individualResponse.status === "success") {
       setIndividualTemplates(individualResponse.data);
+      console.log(individualResponse.data);
 
       const activeIndividual = individualResponse.data.find(
         (templateAPP: TemplateAPP) => templateAPP.enabled

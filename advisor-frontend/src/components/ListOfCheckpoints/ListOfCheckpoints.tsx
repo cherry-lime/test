@@ -9,7 +9,6 @@ import React, { useRef, useState } from "react";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { AssessmentAPP, useGetSaveAssessment } from "../../api/AssessmentAPI";
 import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
-import { useGetTemplate } from "../../api/TemplateAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
@@ -38,7 +37,6 @@ function ListOfCheckpoints({
 
   const [areaList, setAreaList] = useState<CategoryAPP[]>();
   const [answerList, setAnswerList] = useState<AnswerAPP[]>([]);
-  const [allowNa, setAllowNa] = useState<boolean>();
   const [checkpointAnswerList, setCheckpointAnswerList] =
     useState<Record<number, number | undefined>>();
 
@@ -65,8 +63,6 @@ function ListOfCheckpoints({
     ref
   );
 
-  const templateResponse = useGetTemplate(Number(assessmentInfo.templateId));
-
   // set the area list value
   React.useEffect(() => {
     if (areasResponse.data && areasResponse.status === "success") {
@@ -80,15 +76,6 @@ function ListOfCheckpoints({
       setAnswerList(answersResponse.data);
     }
   }, [answersResponse]);
-
-  React.useEffect(() => {
-    if (templateResponse.data && answersResponse.status === "success") {
-      const templateInfo = templateResponse.data;
-      if (templateInfo.includeNoAnswer) {
-        setAnswerList((list) => [...list, { label: "N/A", value: undefined }]);
-      }
-    }
-  }, [templateResponse]);
 
   React.useEffect(() => {
     if (
