@@ -26,6 +26,9 @@ export class AssessmentDto {
   @ApiProperty({ default: '' })
   feedback_text: string;
 
+  @ApiProperty({ default: '' })
+  information: string;
+
   @ApiProperty()
   created_at: Date;
 

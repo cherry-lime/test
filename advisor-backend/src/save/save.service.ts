@@ -137,4 +137,27 @@ export class SaveService {
         answers.map((answer) => answer.answer_id).includes(saved.answer_id)
     );
   }
+
+  /**
+   * Check if all checkpoints have been filled in
+   * @param assessment assessment
+   * @returns true if all checkpoints have been filled in
+   */
+  async areAllAnswersFilled(assessment: AssessmentDto) {
+    const savedCheckpoints = await this.getSavedCheckpoints(assessment);
+
+    const categories = await this.prisma.category.findMany({
+      where: {
+        template_id: assessment.template_id,
+      },
+      include: {
+        Checkpoint: true,
+      },
+    });
+
+    const lengths = categories.map((category) => category.Checkpoint.length);
+    const totalLength = lengths.reduce((a, b) => a + b, 0);
+
+    return savedCheckpoints.length === totalLength;
+  }
 }

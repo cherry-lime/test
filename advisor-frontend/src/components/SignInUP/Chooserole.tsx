@@ -63,11 +63,7 @@ export default function Chooserole({ theme }: { theme: Theme }) {
           onClick={handleClickOpen}
           sx={{
             color: "white",
-            mr: 250,
-            mt: 1,
             float: "left",
-            marginLeft: 2,
-            marginTop: 2,
           }}
         >
           <HelpOutlineOutlinedIcon />

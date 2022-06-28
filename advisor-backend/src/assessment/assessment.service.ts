@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { AssessmentType, User } from '@prisma/client';
+import { SaveService } from '../save/save.service';
 import { FeedbackService } from '../feedback/feedback.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
@@ -16,7 +17,8 @@ import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 export class AssessmentService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly feedbackService: FeedbackService
+    private readonly feedbackService: FeedbackService,
+    private readonly saveService: SaveService
   ) {}
 
   /**
@@ -80,6 +82,7 @@ export class AssessmentService {
           ...createAssessmentDto,
           feedback_text: template.template_feedback,
           template_id: template.template_id,
+          information: template.information,
           AssessmentParticipants: {
             create: users,
           },
@@ -237,6 +240,16 @@ export class AssessmentService {
           throw new InternalServerErrorException();
         }
       });
+
+    const areAllCheckpointsFilled = await this.saveService.areAllAnswersFilled(
+      assessment
+    );
+
+    if (!areAllCheckpointsFilled) {
+      throw new BadRequestException(
+        'All checkpoints must be filled before marking assessment as complete'
+      );
+    }
 
     await this.feedbackService.saveRecommendations(assessment);
 

@@ -20,7 +20,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     const user = (await this.authService.login({ username, password })).user;
 
     if (user == null) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('User not logged in');
     }
     return user;
   }

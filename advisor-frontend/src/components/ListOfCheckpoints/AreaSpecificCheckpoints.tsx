@@ -80,9 +80,7 @@ function AreaSpecificCheckpoints({
           console.log(subareasResponse.error);
           break;
         case "success":
-          if (subareasResponse.data) {
-            setSubareaList(subareasResponse.data);
-          }
+          setSubareaList(subareasResponse.data);
           break;
         default:
           break;
@@ -99,9 +97,7 @@ function AreaSpecificCheckpoints({
           console.log(checkpointResponse.error);
           break;
         case "success":
-          if (checkpointResponse.data) {
-            setCheckpointList(checkpointResponse.data);
-          }
+          setCheckpointList(checkpointResponse.data);
           break;
         default:
           break;

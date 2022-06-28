@@ -9,6 +9,7 @@ export const aTemplate = {
   weight_range_min: 1,
   weight_range_max: 3,
   include_no_answer: false,
+  Category: [],
 };
 
 export const updateTemplate = {
@@ -20,6 +21,7 @@ export const updateTemplate = {
   weight_range_min: 1,
   weight_range_max: 5,
   include_no_answer: true,
+  Category: [],
 };
 
 export const updateTemplateDto: UpdateTemplateDto = {
