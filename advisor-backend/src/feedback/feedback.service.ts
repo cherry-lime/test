@@ -155,18 +155,20 @@ export class FeedbackService {
 
   async calculateRecommendations({ assessment_id, template_id }: Assessment) {
     // Get all saved answers for this assessment
-    const answeredCheckpoints = await this.saveService.getSavedCheckpoints({
+    let answeredCheckpoints = await this.saveService.getSavedCheckpoints({
       assessment_id,
       template_id,
     } as AssessmentDto);
-
-    answeredCheckpoints.filter((saved) => saved.answer_id);
 
     // Get all checkpoint ids of the saved answers
     const checkpoints = await this.getCheckpointsObject(answeredCheckpoints);
 
     // Get all answer ids of the saved answers
     const answers = await this.getAnswersObject(answeredCheckpoints);
+
+    answeredCheckpoints = answeredCheckpoints.filter(
+      (saved) => answers[saved.answer_id]
+    );
 
     // Map answered objective to object for sorting and returning
     const list: ISort[] = answeredCheckpoints
@@ -193,7 +195,7 @@ export class FeedbackService {
         };
       })
       // Filter out checkpoints that are fully completed
-      .filter((item) => item.answerWeight < 100);
+      .filter((item) => item.answerWeight && item.answerWeight < 100);
 
     // Sort answer by maturity order, answer score, category order, and weight
     list.sort(this.compareMaturity.bind(this));
