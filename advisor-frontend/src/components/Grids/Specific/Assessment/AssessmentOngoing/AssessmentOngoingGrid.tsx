@@ -1,6 +1,6 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   GridColumns,
@@ -41,6 +41,7 @@ export default function AssessmentOngoingGrid({
   assessmentType,
 }: AssessmentOngoingGridProps) {
   const [rows, setRows] = React.useState<AssessmentAPP[]>([]);
+  const navigate = useNavigate();
 
   // Ref for error popup
   const ref = React.useRef<RefObject>(null);
@@ -56,6 +57,14 @@ export default function AssessmentOngoingGrid({
     assessmentType === "TEAM" && teamId !== undefined
       ? usePostAssessment(assessmentType, teamId, ref)
       : usePostAssessment(assessmentType, undefined, ref);
+
+  const handleContinue = (id: number) => {
+    navigate(
+      assessmentType === "INDIVIDUAL"
+        ? `/user/self_evaluations/${id}`
+        : `/teams/${teamId}/${id}`
+    );
+  };
 
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
@@ -93,17 +102,12 @@ export default function AssessmentOngoingGrid({
               type: "actions",
               width: 150,
               getActions: (params: { id: GridRowId }) => [
-                <Link
-                  to={
-                    assessmentType === "INDIVIDUAL"
-                      ? `/user/self_evaluations/${params.id}`
-                      : `/teams/${teamId}/${params.id}`
-                  }
+                <Button
+                  variant="contained"
+                  onClick={() => handleContinue(Number(params.id))}
                 >
-                  <Button variant="contained">
-                    <strong>Continue</strong>
-                  </Button>
-                </Link>,
+                  <strong>Continue</strong>
+                </Button>,
               ],
             },
           ]),

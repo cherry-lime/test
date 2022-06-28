@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   GridColumns,
@@ -39,12 +39,21 @@ export default function AssessmentCompletedGrid({
 
   // Ref for error popup
   const ref = React.useRef<RefObject>(null);
+  const navigate = useNavigate();
 
   // Assessment query
   const { status, data } =
     assessmentType === "TEAM" && teamId !== undefined
       ? useGetMyTeamAssessments(true, teamId, ref)
       : useGetMyIndividualAssessments(true, ref);
+
+  const handleReview = (id: number) => {
+    navigate(
+      assessmentType === "INDIVIDUAL"
+        ? `/user/self_evaluations/feedback/${id}`
+        : `/teams/${teamId}/feedback/${id}`
+    );
+  };
 
   // Called when "status" of assessments query is changed
   React.useEffect(() => {
@@ -74,18 +83,12 @@ export default function AssessmentCompletedGrid({
         type: "actions",
         width: 125,
         getActions: (params: { id: GridRowId }) => [
-          <Link
-            to={
-              assessmentType === "INDIVIDUAL"
-                ? `/user/self_evaluations/feedback/${params.id}`
-                : `/teams/${teamId}/feedback/${params.id}`
-            }
+          <Button
+            variant="outlined"
+            onClick={() => handleReview(Number(params.id))}
           >
-            <Button variant="outlined">
-              <strong>Review</strong>
-            </Button>
-            ,
-          </Link>,
+            <strong>Review</strong>
+          </Button>,
         ],
       },
     ],
