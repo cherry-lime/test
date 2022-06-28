@@ -1,6 +1,12 @@
-import { OmitType } from '@nestjs/swagger';
-import { ScorePerTopicDto } from './score-per-topic.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class ScoreDto extends OmitType(ScorePerTopicDto, [
-  'topic_id',
-] as const) {}
+export class ScoreDto {
+  @ApiProperty()
+  category_id?: number;
+
+  @ApiProperty()
+  maturity_id?: number;
+
+  @ApiProperty()
+  score: number;
+}
