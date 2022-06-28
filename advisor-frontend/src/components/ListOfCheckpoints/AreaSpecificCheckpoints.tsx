@@ -130,7 +130,7 @@ function AreaSpecificCheckpoints({
       const answer = checkpointAnswerList[checkpointId] || "-";
       return answer.toString() || "-";
     }
-    return "-";
+    return "";
   };
 
   const createCheckpointCard = (checkpoint: CheckpointAPP) => (
