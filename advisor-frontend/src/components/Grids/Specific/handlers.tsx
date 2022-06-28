@@ -79,12 +79,12 @@ export function handleMove(
 export function handleAdd(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   addMutation: UseMutationResult,
-  templateResponse: UseQueryResult<TemplateAPP[], unknown>
+  templateResponse?: UseQueryResult<TemplateAPP[], unknown>
 ) {
   addMutation.mutate(undefined, {
     onSuccess: (addedRow: GridRowModel) => {
       addRow(setRows, addedRow);
-      templateResponse.refetch();
+      if (templateResponse) templateResponse.refetch();
     },
   });
 }
@@ -93,12 +93,12 @@ export function handleDelete(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   deleteMutation: UseMutationResult,
   rowId: number,
-  templateResponse: UseQueryResult<TemplateAPP[], unknown>
+  templateResponse?: UseQueryResult<TemplateAPP[], unknown>
 ) {
   deleteMutation.mutate(rowId, {
     onSuccess: (deletedRow: GridRowModel) => {
       deleteRow(setRows, deletedRow);
-      templateResponse.refetch();
+      if (templateResponse) templateResponse.refetch();
     },
   });
 }
@@ -107,12 +107,12 @@ export function handleDuplicate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   duplicateMutation: UseMutationResult,
   row: GridRowModel,
-  templateResponse: UseQueryResult<TemplateAPP[], unknown>
+  templateResponse?: UseQueryResult<TemplateAPP[], unknown>
 ) {
   duplicateMutation.mutate(row, {
     onSuccess: (duplicatedRow: GridRowModel) => {
       addRow(setRows, duplicatedRow);
-      templateResponse.refetch();
+      if (templateResponse) templateResponse.refetch();
     },
   });
 }
