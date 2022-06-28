@@ -40,7 +40,7 @@ export function recommendationToAPI(recommendationAPP: RecommendationAPP) {
 // Get feedback of assessment from database
 export function useGetRecommendations(
   assessmentId: number,
-  topicId: number,
+  topicId: number | undefined,
   ref?: React.RefObject<RefObject>
 ) {
   return useQuery(
