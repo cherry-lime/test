@@ -1,7 +1,5 @@
-import { useQuery, useMutation } from "react-query";
-import { GridRowId } from "@mui/x-data-grid";
+import { useQuery } from "react-query";
 import API from "./_API";
-import { AssessmentType } from "../types/AssessmentType";
 import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
 
 export type ScoreAPP = {
@@ -16,10 +14,40 @@ type ScoreAPI = {
   score: number;
 };
 
-function scoreToApp(scoreAPI: ScoreAPI) {
+function scoreToAPP(scoreAPI: ScoreAPI) {
   return {
     maturityId: scoreAPI.maturity_id,
     categoryId: scoreAPI.category_id,
     score: scoreAPI.score,
   } as ScoreAPP;
+}
+
+// Get scores of assessment from database
+export function useGetScores(
+  assessmentId: number,
+  topicId: number | undefined,
+  ref?: React.RefObject<RefObject>
+) {
+  return useQuery(
+    ["GET", "/assessment", assessmentId, "/score", topicId],
+    async () => {
+      // Get response data from database
+      const { data } = await API.get(`/assessment/${assessmentId}/score`, {
+        params: { topic_id: topicId },
+      });
+
+      // Convert data to scoreAPP
+      const scoresAPP = data.map((scoreAPI: ScoreAPI) => scoreToAPP(scoreAPI));
+
+      // Return response
+      return scoresAPP as ScoreAPP[];
+    },
+    {
+      onError: (error) => {
+        if (ref) {
+          handleError(ref, error);
+        }
+      },
+    }
+  );
 }
