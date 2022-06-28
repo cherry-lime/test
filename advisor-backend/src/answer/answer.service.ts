@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { AnswerDto } from './dto/answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 
 @Injectable()
@@ -45,6 +46,17 @@ export class AnswerService {
    * @returns all answers in template
    */
   async findAll(template_id: number, role: Role) {
+    const template = await this.prisma.template.findUnique({
+      where: {
+        template_id,
+      },
+    });
+
+    // Throw error if template not found
+    if (!template) {
+      throw new NotFoundException('Template not found');
+    }
+
     const data: Prisma.AnswerFindManyArgs = {
       where: {
         template_id,
@@ -55,7 +67,16 @@ export class AnswerService {
       data.where.disabled = false;
     }
 
-    return await this.prisma.answer.findMany(data);
+    const answers: AnswerDto[] = await this.prisma.answer.findMany(data);
+    if (template.include_no_answer) {
+      answers.push({
+        disabled: false,
+        template_id: template_id,
+        answer_text: "N/A",
+      })
+    }
+
+    return answers;
   }
 
   /**
