@@ -8,9 +8,6 @@ export class AssessmentDto {
   @ApiProperty({ default: 1 })
   assessment_id: number;
 
-  @ApiProperty({ default: 'New Assessment' })
-  assessment_name: string;
-
   @ApiProperty({ enum: AssessmentType, default: AssessmentType.INDIVIDUAL })
   assessment_type: AssessmentType;
 

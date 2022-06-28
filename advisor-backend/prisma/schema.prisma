@@ -114,7 +114,6 @@ model UserInTeam {
 
 model Assessment {
   assessment_id                     Int                                 @id @default(autoincrement())
-  assessment_name                   String                              @default("New Assessment")
   country_name                      String                              @default("")
   department_name                   String                              @default("")
   feedback_text                     String                              @default("")
@@ -131,7 +130,6 @@ model Assessment {
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
   Feedback Feedback[]
-  @@unique([assessment_name, assessment_type, team_id])
   @@index([assessment_type])
   @@index([team_id])
 }
