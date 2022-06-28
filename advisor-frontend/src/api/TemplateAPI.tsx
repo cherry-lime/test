@@ -20,7 +20,7 @@ export type TemplateAPP = {
   includeNoAnswer: boolean;
 };
 
-type TemplateAPI = {
+export type TemplateAPI = {
   template_id: number;
   template_name: string;
   template_description: string;
@@ -34,7 +34,7 @@ type TemplateAPI = {
   include_no_answer: boolean;
 };
 
-function templateToAPP(templateAPI: TemplateAPI) {
+export function templateToAPP(templateAPI: TemplateAPI) {
   return {
     id: templateAPI.template_id,
     name: templateAPI.template_name,
@@ -50,7 +50,7 @@ function templateToAPP(templateAPI: TemplateAPI) {
   } as TemplateAPP;
 }
 
-function templateToAPI(templateAPP: TemplateAPP) {
+export function templateToAPI(templateAPP: TemplateAPP) {
   return {
     template_id: templateAPP.id,
     template_name: templateAPP.name,

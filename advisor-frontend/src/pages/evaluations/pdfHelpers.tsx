@@ -12,6 +12,8 @@ import {
   RecommendationAPP,
   recommendationToAPP,
 } from "../../api/RecommendationAPI";
+import { AssessmentAPP, assessmentToAPP } from "../../api/AssessmentAPI";
+import { TemplateAPP, templateToAPP } from "../../api/TemplateAPI";
 
 export async function getArea(areaId: number) {
   const area = await API.get(`/category/${areaId}`);
@@ -41,6 +43,18 @@ export async function getCheckpoints(areaId: number) {
   );
 
   return checkpointsFilteredAPP as CheckpointAPP[];
+}
+
+export async function getAssessment(assessmentId: number) {
+  const { data } = await API.get(`/assessment/${assessmentId}`);
+
+  return assessmentToAPP(data) as AssessmentAPP;
+}
+
+export async function getTemplate(templateId: number) {
+  const { data } = await API.get(`/template/${templateId}`);
+
+  return templateToAPP(data) as TemplateAPP;
 }
 
 export async function getSubareas(areaId: number) {
