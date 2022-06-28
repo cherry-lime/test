@@ -104,10 +104,10 @@ function Checkpoint({
   */
   const items = answers.map((a) => (
     <FormControlLabel
-      key={`answers-${a.id.toString()}`}
+      key={`answers-${a.id ? a.id.toString() : "-"}`}
       control={<Radio color="primary" />}
       label={a.label}
-      value={a.id.toString()}
+      value={a.id ? a.id.toString() : "-"}
       disabled={feedback}
     />
   ));
