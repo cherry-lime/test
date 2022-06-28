@@ -5,7 +5,7 @@ import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import TeamGrid from "../../../components/Grids/Specific/Team/TeamGrid";
 import { RootState } from "../../../app/store";
-import { useJoinInviteTokenTeam } from "../../../api/TeamAPI";
+import { useGetMyTeams, useJoinInviteTokenTeam } from "../../../api/TeamAPI";
 import ErrorPopup, {
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
@@ -21,12 +21,19 @@ function TeamList({ theme }: { theme: Theme }) {
   // Ref for error popup
   const ref = useRef<RefObject>(null);
 
+  // Team query
+  const teamResponse = useGetMyTeams(ref);
+
   const [token, setToken] = useState("");
 
   const patchToken = useJoinInviteTokenTeam(token, ref);
 
   const handleJoinTeam = useCallback(() => {
-    patchToken.mutate();
+    patchToken.mutate(undefined, {
+      onSuccess: () => {
+        teamResponse.refetch();
+      },
+    });
   }, []);
 
   return (
@@ -51,7 +58,12 @@ function TeamList({ theme }: { theme: Theme }) {
         </Stack>
       )}
 
-      <TeamGrid theme={theme} userRole={userRole} userId={Number(userId)} />
+      <TeamGrid
+        theme={theme}
+        userRole={userRole}
+        userId={Number(userId)}
+        teamResponse={teamResponse}
+      />
       <ErrorPopup ref={ref} />
     </PageLayout>
   );

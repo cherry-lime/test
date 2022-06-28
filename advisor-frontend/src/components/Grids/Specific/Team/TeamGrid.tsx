@@ -1,5 +1,5 @@
 import * as React from "react";
-import { UseMutationResult } from "react-query";
+import { UseMutationResult, UseQueryResult } from "react-query";
 import { Link } from "react-router-dom";
 
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
@@ -28,7 +28,6 @@ import {
 import {
   TeamAPP,
   useDeleteTeam,
-  useGetMyTeams,
   usePatchTeam,
   usePostTeam,
 } from "../../../../api/TeamAPI";
@@ -38,16 +37,19 @@ type TeamGridProps = {
   theme: Theme;
   userRole: UserRole;
   userId: number;
+  teamResponse: UseQueryResult<TeamAPP[], unknown>;
 };
 
-export default function TeamGrid({ theme, userRole, userId }: TeamGridProps) {
+export default function TeamGrid({
+  theme,
+  userRole,
+  userId,
+  teamResponse,
+}: TeamGridProps) {
   const [rows, setRows] = React.useState<TeamAPP[]>([]);
 
   // Ref for error popup
   const ref = React.useRef<RefObject>(null);
-
-  // Team query
-  const { status, data } = useGetMyTeams(ref);
 
   // Team mutations
   const patchTeam = usePatchTeam(ref);
@@ -57,8 +59,8 @@ export default function TeamGrid({ theme, userRole, userId }: TeamGridProps) {
 
   // Called when "status" of teams query is changed
   React.useEffect(() => {
-    handleInit(setRows, status, data);
-  }, [status, data]);
+    handleInit(setRows, teamResponse.status, teamResponse.data);
+  }, [teamResponse.status, teamResponse.data]);
 
   // Called when a row is edited
   const processRowUpdateDecorator = React.useCallback(
