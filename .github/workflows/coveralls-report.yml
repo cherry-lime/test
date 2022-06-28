@@ -1,10 +1,16 @@
 name: Coverage report upload
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: Generate and upload coverage report
     steps:
       - uses: actions/checkout@v2

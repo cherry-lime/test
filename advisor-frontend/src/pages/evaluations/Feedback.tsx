@@ -71,18 +71,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   const assessmentResponse = useGetAssessment(Number(assessmentId), ref);
 
   React.useEffect(() => {
-    switch (assessmentResponse.status) {
-      case "error":
-        // eslint-disable-next-line no-console
-        console.log(assessmentResponse.error);
-        break;
-      case "success":
-        if (assessmentResponse.data) {
-          setAssessmentInfo(assessmentResponse.data);
-        }
-        break;
-      default:
-        break;
+    if (assessmentResponse.status === "success" && assessmentResponse.data) {
+      setAssessmentInfo(assessmentResponse.data);
     }
   }, [assessmentResponse.status, assessmentResponse.data]);
 
@@ -92,10 +82,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     postFeedback.mutate(newFeedback, {
       onSuccess: (newAssessmentInfo: AssessmentAPP) => {
         setAssessmentInfo(newAssessmentInfo);
-      },
-      onError: (e: unknown) => {
-        // eslint-disable-next-line no-console
-        console.log(e);
       },
     });
   };
@@ -127,59 +113,28 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
   // set the area list value
   React.useEffect(() => {
-    if (areasResponse.data) {
-      switch (areasResponse.status) {
-        case "error":
-          // eslint-disable-next-line no-console
-          console.log(areasResponse.error);
-          break;
-        case "success":
-          if (areasResponse.data) {
-            setAreaList(areasResponse.data);
-          }
-          break;
-        default:
-          break;
-      }
+    if (areasResponse.data && areasResponse.status === "success") {
+      setAreaList(areasResponse.data);
     }
   }, [areasResponse]);
 
   // set the answer list value
   React.useEffect(() => {
-    if (answersResponse.data) {
-      switch (answersResponse.status) {
-        case "error":
-          // eslint-disable-next-line no-console
-          console.log(answersResponse.error);
-          break;
-        case "success":
-          if (answersResponse.data) {
-            setAnswerList(answersResponse.data);
-          }
-          break;
-        default:
-          break;
-      }
+    if (answersResponse.data && answersResponse.status === "success") {
+      setAnswerList(answersResponse.data);
     }
   }, [answersResponse]);
 
   React.useEffect(() => {
-    if (checkpointAnswerResponse.data) {
-      switch (checkpointAnswerResponse.status) {
-        case "success":
-          if (checkpointAnswerResponse.data) {
-            const answerDictionary: Record<number, number | undefined> = {};
-            checkpointAnswerResponse.data.forEach(
-              (a: AssessmentCheckpointAPP) => {
-                answerDictionary[a.checkpointId] = a.answerId;
-              }
-            );
-            setCheckpointAnswerList(answerDictionary);
-          }
-          break;
-        default:
-          break;
-      }
+    if (
+      checkpointAnswerResponse.data &&
+      checkpointAnswerResponse.status === "success"
+    ) {
+      const answerDictionary: Record<number, number | undefined> = {};
+      checkpointAnswerResponse.data.forEach((a: AssessmentCheckpointAPP) => {
+        answerDictionary[a.checkpointId] = a.answerId;
+      });
+      setCheckpointAnswerList(answerDictionary);
     }
   }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
 
@@ -192,18 +147,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
   // set assessment info value
   React.useEffect(() => {
-    switch (topicResponse.status) {
-      case "error":
-        // eslint-disable-next-line no-console
-        console.log(topicResponse.error);
-        break;
-      case "success":
-        if (topicResponse.data) {
-          setTopicList(topicResponse.data);
-        }
-        break;
-      default:
-        break;
+    if (topicResponse.status === "success" && topicResponse.data) {
+      setTopicList(topicResponse.data);
     }
   }, [topicResponse.status, topicResponse.data]);
 
@@ -213,8 +158,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       areaList &&
       answerList &&
       checkpointAnswerList &&
-      topicList &&
-      answerList
+      topicList
     ) {
       createPDF(
         Number(assessmentId),

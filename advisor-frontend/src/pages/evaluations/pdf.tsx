@@ -13,8 +13,6 @@ import {
   getTemplate,
   getTopicRecommendations,
 } from "./pdfHelpers";
-import { useGetTemplate } from "../../api/TemplateAPI";
-import { useGetAssessment } from "../../api/AssessmentAPI";
 
 type Section = {
   title: string;

@@ -34,116 +34,134 @@ function App() {
 
   // Call authentication API on pageload once
   const auth = authProfile(ref);
-  useEffect(() => auth.mutate(), []);
+  useEffect(() => {
+    auth.mutate();
+  }, []);
 
-  return (
-    <div className="App">
-      <GlobalStyles />
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            userRole !== "NONE" ? (
-              <Navigate to={`/${userRole}`} />
-            ) : (
-              <SignIn theme={INGTheme} />
-            )
-          }
-        />
-        <Route path="/signup" element={<Chooserole theme={INGTheme} />} />
-        <Route
-          path="/signup/details"
-          element={<DetailGen theme={INGTheme} />}
-        />
-        <Route path="/home" element={<Home />} />
-        {/* Only route to the user pages if the user has USER rights */}
-        {userRole === "USER" ? (
-          <>
-            <Route path="/user" element={<UserInterface />} />
-            <Route
-              path="/user/self_evaluations"
-              element={<ListOfSelfEvals theme={INGTheme} />}
-            />
-            <Route
-              path="/user/self_evaluations/:assessmentId"
-              element={<Evaluation team={false} theme={INGTheme} />}
-            />
-            <Route
-              path="/user/self_evaluations/feedback/:assessmentId"
-              element={<Feedback team={false} theme={INGTheme} />}
-            />
-          </>
-        ) : (
-          <> </>
-        )}
-        {/* Only route to the teams pages if the user has USER or ASSESSOR rights */}
-        {userRole === "USER" || userRole === "ASSESSOR" ? (
-          <>
-            <Route path="/teams" element={<TeamList theme={INGTheme} />} />
-            <Route path="/teams/:teamId" element={<Team theme={INGTheme} />} />
-            <Route
-              path="/teams/:teamId/:assessmentId"
-              element={<Evaluation team theme={INGTheme} />}
-            />
-            <Route
-              path="/teams/:teamId/feedback/:assessmentId"
-              element={<Feedback team theme={INGTheme} />}
-            />
-          </>
-        ) : (
-          <> </>
-        )}
+  // If the authentication is done, render the routing
+  if (auth.isSuccess || auth.isError) {
+    return (
+      <div className="App">
+        <GlobalStyles />
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              userRole !== "NONE" ? (
+                <Navigate to={`/${userRole}`} />
+              ) : (
+                <SignIn theme={INGTheme} />
+              )
+            }
+          />
+          <Route path="/signup" element={<Chooserole theme={INGTheme} />} />
+          <Route
+            path="/signup/details"
+            element={<DetailGen theme={INGTheme} />}
+          />
+          <Route path="/home" element={<Home />} />
+          {/* Only route to the user pages if the user has USER rights */}
+          {userRole === "USER" ? (
+            <>
+              <Route path="/user" element={<UserInterface />} />
+              <Route
+                path="/user/self_evaluations"
+                element={<ListOfSelfEvals theme={INGTheme} />}
+              />
+              <Route
+                path="/user/self_evaluations/:assessmentId"
+                element={<Evaluation team={false} theme={INGTheme} />}
+              />
+              <Route
+                path="/user/self_evaluations/feedback/:assessmentId"
+                element={<Feedback team={false} theme={INGTheme} />}
+              />
+            </>
+          ) : (
+            <> </>
+          )}
+          {/* Only route to the teams pages if the user has USER or ASSESSOR rights */}
+          {userRole === "USER" || userRole === "ASSESSOR" ? (
+            <>
+              <Route path="/teams" element={<TeamList theme={INGTheme} />} />
+              <Route
+                path="/teams/:teamId"
+                element={<Team theme={INGTheme} />}
+              />
+              <Route
+                path="/teams/:teamId/:assessmentId"
+                element={<Evaluation team theme={INGTheme} />}
+              />
+              <Route
+                path="/teams/:teamId/feedback/:assessmentId"
+                element={<Feedback team theme={INGTheme} />}
+              />
+            </>
+          ) : (
+            <> </>
+          )}
 
-        {/* Only route to the assessor pages if the user has ASSESSOR rights */}
-        {userRole === "ASSESSOR" ? (
-          <Route path="/assessor" element={<AssessorInterface />} />
-        ) : (
-          <> </>
-        )}
-        {/* Only route to the admin pages if the user has ADMIN rights */}
-        {userRole === "ADMIN" ? (
-          <>
-            <Route path="/admin" element={<AdminInterface />} />
-            <Route
-              path="/admin/individuals"
-              element={<ListOfIndividuals theme={INGTheme} />}
-            />
-            <Route
-              path="/admin/templates"
-              element={<ListOfTemplates theme={INGTheme} />}
-            />
-            <Route
-              path="/admin/templates/:templateId"
-              element={<Template theme={INGTheme} />}
-            />
-            <Route
-              path="/admin/templates/:templateId/:areaId"
-              element={<Area theme={INGTheme} />}
-            />
-          </>
-        ) : (
-          <> </>
-        )}
-        <Route
-          path="/"
-          element={
-            userRole !== "NONE" ? (
-              <Navigate to={`/${userRole}`} />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        {/* Redirect to initial page if there is an invalid URL */}
-        <Route
-          path="/*"
-          element={userRole !== "NONE" ? <Navigate to="/error" /> : <> </>}
-        />
-        <Route path="/error" element={<ErrorPage />} />
-      </Routes>
-      <ErrorPopup ref={ref} />
-    </div>
-  );
+          {/* Only route to the assessor pages if the user has ASSESSOR rights */}
+          {userRole === "ASSESSOR" ? (
+            <Route path="/assessor" element={<AssessorInterface />} />
+          ) : (
+            <> </>
+          )}
+          {/* Only route to the admin pages if the user has ADMIN rights */}
+          {userRole === "ADMIN" ? (
+            <>
+              <Route path="/admin" element={<AdminInterface />} />
+              <Route
+                path="/admin/individuals"
+                element={<ListOfIndividuals theme={INGTheme} />}
+              />
+              <Route
+                path="/admin/templates"
+                element={<ListOfTemplates theme={INGTheme} />}
+              />
+              <Route
+                path="/admin/templates/:templateId"
+                element={<Template theme={INGTheme} />}
+              />
+              <Route
+                path="/admin/templates/:templateId/:areaId"
+                element={<Area theme={INGTheme} />}
+              />
+            </>
+          ) : (
+            <> </>
+          )}
+          <Route
+            path="/"
+            element={
+              userRole !== "NONE" ? (
+                <Navigate to={`/${userRole}`} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          {/* Redirect to initial page if there is an invalid URL */}
+          <Route
+            path="/*"
+            element={
+              userRole !== "NONE" ? (
+                <Navigate to="/error" />
+              ) : (
+                <>
+                  <Navigate to="/login" />{" "}
+                </>
+              )
+            }
+          />
+          <Route path="/error" element={<ErrorPage />} />
+        </Routes>
+        <ErrorPopup ref={ref} />
+      </div>
+    );
+  }
+  // If the authentication is in progress, show blank page
+  return <div className="App"> </div>;
 }
 
 export default App;

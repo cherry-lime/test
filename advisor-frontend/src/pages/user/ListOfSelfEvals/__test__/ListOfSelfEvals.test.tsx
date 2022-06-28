@@ -7,7 +7,7 @@ import { store } from "../../../../app/store";
 import Theme from "../../../../Theme";
 import ListOfSelfEvals from "../ListOfSelfEvals";
 
-test("app rendering/navigating from user interface to self-evals", async () => {
+test("app rendering the components of the user/evaluation page", async () => {
   render(
     <QueryClientProvider client={client}>
       <Provider store={store}>

@@ -21,6 +21,9 @@ export class TemplateDto {
   @ApiProperty({ default: '' })
   template_feedback: string;
 
+  @ApiProperty({ default: '' })
+  information: string;
+
   @ApiProperty({ default: true })
   @IsBoolean()
   enabled: boolean;

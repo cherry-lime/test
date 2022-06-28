@@ -60,6 +60,17 @@ export class CheckpointService {
       },
     });
 
+    let weight = 3;
+
+    const isInRange = await this.templateService.checkWeightRange(
+      category.template_id,
+      weight
+    );
+
+    if (!isInRange) {
+      weight = category.Template.weight_range_min;
+    }
+
     if (!maturity) {
       throw new NotFoundException('No enabled maturities found');
     }
@@ -78,6 +89,7 @@ export class CheckpointService {
             },
           },
           order: order + 1,
+          weight,
         },
         include: {
           CheckpointInTopic: true,

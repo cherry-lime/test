@@ -7,6 +7,7 @@ import { mockTemplate } from './mockTemplate';
 import { mockUser } from './mockUser';
 import { mockUserInTeam } from './mockUserInTeam';
 import { mockSubarea } from './mockSubarea';
+import { mockCheckpoint } from './mockCheckpoint';
 
 export const mockPrisma = {
   template: mockTemplate,
@@ -18,4 +19,5 @@ export const mockPrisma = {
   assessmentParticipants: mockAssessmentParticipants,
   maturity: mockMaturity,
   subArea: mockSubarea,
+  checkpoint: mockCheckpoint,
 };

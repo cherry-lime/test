@@ -64,7 +64,7 @@ export default function AssessmentOngoingGrid({
 
   // Called when the "Add" button is pressed below the grid
   const handleAddDecorator = React.useCallback(() => {
-    handleAdd(setRows, postAssessment as UseMutationResult);
+    handleAdd(setRows, postAssessment as UseMutationResult, undefined, ref);
   }, []);
 
   const columns = React.useMemo<GridColumns<AssessmentAPP>>(

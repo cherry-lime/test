@@ -182,7 +182,8 @@ export class FeedbackService {
         return {
           data: {
             feedback_text: checkpoint.checkpoint_description,
-            feedback_additional_information: checkpoint.checkpoint_description,
+            feedback_additional_information:
+              checkpoint.checkpoint_additional_information,
             topic_ids,
           },
           answerWeight,
@@ -214,9 +215,9 @@ export class FeedbackService {
   private async getAnswersObject(
     answeredCheckpoints: CheckpointAndAnswersInAssessments[]
   ) {
-    const answerIds = answeredCheckpoints.map(
-      (checkpoint) => checkpoint.answer_id
-    );
+    const answerIds = answeredCheckpoints
+      .map((checkpoint) => checkpoint.answer_id)
+      .filter((answer_id) => answer_id);
 
     const answersList = await this.prisma.answer.findMany({
       where: {
