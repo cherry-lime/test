@@ -106,11 +106,13 @@ export function handleDelete(
 export function handleDuplicate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   duplicateMutation: UseMutationResult,
-  row: GridRowModel
+  row: GridRowModel,
+  templateResponse: UseQueryResult<TemplateAPP[], unknown>
 ) {
   duplicateMutation.mutate(row, {
     onSuccess: (duplicatedRow: GridRowModel) => {
       addRow(setRows, duplicatedRow);
+      templateResponse.refetch();
     },
   });
 }

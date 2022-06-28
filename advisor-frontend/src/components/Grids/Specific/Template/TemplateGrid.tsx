@@ -100,7 +100,8 @@ export default function TemplateGrid({
       handleDuplicate(
         setRows,
         duplicateTemplate as UseMutationResult,
-        rowId as number
+        rowId as number,
+        templateResponse
       );
     },
     []
