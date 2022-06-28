@@ -29,6 +29,7 @@ import {
   handleInit,
   processRowUpdate,
 } from "../handlers";
+import DeleteDialog from "../../../Dialog/DeleteDialog";
 
 type TemplateGridProps = {
   theme: Theme;
@@ -112,6 +113,17 @@ export default function TemplateGrid({
     handleAdd(setRows, postTemplate as UseMutationResult, templateResponse);
   }, []);
 
+  // Delete dialog handler
+  const [open, setOpen] = React.useState(false);
+  const [paramId, setParamId] = React.useState<GridRowId>(0);
+  function handleClickOpen(id: GridRowId)  {
+    setOpen(true);
+    setParamId(id);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const columns = React.useMemo<GridColumns<TemplateAPP>>(
     () => [
       {
@@ -155,7 +167,7 @@ export default function TemplateGrid({
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteDecorator(params.id)}
+            onClick={() => handleClickOpen(params.id)}
             showInMenu
           />,
         ],
@@ -178,6 +190,7 @@ export default function TemplateGrid({
         }}
       />
       <ErrorPopup ref={ref} />
+      <DeleteDialog open={open} onClose={handleClose} deleteTemplate={handleDeleteDecorator(paramId)}/>
     </>
   );
 }
