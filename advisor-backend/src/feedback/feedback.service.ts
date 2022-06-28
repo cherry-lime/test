@@ -229,7 +229,9 @@ export class FeedbackService {
 
     const answers = {};
     answersList.forEach((answer) => {
-      answers[answer.answer_id] = answer;
+      if (answer.answer_weight) {
+        answers[answer.answer_id] = answer;
+      }
     });
     return answers;
   }
