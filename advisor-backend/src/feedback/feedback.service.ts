@@ -182,7 +182,8 @@ export class FeedbackService {
         return {
           data: {
             feedback_text: checkpoint.checkpoint_description,
-            feedback_additional_information: checkpoint.aditional_information,
+            feedback_additional_information:
+              checkpoint.checkpoint_additional_information,
             topic_ids,
           },
           answerWeight,
