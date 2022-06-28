@@ -7,14 +7,22 @@ import { CheckpointAPP } from "../../api/CheckpointAPI";
 import { TopicAPP } from "../../api/TopicAPI";
 import {
   getAreas,
+  getAssessment,
   getCheckpoints,
   getSubareas,
+  getTemplate,
   getTopicRecommendations,
 } from "./pdfHelpers";
+import { useGetTemplate } from "../../api/TemplateAPI";
+import { useGetAssessment } from "../../api/AssessmentAPI";
 
+type Section = {
+  title: string;
+  text: string[];
+};
 type Table = {
   title: string;
-  sections: { title: string; text: string[] }[];
+  sections: Section[];
   data: (string | number)[][];
   headers: string[];
 };
@@ -89,10 +97,14 @@ async function getAreaTables(
   return tables;
 }
 
-function getRecTable(recs: RecommendationAPP[], recsHeaders: string[]) {
+function getRecTable(
+  recs: RecommendationAPP[],
+  recsHeaders: string[],
+  sections: { title: string; text: string[] }[]
+) {
   return {
     title: `Recommendations`,
-    sections: [],
+    sections,
     data: recs.map((c) => [c.order, c.description, c.additionalInfo]),
     headers: recsHeaders,
   };
@@ -315,9 +327,27 @@ export default async function createPDF(
   const checkpointHeaders = ["Order", "Description", "Topics", "Answer"];
 
   const tables: Table[] = [];
+
+  const assessmentInfo = await getAssessment(Number(assessmentId));
+
+  const templateInfo = await getTemplate(Number(assessmentInfo.templateId));
+
+  const feedbackSections: Section[] = [];
+
+  const feedback = templateInfo.information;
+  const assessorFeedback = assessmentInfo.feedbackText;
+
+  if (feedback !== "") feedbackSections.push({ title: "", text: [feedback] });
+
+  if (templateInfo.templateType === "TEAM" && assessorFeedback !== "") {
+    feedbackSections.push({
+      title: "Assessor Feedback",
+      text: [assessorFeedback],
+    });
+  }
   const recs = await getTopicRecommendations(assessmentId, undefined);
 
-  tables.push(getRecTable(recs, recsHeaders));
+  tables.push(getRecTable(recs, recsHeaders, feedbackSections));
 
   const allAreas = await getAreas(areas.map((a) => Number(a.id)));
   (

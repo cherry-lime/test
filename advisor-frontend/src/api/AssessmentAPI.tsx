@@ -20,7 +20,7 @@ export type AssessmentAPP = {
   teamId: number;
 };
 
-type AssessmentAPI = {
+export type AssessmentAPI = {
   assessment_id: number;
   assessment_name: string;
   assessment_type: AssessmentType;
@@ -35,7 +35,7 @@ type AssessmentAPI = {
   team_id: number;
 };
 
-function assessmentToAPP(assessmentAPI: AssessmentAPI) {
+export function assessmentToAPP(assessmentAPI: AssessmentAPI) {
   return {
     id: assessmentAPI.assessment_id,
     name: assessmentAPI.assessment_name,
@@ -52,7 +52,7 @@ function assessmentToAPP(assessmentAPI: AssessmentAPI) {
   } as AssessmentAPP;
 }
 
-function assessmentToAPI(assessmentAPP: AssessmentAPP) {
+export function assessmentToAPI(assessmentAPP: AssessmentAPP) {
   return {
     assessment_id: assessmentAPP.id,
     assessment_name: assessmentAPP.name,
