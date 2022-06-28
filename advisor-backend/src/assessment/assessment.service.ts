@@ -76,8 +76,6 @@ export class AssessmentService {
       throw new BadRequestException('No active templates found');
     }
 
-    console.log(template);
-
     return await this.prisma.assessment
       .create({
         data: {

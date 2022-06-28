@@ -28,7 +28,6 @@ import { AssessmentDto } from './dto/assessment.dto';
 import { FeedbackDto } from './dto/feedback.dto';
 import { Roles } from '../common/decorators/roles.decorator';
 import { ScoreDto } from './dto/score.dto';
-import { ScorePerTopicDto } from './dto/score-per-topic.dto';
 import { AssessmentScoreService } from './assessment-score.service';
 import { Role, User } from '@prisma/client';
 import AuthUser from '../common/decorators/auth-user.decorator';
@@ -309,7 +308,8 @@ export class AssessmentController {
       'Score for a specific topics (if score is -1, this means that there are no \
       checkpoints related to this maturity category pair \
       (for the selected topic))',
-    type: ScorePerTopicDto,
+    type: ScoreDto,
+    isArray: true,
   })
   @ApiNotFoundResponse({ description: 'Assessment not found' })
   @ApiBadRequestResponse({
@@ -319,14 +319,13 @@ export class AssessmentController {
   async getScorePerTopic(
     @Param('assessment_id', ParseIntPipe) id: number,
     @Param('topic_id', ParseIntPipe) topicId: number
-  ): Promise<ScorePerTopicDto> {
-    return {
-      topic_id: topicId,
-      ...((await this.assessmentScoreService.getScore(
+  ): Promise<ScoreDto[]> {
+    return await this.assessmentScoreService.getScore(
         id,
         topicId
-      )) as ScoreDto),
-    } as ScorePerTopicDto;
+      ).catch(err => {
+        throw err;
+      });
   }
 
   @Get(':assessment_id/feedback')

@@ -63,7 +63,7 @@ export class AssessmentScoreService {
     });
 
     if (maturityIds.length === 0) {
-      return new BadRequestException(
+      throw new BadRequestException(
         'No enabled maturities found associated to this template'
       );
     }
@@ -82,7 +82,7 @@ export class AssessmentScoreService {
     });
 
     if (categoryIds.length === 0) {
-      return new BadRequestException(
+      throw new BadRequestException(
         'No enabled categories found associated to this template'
       );
     }
@@ -161,7 +161,7 @@ export class AssessmentScoreService {
     );
 
     if (checkpoints.length === 0) {
-      return new BadRequestException(
+      throw new BadRequestException(
         'No enabled checkpoints found associated to this template'
       );
     }
@@ -179,7 +179,7 @@ export class AssessmentScoreService {
     });
 
     if (possibleAnswers.length === 0) {
-      return new BadRequestException(
+      throw new BadRequestException(
         'No enabled possible answers found associated to this template'
       );
     }
@@ -190,7 +190,7 @@ export class AssessmentScoreService {
       categoryIdsList,
       checkpoints,
       topic_id
-    ) as ScoreDto;
+    ) as ScoreDto[];
   }
 
   calculateScores(
@@ -290,7 +290,7 @@ export class AssessmentScoreService {
         }
       }
       scores[maturityIdsList.length][i] = (sum / sumWeights) * 100;
-      if (sum === 0) {
+      if (sumWeights === 0) {
         scores[maturityIdsList.length][i] = -1;
       }
     }
@@ -306,7 +306,7 @@ export class AssessmentScoreService {
         }
       }
       scores[i][categoryIdsList.length] = (sum / sumWeights) * 100;
-      if (sum === 0) {
+      if (sumWeights === 0) {
         scores[i][categoryIdsList.length] = -1;
       }
     }
@@ -329,16 +329,11 @@ export class AssessmentScoreService {
     scores[maturityIdsList.length][categoryIdsList.length] =
       sum / nrMaturitiesAndCategoriesWithOverallScore;
 
-    const output = {
-      scores: [],
-      maturity_total: {},
-      category_total: {},
-      total: 0,
-    };
+    const output = [];
 
     for (let i = 0; i < maturityIdsList.length; i++) {
       for (let j = 0; j < categoryIdsList.length; j++) {
-        output.scores.push({
+        output.push({
           maturity_id: maturityIdsList[i],
           category_id: categoryIdsList[j],
           score: scores[i][j],
@@ -347,16 +342,26 @@ export class AssessmentScoreService {
     }
 
     for (let i = 0; i < categoryIdsList.length; i++) {
-      output.category_total[categoryIdsList[i].toString()] =
-        scores[maturityIdsList.length][i];
+      output.push({
+        category_id: categoryIdsList[i],
+        maturity_id: null,
+        score: scores[maturityIdsList.length][i],
+      });
     }
 
     for (let i = 0; i < maturityIdsList.length; i++) {
-      output.maturity_total[maturityIdsList[i].toString()] =
-        scores[i][categoryIdsList.length];
+      output.push({
+        category_id: null,
+        maturity_id: maturityIdsList[i],
+        score: scores[i][categoryIdsList.length],
+      });
     }
 
-    output.total = scores[maturityIdsList.length][categoryIdsList.length];
+    output.push({
+      maturity_id: null,
+      category_id: null,
+      score: scores[maturityIdsList.length][categoryIdsList.length],
+    });
 
     return output;
   }
