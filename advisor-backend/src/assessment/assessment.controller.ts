@@ -283,49 +283,16 @@ export class AssessmentController {
     description: 'Individual assessment cannot be scored',
   })
   @ApiInternalServerErrorResponse()
-  async getScore(@Param('assessment_id', ParseIntPipe) id: number) {
-    return this.assessmentScoreService.getScore(id, null);
-  }
-
-  /**
-   * [GET] /assessment/{assessment_id}/score/{topic_id} -
-   *                                            get score per specific topic
-   * @param assessment_id assessment_id
-   * @param topic_id topic_id
-   * @returns scorePerTopicDto
-   * @throws NotFoundException if assessment not found
-   * @throws ForbiddenException if assessment type is INDIVIDUAL
-   * @throws BadRequestException if assessment is not completed
-   * @throws BadRequestException if no enabled maturities found associated to this template
-   * @throws BadRequestException if no enabled categories found associated to this template
-   * @throws BadRequestException if topic not found or not enabled for this template
-   * @throws BadRequestException if no enabled checkpoints found associated to this template
-   * @throws BadRequestException if no enabled possible answers found associated to this template
-   */
-  @Get(':assessment_id/score/:topic_id')
-  @ApiResponse({
-    description:
-      'Score for a specific topics (if score is -1, this means that there are no \
-      checkpoints related to this maturity category pair \
-      (for the selected topic))',
-    type: ScoreDto,
-    isArray: true,
+  @ApiQuery({
+    name: 'topic_id',
+    required: false,
+    type: Number,
   })
-  @ApiNotFoundResponse({ description: 'Assessment not found' })
-  @ApiBadRequestResponse({
-    description: 'Individual assessment cannot be scored',
-  })
-  @ApiInternalServerErrorResponse()
-  async getScorePerTopic(
+  async getScore(
     @Param('assessment_id', ParseIntPipe) id: number,
-    @Param('topic_id', ParseIntPipe) topicId: number
-  ): Promise<ScoreDto[]> {
-    return await this.assessmentScoreService.getScore(
-        id,
-        topicId
-      ).catch(err => {
-        throw err;
-      });
+    @Query('topic_id') topic_id?: number
+  ) {
+    return this.assessmentScoreService.getScore(id, topic_id);
   }
 
   @Get(':assessment_id/feedback')
