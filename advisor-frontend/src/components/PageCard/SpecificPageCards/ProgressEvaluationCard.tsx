@@ -145,6 +145,42 @@ export default function ProgressEvaluationCard({
     else setCategorySelected(null);
   };
 
+  if (!(scores && maturities && categories && categorySelected !== undefined)) {
+    return <>...</>;
+  }
+
+  const getFilteredScores = () =>
+    scores.filter(
+      (score: ScoreAPP) =>
+        score.categoryId === categorySelected &&
+        score.maturityId !== null &&
+        score.score !== -1
+    ) as ScoreAPP[];
+
+  const getLabels = () =>
+    getFilteredScores().map((score: ScoreAPP) => {
+      const maturityWithId = maturities.find(
+        (maturity: MaturityAPP) => maturity.id === score.maturityId
+      );
+
+      if (maturityWithId) {
+        return maturityWithId.name;
+      }
+
+      return "";
+    });
+
+  const getData = () =>
+    getFilteredScores().map((score: ScoreAPP) => score.score);
+
+  const getBackgroundColor = () =>
+    getFilteredScores().map(
+      (score: ScoreAPP) =>
+        `rgba(${Math.floor((255 / 100) * (100 - score.score))},${Math.floor(
+          (255 / 100) * score.score
+        )},0,0.4)`
+    );
+
   const options = {
     scales: {
       r: {
@@ -202,25 +238,25 @@ export default function ProgressEvaluationCard({
 
               <Box width="15vw">
                 <h2>View Area</h2>
-                {categories && categorySelected && (
-                  <Select
-                    value={categorySelected.toString()}
-                    onChange={handleCategoryChange}
-                  >
-                    <MenuItem key="menu-total-category" value="total">
-                      Total
+                <Select
+                  value={
+                    categorySelected === null ? "" : categorySelected.toString()
+                  }
+                  onChange={handleCategoryChange}
+                >
+                  <MenuItem key="menu-total-category" value="total">
+                    Total
+                  </MenuItem>
+                  ,
+                  {categories.map((category) => (
+                    <MenuItem
+                      key={category.name}
+                      value={category.id.toString()}
+                    >
+                      {category.name}
                     </MenuItem>
-                    ,
-                    {categories.map((category) => (
-                      <MenuItem
-                        key={category.name}
-                        value={category.id.toString()}
-                      >
-                        {category.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )}
+                  ))}
+                </Select>
               </Box>
             </Stack>
             <Box width="inherit">
@@ -230,25 +266,17 @@ export default function ProgressEvaluationCard({
             </Box>
             {scores && maturities && categories && (
               <Box>
-                {scores
-                  .filter(
-                    (score: ScoreAPP) =>
-                      score.categoryId === categorySelected &&
-                      score.maturityId !== null &&
-                      score.score !== -1
-                  )
-                  .map((score: ScoreAPP) => {
-                    const maturityWithId = maturities.find(
-                      (maturity: MaturityAPP) =>
-                        maturity.id === score.maturityId
-                    );
+                {getFilteredScores().map((score: ScoreAPP) => {
+                  const maturityWithId = maturities.find(
+                    (maturity: MaturityAPP) => maturity.id === score.maturityId
+                  );
 
-                    if (maturityWithId) {
-                      return `${maturityWithId.name}: ${score.score}%`;
-                    }
+                  if (maturityWithId) {
+                    return <p>{`${maturityWithId.name}: ${score.score}%`}</p>;
+                  }
 
-                    return "";
-                  })}
+                  return "";
+                })}
               </Box>
             )}
             <Box width="inherit">
@@ -280,44 +308,12 @@ export default function ProgressEvaluationCard({
             {scores && maturities && categories && (
               <PolarArea
                 data={{
-                  labels: scores
-                    .filter((score: ScoreAPP) => score.score !== -1)
-                    .map((score: ScoreAPP) => {
-                      const maturityWithId = maturities.find(
-                        (maturity: MaturityAPP) =>
-                          maturity.id === score.maturityId
-                      );
-
-                      if (maturityWithId) {
-                        return maturityWithId.name;
-                      }
-
-                      return "";
-                    }),
+                  labels: getLabels(),
                   datasets: [
                     {
                       label: "Progress Scores",
-                      data: scores
-                        .filter(
-                          (score: ScoreAPP) =>
-                            score.categoryId === categorySelected &&
-                            score.maturityId !== null &&
-                            score.score !== -1
-                        )
-                        .map((score: ScoreAPP) => score.score),
-                      backgroundColor: scores
-                        .filter(
-                          (score: ScoreAPP) =>
-                            score.categoryId === categorySelected &&
-                            score.maturityId !== null &&
-                            score.score !== -1
-                        )
-                        .map(
-                          (score: ScoreAPP) =>
-                            `rgba(${Math.floor(
-                              (255 / 100) * (100 - score.score)
-                            )},${Math.floor((255 / 100) * score.score)},0,0.4)`
-                        ),
+                      data: getData(),
+                      backgroundColor: getBackgroundColor(),
                     },
                   ],
                 }}
