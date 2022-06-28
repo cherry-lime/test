@@ -25,7 +25,19 @@ import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import ErrorPopup, { RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
-const showFeedbackText = (
+const showFeedbackTextUser = (
+  team: boolean,
+  userRole: string,
+  value: string,
+  assessmentInfo: AssessmentAPP
+) =>
+  team &&
+  userRole === "USER" &&
+  value === "Recommendations" &&
+  assessmentInfo &&
+  assessmentInfo.feedbackText;
+
+const showFeedbackTextAssessor = (
   team: boolean,
   userRole: string,
   value: string,
@@ -34,8 +46,7 @@ const showFeedbackText = (
   team &&
   userRole === "ASSESSOR" &&
   value === "Recommendations" &&
-  assessmentInfo &&
-  assessmentInfo.feedbackText;
+  assessmentInfo;
 
 /**
  * Page with the feedback related to a self assessment
@@ -198,7 +209,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
 
       {assessmentInfo &&
-        showFeedbackText(team, userRole, value, assessmentInfo) && (
+        showFeedbackTextAssessor(team, userRole, value, assessmentInfo) && (
           <TextfieldEdit
             rows={5}
             theme={theme}
@@ -207,11 +218,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           />
         )}
 
-      {team &&
-        userRole === "USER" &&
-        value === "Recommendations" &&
-        assessmentInfo &&
-        assessmentInfo.feedbackText !== "" && (
+      {assessmentInfo &&
+        showFeedbackTextUser(team, userRole, value, assessmentInfo) && (
           <Textfield
             rows={5}
             columns="inherit"
@@ -236,7 +244,12 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         />
       )}
 
-      {value === "Progress" && <ProgressEvaluationCard />}
+      {value === "Progress" && assessmentInfo && (
+        <ProgressEvaluationCard
+          assessmentId={Number(assessmentId)}
+          templateId={Number(assessmentInfo.templateId)}
+        />
+      )}
 
       <Button className="widthInherited" variant="contained" onClick={download}>
         <Stack direction="row">

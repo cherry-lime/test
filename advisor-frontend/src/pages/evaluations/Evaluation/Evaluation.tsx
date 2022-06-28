@@ -1,7 +1,7 @@
 import { Button, Theme } from "@mui/material";
 import { useSelector } from "react-redux";
 import React, { useCallback, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ListOfCheckpoints from "../../../components/ListOfCheckpoints/ListOfCheckpoints";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../PageLayout";
@@ -13,6 +13,7 @@ import {
   usePostCompleteAssessment,
 } from "../../../api/AssessmentAPI";
 import ErrorPopup, {
+  handleError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
 
@@ -31,36 +32,40 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
 
   // Ref for error popup
   const ref = useRef<RefObject>(null);
+  const navigate = useNavigate();
 
   const postCompleteEval = usePostCompleteAssessment(Number(assessmentId), ref);
 
   const handleClickFinish = useCallback(() => {
-    postCompleteEval.mutate();
+    postCompleteEval.mutate(undefined, {
+      onError: () => {
+        handleError(
+          ref,
+          "Error: unable to complete the evaluation. Make sure you filled in all the checkpoints."
+        );
+      },
+      onSuccess: () => {
+        navigate(
+          team
+            ? `/teams/${teamId}/feedback/${assessmentId}`
+            : `/user/self_evaluations/feedback/${assessmentId}`
+        );
+      },
+    });
   }, []);
 
   const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
 
   // get assessment information from API
-  const {
-    status: assessmentStatus,
-    data: assessmentData,
-    error: assessmentError,
-  } = useGetAssessment(Number(assessmentId), ref);
+  const { status: assessmentStatus, data: assessmentData } = useGetAssessment(
+    Number(assessmentId),
+    ref
+  );
 
   // set assessment info value
   React.useEffect(() => {
-    switch (assessmentStatus) {
-      case "error":
-        // eslint-disable-next-line no-console
-        console.log(assessmentError);
-        break;
-      case "success":
-        if (assessmentData) {
-          setAssessmentInfo(assessmentData);
-        }
-        break;
-      default:
-        break;
+    if (assessmentData && assessmentStatus === "success") {
+      setAssessmentInfo(assessmentData);
     }
   }, [assessmentStatus, assessmentData]);
 
@@ -104,19 +109,10 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
           justifyContent: "flex-end",
         }}
       >
-        <Link
-          className="buttonLink"
-          to={
-            team
-              ? `/teams/${teamId}/feedback/${assessmentId}`
-              : `/user/self_evaluations/feedback/${assessmentId}`
-          }
-        >
-          <Button variant="contained" onClick={handleClickFinish}>
-            {" "}
-            Finish Evaluation{" "}
-          </Button>
-        </Link>
+        <Button variant="contained" onClick={handleClickFinish}>
+          {" "}
+          Finish Evaluation{" "}
+        </Button>
         <ErrorPopup ref={ref} />
       </div>
     </PageLayout>
