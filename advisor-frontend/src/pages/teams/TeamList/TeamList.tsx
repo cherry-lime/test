@@ -36,7 +36,7 @@ function TeamList({ theme }: { theme: Theme }) {
           <Box>
             <TextField
               value={token}
-              onChange={(e) => setToken(e.target.value)}
+              onChange={(e) => {setToken(e.target.value)}}
               label="Enter token"
               rows={1}
             />
