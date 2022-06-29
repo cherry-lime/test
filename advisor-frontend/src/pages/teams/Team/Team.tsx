@@ -139,7 +139,7 @@ function Team({ theme }: { theme: Theme }) {
 
           {userRole === "ASSESSOR" && <h3>Invite Token</h3>}
 
-          {userRole === "ASSESSOR" && teamInfo && (
+          {userRole === "ASSESSOR" && (
             <FormControl sx={{ width: "inherit" }} variant="standard">
               <OutlinedInput
                 readOnly
