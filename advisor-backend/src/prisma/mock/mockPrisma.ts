@@ -10,6 +10,7 @@ import { mockSubarea } from './mockSubarea';
 import { mockCheckpoint } from './mockCheckpoint';
 import { mockTopic } from './mockTopic';
 import { mockCheckpointInTopic } from './mockCheckpointInTopic';
+import { mockAnswer } from './mockAnswer';
 
 export const mockPrisma = {
   template: mockTemplate,
@@ -24,4 +25,5 @@ export const mockPrisma = {
   checkpoint: mockCheckpoint,
   topic: mockTopic,
   checkpointInTopic: mockCheckpointInTopic,
+  answer: mockAnswer,
 };

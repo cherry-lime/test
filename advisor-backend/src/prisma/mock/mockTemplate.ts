@@ -8,7 +8,7 @@ export const aTemplate = {
   disabled: false,
   weight_range_min: 1,
   weight_range_max: 3,
-  include_no_answer: false,
+  include_no_answer: true,
   Category: [],
 };
 
