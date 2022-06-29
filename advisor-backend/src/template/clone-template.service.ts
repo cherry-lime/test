@@ -198,10 +198,7 @@ export class CloneTemplateService {
         newTemplate = await this.prisma.template.create({
           data: {
             template_name,
-            template_type: template.template_type,
-            weight_range_min: template.weight_range_min,
-            weight_range_max: template.weight_range_max,
-            enabled: template.enabled,
+            ...template,
             Category: {
               create: createCat,
             },
