@@ -1,6 +1,6 @@
 import { Card, Stack, Tab, Tabs, Theme, Button, Box } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import userTypes from "../../components/Sidebar/listUsersTypes";
@@ -53,7 +53,7 @@ const showFeedbackTextAssessor = (
  * This should only be accessible to the user whose assement this belongs to
  */
 function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
-  const { assessmentId } = useParams();
+  const { assessmentId, teamId } = useParams();
 
   const { userRole } = useSelector((state: RootState) => state.userData);
 
@@ -64,6 +64,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
   // Ref for error popup
   const ref = useRef<RefObject>(null);
+  const navigate = useNavigate();
 
   const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
 
@@ -72,6 +73,13 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   React.useEffect(() => {
     if (assessmentResponse.status === "success" && assessmentResponse.data) {
       setAssessmentInfo(assessmentResponse.data);
+      if (!assessmentResponse.data.completedAt) {
+        navigate(
+          team
+            ? `/teams/${teamId}/${assessmentId}`
+            : `/user/self_evaluations/${assessmentId}`
+        );
+      }
     }
   }, [assessmentResponse.status, assessmentResponse.data]);
 

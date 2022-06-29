@@ -76,6 +76,13 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   React.useEffect(() => {
     if (assessmentData && assessmentStatus === "success") {
       setAssessmentInfo(assessmentData);
+      if (assessmentData.completedAt) {
+        navigate(
+          team
+            ? `/teams/${teamId}/feedback/${assessmentId}`
+            : `/user/self_evaluations/feedback/${assessmentId}`
+        );
+      }
     }
   }, [assessmentStatus, assessmentData]);
 
