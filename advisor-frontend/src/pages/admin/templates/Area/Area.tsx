@@ -1,5 +1,5 @@
 // import { useParams } from "react-router-dom";
-import { Theme } from "@mui/material";
+import { Theme, ThemeProvider } from "@mui/material";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import SubareaGrid from "../../../../components/Grids/Specific/Subarea/SubareaGrid";
@@ -7,6 +7,7 @@ import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
 import CheckpointGrid from "../../../../components/Grids/Specific/Checkpoint/CheckpointGrid";
 import { CategoryAPP, useGetCategory } from "../../../../api/CategoryAPI";
+import { getUpdatedTheme } from "./colorHelpers";
 
 /**
  * Page with details regarding an area beloging to a certain template
@@ -17,27 +18,39 @@ function Area({ theme }: { theme: Theme }) {
   const { areaId } = useParams();
 
   const [areaInfo, setAreaInfo] = useState<CategoryAPP>();
+  const [currentTheme, setCurrentTheme] = useState(theme);
+  const [primaryColor, setPrimaryColor] = useState(theme.palette.primary.main);
 
   const areaResponse = useGetCategory(Number(areaId));
 
   React.useEffect(() => {
     if (areaResponse.data && areaResponse.status === "success") {
       setAreaInfo(areaResponse.data);
+      const { color } = areaResponse.data;
+      const newTheme = getUpdatedTheme(color, theme);
+      setPrimaryColor(color);
+      setCurrentTheme(newTheme);
     }
   }, [areaResponse]);
 
   return (
     <div>
       {areaInfo && (
-        <PageLayout title={`${areaInfo.name}`} sidebarType={userType.ADMIN}>
-          <h2>Subareas</h2>
-          <SubareaGrid theme={theme} categoryId={Number(areaId)} />
-          <h2>Checkpoints</h2>
-          <CheckpointGrid
-            theme={theme}
-            templateId={Number(templateId)}
-            categoryId={Number(areaId)}
-          />
+        <PageLayout
+          title={`${areaInfo.name}`}
+          sidebarType={userType.ADMIN}
+          headerColor={primaryColor}
+        >
+          <ThemeProvider theme={currentTheme}>
+            <h2>Subareas</h2>
+            <SubareaGrid theme={currentTheme} categoryId={Number(areaId)} />
+            <h2>Checkpoints</h2>
+            <CheckpointGrid
+              theme={currentTheme}
+              templateId={Number(templateId)}
+              categoryId={Number(areaId)}
+            />
+          </ThemeProvider>
         </PageLayout>
       )}
     </div>

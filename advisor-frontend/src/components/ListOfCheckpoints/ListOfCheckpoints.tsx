@@ -4,6 +4,7 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  ThemeProvider,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
@@ -22,16 +23,14 @@ function ListOfCheckpoints({
   assessmentInfo,
   theme,
   feedback,
+  setPrimaryColor,
 }: {
   assessmentInfo: AssessmentAPP;
   theme: ThemeOptions;
   feedback: boolean;
+  setPrimaryColor?: React.Dispatch<React.SetStateAction<string>> | undefined;
 }) {
   const [activeArea, setActiveArea] = useState<number>();
-
-  const handleAreaChange = (event: SelectChangeEvent<number>) => {
-    setActiveArea(Number(event.target.value));
-  };
 
   // GET ASSESSMENT INFORMATION
 
@@ -39,6 +38,17 @@ function ListOfCheckpoints({
   const [answerList, setAnswerList] = useState<AnswerAPP[]>([]);
   const [checkpointAnswerList, setCheckpointAnswerList] =
     useState<Record<number, number | undefined>>();
+
+  const handleAreaChange = (event: SelectChangeEvent<number>) => {
+    setActiveArea(Number(event.target.value));
+  };
+
+  React.useEffect(() => {
+    if (areaList && setPrimaryColor) {
+      const newColor = areaList.filter((a) => a.id === activeArea)[0].color;
+      setPrimaryColor(newColor);
+    }
+  }, [activeArea]);
 
   // Ref for error popup
   const ref = useRef<RefObject>(null);
@@ -110,17 +120,19 @@ function ListOfCheckpoints({
 
   return (
     <div style={{ width: "inherit", display: "contents" }}>
-      {areaList !== undefined && activeArea !== undefined && (
-        <FormControl sx={{ width: "inherit" }}>
-          <Select value={activeArea} onChange={handleAreaChange}>
-            {areaList.map((a) => (
-              <MenuItem key={`menu-area-${a.id}`} value={a.id}>
-                {a.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
+      <ThemeProvider theme={theme}>
+        {areaList !== undefined && activeArea !== undefined && (
+          <FormControl sx={{ width: "inherit" }}>
+            <Select value={activeArea} onChange={handleAreaChange}>
+              {areaList.map((a) => (
+                <MenuItem key={`menu-area-${a.id}`} value={a.id}>
+                  {a.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+      </ThemeProvider>
 
       {activeArea &&
         answerList &&
@@ -142,5 +154,9 @@ function ListOfCheckpoints({
     </div>
   );
 }
+
+ListOfCheckpoints.defaultProps = {
+  setPrimaryColor: undefined,
+};
 
 export default ListOfCheckpoints;

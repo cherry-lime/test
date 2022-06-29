@@ -4,11 +4,13 @@ import {
   FormControl,
   Select,
   MenuItem,
+  ThemeProvider,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import { RootState } from "../../app/store";
+import INGTheme from "../../Theme";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import RecommendationGrid from "../Grids/Specific/Recommendation/RecommendationGrid";
 
@@ -54,32 +56,34 @@ function ListOfRecommendations({
 
   return (
     <div style={{ width: "inherit", display: "contents" }}>
-      {topicList !== undefined && (
-        <FormControl sx={{ width: "inherit" }}>
-          <Select
-            value={topic ? topic.toString() : "-"}
-            onChange={handleTopicChange}
-          >
-            {[
-              <MenuItem key="menu-no-topic" value="-">
-                No topic prioritization
-              </MenuItem>,
-              ...topicList.map((t) => (
-                <MenuItem key={`menu-topic-${t.id}`} value={t.id.toString()}>
-                  {t.name}
-                </MenuItem>
-              )),
-            ]}
-          </Select>
-        </FormControl>
-      )}
-      <RecommendationGrid
-        theme={theme}
-        assessmentId={assessmentId}
-        topicId={topic}
-        isEditable={userRole === "ASSESSOR"} // TODO: Add && assessment === done later
-      />
-      <ErrorPopup ref={ref} />
+      <ThemeProvider theme={INGTheme}>
+        {topicList !== undefined && (
+          <FormControl sx={{ width: "inherit" }}>
+            <Select
+              value={topic ? topic.toString() : "-"}
+              onChange={handleTopicChange}
+            >
+              {[
+                <MenuItem key="menu-no-topic" value="-">
+                  No topic prioritization
+                </MenuItem>,
+                ...topicList.map((t) => (
+                  <MenuItem key={`menu-topic-${t.id}`} value={t.id.toString()}>
+                    {t.name}
+                  </MenuItem>
+                )),
+              ]}
+            </Select>
+          </FormControl>
+        )}
+        <RecommendationGrid
+          theme={theme}
+          assessmentId={assessmentId}
+          topicId={topic}
+          isEditable={userRole === "ASSESSOR"} // TODO: Add && assessment === done later
+        />
+        <ErrorPopup ref={ref} />
+      </ThemeProvider>
     </div>
   );
 }
