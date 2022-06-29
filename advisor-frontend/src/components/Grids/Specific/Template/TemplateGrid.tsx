@@ -116,10 +116,10 @@ export default function TemplateGrid({
   // Delete dialog handler
   const [open, setOpen] = React.useState(false);
   const [paramId, setParamId] = React.useState<GridRowId>(0);
-  function handleClickOpen(id: GridRowId)  {
+  function handleClickOpen(id: GridRowId) {
     setOpen(true);
     setParamId(id);
-  };
+  }
   const handleClose = () => {
     setOpen(false);
   };
@@ -190,7 +190,11 @@ export default function TemplateGrid({
         }}
       />
       <ErrorPopup ref={ref} />
-      <DeleteDialog open={open} onClose={handleClose} deleteTemplate={handleDeleteDecorator(paramId)}/>
+      <DeleteDialog
+        open={open}
+        onClose={handleClose}
+        deleteTemplate={handleDeleteDecorator(paramId)}
+      />
     </>
   );
 }

@@ -73,37 +73,21 @@ function AreaSpecificCheckpoints({
 
   // set the subarea list value
   React.useEffect(() => {
-    if (subareasResponse.data) {
-      switch (subareasResponse.status) {
-        case "error":
-          // eslint-disable-next-line no-console
-          console.log(subareasResponse.error);
-          break;
-        case "success":
-          setSubareaList(subareasResponse.data);
-          break;
-        default:
-          break;
-      }
+    if (subareasResponse.data && subareasResponse.status === "success") {
+      setSubareaList(subareasResponse.data);
     }
   }, [subareasResponse]);
 
   // set the checkpoint list value
   React.useEffect(() => {
-    if (checkpointResponse.data) {
-      switch (checkpointResponse.status) {
-        case "error":
-          // eslint-disable-next-line no-console
-          console.log(checkpointResponse.error);
-          break;
-        case "success":
-          setCheckpointList(checkpointResponse.data);
-          break;
-        default:
-          break;
-      }
+    if (checkpointResponse.data && checkpointResponse.status === "success") {
+      setCheckpointList(checkpointResponse.data);
     }
   }, [checkpointResponse]);
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [areaId]);
 
   React.useEffect(() => {
     if (subareaList !== undefined) {
