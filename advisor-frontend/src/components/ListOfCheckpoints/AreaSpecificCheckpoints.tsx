@@ -138,7 +138,7 @@ function AreaSpecificCheckpoints({
       topicList={topicList}
       number={checkpoint.order}
       topicIds={checkpoint.topics}
-      selectedAnswer={checkpointIdToAnswerLabel(checkpoint.id)}
+      selectedAnswer={checkpointIdToAnswerLabel(Number(checkpoint.id))}
       setCheckpointAnswerList={setCheckpointAnswerList}
       theme={theme}
       description={checkpoint.description}

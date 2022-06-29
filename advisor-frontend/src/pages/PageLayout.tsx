@@ -1,5 +1,4 @@
-import { Box, Theme, ThemeProvider } from "@mui/material";
-import { useState } from "react";
+import { Box, ThemeProvider } from "@mui/material";
 import Header from "../components/Cards/Header";
 import Footer from "../components/Cards/Footer";
 import Sidebar from "../components/Sidebar/Sidebar";

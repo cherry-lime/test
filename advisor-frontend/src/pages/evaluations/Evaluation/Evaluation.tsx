@@ -1,4 +1,4 @@
-import { Button, createMuiTheme, Theme, ThemeProvider } from "@mui/material";
+import { Button, Theme, ThemeProvider } from "@mui/material";
 import { useSelector } from "react-redux";
 import React, { useCallback, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,7 +16,7 @@ import ErrorPopup, {
   handleError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
-import INGTheme from "../../../Theme";
+import { getUpdatedTheme } from "../../admin/templates/Area/colorHelpers";
 
 /**
  * Page with a self evaluation that can be filled in
@@ -30,19 +30,14 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   const [currentTheme, setCurrentTheme] = useState(theme);
 
   React.useEffect(() => {
-    console.log("change theme");
-    setCurrentTheme((t) => {
-      const newT = t;
-      newT.palette.primary.main = primaryColor;
-      console.log();
-      console.log(t.palette.primary.main);
-      console.log(newT.palette.primary.main);
-      return newT;
-    });
+    setCurrentTheme(() => getUpdatedTheme(primaryColor, theme));
   }, [primaryColor]);
 
   const handleViewChange = () => {
-    setCheckpointView((v) => !v);
+    setCheckpointView((v) => {
+      setPrimaryColor(theme.palette.primary.main);
+      return !v;
+    });
   };
 
   // Ref for error popup
@@ -84,69 +79,56 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
     }
   }, [assessmentStatus, assessmentData]);
 
-  const modifyTheme = () => {
-    setCurrentTheme((t) => {
-      const newT = t;
-      newT.palette.primary.main = primaryColor;
-      return newT;
-    });
-  };
-
-  const ThemeSelectorContext = React.createContext({
-    primaryColor,
-    modifyTheme: () => modifyTheme(),
-  });
-
   return (
     <PageLayout
       title={team ? "Team Evaluation" : "Individual Evaluation"}
       sidebarType={userTypes[userRole]}
       headerColor={primaryColor}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          width: "inherit",
-        }}
-      >
-        <Button onClick={handleViewChange} variant="contained">
-          {checkpointView ? "See Recommendations" : "Go back to checkpoints"}
-        </Button>
-      </div>
+      <ThemeProvider theme={checkpointView ? currentTheme : theme}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            width: "inherit",
+          }}
+        >
+          <Button onClick={handleViewChange} variant="contained">
+            {checkpointView ? "See Recommendations" : "Go back to checkpoints"}
+          </Button>
+        </div>
 
-      {checkpointView && assessmentInfo && (
-        <ListOfCheckpoints
-          feedback={false || (team && userRole === "USER")}
-          theme={INGTheme}
-          assessmentInfo={assessmentInfo}
-          setPrimaryColor={setPrimaryColor}
-        />
-      )}
+        {checkpointView && assessmentInfo && (
+          <ListOfCheckpoints
+            feedback={false || (team && userRole === "USER")}
+            theme={currentTheme}
+            assessmentInfo={assessmentInfo}
+            setPrimaryColor={setPrimaryColor}
+          />
+        )}
 
-      {!checkpointView && assessmentInfo && (
-        <ThemeProvider theme={INGTheme}>
+        {!checkpointView && assessmentInfo && (
           <ListOfRecommendations
-            theme={INGTheme}
+            theme={theme}
             assessmentId={Number(assessmentId)}
             templateId={assessmentInfo.templateId}
           />
-        </ThemeProvider>
-      )}
+        )}
 
-      <div
-        style={{
-          width: "inherit",
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Button variant="contained" onClick={handleClickFinish}>
-          {" "}
-          Finish Evaluation{" "}
-        </Button>
-        <ErrorPopup ref={ref} />
-      </div>
+        <div
+          style={{
+            width: "inherit",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button variant="contained" onClick={handleClickFinish}>
+            {" "}
+            Finish Evaluation{" "}
+          </Button>
+          <ErrorPopup ref={ref} />
+        </div>
+      </ThemeProvider>
     </PageLayout>
   );
 }

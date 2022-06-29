@@ -28,7 +28,6 @@ import ErrorPage from "./pages/ErrorPage";
 function App() {
   // Import the global state variables that will be used throughout the session
   const { userRole } = useSelector((state: RootState) => state.userData);
-
   // Ref for error popup
   const ref = useRef<RefObject>(null);
 

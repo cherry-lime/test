@@ -62,8 +62,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     setValue(newValue);
   };
 
-  const [primaryColor, setPrimaryColor] = useState(theme.palette.primary.main);
-
   // Ref for error popup
   const ref = useRef<RefObject>(null);
 
@@ -240,7 +238,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
       {value === "Checkpoints" && assessmentInfo && (
         <ListOfCheckpoints
-          setPrimaryColor={setPrimaryColor}
           feedback
           theme={theme}
           assessmentInfo={assessmentInfo}

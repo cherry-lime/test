@@ -57,33 +57,32 @@ function ListOfRecommendations({
   return (
     <div style={{ width: "inherit", display: "contents" }}>
       <ThemeProvider theme={INGTheme}>
-
-      {topicList !== undefined && (
-        <FormControl sx={{ width: "inherit" }}>
-          <Select
-            value={topic ? topic.toString() : "-"}
-            onChange={handleTopicChange}
-          >
-            {[
-              <MenuItem key="menu-no-topic" value="-">
-                No topic prioritization
-              </MenuItem>,
-              ...topicList.map((t) => (
-                <MenuItem key={`menu-topic-${t.id}`} value={t.id.toString()}>
-                  {t.name}
-                </MenuItem>
-              )),
-            ]}
-          </Select>
-        </FormControl>
-      )}
-      <RecommendationGrid
-        theme={theme}
-        assessmentId={assessmentId}
-        topicId={topic}
-        isEditable={userRole === "ASSESSOR"} // TODO: Add && assessment === done later
-      />
-      <ErrorPopup ref={ref} />
+        {topicList !== undefined && (
+          <FormControl sx={{ width: "inherit" }}>
+            <Select
+              value={topic ? topic.toString() : "-"}
+              onChange={handleTopicChange}
+            >
+              {[
+                <MenuItem key="menu-no-topic" value="-">
+                  No topic prioritization
+                </MenuItem>,
+                ...topicList.map((t) => (
+                  <MenuItem key={`menu-topic-${t.id}`} value={t.id.toString()}>
+                    {t.name}
+                  </MenuItem>
+                )),
+              ]}
+            </Select>
+          </FormControl>
+        )}
+        <RecommendationGrid
+          theme={theme}
+          assessmentId={assessmentId}
+          topicId={topic}
+          isEditable={userRole === "ASSESSOR"} // TODO: Add && assessment === done later
+        />
+        <ErrorPopup ref={ref} />
       </ThemeProvider>
     </div>
   );

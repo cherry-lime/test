@@ -28,7 +28,7 @@ function ListOfCheckpoints({
   assessmentInfo: AssessmentAPP;
   theme: ThemeOptions;
   feedback: boolean;
-  setPrimaryColor: React.Dispatch<React.SetStateAction<string>>;
+  setPrimaryColor?: React.Dispatch<React.SetStateAction<string>> | undefined;
 }) {
   const [activeArea, setActiveArea] = useState<number>();
 
@@ -44,11 +44,12 @@ function ListOfCheckpoints({
   };
 
   React.useEffect(() => {
-    if (areaList) {
+    if (areaList && setPrimaryColor) {
       const newColor = areaList.filter((a) => a.id === activeArea)[0].color;
       setPrimaryColor(newColor);
     }
   }, [activeArea]);
+
   // Ref for error popup
   const ref = useRef<RefObject>(null);
 
@@ -121,18 +122,17 @@ function ListOfCheckpoints({
     <div style={{ width: "inherit", display: "contents" }}>
       <ThemeProvider theme={theme}>
         {areaList !== undefined && activeArea !== undefined && (
-        <FormControl sx={{ width: "inherit" }}>
-          <Select value={activeArea} onChange={handleAreaChange}>
-            {areaList.map((a) => (
-              <MenuItem key={`menu-area-${a.id}`} value={a.id}>
-                {a.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
+          <FormControl sx={{ width: "inherit" }}>
+            <Select value={activeArea} onChange={handleAreaChange}>
+              {areaList.map((a) => (
+                <MenuItem key={`menu-area-${a.id}`} value={a.id}>
+                  {a.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
       </ThemeProvider>
-      
 
       {activeArea &&
         answerList &&
@@ -154,5 +154,9 @@ function ListOfCheckpoints({
     </div>
   );
 }
+
+ListOfCheckpoints.defaultProps = {
+  setPrimaryColor: undefined,
+};
 
 export default ListOfCheckpoints;
