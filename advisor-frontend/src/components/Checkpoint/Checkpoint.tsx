@@ -41,9 +41,11 @@ function Checkpoint({
   topicList: TopicAPP[];
   answers: AnswerAPP[];
   selectedAnswer: string | undefined;
-  setCheckpointAnswerList: React.Dispatch<
-    React.SetStateAction<Record<number, number | undefined> | undefined>
-  >;
+  setCheckpointAnswerList:
+    | React.Dispatch<
+        React.SetStateAction<Record<number, number | undefined> | undefined>
+      >
+    | undefined;
   theme: ThemeOptions;
   feedback: boolean;
 }) {
@@ -55,15 +57,17 @@ function Checkpoint({
   const postCheckpointAnswer = usePostSaveAssessment(assessmentId, value);
 
   const changeAnswerList = (newAnswer: string) => {
-    setCheckpointAnswerList((old) => {
-      if (old) {
-        const newList = old;
-        newList[checkpointId] =
-          newAnswer !== "-" ? Number(newAnswer) : undefined;
-        return newList;
-      }
-      return old;
-    });
+    if (setCheckpointAnswerList) {
+      setCheckpointAnswerList((old) => {
+        if (old) {
+          const newList = old;
+          newList[checkpointId] =
+            newAnswer !== "-" ? Number(newAnswer) : undefined;
+          return newList;
+        }
+        return old;
+      });
+    }
   };
 
   const changeCheckpointAnswer = (newValue: string) => {

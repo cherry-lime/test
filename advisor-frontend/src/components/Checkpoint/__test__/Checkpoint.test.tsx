@@ -24,6 +24,7 @@ it("The checkpoint renders and buttons are checked in sequences 123 132 213 231 
         theme={Theme}
         selectedAnswer="-"
         topicList={[]}
+        setCheckpointAnswerList={undefined}
         answers={[
           { id: 1, label: "Yes", value: 1, templateId: 1, enabled: true },
           { id: 2, label: "No", value: 2, templateId: 1, enabled: true },
