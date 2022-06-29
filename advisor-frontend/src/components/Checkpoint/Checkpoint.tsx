@@ -52,7 +52,12 @@ function Checkpoint({
   /*
   set the value when clicking one of the radio-buttons
   */
+
   const [value, setValue] = useState(selectedAnswer);
+
+  React.useEffect(() => {
+    setValue(selectedAnswer);
+  }, [selectedAnswer]);
 
   const postCheckpointAnswer = usePostSaveAssessment(assessmentId, value);
 
