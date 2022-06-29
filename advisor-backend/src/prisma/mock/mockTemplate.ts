@@ -1,14 +1,19 @@
+import { Template } from '@prisma/client';
 import { UpdateTemplateDto } from '../../template/dto/update-template.dto';
 
-export const aTemplate = {
+export const aTemplate: Template & {
+  [key: string]: any;
+} = {
   template_id: 1,
   template_name: 'test',
   template_description: 'test',
   template_type: 'INDIVIDUAL',
-  disabled: false,
+  enabled: true,
   weight_range_min: 1,
   weight_range_max: 3,
   include_no_answer: true,
+  information: 'test',
+  template_feedback: 'test',
   Category: [],
 };
 
