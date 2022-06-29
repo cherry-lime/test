@@ -1,7 +1,7 @@
 export const aMaturity = {
   maturity_id: 1,
   maturity_name: 'Maturity 1',
-  order: 0,
+  order: 1,
   template_id: 1,
 };
 
