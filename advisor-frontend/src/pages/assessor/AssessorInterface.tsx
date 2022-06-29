@@ -13,7 +13,7 @@ function AssessorInterface() {
   const { userId, userRole } = useSelector(
     (state: RootState) => state.userData
   );
-  const pageTitle = `Assessor Home`;
+  const pageTitle = `Facilitator Home`;
 
   return (
     <PageLayout title={pageTitle} footer sidebarType={userTypes[userRole]}>

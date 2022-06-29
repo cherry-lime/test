@@ -62,7 +62,7 @@ export default function MemberGrid({
     () => [
       {
         field: "name",
-        headerName: forAssessors ? "Assessor Name" : "Member Name",
+        headerName: forAssessors ? "Facilitator Name" : "Member Name",
         type: "string",
         flex: 1,
         editable: userRole === "ASSESSOR",

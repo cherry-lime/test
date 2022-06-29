@@ -162,7 +162,7 @@ function Team({ theme }: { theme: Theme }) {
               />
             </FormControl>
           )}
-          <h3>Assessors</h3>
+          <h3>Facilitators</h3>
           <MemberGrid
             theme={theme}
             userRole={userRole}
