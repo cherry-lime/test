@@ -14,17 +14,8 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import {
   Chart,
   ArcElement,
-  LineElement,
-  BarElement,
-  PointElement,
-  PolarAreaController,
   CategoryScale,
-  LinearScale,
   RadialLinearScale,
-  TimeScale,
-  TimeSeriesScale,
-  Decimation,
-  Filler,
   Legend,
   Tooltip,
 } from "chart.js";
@@ -36,22 +27,7 @@ import { ScoreAPP, useGetScores } from "../../../api/ScoreAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI";
 import ErrorPopup, { RefObject } from "../../ErrorPopup/ErrorPopup";
 
-Chart.register(
-  ArcElement,
-  LineElement,
-  BarElement,
-  PointElement,
-  PolarAreaController,
-  CategoryScale,
-  LinearScale,
-  RadialLinearScale,
-  TimeScale,
-  TimeSeriesScale,
-  Decimation,
-  Filler,
-  Legend,
-  Tooltip
-);
+Chart.register(ArcElement, CategoryScale, RadialLinearScale, Legend, Tooltip);
 
 type ProgressEvaluationCardProps = {
   assessmentId: number;
