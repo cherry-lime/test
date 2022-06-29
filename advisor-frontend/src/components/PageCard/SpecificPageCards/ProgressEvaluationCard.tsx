@@ -1,4 +1,13 @@
-import { Box, Card, CardContent, Divider, Stack } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Stack,
+} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
@@ -67,6 +76,8 @@ type ProgressEvaluationCardProps = {
   templateId: number;
 };
 
+type Filter = "Category" | "Maturity";
+
 export default function ProgressEvaluationCard({
   assessmentId,
   templateId,
@@ -77,13 +88,14 @@ export default function ProgressEvaluationCard({
   const [topics, setTopics] = useState<TopicAPP[]>();
   const [categories, setCategories] = useState<CategoryAPP[]>();
   const [maturities, setMaturities] = useState<MaturityAPP[]>();
+  const [scores, setScores] = useState<ScoreAPP[]>();
 
   const [topicSelected, setTopicSelected] = useState<number | undefined>(
     undefined
   );
-  const [categorySelected, setCategorySelected] = useState<number | null>();
 
-  const [scores, setScores] = useState<ScoreAPP[]>();
+  const [filter, setFilter] = useState<Filter>();
+  const [filterSelected, setFilterSelected] = useState<number | null>();
 
   const { status: statusTopics, data: dataTopics } = useGetTopics(
     templateId,
@@ -117,7 +129,8 @@ export default function ProgressEvaluationCard({
   useEffect(() => {
     if (statusCategories === "success") {
       setCategories(dataCategories);
-      setCategorySelected(Number(dataCategories[0].id));
+      setFilter("Category");
+      setFilterSelected(Number(dataCategories[0].id));
     }
   }, [statusCategories, dataCategories]);
 
@@ -141,30 +154,54 @@ export default function ProgressEvaluationCard({
 
   const handleCategoryChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "total")
-      setCategorySelected(Number(event.target.value));
-    else setCategorySelected(null);
+      setFilterSelected(Number(event.target.value));
+    else setFilterSelected(null);
   };
 
-  if (!(scores && maturities && categories && categorySelected !== undefined)) {
+  if (
+    !(
+      scores &&
+      maturities &&
+      categories &&
+      filter &&
+      filterSelected !== undefined
+    )
+  ) {
     return <>...</>;
   }
+
+  const filteredObjects = filter === "Category" ? categories : maturities;
+  const displayedObjects = filter === "Category" ? maturities : categories;
+
+  const filteredId = filter === "Category" ? "categoryId" : "maturityId";
+  const displayedId = filter === "Category" ? "maturityId" : "categoryId";
+
+  const handleFilterChange = () => {
+    if (filter === "Category") {
+      setFilter("Maturity");
+      setFilterSelected(Number(maturities[0].id));
+    } else {
+      setFilter("Category");
+      setFilterSelected(Number(categories[0].id));
+    }
+  };
 
   const getFilteredScores = () =>
     scores.filter(
       (score: ScoreAPP) =>
-        score.categoryId === categorySelected &&
-        score.maturityId !== null &&
+        score[filteredId] === filterSelected &&
+        score[displayedId] !== null &&
         score.score !== -1
     ) as ScoreAPP[];
 
   const getLabels = () =>
     getFilteredScores().map((score: ScoreAPP) => {
-      const maturityWithId = maturities.find(
-        (maturity: MaturityAPP) => maturity.id === score.maturityId
+      const displayedObject = displayedObjects.find(
+        (o) => o.id === score[displayedId]
       );
 
-      if (maturityWithId) {
-        return maturityWithId.name;
+      if (displayedObject) {
+        return displayedObject.name;
       }
 
       return "";
@@ -237,10 +274,34 @@ export default function ProgressEvaluationCard({
               </Box>
 
               <Box width="15vw">
-                <h2>View Area</h2>
+                <h2>View</h2>
+                <RadioGroup
+                  sx={{
+                    width: "inherit",
+                    marginTop: "5px",
+                  }}
+                  name="switch-filter"
+                  value={filter === "Category"}
+                  onClick={handleFilterChange}
+                  row
+                >
+                  <FormControlLabel
+                    control={<Radio color="primary" />}
+                    label="Area"
+                    value
+                  />
+
+                  <FormControlLabel
+                    control={<Radio color="primary" />}
+                    label="Maturity"
+                    value={false}
+                  />
+                </RadioGroup>
                 <Select
                   value={
-                    categorySelected === null ? "" : categorySelected.toString()
+                    filterSelected === null
+                      ? "total"
+                      : filterSelected.toString()
                   }
                   onChange={handleCategoryChange}
                 >
@@ -248,12 +309,9 @@ export default function ProgressEvaluationCard({
                     Total
                   </MenuItem>
                   ,
-                  {categories.map((category) => (
-                    <MenuItem
-                      key={category.name}
-                      value={category.id.toString()}
-                    >
-                      {category.name}
+                  {filteredObjects.map((o) => (
+                    <MenuItem key={o.name} value={o.id.toString()}>
+                      {o.name}
                     </MenuItem>
                   ))}
                 </Select>
@@ -264,62 +322,56 @@ export default function ProgressEvaluationCard({
               <Divider textAlign="left" />
               <br />
             </Box>
-            {scores && maturities && categories && (
-              <Box>
-                {getFilteredScores().map((score: ScoreAPP) => {
-                  const maturityWithId = maturities.find(
-                    (maturity: MaturityAPP) => maturity.id === score.maturityId
-                  );
+            <Box>
+              {getFilteredScores().map((score: ScoreAPP) => {
+                const displayedObject = displayedObjects.find(
+                  (o) => o.id === score[displayedId]
+                );
 
-                  if (maturityWithId) {
-                    return <p>{`${maturityWithId.name}: ${score.score}%`}</p>;
-                  }
+                if (displayedObject) {
+                  return <p>{`${displayedObject.name}: ${score.score}%`}</p>;
+                }
 
-                  return "";
-                })}
-              </Box>
-            )}
+                return "";
+              })}
+            </Box>
             <Box width="inherit">
               <br />
               <Divider textAlign="left" />
               <br />
             </Box>
-            {scores && maturities && categories && (
-              <Box width="inherit">
-                <h2>
-                  {scores
-                    .filter(
-                      (score: ScoreAPP) =>
-                        score.categoryId === categorySelected &&
-                        score.maturityId === null &&
-                        score.score !== -1
-                    )
-                    .map((score: ScoreAPP) => `Overall: ${score.score}%`)}
-                  <br />
-                </h2>
-              </Box>
-            )}
+            <Box width="inherit">
+              <h2>
+                {scores
+                  .filter(
+                    (score: ScoreAPP) =>
+                      score[filteredId] === filterSelected &&
+                      score[displayedId] === null &&
+                      score.score !== -1
+                  )
+                  .map((score: ScoreAPP) => `Total: ${score.score}%`)}
+                <br />
+              </h2>
+            </Box>
           </CardContent>
           <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }} />
         </Box>
         <Divider orientation="vertical" variant="middle" flexItem />
         <Box width="50vw" height="50vw" bgcolor="white">
           <CardContent>
-            {scores && maturities && categories && (
-              <PolarArea
-                data={{
-                  labels: getLabels(),
-                  datasets: [
-                    {
-                      label: "Progress Scores",
-                      data: getData(),
-                      backgroundColor: getBackgroundColor(),
-                    },
-                  ],
-                }}
-                options={options}
-              />
-            )}
+            <PolarArea
+              data={{
+                labels: getLabels(),
+                datasets: [
+                  {
+                    label: "Progress Scores",
+                    data: getData(),
+                    backgroundColor: getBackgroundColor(),
+                  },
+                ],
+              }}
+              options={options}
+            />
           </CardContent>
         </Box>
       </CardContent>
