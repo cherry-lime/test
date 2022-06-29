@@ -93,104 +93,108 @@ function Team({ theme }: { theme: Theme }) {
   of team members / assessors
   */
   return (
-    <PageLayout title={data?.name as string} sidebarType={userTypes[userRole]}>
-      <h2> Team Information </h2>
-      <h3> Country </h3>
+    <div>
+      {teamInfo && (
+        <PageLayout title={teamInfo.name} sidebarType={userTypes[userRole]}>
+          <h2> Team Information </h2>
+          <h3> Country </h3>
 
-      {userRole === "ASSESSOR" && (
-        <TextfieldEdit
-          text={teamInfo ? teamInfo.country : ""}
-          theme={theme}
-          rows={1}
-          handleSave={changeCountry}
-        />
-      )}
+          {userRole === "ASSESSOR" && (
+            <TextfieldEdit
+              text={teamInfo.country}
+              theme={theme}
+              rows={1}
+              handleSave={changeCountry}
+            />
+          )}
 
-      {userRole !== "ASSESSOR" && (
-        <Textfield
-          text={teamInfo ? teamInfo.country : ""}
-          theme={theme}
-          rows={1}
-          columns="inherit"
-        />
-      )}
+          {userRole !== "ASSESSOR" && (
+            <Textfield
+              text={teamInfo.country}
+              theme={theme}
+              rows={1}
+              columns="inherit"
+            />
+          )}
 
-      <h3> IT Area / Department </h3>
+          <h3> IT Area / Department </h3>
 
-      {userRole === "ASSESSOR" && (
-        <TextfieldEdit
-          text={teamInfo ? teamInfo.department : ""}
-          theme={theme}
-          rows={1}
-          handleSave={changeDept}
-        />
-      )}
+          {userRole === "ASSESSOR" && (
+            <TextfieldEdit
+              text={teamInfo.department}
+              theme={theme}
+              rows={1}
+              handleSave={changeDept}
+            />
+          )}
 
-      {userRole !== "ASSESSOR" && (
-        <Textfield
-          text={teamInfo ? teamInfo.department : ""}
-          theme={theme}
-          rows={1}
-          columns="inherit"
-        />
-      )}
+          {userRole !== "ASSESSOR" && (
+            <Textfield
+              text={teamInfo.department}
+              theme={theme}
+              rows={1}
+              columns="inherit"
+            />
+          )}
 
-      {userRole === "ASSESSOR" && <h3>Invite Token</h3>}
+          {userRole === "ASSESSOR" && <h3>Invite Token</h3>}
 
-      {userRole === "ASSESSOR" && teamInfo && (
-        <FormControl sx={{ width: "inherit" }} variant="standard">
-          <OutlinedInput
-            readOnly
-            sx={{ backgroundColor: "white" }}
-            id="token"
-            value={teamInfo.inviteToken}
-            startAdornment={
-              <InputAdornment position="start">
-                <IconButton
-                  onClick={() =>
-                    navigator.clipboard.writeText(
-                      teamInfo.inviteToken.toString()
-                    )
-                  }
-                >
-                  <ContentCopyIcon />
-                </IconButton>
-              </InputAdornment>
-            }
+          {userRole === "ASSESSOR" && (
+            <FormControl sx={{ width: "inherit" }} variant="standard">
+              <OutlinedInput
+                readOnly
+                sx={{ backgroundColor: "white" }}
+                id="token"
+                value={teamInfo.inviteToken}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <IconButton
+                      onClick={() =>
+                        navigator.clipboard.writeText(
+                          teamInfo.inviteToken.toString()
+                        )
+                      }
+                    >
+                      <ContentCopyIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+          )}
+          <h3>Assessors</h3>
+          <MemberGrid
+            theme={theme}
+            userRole={userRole}
+            teamId={Number(teamId)}
+            forAssessors
           />
-        </FormControl>
+          <h3>Members</h3>
+          <MemberGrid
+            theme={theme}
+            userRole={userRole}
+            teamId={Number(teamId)}
+            forAssessors={false}
+          />
+
+          <h3>Ongoing Evaluations</h3>
+          <AssessmentOngoingGrid
+            theme={theme}
+            userRole={userRole}
+            teamId={Number(teamId)}
+            assessmentType="TEAM"
+          />
+
+          <h3>Completed Evaluations</h3>
+          <AssessmentCompletedGrid
+            theme={theme}
+            teamId={Number(teamId)}
+            assessmentType="TEAM"
+          />
+          <ErrorPopup ref={ref} />
+        </PageLayout>
       )}
-      <h3>Assessors</h3>
-      <MemberGrid
-        theme={theme}
-        userRole={userRole}
-        teamId={Number(teamId)}
-        forAssessors
-      />
-      <h3>Members</h3>
-      <MemberGrid
-        theme={theme}
-        userRole={userRole}
-        teamId={Number(teamId)}
-        forAssessors={false}
-      />
-
-      <h3>Ongoing Evaluations</h3>
-      <AssessmentOngoingGrid
-        theme={theme}
-        userRole={userRole}
-        teamId={Number(teamId)}
-        assessmentType="TEAM"
-      />
-
-      <h3>Completed Evaluations</h3>
-      <AssessmentCompletedGrid
-        theme={theme}
-        teamId={Number(teamId)}
-        assessmentType="TEAM"
-      />
-      <ErrorPopup ref={ref} />
-    </PageLayout>
+    </div>
   );
 }
 
