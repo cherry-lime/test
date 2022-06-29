@@ -239,6 +239,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           theme={theme}
           assessmentId={Number(assessmentId)}
           templateId={Number(assessmentInfo.templateId)}
+          completedAt={assessmentInfo.completedAt}
         />
       )}
 
