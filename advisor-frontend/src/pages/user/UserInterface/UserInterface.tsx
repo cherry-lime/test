@@ -9,7 +9,7 @@ import ProgressCard from "../../../components/PageCard/SpecificPageCards/Progres
  * Home page visible to anyone with the user role
  */
 function UserInterface() {
-  const pageTitle = `Home User`;
+  const pageTitle = `User Home`;
 
   return (
     <PageLayout title={pageTitle} footer sidebarType={userTypes.USER}>
