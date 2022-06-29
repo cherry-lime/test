@@ -1,4 +1,4 @@
-import { Button, Theme } from "@mui/material";
+import { Button, createMuiTheme, Theme, ThemeProvider } from "@mui/material";
 import { useSelector } from "react-redux";
 import React, { useCallback, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,6 +16,7 @@ import ErrorPopup, {
   handleError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
+import INGTheme from "../../../Theme";
 
 /**
  * Page with a self evaluation that can be filled in
@@ -25,6 +26,20 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   const { assessmentId, teamId } = useParams();
   const { userRole } = useSelector((state: RootState) => state.userData);
   const [checkpointView, setCheckpointView] = useState(true);
+  const [primaryColor, setPrimaryColor] = useState(theme.palette.primary.main);
+  const [currentTheme, setCurrentTheme] = useState(theme);
+
+  React.useEffect(() => {
+    console.log("change theme");
+    setCurrentTheme((t) => {
+      const newT = t;
+      newT.palette.primary.main = primaryColor;
+      console.log();
+      console.log(t.palette.primary.main);
+      console.log(newT.palette.primary.main);
+      return newT;
+    });
+  }, [primaryColor]);
 
   const handleViewChange = () => {
     setCheckpointView((v) => !v);
@@ -69,10 +84,24 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
     }
   }, [assessmentStatus, assessmentData]);
 
+  const modifyTheme = () => {
+    setCurrentTheme((t) => {
+      const newT = t;
+      newT.palette.primary.main = primaryColor;
+      return newT;
+    });
+  };
+
+  const ThemeSelectorContext = React.createContext({
+    primaryColor,
+    modifyTheme: () => modifyTheme(),
+  });
+
   return (
     <PageLayout
       title={team ? "Team Evaluation" : "Individual Evaluation"}
       sidebarType={userTypes[userRole]}
+      headerColor={primaryColor}
     >
       <div
         style={{
@@ -89,17 +118,20 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
       {checkpointView && assessmentInfo && (
         <ListOfCheckpoints
           feedback={false || (team && userRole === "USER")}
-          theme={theme}
+          theme={INGTheme}
           assessmentInfo={assessmentInfo}
+          setPrimaryColor={setPrimaryColor}
         />
       )}
 
       {!checkpointView && assessmentInfo && (
-        <ListOfRecommendations
-          theme={theme}
-          assessmentId={Number(assessmentId)}
-          templateId={assessmentInfo.templateId}
-        />
+        <ThemeProvider theme={INGTheme}>
+          <ListOfRecommendations
+            theme={INGTheme}
+            assessmentId={Number(assessmentId)}
+            templateId={assessmentInfo.templateId}
+          />
+        </ThemeProvider>
       )}
 
       <div
