@@ -1,5 +1,5 @@
 // import { useParams } from "react-router-dom";
-import * as React from "react";
+import React, { useState } from "react";
 import { FormControlLabel, Radio, RadioGroup, Theme } from "@mui/material";
 import { useParams } from "react-router-dom";
 import AnswerGrid from "../../../../components/Grids/Specific/Answer/AnswerGrid";
@@ -27,9 +27,14 @@ import ErrorPopup, {
 function Template({ theme }: { theme: Theme }) {
   const { templateId } = useParams();
 
-  const [templateInfo, setTemplateInfo] = React.useState<TemplateAPP>();
+  const [templateInfo, setTemplateInfo] = useState<TemplateAPP>();
 
   const { status, data } = useGetTemplate(Number(templateId));
+
+  const [minWeight, setMinWeight] = useState<number>();
+  const [maxWeight, setMaxWeight] = useState<number>();
+
+  const [weightError, setWeightError] = useState(false);
 
   // Ref for error popup
   const ref = React.useRef<RefObject>(null);
@@ -37,41 +42,50 @@ function Template({ theme }: { theme: Theme }) {
   React.useEffect(() => {
     if (status === "success") {
       setTemplateInfo(data);
+      setMinWeight(data.weightRangeMin);
+      setMaxWeight(data.weightRangeMax);
     }
   }, [status]);
 
   const patchTemplate = usePatchTemplate();
 
-  const changeInfo = (newInfo: TemplateAPP) => {
-    if (newInfo.weightRangeMax < newInfo.weightRangeMin) {
-      handleError(
-        ref,
-        "Out of bounds: Weight range start must not be less than end."
-      );
-      return;
-    }
-
-    patchTemplate.mutate(newInfo, {
-      onSuccess: (templateAPP: TemplateAPP) => {
-        setTemplateInfo(templateAPP);
-      },
-      onError: (error: unknown) => {
-        handleError(ref, error);
-      },
-    });
-  };
-
-  const changeInfoOptimistic = (newInfo: TemplateAPP) => {
+  const changeInfoOptimistic = (newInfo: TemplateAPP, weight?: boolean) => {
     const oldInfo = templateInfo;
     setTemplateInfo(newInfo);
 
     patchTemplate.mutate(newInfo, {
+      onSuccess: (info) => {
+        if (
+          info.weightRangeMin === minWeight &&
+          info.weightRangeMax === maxWeight
+        ) {
+          setWeightError(false);
+        }
+      },
       onError: (error: unknown) => {
         handleError(ref, error);
         setTemplateInfo(oldInfo);
+        if (weight) {
+          setWeightError(true);
+        }
       },
     });
   };
+
+  const changeWeights = () => {
+    if (templateInfo && maxWeight && minWeight) {
+      const newInfo = {
+        ...templateInfo,
+        weightRangeMin: minWeight,
+        weightRangeMax: maxWeight,
+      };
+      changeInfoOptimistic(newInfo, true);
+    }
+  };
+
+  React.useEffect(() => {
+    changeWeights();
+  }, [minWeight, minWeight]);
 
   return (
     <div>
@@ -92,7 +106,7 @@ function Template({ theme }: { theme: Theme }) {
             theme={theme}
             text={templateInfo.information}
             handleSave={(intermediateStringValue) =>
-              changeInfo({
+              changeInfoOptimistic({
                 ...templateInfo,
                 information: intermediateStringValue,
               })
@@ -123,26 +137,22 @@ function Template({ theme }: { theme: Theme }) {
           >
             <div>Start</div>
             <div>End</div>
-            <TextfieldEditWeight
-              theme={theme}
-              weightValue={templateInfo.weightRangeMin}
-              setWeight={(weight) =>
-                changeInfo({
-                  ...templateInfo,
-                  weightRangeMin: weight,
-                })
-              }
-            />
-            <TextfieldEditWeight
-              theme={theme}
-              weightValue={templateInfo.weightRangeMax}
-              setWeight={(weight) =>
-                changeInfo({
-                  ...templateInfo,
-                  weightRangeMax: weight,
-                })
-              }
-            />
+            {minWeight && (
+              <TextfieldEditWeight
+                theme={theme}
+                weightValue={minWeight}
+                setWeight={setMinWeight}
+                error={weightError}
+              />
+            )}
+            {maxWeight && (
+              <TextfieldEditWeight
+                theme={theme}
+                weightValue={maxWeight}
+                setWeight={setMaxWeight}
+                error={weightError}
+              />
+            )}
           </div>
 
           <h2> Checkpoint Values </h2>
