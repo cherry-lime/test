@@ -26,7 +26,7 @@ import {
 type RecommendationGridProps = {
   theme: Theme;
   assessmentId: number;
-  topicId: number;
+  topicId: number | undefined;
   isEditable: boolean;
 };
 
@@ -50,7 +50,7 @@ export default function RecommendationGrid({
   // Called when "status" of recommendation query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(

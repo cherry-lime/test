@@ -2,7 +2,6 @@ import { ThemeOptions, ThemeProvider } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import PropTypes from "prop-types";
 import "./Subarea.css";
 
 /*  
@@ -12,6 +11,8 @@ description of subarea = description
 description might be empty string
 theme of app
 main function returning a subarea component
+prop tip is used to make sure that when tip = true,
+that only the word/string "TIP" will be coloured/printed in ING orange in a card
 */
 function Subarea({
   title,
@@ -58,14 +59,5 @@ function Subarea({
     </ThemeProvider>
   );
 }
-/*
-props declarations:
-subarea card that contains title, description with its theme
-*/
-Subarea.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  theme: PropTypes.node.isRequired,
-};
 
 export default Subarea;

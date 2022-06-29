@@ -25,7 +25,6 @@ function TextfieldEdit({
   theme: ThemeOptions;
   rows: number;
   handleSave: (intermediateValue: string) => void;
-  // eslint-disable-next-line react/require-default-props
   label?: string;
 }) {
   /*
@@ -59,6 +58,11 @@ function TextfieldEdit({
     setIntermediateValue(text);
   }, [text]);
 
+  /*
+  once you edit a text in textfield, and you click 
+  away from the textfield , the value can be stored. 
+  This is what the ClickAwayListener can do. 
+  */
   return (
     <ThemeProvider theme={theme}>
       <ClickAwayListener onClickAway={handleSaveDecorator}>
@@ -80,5 +84,9 @@ function TextfieldEdit({
     </ThemeProvider>
   );
 }
+
+TextfieldEdit.defaultProps = {
+  label: "",
+};
 
 export default TextfieldEdit;

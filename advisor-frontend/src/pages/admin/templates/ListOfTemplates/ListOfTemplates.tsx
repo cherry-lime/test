@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FormControl, MenuItem, Select, Theme } from "@mui/material";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
@@ -8,6 +8,9 @@ import {
   useGetTemplates,
   usePatchTemplate,
 } from "../../../../api/TemplateAPI";
+import ErrorPopup, {
+  RefObject,
+} from "../../../../components/ErrorPopup/ErrorPopup";
 
 /**
  * Page containing the list of all existing templates
@@ -23,20 +26,22 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
     useState<TemplateAPP>();
   const [activeTeamTemplate, setActiveTeamTemplate] = useState<TemplateAPP>();
 
-  // Template queries
-  const { status: statusIndividual, data: dataIndividual } =
-    useGetTemplates("INDIVIDUAL");
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
 
-  const { status: statusTeam, data: dataTeam } = useGetTemplates("TEAM");
+  // Template queries
+  const individualResponse = useGetTemplates("INDIVIDUAL");
+
+  const teamResponse = useGetTemplates("TEAM", undefined, ref);
 
   // Template mutation
-  const patchTemplate = usePatchTemplate();
+  const patchTemplate = usePatchTemplate(ref);
 
   useEffect(() => {
-    if (statusIndividual === "success") {
-      setIndividualTemplates(dataIndividual);
+    if (individualResponse.status === "success") {
+      setIndividualTemplates(individualResponse.data);
 
-      const activeIndividual = dataIndividual.find(
+      const activeIndividual = individualResponse.data.find(
         (templateAPP: TemplateAPP) => templateAPP.enabled
       );
 
@@ -44,13 +49,13 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         setActiveIndividualTemplate(activeIndividual);
       }
     }
-  }, [statusIndividual]);
+  }, [individualResponse.data, individualResponse.status]);
 
   useEffect(() => {
-    if (statusTeam === "success") {
-      setTeamTemplates(dataTeam);
+    if (teamResponse.status === "success") {
+      setTeamTemplates(teamResponse.data);
 
-      const activeTeam = dataTeam.find(
+      const activeTeam = teamResponse.data.find(
         (templateAPP: TemplateAPP) => templateAPP.enabled
       );
 
@@ -58,7 +63,7 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         setActiveTeamTemplate(activeTeam);
       }
     }
-  }, [statusTeam]);
+  }, [teamResponse.status, teamResponse.data]);
 
   const handleActiveIndividualTemplateChange = useCallback(
     (event) => {
@@ -101,7 +106,10 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
     },
     [activeIndividualTemplate]
   );
-
+  /*
+  return page with list of templates, e.g.:
+  individual templates, team templates 
+  */
   return (
     <div>
       <PageLayout title="Templates" sidebarType={userType.ADMIN}>
@@ -122,7 +130,12 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
           </Select>
         </FormControl>
 
-        <TemplateGrid theme={theme} templateType="INDIVIDUAL" />
+        <TemplateGrid
+          theme={theme}
+          templateType="INDIVIDUAL"
+          templateResponse={individualResponse}
+          setTemplates={setIndividualTemplates}
+        />
 
         <h2>Team Templates</h2>
         <p style={{ marginBottom: "0px" }}>
@@ -140,8 +153,14 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
             ))}
           </Select>
         </FormControl>
-        <TemplateGrid theme={theme} templateType="TEAM" />
+        <TemplateGrid
+          theme={theme}
+          templateType="TEAM"
+          templateResponse={teamResponse}
+          setTemplates={setTeamTemplates}
+        />
       </PageLayout>
+      <ErrorPopup ref={ref} />
     </div>
   );
 }

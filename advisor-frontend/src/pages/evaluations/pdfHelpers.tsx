@@ -12,7 +12,8 @@ import {
   RecommendationAPP,
   recommendationToAPP,
 } from "../../api/RecommendationAPI";
-import { TopicAPP } from "../../api/TopicAPI";
+import { AssessmentAPP, assessmentToAPP } from "../../api/AssessmentAPI";
+import { TemplateAPP, templateToAPP } from "../../api/TemplateAPI";
 
 export async function getArea(areaId: number) {
   const area = await API.get(`/category/${areaId}`);
@@ -33,15 +34,27 @@ export async function getAreas(areaIds: number[]) {
 export async function getCheckpoints(areaId: number) {
   const { data } = await API.get(`/category/${areaId}/checkpoint`);
   // Convert data to checkpointsAPP
-  const checkpointsAPP = data.map((checkpointAPI: CheckpointAPI) =>
-    checkpointToAPP(checkpointAPI)
-  );
+  const checkpointsAPP = data
+    .map((checkpointAPI: CheckpointAPI) => checkpointToAPP(checkpointAPI))
+    .sort((a: CheckpointAPI, b: CheckpointAPI) => a.order - b.order);
 
   const checkpointsFilteredAPP = checkpointsAPP.filter(
     (checkpointAPP: CheckpointAPP) => checkpointAPP.enabled
   );
 
   return checkpointsFilteredAPP as CheckpointAPP[];
+}
+
+export async function getAssessment(assessmentId: number) {
+  const { data } = await API.get(`/assessment/${assessmentId}`);
+
+  return assessmentToAPP(data) as AssessmentAPP;
+}
+
+export async function getTemplate(templateId: number) {
+  const { data } = await API.get(`/template/${templateId}`);
+
+  return templateToAPP(data) as TemplateAPP;
 }
 
 export async function getSubareas(areaId: number) {
@@ -61,7 +74,7 @@ export async function getSubareas(areaId: number) {
 
 export async function getTopicRecommendations(
   assessmentId: number,
-  topicId: number
+  topicId: number | undefined
 ) {
   // Get response data from database
   const { data } = await API.get(`/assessment/${assessmentId}/feedback`, {
@@ -75,18 +88,4 @@ export async function getTopicRecommendations(
 
   // Return response
   return recommendationsAPP as RecommendationAPP[];
-}
-
-export async function getRecommendations(
-  assessmentId: number,
-  topicIds: TopicAPP[]
-) {
-  const recList: Record<string, RecommendationAPP[]> = {};
-  // eslint-disable-next-line no-restricted-syntax
-  for (const t of topicIds) {
-    // eslint-disable-next-line no-await-in-loop
-    const rec = await getTopicRecommendations(assessmentId, Number(t.id));
-    recList[t.name] = rec;
-  }
-  return recList;
 }

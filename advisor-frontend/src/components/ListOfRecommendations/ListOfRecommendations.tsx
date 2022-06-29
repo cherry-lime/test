@@ -4,11 +4,14 @@ import {
   FormControl,
   Select,
   MenuItem,
+  ThemeProvider,
 } from "@mui/material";
-import React, { Dispatch, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import { RootState } from "../../app/store";
+import INGTheme from "../../Theme";
+import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import RecommendationGrid from "../Grids/Specific/Recommendation/RecommendationGrid";
 
 /**
@@ -29,51 +32,58 @@ function ListOfRecommendations({
     (state: RootState) => state.userData
   );
 
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
   // Fetch the GetTopics API
-  const { status, data } = useGetTopics(templateId);
+  const { status, data } = useGetTopics(templateId, undefined, ref);
 
-  const [topicList, setTopicList]: [
-    TopicAPP[] | undefined,
-    Dispatch<TopicAPP[] | undefined>
-  ] = useState();
+  const [topicList, setTopicList] = useState<TopicAPP[]>();
 
-  const [topic, setTopic]: [number | undefined, Dispatch<number | undefined>] =
-    useState();
+  const [topic, setTopic] = useState<number>();
 
-  const handleTopicChange = (event: SelectChangeEvent<number>) => {
-    setTopic(Number(event.target.value));
+  const handleTopicChange = (event: SelectChangeEvent<string>) => {
+    if (event.target.value !== "-") setTopic(Number(event.target.value));
+    else setTopic(undefined);
   };
 
   // first render: get the area list and set the area
   React.useEffect(() => {
     if (status === "success") {
       setTopicList(data);
-      setTopic(data[0].id as number);
     }
   }, [status]);
 
   return (
     <div style={{ width: "inherit", display: "contents" }}>
-      {topicList !== undefined && topic !== undefined && (
-        <FormControl sx={{ width: "inherit" }}>
-          <Select value={topic} onChange={handleTopicChange}>
-            {topicList.map((t) => (
-              <MenuItem key={`menu-topic-${t.id}`} value={t.id}>
-                {t.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
-
-      {topic !== undefined && (
+      <ThemeProvider theme={INGTheme}>
+        {topicList !== undefined && (
+          <FormControl sx={{ width: "inherit" }}>
+            <Select
+              value={topic ? topic.toString() : "-"}
+              onChange={handleTopicChange}
+            >
+              {[
+                <MenuItem key="menu-no-topic" value="-">
+                  No topic prioritization
+                </MenuItem>,
+                ...topicList.map((t) => (
+                  <MenuItem key={`menu-topic-${t.id}`} value={t.id.toString()}>
+                    {t.name}
+                  </MenuItem>
+                )),
+              ]}
+            </Select>
+          </FormControl>
+        )}
         <RecommendationGrid
           theme={theme}
           assessmentId={assessmentId}
           topicId={topic}
           isEditable={userRole === "ASSESSOR"} // TODO: Add && assessment === done later
         />
-      )}
+        <ErrorPopup ref={ref} />
+      </ThemeProvider>
     </div>
   );
 }

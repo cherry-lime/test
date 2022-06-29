@@ -1,5 +1,5 @@
 import { Card, Stack, Tab, Tabs, Theme, Button, Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
@@ -15,14 +15,38 @@ import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/
 import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
 import {
   AssessmentAPP,
+  AssessmentCheckpointAPP,
   useGetAssessment,
   useGetSaveAssessment,
   usePostFeedbackAssessment,
 } from "../../api/AssessmentAPI";
-import ProgressOverallCard from "../../components/PageCard/SpecificPageCards/ProgressOverallCard";
 import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
+import ErrorPopup, { RefObject } from "../../components/ErrorPopup/ErrorPopup";
+
+const showFeedbackTextUser = (
+  team: boolean,
+  userRole: string,
+  value: string,
+  assessmentInfo: AssessmentAPP
+) =>
+  team &&
+  userRole === "USER" &&
+  value === "Recommendations" &&
+  assessmentInfo &&
+  assessmentInfo.feedbackText;
+
+const showFeedbackTextAssessor = (
+  team: boolean,
+  userRole: string,
+  value: string,
+  assessmentInfo: AssessmentAPP
+) =>
+  team &&
+  userRole === "ASSESSOR" &&
+  value === "Recommendations" &&
+  assessmentInfo;
 
 /**
  * Page with the feedback related to a self assessment
@@ -38,35 +62,25 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     setValue(newValue);
   };
 
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
   const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
-  const assessmentResponse = useGetAssessment(Number(assessmentId));
+
+  const assessmentResponse = useGetAssessment(Number(assessmentId), ref);
 
   React.useEffect(() => {
-    switch (assessmentResponse.status) {
-      case "error":
-        // eslint-disable-next-line no-console
-        console.log(assessmentResponse.error);
-        break;
-      case "success":
-        if (assessmentResponse.data) {
-          setAssessmentInfo(assessmentResponse.data);
-        }
-        break;
-      default:
-        break;
+    if (assessmentResponse.status === "success" && assessmentResponse.data) {
+      setAssessmentInfo(assessmentResponse.data);
     }
   }, [assessmentResponse.status, assessmentResponse.data]);
 
-  const postFeedback = usePostFeedbackAssessment(Number(assessmentId));
+  const postFeedback = usePostFeedbackAssessment(Number(assessmentId), ref);
 
   const changeFeedback = (newFeedback: string) => {
     postFeedback.mutate(newFeedback, {
       onSuccess: (newAssessmentInfo: AssessmentAPP) => {
         setAssessmentInfo(newAssessmentInfo);
-      },
-      onError: (e: unknown) => {
-        // eslint-disable-next-line no-console
-        console.log(e);
       },
     });
   };
@@ -79,94 +93,65 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   // get area list from API
   const areasResponse = useGetCategories(
     Number(assessmentInfo?.templateId),
-    true
+    true,
+    ref
   );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
     Number(assessmentInfo?.templateId),
-    true
+    true,
+    ref
   );
 
   // get checkpoint answer list from API
   const checkpointAnswerResponse = useGetSaveAssessment(
-    Number(assessmentInfo?.id)
+    Number(assessmentInfo?.id),
+    ref
   );
 
   // set the area list value
   React.useEffect(() => {
-    if (areasResponse.data) {
-      switch (areasResponse.status) {
-        case "error":
-          // eslint-disable-next-line no-console
-          console.log(areasResponse.error);
-          break;
-        case "success":
-          setAreaList(areasResponse.data);
-          break;
-        default:
-          break;
-      }
+    if (areasResponse.data && areasResponse.status === "success") {
+      setAreaList(areasResponse.data);
     }
   }, [areasResponse]);
 
   // set the answer list value
   React.useEffect(() => {
-    if (answersResponse.data) {
-      switch (answersResponse.status) {
-        case "error":
-          // eslint-disable-next-line no-console
-          console.log(answersResponse.error);
-          break;
-        case "success":
-          setAnswerList(answersResponse.data);
-          break;
-        default:
-          break;
-      }
+    if (answersResponse.data && answersResponse.status === "success") {
+      setAnswerList(answersResponse.data);
     }
   }, [answersResponse]);
 
   React.useEffect(() => {
-    // console.log(checkpointAnswerResponse.status);
-    if (checkpointAnswerResponse.data) {
-      switch (checkpointAnswerResponse.status) {
-        case "success": {
-          const answerDictionary: Record<number, number | undefined> = {};
-          checkpointAnswerResponse.data.forEach((a) => {
-            answerDictionary[a.checkpointId] = a.answerId;
-          });
-          setCheckpointAnswerList(answerDictionary);
-          break;
-        }
-        default:
-          break;
-      }
+    if (
+      checkpointAnswerResponse.data &&
+      checkpointAnswerResponse.status === "success"
+    ) {
+      const answerDictionary: Record<number, number | undefined> = {};
+      checkpointAnswerResponse.data.forEach((a: AssessmentCheckpointAPP) => {
+        answerDictionary[a.checkpointId] = a.answerId;
+      });
+      setCheckpointAnswerList(answerDictionary);
     }
   }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
 
   const [topicList, setTopicList] = useState<TopicAPP[]>([]);
-  const topicResponse = useGetTopics(Number(assessmentInfo?.templateId), true);
+  const topicResponse = useGetTopics(
+    Number(assessmentInfo?.templateId),
+    true,
+    ref
+  );
 
   // set assessment info value
   React.useEffect(() => {
-    switch (topicResponse.status) {
-      case "error":
-        // eslint-disable-next-line no-console
-        console.log(topicResponse.error);
-        break;
-      case "success":
-        if (topicResponse.data) {
-          setTopicList(topicResponse.data);
-        }
-        break;
-      default:
-        break;
+    if (topicResponse.status === "success" && topicResponse.data) {
+      setTopicList(topicResponse.data);
     }
   }, [topicResponse.status, topicResponse.data]);
 
   const download = () => {
-    // console.log(checkpointAnswerList);
     if (
       assessmentId &&
       areaList &&
@@ -183,7 +168,13 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       );
     }
   };
-
+  /*
+  return page with title,
+  tabs for recommendations + checkpoints + progress (from left to right)
+  followed by (automated) feedback
+  An import note is that once you receive automated feedback,
+  the checkpoint answers are not editable
+  */
   return (
     <PageLayout
       title={
@@ -208,25 +199,23 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           </Tabs>
         </Stack>
       </Card>
-      {value === "Recommendations" && <ProgressOverallCard />}
 
       {/* this is not actually a subarea, it's the automated feedback */}
-      {value !== "Progress" && (
-        <Subarea
-          theme={theme}
-          title=""
-          summary="Below you will find a list of items that you or your squad can review in order to start improving your testing maturity. This list is based on your answers and prioritized to maximize your testing maturity."
-          description="Only work on one or two items at a time. At any time, you can log back in using your username to review this feedback. Alternatively, you can fill out a new form to see how much you have already progressed and get updated recommendations."
-          tip
-        />
-      )}
+      {value !== "Progress" &&
+        assessmentInfo &&
+        assessmentInfo.information !== "" && (
+          <Subarea
+            theme={theme}
+            title=""
+            summary=""
+            description={assessmentInfo.information}
+          />
+        )}
 
       {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
 
-      {team &&
-        userRole === "ASSESSOR" &&
-        value === "Recommendations" &&
-        assessmentInfo && (
+      {assessmentInfo &&
+        showFeedbackTextAssessor(team, userRole, value, assessmentInfo) && (
           <TextfieldEdit
             rows={5}
             theme={theme}
@@ -235,10 +224,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           />
         )}
 
-      {team &&
-        userRole === "USER" &&
-        value === "Recommendations" &&
-        assessmentInfo && (
+      {assessmentInfo &&
+        showFeedbackTextUser(team, userRole, value, assessmentInfo) && (
           <Textfield
             rows={5}
             columns="inherit"
@@ -263,8 +250,14 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         />
       )}
 
-      {value === "Progress" && <ProgressEvaluationCard />}
-
+      {value === "Progress" && assessmentInfo && (
+        <ProgressEvaluationCard
+          assessmentId={Number(assessmentId)}
+          templateId={Number(assessmentInfo.templateId)}
+        />
+      )}
+      {/* create button component at the bottom of the page
+      in which you will see a download as pdf button */}
       <Button className="widthInherited" variant="contained" onClick={download}>
         <Stack direction="row">
           <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />
@@ -276,6 +269,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           </Box>
         </Stack>
       </Button>
+      <ErrorPopup ref={ref} />
     </PageLayout>
   );
 }

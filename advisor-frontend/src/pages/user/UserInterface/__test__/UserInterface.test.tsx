@@ -25,6 +25,20 @@ test("app rendering/navigating from user interface to self-evals", async () => {
   fireEvent.click(button);
 });
 
-// describe block = test suite
-// test block = test case
-// test suite can have multiple test cases
+test("app rendering/navigating from user interface to teams", async () => {
+  render(
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <UserInterface />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </Provider>
+  );
+  expect(
+    screen.getByText(/View and start individual evaluations/i)
+  ).toBeInTheDocument();
+  expect(screen.getByText(/View your teams/i)).toBeInTheDocument();
+  const button = screen.getByTestId("user-teams");
+  fireEvent.click(button);
+});

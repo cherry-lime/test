@@ -15,6 +15,10 @@ import {
   useGetTemplate,
   usePatchTemplate,
 } from "../../../../api/TemplateAPI";
+import ErrorPopup, {
+  handleError,
+  RefObject,
+} from "../../../../components/ErrorPopup/ErrorPopup";
 
 /**
  * Page with details regarding a certain template
@@ -27,6 +31,9 @@ function Template({ theme }: { theme: Theme }) {
 
   const { status, data } = useGetTemplate(Number(templateId));
 
+  // Ref for error popup
+  const ref = React.useRef<RefObject>(null);
+
   React.useEffect(() => {
     if (status === "success") {
       setTemplateInfo(data);
@@ -36,12 +43,20 @@ function Template({ theme }: { theme: Theme }) {
   const patchTemplate = usePatchTemplate();
 
   const changeInfo = (newInfo: TemplateAPP) => {
+    if (newInfo.weightRangeMax < newInfo.weightRangeMin) {
+      handleError(
+        ref,
+        "Out of bounds: Weight range start must not be less than end."
+      );
+      return;
+    }
+
     patchTemplate.mutate(newInfo, {
       onSuccess: (templateAPP: TemplateAPP) => {
         setTemplateInfo(templateAPP);
       },
-      onError: () => {
-        // handle error
+      onError: (error: unknown) => {
+        handleError(ref, error);
       },
     });
   };
@@ -51,8 +66,8 @@ function Template({ theme }: { theme: Theme }) {
     setTemplateInfo(newInfo);
 
     patchTemplate.mutate(newInfo, {
-      onError: () => {
-        // handle error
+      onError: (error: unknown) => {
+        handleError(ref, error);
         setTemplateInfo(oldInfo);
       },
     });
@@ -65,15 +80,21 @@ function Template({ theme }: { theme: Theme }) {
           title={`Template "${templateInfo.name}"`}
           sidebarType={userType.ADMIN}
         >
-          <h2> Feedback Textbox </h2>
+          <h2> Feedback Information Textbox </h2>
+          <p style={{ margin: "0px" }}>
+            This is the automated textfield that appears at the top of every
+            assessment. It might contain an explanation of the recommendations
+            list as well as some notes or tips for the person reviewing their
+            feedback.
+          </p>
           <TextfieldEdit
             rows={5}
             theme={theme}
-            text={templateInfo.feedback}
+            text={templateInfo.information}
             handleSave={(intermediateStringValue) =>
               changeInfo({
                 ...templateInfo,
-                feedback: intermediateStringValue,
+                information: intermediateStringValue,
               })
             }
           />
@@ -159,6 +180,7 @@ function Template({ theme }: { theme: Theme }) {
           <AnswerGrid theme={theme} templateId={Number(templateId)} />
         </PageLayout>
       )}
+      <ErrorPopup ref={ref} />
     </div>
   );
 }

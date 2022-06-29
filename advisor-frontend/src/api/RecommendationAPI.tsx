@@ -20,8 +20,15 @@ export type RecommendationAPI = {
 };
 
 export function recommendationToAPP(recommendationAPI: RecommendationAPI) {
+  // Define an unique rowId, in case the evaluation is not finished yet.
+  let uniqueID = 0
+  if(recommendationAPI.feedback_id === undefined) {
+    uniqueID = recommendationAPI.order
+  } else {
+    uniqueID = recommendationAPI.feedback_id
+  }
   return {
-    id: recommendationAPI.feedback_id,
+    id: uniqueID,
     order: recommendationAPI.order,
     description: recommendationAPI.feedback_text,
     additionalInfo: recommendationAPI.feedback_additional_information,
@@ -40,7 +47,7 @@ export function recommendationToAPI(recommendationAPP: RecommendationAPP) {
 // Get feedback of assessment from database
 export function useGetRecommendations(
   assessmentId: number,
-  topicId: number,
+  topicId: number | undefined,
   ref?: React.RefObject<RefObject>
 ) {
   return useQuery(

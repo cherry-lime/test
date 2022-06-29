@@ -12,6 +12,7 @@ export type TemplateAPP = {
   description: string;
   templateType: AssessmentType;
   feedback: string;
+  information: string;
   enabled: boolean;
   weightRangeMin: number;
   weightRangeMax: number;
@@ -19,12 +20,13 @@ export type TemplateAPP = {
   includeNoAnswer: boolean;
 };
 
-type TemplateAPI = {
+export type TemplateAPI = {
   template_id: number;
   template_name: string;
   template_description: string;
   template_type: AssessmentType;
   template_feedback: string;
+  information: string;
   enabled: boolean;
   weight_range_min: number;
   weight_range_max: number;
@@ -32,13 +34,14 @@ type TemplateAPI = {
   include_no_answer: boolean;
 };
 
-function templateToAPP(templateAPI: TemplateAPI) {
+export function templateToAPP(templateAPI: TemplateAPI) {
   return {
     id: templateAPI.template_id,
     name: templateAPI.template_name,
     description: templateAPI.template_description,
     templateType: templateAPI.template_type,
     feedback: templateAPI.template_feedback,
+    information: templateAPI.information,
     enabled: templateAPI.enabled,
     weightRangeMin: templateAPI.weight_range_min,
     weightRangeMax: templateAPI.weight_range_max,
@@ -47,13 +50,14 @@ function templateToAPP(templateAPI: TemplateAPI) {
   } as TemplateAPP;
 }
 
-function templateToAPI(templateAPP: TemplateAPP) {
+export function templateToAPI(templateAPP: TemplateAPP) {
   return {
     template_id: templateAPP.id,
     template_name: templateAPP.name,
     template_description: templateAPP.description,
     template_type: templateAPP.templateType,
     template_feedback: templateAPP.feedback,
+    information: templateAPP.information,
     enabled: templateAPP.enabled,
     weight_range_min: templateAPP.weightRangeMin,
     weight_range_max: templateAPP.weightRangeMax,
@@ -124,6 +128,7 @@ export function useGetTemplate(
           handleError(ref, error);
         }
       },
+      enabled: !!templateId,
     }
   );
 }

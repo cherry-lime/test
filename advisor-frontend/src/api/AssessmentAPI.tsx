@@ -13,13 +13,14 @@ export type AssessmentAPP = {
   departmentName: string;
   templateId: number;
   feedbackText: string;
+  information: string;
   createdAt: string;
   updatedAt: string;
   completedAt: string;
   teamId: number;
 };
 
-type AssessmentAPI = {
+export type AssessmentAPI = {
   assessment_id: number;
   assessment_name: string;
   assessment_type: AssessmentType;
@@ -27,13 +28,14 @@ type AssessmentAPI = {
   department_name: string;
   template_id: number;
   feedback_text: string;
+  information: string;
   created_at: string;
   updated_at: string;
   completed_at: string;
   team_id: number;
 };
 
-function assessmentToAPP(assessmentAPI: AssessmentAPI) {
+export function assessmentToAPP(assessmentAPI: AssessmentAPI) {
   return {
     id: assessmentAPI.assessment_id,
     name: assessmentAPI.assessment_name,
@@ -42,6 +44,7 @@ function assessmentToAPP(assessmentAPI: AssessmentAPI) {
     departmentName: assessmentAPI.department_name,
     templateId: assessmentAPI.template_id,
     feedbackText: assessmentAPI.feedback_text,
+    information: assessmentAPI.information,
     createdAt: assessmentAPI.created_at,
     updatedAt: assessmentAPI.updated_at,
     completedAt: assessmentAPI.completed_at,
@@ -49,7 +52,7 @@ function assessmentToAPP(assessmentAPI: AssessmentAPI) {
   } as AssessmentAPP;
 }
 
-function assessmentToAPI(assessmentAPP: AssessmentAPP) {
+export function assessmentToAPI(assessmentAPP: AssessmentAPP) {
   return {
     assessment_id: assessmentAPP.id,
     assessment_name: assessmentAPP.name,
@@ -58,6 +61,7 @@ function assessmentToAPI(assessmentAPP: AssessmentAPP) {
     department_name: assessmentAPP.departmentName,
     template_id: assessmentAPP.templateId,
     feedback_text: assessmentAPP.feedbackText,
+    information: assessmentAPP.information,
     created_at: assessmentAPP.createdAt,
     updated_at: assessmentAPP.updatedAt,
     completed_at: assessmentAPP.completedAt,
@@ -372,7 +376,6 @@ export function useGetSaveAssessment(
     async () => {
       // Get response data from database
       const { data } = await API.get(`/assessment/${assessmentId}/save`);
-      // console.log(data);
       // Convert data to checkpointsAPP
       const checkpointsAPP = data.map(
         (assessmentCheckpointAPI: AssessmentCheckpointAPI) =>

@@ -51,7 +51,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   // Called when "status" of user query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when maturity level changes
   const handleRoleChange = React.useCallback(

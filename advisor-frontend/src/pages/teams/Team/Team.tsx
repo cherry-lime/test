@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
@@ -18,6 +18,9 @@ import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessme
 import { RootState } from "../../../app/store";
 import Textfield from "../../../components/Textfield/Textfield";
 import { TeamAPP, useGetTeam, usePatchTeam } from "../../../api/TeamAPI";
+import ErrorPopup, {
+  RefObject,
+} from "../../../components/ErrorPopup/ErrorPopup";
 
 /**
  * Page providing team details
@@ -29,7 +32,10 @@ function Team({ theme }: { theme: Theme }) {
 
   const { userRole } = useSelector((state: RootState) => state.userData);
 
-  const { status, data, error } = useGetTeam(Number(teamId));
+  // Ref for error popup
+  const ref = useRef<RefObject>(null);
+
+  const { status, data, error } = useGetTeam(Number(teamId), ref);
 
   const [teamInfo, setTeamInfo] = useState<TeamAPP>();
 
@@ -50,7 +56,7 @@ function Team({ theme }: { theme: Theme }) {
     }
   }, [status, data]);
 
-  const patchTeam = usePatchTeam();
+  const patchTeam = usePatchTeam(ref);
 
   const changeInfo = (newInfo: TeamAPP) => {
     patchTeam.mutate(newInfo, {
@@ -79,7 +85,13 @@ function Team({ theme }: { theme: Theme }) {
       changeInfo(newInfo);
     }
   };
-
+  /*
+  return page with e.g. the following: 
+  team information, country, IT Area/ Department, 
+  grids for ongoing evaluations, completed evaluations,
+  grids for members, assessors that contains e.g. the name(s)
+  of team members / assessors
+  */
   return (
     <PageLayout title={data?.name as string} sidebarType={userTypes[userRole]}>
       <h2> Team Information </h2>
@@ -149,7 +161,6 @@ function Team({ theme }: { theme: Theme }) {
         </FormControl>
       )}
       <h3>Assessors</h3>
-
       <MemberGrid
         theme={theme}
         userRole={userRole}
@@ -178,6 +189,7 @@ function Team({ theme }: { theme: Theme }) {
         teamId={Number(teamId)}
         assessmentType="TEAM"
       />
+      <ErrorPopup ref={ref} />
     </PageLayout>
   );
 }

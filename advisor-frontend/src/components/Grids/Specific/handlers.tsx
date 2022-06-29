@@ -1,10 +1,11 @@
 import * as React from "react";
-import { UseMutationResult } from "react-query";
+import { UseMutationResult, UseQueryResult } from "react-query";
 
 import { GridPreProcessEditCellProps, GridRowModel } from "@mui/x-data-grid";
 
 import { initRows, addRow, deleteRow, updateRow, moveRow } from "./helpers";
 import { RefObject, handleError } from "../../ErrorPopup/ErrorPopup";
+import { TemplateAPP } from "../../../api/TemplateAPI";
 
 export function preProcessEditOrder(
   rows: GridRowModel[],
@@ -77,11 +78,17 @@ export function handleMove(
 
 export function handleAdd(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  addMutation: UseMutationResult
+  addMutation: UseMutationResult,
+  templateResponse?: UseQueryResult<TemplateAPP[], unknown>,
+  ref?: React.RefObject<RefObject>
 ) {
   addMutation.mutate(undefined, {
     onSuccess: (addedRow: GridRowModel) => {
       addRow(setRows, addedRow);
+      if (templateResponse) templateResponse.refetch();
+    },
+    onError: () => {
+      if (ref) handleError(ref, "Error: Unable to add");
     },
   });
 }
@@ -89,11 +96,17 @@ export function handleAdd(
 export function handleDelete(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   deleteMutation: UseMutationResult,
-  rowId: number
+  rowId: number,
+  templateResponse?: UseQueryResult<TemplateAPP[], unknown>,
+  ref?: React.RefObject<RefObject>
 ) {
   deleteMutation.mutate(rowId, {
     onSuccess: (deletedRow: GridRowModel) => {
       deleteRow(setRows, deletedRow);
+      if (templateResponse) templateResponse.refetch();
+    },
+    onError: () => {
+      if (ref) handleError(ref, "Error: Unable to delete");
     },
   });
 }
@@ -101,11 +114,17 @@ export function handleDelete(
 export function handleDuplicate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   duplicateMutation: UseMutationResult,
-  row: GridRowModel
+  row: GridRowModel,
+  templateResponse?: UseQueryResult<TemplateAPP[], unknown>,
+  ref?: React.RefObject<RefObject>
 ) {
   duplicateMutation.mutate(row, {
     onSuccess: (duplicatedRow: GridRowModel) => {
       addRow(setRows, duplicatedRow);
+      if (templateResponse) templateResponse.refetch();
+    },
+    onError: () => {
+      if (ref) handleError(ref, "Error: Unable to duplicate");
     },
   });
 }
@@ -114,11 +133,15 @@ export function handleChange(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   patchMutation: UseMutationResult,
   newRow: GridRowModel,
-  oldRow: GridRowModel
+  oldRow: GridRowModel,
+  ref?: React.RefObject<RefObject>
 ) {
   patchMutation.mutate(newRow, {
     onSuccess: (changedRow: GridRowModel) => {
       updateRow(setRows, changedRow, oldRow);
+    },
+    onError: () => {
+      if (ref) handleError(ref, "Error: Unable to save the changes");
     },
   });
 }

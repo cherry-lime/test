@@ -60,7 +60,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when "status" of categories query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(

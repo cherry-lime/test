@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, ThemeProvider } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
@@ -11,8 +11,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Grid } from "@mui/material";
 // import  mainListItems  from "./listItems";
 import SidebarList from "./listItems";
-
-import INGTheme from "../../Theme";
 
 // Used to define the maximum width of the sidebar.
 const drawerWidth = 220;
@@ -69,64 +67,63 @@ export default function Sidebar({ children, sidebarType }: SidebarProps) {
   const toggleDrawer = () => {
     setOpen((isOpen) => !isOpen);
   };
+
   return (
-    <ThemeProvider theme={INGTheme}>
-      <Grid
-        sx={{ display: "flex", minHeight: "100vh" }}
-        data-testid="SidebarTest"
+    <Grid
+      sx={{ display: "flex", minHeight: "100vh" }}
+      data-testid="SidebarTest"
+    >
+      <CssBaseline />
+      <Drawer
+        variant="permanent"
+        open={open}
+        PaperProps={{
+          sx: {
+            bgcolor: "secondary.main",
+          },
+        }}
       >
-        <CssBaseline />
-        <Drawer
-          variant="permanent"
-          open={open}
-          PaperProps={{
-            sx: {
-              bgcolor: "secondary.main",
-            },
-          }}
-        >
-          <Toolbar
-            disableGutters
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <IconButton
-              onClick={toggleDrawer}
-              data-testid="DrawerButton"
-              sx={{
-                padding: "16px",
-              }}
-            >
-              <MenuIcon color="info" />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List
-            component="nav"
-            sx={{
-              alignItems: "center",
-              display: "flex",
-              flexWrap: "wrap",
-            }}
-          >
-            <SidebarList userType={sidebarType} />
-            <Divider sx={{ my: 1 }} />
-            {}
-          </List>
-        </Drawer>
-        <Box
-          component="main"
+        <Toolbar
+          disableGutters
           sx={{
-            width: "100vw",
-            overflow: "auto",
+            display: "flex",
+            alignItems: "center",
           }}
         >
-          {children}
-        </Box>
-      </Grid>
-    </ThemeProvider>
+          <IconButton
+            onClick={toggleDrawer}
+            data-testid="DrawerButton"
+            sx={{
+              padding: "16px",
+            }}
+          >
+            <MenuIcon color="info" />
+          </IconButton>
+        </Toolbar>
+        <Divider />
+        <List
+          component="nav"
+          sx={{
+            alignItems: "center",
+            display: "flex",
+            flexWrap: "wrap",
+          }}
+        >
+          <SidebarList userType={sidebarType} />
+          <Divider sx={{ my: 1 }} />
+          {}
+        </List>
+      </Drawer>
+      <Box
+        component="main"
+        sx={{
+          width: "100vw",
+          overflow: "auto",
+        }}
+      >
+        {children}
+      </Box>
+    </Grid>
   );
 }
 Sidebar.defaultProps = defaultProps;

@@ -48,7 +48,7 @@ export default function MemberGrid({
   // Called when "status" of member query is changed
   React.useEffect(() => {
     handleInit(setRows, status, data);
-  }, [status]);
+  }, [status, data]);
 
   // Called when the "Delete" action is pressed in the menu
   const handleDeleteDecorator = React.useCallback(
