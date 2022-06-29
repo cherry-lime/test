@@ -95,10 +95,7 @@ function Team({ theme }: { theme: Theme }) {
   return (
     <div>
       {teamInfo && (
-        <PageLayout
-          title={teamInfo ? teamInfo.name : ""}
-          sidebarType={userTypes[userRole]}
-        >
+        <PageLayout title={teamInfo.name} sidebarType={userTypes[userRole]}>
           <h2> Team Information </h2>
           <h3> Country </h3>
 
