@@ -87,7 +87,7 @@ export function usePatchRecommendation(ref?: React.RefObject<RefObject>) {
 
       // Get response data from database
       const { data } = await API.patch(
-        `/assessment/${recommendationAPI.feedback_id}`,
+        `/feedback/${recommendationAPI.feedback_id}`,
         recommendationAPI
       );
 
