@@ -14,27 +14,9 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import {
   Chart,
   ArcElement,
-  LineElement,
-  BarElement,
-  PointElement,
-  BarController,
-  BubbleController,
-  DoughnutController,
-  LineController,
-  PieController,
-  PolarAreaController,
-  RadarController,
-  ScatterController,
   CategoryScale,
-  LinearScale,
-  LogarithmicScale,
   RadialLinearScale,
-  TimeScale,
-  TimeSeriesScale,
-  Decimation,
-  Filler,
   Legend,
-  Title,
   Tooltip,
 } from "chart.js";
 import { useEffect, useRef, useState } from "react";
@@ -45,31 +27,7 @@ import { ScoreAPP, useGetScores } from "../../../api/ScoreAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI";
 import ErrorPopup, { RefObject } from "../../ErrorPopup/ErrorPopup";
 
-Chart.register(
-  ArcElement,
-  LineElement,
-  BarElement,
-  PointElement,
-  BarController,
-  BubbleController,
-  DoughnutController,
-  LineController,
-  PieController,
-  PolarAreaController,
-  RadarController,
-  ScatterController,
-  CategoryScale,
-  LinearScale,
-  LogarithmicScale,
-  RadialLinearScale,
-  TimeScale,
-  TimeSeriesScale,
-  Decimation,
-  Filler,
-  Legend,
-  Title,
-  Tooltip
-);
+Chart.register(ArcElement, CategoryScale, RadialLinearScale, Legend, Tooltip);
 
 type ProgressEvaluationCardProps = {
   assessmentId: number;
@@ -121,6 +79,11 @@ export default function ProgressEvaluationCard({
   );
 
   useEffect(() => {
+    setFilter("Category");
+    setFilterSelected(null);
+  }, []);
+
+  useEffect(() => {
     if (statusTopics === "success") {
       setTopics(dataTopics);
     }
@@ -129,8 +92,6 @@ export default function ProgressEvaluationCard({
   useEffect(() => {
     if (statusCategories === "success") {
       setCategories(dataCategories);
-      setFilter("Category");
-      setFilterSelected(Number(dataCategories[0].id));
     }
   }, [statusCategories, dataCategories]);
 
@@ -179,10 +140,10 @@ export default function ProgressEvaluationCard({
   const handleFilterChange = () => {
     if (filter === "Category") {
       setFilter("Maturity");
-      setFilterSelected(Number(maturities[0].id));
+      setFilterSelected(null);
     } else {
       setFilter("Category");
-      setFilterSelected(Number(categories[0].id));
+      setFilterSelected(null);
     }
   };
 
@@ -331,9 +292,9 @@ export default function ProgressEvaluationCard({
 
                 if (displayedObject) {
                   return (
-                    <p
-                      key={displayedObject.id}
-                    >{`${displayedObject.name}: ${score.score}%`}</p>
+                    <p key={displayedObject.id}>{`${
+                      displayedObject.name
+                    }: ${Math.round(score.score)}%`}</p>
                   );
                 }
 
@@ -354,7 +315,9 @@ export default function ProgressEvaluationCard({
                       score[displayedId] === null &&
                       score.score !== -1
                   )
-                  .map((score: ScoreAPP) => `Total: ${score.score}%`)}
+                  .map(
+                    (score: ScoreAPP) => `Total: ${Math.round(score.score)}%`
+                  )}
                 <br />
               </h2>
             </Box>

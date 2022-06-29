@@ -21,6 +21,7 @@ import {
 
 type MemberGridProps = {
   theme: Theme;
+  userId: number;
   userRole: UserRole;
   teamId: number;
   forAssessors: boolean; // Is the grid for assessors (true) or users (false)
@@ -28,6 +29,7 @@ type MemberGridProps = {
 
 export default function MemberGrid({
   theme,
+  userId,
   userRole,
   teamId,
   forAssessors,
@@ -62,7 +64,7 @@ export default function MemberGrid({
     () => [
       {
         field: "name",
-        headerName: forAssessors ? "Assessor Name" : "Member Name",
+        headerName: forAssessors ? "Facilitator Name" : "Member Name",
         type: "string",
         flex: 1,
         editable: userRole === "ASSESSOR",
@@ -73,17 +75,20 @@ export default function MemberGrid({
               field: "actions",
               type: "actions",
               width: 100,
-              getActions: (params: { id: GridRowId }) => [
-                <GridActionsCellItem
-                  icon={
-                    <Tooltip title="Remove">
-                      <RemoveIcon />
-                    </Tooltip>
-                  }
-                  label="Remove"
-                  onClick={handleDeleteDecorator(params.id)}
-                />,
-              ],
+              getActions: (params: { id: GridRowId }) =>
+                params.id === userId
+                  ? []
+                  : [
+                      <GridActionsCellItem
+                        icon={
+                          <Tooltip title="Remove">
+                            <RemoveIcon />
+                          </Tooltip>
+                        }
+                        label="Remove"
+                        onClick={handleDeleteDecorator(params.id)}
+                      />,
+                    ],
             },
           ]
         : []),

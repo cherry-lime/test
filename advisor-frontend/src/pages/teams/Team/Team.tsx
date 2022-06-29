@@ -30,7 +30,9 @@ import ErrorPopup, {
 function Team({ theme }: { theme: Theme }) {
   const { teamId } = useParams();
 
-  const { userRole } = useSelector((state: RootState) => state.userData);
+  const { userRole, userId } = useSelector(
+    (state: RootState) => state.userData
+  );
 
   // Ref for error popup
   const ref = useRef<RefObject>(null);
@@ -162,9 +164,10 @@ function Team({ theme }: { theme: Theme }) {
               />
             </FormControl>
           )}
-          <h3>Assessors</h3>
+          <h3>Facilitators</h3>
           <MemberGrid
             theme={theme}
+            userId={Number(userId)}
             userRole={userRole}
             teamId={Number(teamId)}
             forAssessors
@@ -172,6 +175,7 @@ function Team({ theme }: { theme: Theme }) {
           <h3>Members</h3>
           <MemberGrid
             theme={theme}
+            userId={Number(userId)}
             userRole={userRole}
             teamId={Number(teamId)}
             forAssessors={false}

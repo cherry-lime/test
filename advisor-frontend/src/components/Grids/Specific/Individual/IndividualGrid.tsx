@@ -18,24 +18,17 @@ import {
   useDeleteUser,
   useGetUsers,
   usePatchUser,
+  UserAPP,
 } from "../../../../api/UserAPI";
 
 import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
-
-// Define type for the rows in the grid
-type Row = {
-  id: number;
-  name: string;
-  role: string;
-};
 
 type IndividualGridProps = {
   theme: Theme;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function IndividualGrid({ theme }: IndividualGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+  const [rows, setRows] = React.useState<UserAPP[]>([]);
   const roles = ["USER", "ASSESSOR", "ADMIN"];
 
   // Ref for error popup
@@ -55,7 +48,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
 
   // Called when maturity level changes
   const handleRoleChange = React.useCallback(
-    (row: Row, event: SelectChangeEvent<string>) => {
+    (row: UserAPP, event: SelectChangeEvent<string>) => {
       handleChange(
         setRows,
         patchUser as UseMutationResult,
@@ -74,7 +67,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
     []
   );
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColumns<UserAPP>>(
     () => [
       {
         field: "name",
@@ -87,7 +80,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         headerName: "Role",
         type: "string",
         flex: 1,
-        renderCell: (params: { row: Row }) => (
+        renderCell: (params: { row: UserAPP }) => (
           <FormControl sx={{ m: 1, width: 200 }}>
             <Select
               value={params.row.role}
@@ -97,7 +90,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
             >
               {roles.map((role) => (
                 <MenuItem key={role} value={role}>
-                  {role}
+                  {role === "ASSESSOR" ? "FACILITATOR" : role}
                 </MenuItem>
               ))}
             </Select>
@@ -108,7 +101,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         field: "actions",
         type: "actions",
         width: 100,
-        getActions: (params: { id: GridRowId; row: Row }) =>
+        getActions: (params: { id: GridRowId; row: UserAPP }) =>
           params.row.role !== "ADMIN"
             ? [
                 <GridActionsCellItem

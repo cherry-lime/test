@@ -149,7 +149,7 @@ export default function Chooserole({ theme }: { theme: Theme }) {
               <FormControl fullWidth>
                 <Select sx={{ m: 2 }} value={userRole} onChange={handleChange}>
                   <MenuItem value="USER">User</MenuItem>
-                  <MenuItem value="ASSESSOR">Assessor</MenuItem>
+                  <MenuItem value="ASSESSOR">Facilitator</MenuItem>
                 </Select>
               </FormControl>
               <Button
