@@ -121,6 +121,11 @@ export default function ProgressEvaluationCard({
   );
 
   useEffect(() => {
+    setFilter("Category");
+    setFilterSelected(null);
+  }, []);
+
+  useEffect(() => {
     if (statusTopics === "success") {
       setTopics(dataTopics);
     }
@@ -129,8 +134,6 @@ export default function ProgressEvaluationCard({
   useEffect(() => {
     if (statusCategories === "success") {
       setCategories(dataCategories);
-      setFilter("Category");
-      setFilterSelected(Number(dataCategories[0].id));
     }
   }, [statusCategories, dataCategories]);
 
@@ -179,10 +182,10 @@ export default function ProgressEvaluationCard({
   const handleFilterChange = () => {
     if (filter === "Category") {
       setFilter("Maturity");
-      setFilterSelected(Number(maturities[0].id));
+      setFilterSelected(null);
     } else {
       setFilter("Category");
-      setFilterSelected(Number(categories[0].id));
+      setFilterSelected(null);
     }
   };
 
@@ -331,9 +334,9 @@ export default function ProgressEvaluationCard({
 
                 if (displayedObject) {
                   return (
-                    <p
-                      key={displayedObject.id}
-                    >{`${displayedObject.name}: ${score.score}%`}</p>
+                    <p key={displayedObject.id}>{`${
+                      displayedObject.name
+                    }: ${Math.round(score.score)}%`}</p>
                   );
                 }
 
@@ -354,7 +357,9 @@ export default function ProgressEvaluationCard({
                       score[displayedId] === null &&
                       score.score !== -1
                   )
-                  .map((score: ScoreAPP) => `Total: ${score.score}%`)}
+                  .map(
+                    (score: ScoreAPP) => `Total: ${Math.round(score.score)}%`
+                  )}
                 <br />
               </h2>
             </Box>
