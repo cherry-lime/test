@@ -55,21 +55,21 @@ function ListOfCheckpoints({
 
   // get area list from API
   const areasResponse = useGetCategories(
-    Number(assessmentInfo.templateId),
+    Number(assessmentInfo?.templateId),
     true,
     ref
   );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
-    Number(assessmentInfo.templateId),
+    Number(assessmentInfo?.templateId),
     true,
     ref
   );
 
   // get checkpoint answer list from API
   const checkpointAnswerResponse = useGetSaveAssessment(
-    Number(assessmentInfo.id),
+    Number(assessmentInfo?.id),
     ref
   );
 
@@ -92,13 +92,11 @@ function ListOfCheckpoints({
       checkpointAnswerResponse.data &&
       checkpointAnswerResponse.status === "success"
     ) {
-      if (checkpointAnswerResponse.data) {
         const answerDictionary: Record<number, number | undefined> = {};
         checkpointAnswerResponse.data.forEach((a) => {
           answerDictionary[a.checkpointId] = a.answerId;
         });
         setCheckpointAnswerList(answerDictionary);
-      }
     }
   }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
 
