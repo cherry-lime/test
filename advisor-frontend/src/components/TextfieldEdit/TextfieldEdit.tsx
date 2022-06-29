@@ -4,8 +4,8 @@ import {
   ThemeOptions,
   ThemeProvider,
 } from "@mui/material";
-import { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
+
 /*
 size of the textfield is specified with the parameter width (in characters)
 default set to 50
@@ -14,37 +14,68 @@ default set to five
 the background color of the text is white
 text can be edited, after selection
 */
-function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
+function TextfieldEdit({
+  text,
+  theme,
+  rows,
+  handleSave,
+  label = "",
+}: {
+  text: string;
+  theme: ThemeOptions;
+  rows: number;
+  handleSave: (intermediateValue: string) => void;
+  label?: string;
+}) {
   /*
   initial value of the textfield is set to the bodytext passed as parameter
   using the State Hook in React
   the value is updated when you are done entering and click outside the textfield
   */
-  const initialState = text;
-  const [, setValue] = useState(initialState);
-  const [intermediateValue, setIntermediateValue] = useState(initialState);
-
-  const handleSave = () => {
-    // here you save the new text
-    // that is contained in intermediateValue
-    setValue(intermediateValue);
-  };
+  const [intermediateValue, setIntermediateValue] = useState(text);
+  let multiline = false;
 
   const handleModify = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIntermediateValue(event.target.value);
   };
 
+  const handleSaveDecorator = () => {
+    handleSave(intermediateValue);
+  };
+
+  /*
+  if the textfield has only one row then
+  multiline must be disabled,
+  e.g,. in country + IT department textfields
+  */
+  if (rows > 1) {
+    multiline = true;
+  } else {
+    multiline = false;
+  }
+
+  React.useEffect(() => {
+    setIntermediateValue(text);
+  }, [text]);
+
+  /*
+  once you edit a text in textfield, and you click 
+  away from the textfield , the value can be stored. 
+  This is what the ClickAwayListener can do. 
+  */
   return (
     <ThemeProvider theme={theme}>
-      <ClickAwayListener onClickAway={handleSave}>
+      <ClickAwayListener onClickAway={handleSaveDecorator}>
         <TextField
           sx={{
             backgroundColor: "white",
             width: "inherit",
+            marginTop: "10px",
           }}
           variant="outlined"
-          multiline
-          rows={5}
+          multiline={multiline}
+          label={label}
+          rows={rows}
           size="small"
           value={intermediateValue}
           onChange={handleModify}
@@ -53,14 +84,9 @@ function TextfieldEdit({ text, theme }: { text: string; theme: ThemeOptions }) {
     </ThemeProvider>
   );
 }
-/*
-Define proptypes for textfieldedit:
-1) text (which will be seen in the textfield)
-2) theme (according to UI)
-*/
-TextfieldEdit.propTypes = {
-  text: PropTypes.string.isRequired,
-  theme: PropTypes.node.isRequired,
+
+TextfieldEdit.defaultProps = {
+  label: "",
 };
 
 export default TextfieldEdit;

@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateSubareaDto } from './dto/update-subarea.dto';
 
@@ -20,10 +21,17 @@ export class SubareaService {
    * @throws Category not found
    */
   async create(category_id: number) {
+    const order = await this.prisma.subArea.count({
+      where: {
+        category_id,
+      },
+    });
+
     return await this.prisma.subArea
       .create({
         data: {
           category_id,
+          order: order + 1,
         },
       })
       .catch((error) => {
@@ -32,6 +40,7 @@ export class SubareaService {
         } else if (error.code === 'P2003') {
           throw new NotFoundException('Category not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -41,12 +50,18 @@ export class SubareaService {
    * @param category_id category id
    * @returns all subareas in category
    */
-  async findAll(category_id: number) {
-    return await this.prisma.subArea.findMany({
+  async findAll(category_id: number, role: Role) {
+    const data: Prisma.SubAreaFindManyArgs = {
       where: {
         category_id,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    return await this.prisma.subArea.findMany(data);
   }
 
   /**
@@ -79,7 +94,36 @@ export class SubareaService {
    * @throws Subarea with this name already exists
    */
   async update(subarea_id: number, updateSubareaDto: UpdateSubareaDto) {
-    return await this.prisma.subArea
+    const subarea = await this.prisma.subArea.findUnique({
+      where: {
+        subarea_id,
+      },
+    });
+
+    if (!subarea) {
+      throw new NotFoundException('Subarea not found');
+    }
+
+    const newOrder = updateSubareaDto.order;
+
+    // Update order if order is changed
+    if (newOrder) {
+      // Get the max order in category
+      const maxOrder = await this.prisma.subArea.count({
+        where: {
+          category_id: subarea.category_id,
+        },
+      });
+
+      // Check if new order is valid
+      if (newOrder > maxOrder) {
+        throw new ConflictException(
+          'Order cannot be greater than amount of subareas'
+        );
+      }
+    }
+
+    const updatedSubarea = await this.prisma.subArea
       .update({
         where: {
           subarea_id,
@@ -89,11 +133,52 @@ export class SubareaService {
       .catch((error) => {
         if (error.code === 'P2002') {
           throw new ConflictException('Subarea with this name already exists');
-        } else if (error.code === 'P2025') {
-          throw new NotFoundException('Subarea not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
+
+    // If new order is lower, increment everything between new and old order
+    if (newOrder && newOrder < subarea.order) {
+      await this.prisma.subArea.updateMany({
+        where: {
+          category_id: subarea.category_id,
+          subarea_id: {
+            not: subarea.subarea_id,
+          },
+          order: {
+            gte: updateSubareaDto.order,
+            lte: subarea.order,
+          },
+        },
+        data: {
+          order: {
+            increment: 1,
+          },
+        },
+      });
+    } else if (newOrder && newOrder > subarea.order) {
+      // If new order is higher, decrement everything between old and new order
+      await this.prisma.subArea.updateMany({
+        where: {
+          category_id: subarea.category_id,
+          subarea_id: {
+            not: subarea.subarea_id,
+          },
+          order: {
+            gte: subarea.order,
+            lte: updateSubareaDto.order,
+          },
+        },
+        data: {
+          order: {
+            decrement: 1,
+          },
+        },
+      });
+    }
+
+    return updatedSubarea;
   }
 
   /**
@@ -103,7 +188,8 @@ export class SubareaService {
    * @throws Subarea not found
    */
   async delete(subarea_id: number) {
-    return await this.prisma.subArea
+    // Delete subarea
+    const deletedSubarea = await this.prisma.subArea
       .delete({
         where: {
           subarea_id,
@@ -113,7 +199,24 @@ export class SubareaService {
         if (error.code === 'P2025') {
           throw new NotFoundException('Subarea not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
+
+    // Create new order for all subareas after deleted subarea
+    await this.prisma.subArea.updateMany({
+      where: {
+        category_id: deletedSubarea.category_id,
+        order: {
+          gte: deletedSubarea.order,
+        },
+      },
+      data: {
+        order: {
+          decrement: 1,
+        },
+      },
+    });
+    return deletedSubarea;
   }
 }

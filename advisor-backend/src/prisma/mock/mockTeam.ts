@@ -48,8 +48,14 @@ export const aUpdateTeam = {
   team_department: 'test_team_department',
 };
 
+export const aCreateTeam = {
+  team_name: 'New Team',
+  team_country: '',
+  team_department: '',
+};
+
 export const mockTeam = {
-  create: jest.fn().mockResolvedValue(aTeam),
+  create: jest.fn().mockResolvedValue(aCreateTeam),
   findUnique: jest.fn().mockResolvedValue(aTeam),
   findOne: jest.fn().mockResolvedValue(aTeam),
   getAssessments: jest.fn().mockResolvedValue([aAssessment]),

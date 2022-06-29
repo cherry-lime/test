@@ -1,7 +1,8 @@
-import { Box } from "@mui/material";
+import { Box, ThemeProvider } from "@mui/material";
 import Header from "../components/Cards/Header";
 import Footer from "../components/Cards/Footer";
 import Sidebar from "../components/Sidebar/Sidebar";
+import INGTheme from "../Theme";
 
 /**
  * PageProps type is used to pass through components that will dynamically alter the pageLayout.
@@ -35,33 +36,35 @@ export default function PageLayout({
   sidebarType,
 }: PageProps) {
   return (
-    <Sidebar sidebarType={sidebarType}>
-      <div className="main_container">
-        <Header name={title} bgColor={headerColor} />
-        {footer ? (
-          <>
+    <ThemeProvider theme={INGTheme}>
+      <Sidebar sidebarType={sidebarType}>
+        <div className="main_container">
+          <Header name={title} bgColor={headerColor} />
+          {footer ? (
+            <>
+              <Box
+                className="body_footer"
+                sx={{
+                  bgcolor: "secondary.light",
+                }}
+              >
+                {children}
+              </Box>
+              <Footer />
+            </>
+          ) : (
             <Box
-              className="body_footer"
+              className="body"
               sx={{
                 bgcolor: "secondary.light",
               }}
             >
               {children}
             </Box>
-            <Footer />
-          </>
-        ) : (
-          <Box
-            className="body"
-            sx={{
-              bgcolor: "secondary.light",
-            }}
-          >
-            {children}
-          </Box>
-        )}
-      </div>
-    </Sidebar>
+          )}
+        </div>
+      </Sidebar>
+    </ThemeProvider>
   );
 }
 PageLayout.defaultProps = defaultProps;

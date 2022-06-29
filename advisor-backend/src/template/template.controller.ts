@@ -7,7 +7,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -27,10 +26,10 @@ import { TopicDto } from '../topic/dto/topic.dto';
 import { TopicService } from '../topic/topic.service';
 import { AnswerDto } from '../answer/dto/answer.dto';
 import { AnswerService } from '../answer/answer.service';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
-import { Role } from '@prisma/client';
+import { Role, User } from '@prisma/client';
+import { CloneTemplateService } from './clone-template.service';
+import AuthUser from '../common/decorators/auth-user.decorator';
 
 @Controller('template')
 @ApiTags('template')
@@ -40,21 +39,23 @@ export class TemplateController {
     private readonly categoryService: CategoryService,
     private readonly maturityService: MaturityService,
     private readonly topicService: TopicService,
-    private readonly answerService: AnswerService
+    private readonly answerService: AnswerService,
+    private readonly cloneTemplateService: CloneTemplateService
   ) {}
 
   /**
    * [GET] /template - Get all templates
    * @returns TemplateResponse[] List of all templates
    */
-  @Get('')
   @ApiResponse({
     description: 'Found templates',
     type: TemplateDto,
     isArray: true,
   })
-  async findAll(): Promise<TemplateDto[]> {
-    return this.templateService.findAll();
+  @Get('')
+  @Roles(Role.ADMIN)
+  async findAll(@AuthUser() user: User): Promise<TemplateDto[]> {
+    return this.templateService.findAll(user.role);
   }
 
   /**
@@ -67,6 +68,7 @@ export class TemplateController {
   @ApiConflictResponse({
     description: 'Template with this name and type already exists',
   })
+  @Roles(Role.ADMIN)
   async create(
     @Body() { template_type }: CreateTemplateDto
   ): Promise<TemplateDto> {
@@ -99,6 +101,7 @@ export class TemplateController {
   @ApiConflictResponse({
     description: 'Template with this name and type already exists',
   })
+  @Roles(Role.ADMIN)
   async update(
     @Param('template_id', ParseIntPipe) id: number,
     @Body() updateTemplateDto: UpdateTemplateDto
@@ -114,6 +117,7 @@ export class TemplateController {
   @Delete(':template_id')
   @ApiResponse({ description: 'Deleted template', type: TemplateDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
+  @Roles(Role.ADMIN)
   async delete(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<TemplateDto> {
@@ -128,10 +132,11 @@ export class TemplateController {
   @Post(':template_id/clone')
   @ApiResponse({ description: 'Template', type: TemplateDto })
   @ApiNotFoundResponse({ description: 'Template not found' })
+  @Roles(Role.ADMIN)
   async clone(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<TemplateDto> {
-    return this.templateService.clone(id);
+    return this.cloneTemplateService.clone(id);
   }
 
   /**
@@ -147,6 +152,7 @@ export class TemplateController {
   @ApiConflictResponse({
     description: 'Category with this already exists',
   })
+  @Roles(Role.ADMIN)
   async createCategory(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<CategoryDto> {
@@ -167,9 +173,10 @@ export class TemplateController {
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
   async findAllCategories(
-    @Param('template_id', ParseIntPipe) id: number
+    @Param('template_id', ParseIntPipe) id: number,
+    @AuthUser() user: User
   ): Promise<CategoryDto[]> {
-    return this.categoryService.findAll(id);
+    return this.categoryService.findAll(id, user.role);
   }
 
   /**
@@ -185,6 +192,7 @@ export class TemplateController {
   @ApiConflictResponse({
     description: 'Maturity with this name already exists',
   })
+  @Roles(Role.ADMIN)
   async createMaturity(
     @Param('template_id', ParseIntPipe) id: number
   ): Promise<MaturityDto> {
@@ -206,9 +214,10 @@ export class TemplateController {
   })
   @ApiNotFoundResponse({ description: 'Template not found' })
   async findAllMaturities(
-    @Param('template_id', ParseIntPipe) id: number
+    @Param('template_id', ParseIntPipe) id: number,
+    @AuthUser() user: User
   ): Promise<MaturityDto[]> {
-    return this.maturityService.findAll(id);
+    return this.maturityService.findAll(id, user.role);
   }
 
   /**
@@ -217,15 +226,17 @@ export class TemplateController {
    * @returns TopicDto[] List of all topics
    */
   @Get(':template_id/topic')
-  @UseGuards(AuthGuard('jwt'))
   @ApiTags('topic')
   @ApiResponse({
     description: 'Found topics',
     type: TopicDto,
     isArray: true,
   })
-  async findAllTopics(@Param('template_id', ParseIntPipe) template_id: number) {
-    return this.topicService.findAll(template_id);
+  async findAllTopics(
+    @Param('template_id', ParseIntPipe) template_id: number,
+    @AuthUser() user: User
+  ) {
+    return this.topicService.findAll(template_id, user.role);
   }
 
   /**
@@ -236,7 +247,6 @@ export class TemplateController {
    * @throws ConflictException if topic with this name already exists
    */
   @Post(':template_id/topic')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   @ApiTags('topic')
   @ApiResponse({ description: 'Topic', type: TopicDto })
@@ -254,19 +264,25 @@ export class TemplateController {
    * @returns AnswerDto[] List of all answers
    */
   @Get(':template_id/answer')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiTags('answer')
   @ApiResponse({
     description: 'Found answers',
     type: AnswerDto,
     isArray: true,
   })
-  async getAnswers(@Param('template_id', ParseIntPipe) template_id: number) {
-    return this.answerService.findAll(template_id);
+  async getAnswers(
+    @Param('template_id', ParseIntPipe) template_id: number,
+    @AuthUser() user: User
+  ) {
+    return this.answerService.findAll(template_id, user.role);
   }
 
+  /**
+   * Create ansewr for template
+   * @param template_id template_id
+   * @returns Created answer
+   */
   @Post(':template_id/answer')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(Role.ADMIN)
   @ApiTags('answer')
   @ApiResponse({ description: 'Answer', type: AnswerDto })

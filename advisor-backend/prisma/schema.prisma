@@ -21,6 +21,7 @@ model User {
   UserInTeam             UserInTeam[]
 
   @@index([role])
+  @@index([username])
 }
 
 model Checkpoint {
@@ -29,73 +30,81 @@ model Checkpoint {
   checkpoint_additional_information String                              @default("")
   order                             Int
   weight                            Int                                 @default(1)
-  Maturity                          Maturity?                           @relation(fields: [maturity_id], references: [maturity_id])
-  maturity_id                       Int?
-  Category                          Category                            @relation(fields: [category_id], references: [category_id])
+  disabled                          Boolean                             @default(false)
+  Maturity                          Maturity                            @relation(fields: [maturity_id], references: [maturity_id], onDelete: Cascade)
+  maturity_id                       Int
+  Category                          Category                            @relation(fields: [category_id], references: [category_id], onDelete: Cascade)
   category_id                       Int
   CheckpointInTopic                 CheckpointInTopic[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
   @@unique([checkpoint_description, category_id])
+  @@index([category_id, order])
+  @@index([maturity_id])
 }
 
 model Answer {
   answer_id                         Int                                 @id @default(autoincrement())
   answer_text                       String                              @default("New Answer")
   answer_weight                     Float                               @default(0)
-  Template                          Template                            @relation(fields: [template_id], references: [template_id])
+  Template                          Template                            @relation(fields: [template_id], references: [template_id], onDelete: Cascade)
   template_id                       Int
+  disabled                          Boolean                             @default(false)
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
   @@unique([answer_text, template_id])
+  @@index([template_id])
 }
 
 model Maturity {
-  maturity_id    Int          @id @default(autoincrement())
-  maturity_name  String       @default("New Maturity")
-  maturity_order Int
-  Template       Template     @relation(fields: [template_id], references: [template_id])
-  template_id    Int
-  Checkpoint     Checkpoint[]
-  Feedback       Feedback[]
+  maturity_id   Int          @id @default(autoincrement())
+  maturity_name String       @default("New Maturity")
+  order         Int
+  Template      Template     @relation(fields: [template_id], references: [template_id], onDelete: Cascade)
+  template_id   Int
+  disabled      Boolean      @default(false)
+  Checkpoint    Checkpoint[]
 
   @@unique([maturity_name, template_id])
+  @@index([template_id, order])
 }
 
 model Topic {
   topic_id          Int                 @id @default(autoincrement())
   topic_name        String              @default("New Topic")
-  Template          Template            @relation(fields: [template_id], references: [template_id])
+  Template          Template            @relation(fields: [template_id], references: [template_id], onDelete: Cascade)
   template_id       Int
+  disabled          Boolean             @default(false)
   CheckpointInTopic CheckpointInTopic[]
-  Feedback          Feedback[]
 
   @@unique([topic_name, template_id])
+  @@index([template_id])
 }
 
 model CheckpointInTopic {
-  checkpoint    Checkpoint @relation(fields: [checkpoint_id], references: [checkpoint_id])
+  checkpoint    Checkpoint @relation(fields: [checkpoint_id], references: [checkpoint_id], onDelete: Cascade)
   checkpoint_id Int
-  topic         Topic      @relation(fields: [topic_id], references: [topic_id])
+  topic         Topic      @relation(fields: [topic_id], references: [topic_id], onDelete: Cascade)
   topic_id      Int
 
   @@id([topic_id, checkpoint_id])
+  @@index([checkpoint_id, topic_id])
 }
 
 model Team {
   team_id         Int          @id @default(autoincrement())
-  team_name       String       @unique
+  team_name       String       @default("New Team")
   invite_token    String       @unique @default(uuid()) @db.Uuid
-  team_country    String
-  team_department String
+  team_country    String       @default("")
+  team_department String       @default("")
   UserInTeam      UserInTeam[]
   Assessment      Assessment[]
 }
 
 model UserInTeam {
-  user      User     @relation(fields: [user_id], references: [user_id])
+  user      User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   user_id   Int
-  team      Team     @relation(fields: [team_id], references: [team_id])
+  team      Team     @relation(fields: [team_id], references: [team_id], onDelete: Cascade)
   team_id   Int
   joined_at DateTime @default(now())
 
@@ -105,30 +114,30 @@ model UserInTeam {
 
 model Assessment {
   assessment_id                     Int                                 @id @default(autoincrement())
-  assessment_name                   String                              @default("New Assessment")
   country_name                      String                              @default("")
   department_name                   String                              @default("")
   feedback_text                     String                              @default("")
+  information                       String
   created_at                        DateTime                            @default(now())
   updated_at                        DateTime                            @updatedAt
   completed_at                      DateTime?
   assessment_type                   AssessmentType
-  template                          Template                            @relation(fields: [template_id], references: [template_id])
+  template                          Template                            @relation(fields: [template_id], references: [template_id], onDelete: Cascade)
   template_id                       Int
-  Team                              Team?                               @relation(fields: [team_id], references: [team_id])
+  Team                              Team?                               @relation(fields: [team_id], references: [team_id], onDelete: Cascade)
   team_id                           Int?
   AssessmentParticipants            AssessmentParticipants[]
   CheckpointAndAnswersInAssessments CheckpointAndAnswersInAssessments[]
 
-  @@unique([assessment_name, assessment_type, team_id])
+  Feedback Feedback[]
   @@index([assessment_type])
   @@index([team_id])
 }
 
 model AssessmentParticipants {
-  User          User       @relation(fields: [user_id], references: [user_id])
+  User          User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   user_id       Int
-  Assessment    Assessment @relation(fields: [assessment_id], references: [assessment_id])
+  Assessment    Assessment @relation(fields: [assessment_id], references: [assessment_id], onDelete: Cascade)
   assessment_id Int
 
   @@id([user_id, assessment_id])
@@ -140,10 +149,11 @@ model Template {
   template_name        String         @default("New Template")
   template_description String         @default("")
   template_type        AssessmentType
+  template_feedback    String         @default("")
+  information          String         @default("")
   enabled              Boolean        @default(false)
   weight_range_min     Int            @default(1)
   weight_range_max     Int            @default(3)
-  score_formula        String         @default("sum(x)")
   include_no_answer    Boolean        @default(false)
   Assessment           Assessment[]
   Answers              Answer[]
@@ -152,6 +162,7 @@ model Template {
 
   Maturity Maturity[]
   @@unique([template_name, template_type])
+  @@index([enabled])
 }
 
 model Category {
@@ -159,13 +170,14 @@ model Category {
   category_name String       @default("New Category")
   color         String       @default("#FF0000")
   order         Int
-  Template      Template     @relation(fields: [template_id], references: [template_id])
+  Template      Template     @relation(fields: [template_id], references: [template_id], onDelete: Cascade)
   template_id   Int
-  Feedback      Feedback[]
+  disabled      Boolean      @default(false)
   Checkpoint    Checkpoint[]
   SubArea       SubArea[]
 
   @@unique([category_name, template_id])
+  @@index([template_id, order])
 }
 
 model SubArea {
@@ -173,36 +185,38 @@ model SubArea {
   subarea_name        String   @default("New Subarea")
   subarea_summary     String   @default("")
   subarea_description String   @default("")
-  Category            Category @relation(fields: [category_id], references: [category_id])
+  disabled            Boolean  @default(false)
+  order               Int
+  Category            Category @relation(fields: [category_id], references: [category_id], onDelete: Cascade)
   category_id         Int
 
   @@unique([subarea_name, category_id])
+  @@index([category_id])
 }
 
 model CheckpointAndAnswersInAssessments {
-  assessment    Assessment @relation(fields: [assessment_id], references: [assessment_id])
+  assessment    Assessment @relation(fields: [assessment_id], references: [assessment_id], onDelete: Cascade)
   assessment_id Int
-  checkpoint    Checkpoint @relation(fields: [checkpoint_id], references: [checkpoint_id])
+  checkpoint    Checkpoint @relation(fields: [checkpoint_id], references: [checkpoint_id], onDelete: Cascade)
   checkpoint_id Int
-  Answer        Answer?    @relation(fields: [answer_id], references: [answer_id])
+  Answer        Answer?    @relation(fields: [answer_id], references: [answer_id], onDelete: Cascade)
   answer_id     Int?
 
   @@id([assessment_id, checkpoint_id])
   @@index([assessment_id])
+  @@index([checkpoint_id])
 }
 
 model Feedback {
-  feedback_id   Int      @id @default(autoincrement())
-  feedback_name String
-  feedback_text String
-  Topic         Topic    @relation(fields: [topic_id], references: [topic_id])
-  topic_id      Int
-  Maturity      Maturity @relation(fields: [maturity_id], references: [maturity_id])
-  maturity_id   Int
-  answer_weight Float
-  Category      Category @relation(fields: [category_id], references: [category_id])
-  category_id   Int
-  weight_factor Int
+  feedback_id                     Int        @id @default(autoincrement())
+  Assessment                      Assessment @relation(fields: [assessment_id], references: [assessment_id], onDelete: Cascade)
+  assessment_id                   Int
+  feedback_text                   String
+  feedback_additional_information String
+  order                           Int
+  topic_ids                       Int[]
+
+  @@index([assessment_id, order])
 }
 
 enum AssessmentType {

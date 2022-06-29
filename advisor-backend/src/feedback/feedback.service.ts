@@ -1,48 +1,174 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Assessment, CheckpointAndAnswersInAssessments } from '@prisma/client';
 import { AssessmentDto } from '../assessment/dto/assessment.dto';
-import { CheckpointService } from '../checkpoint/checkpoint.service';
 import { PrismaService } from '../prisma/prisma.service';
-
-interface IData {
-  feedback_text: string;
-  feedback_additional_information: string;
-}
+import { SaveService } from '../save/save.service';
+import { RecommendationDto } from './dto/recommendation.dto';
+import { UpdateRecommendationDto } from './dto/UpdateRecommendation.dto';
 
 interface ISort {
-  data: IData;
+  data: RecommendationDto;
   answerWeight: number;
   maturityOrder: number;
   categoryOrder: number;
   checkpointWeight: number;
-  topic_ids: number[];
 }
 
 @Injectable()
 export class FeedbackService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly checkpointService: CheckpointService
+    private readonly saveService: SaveService
   ) {}
 
-  async getRecommendations(
-    { assessment_id, template_id }: Assessment,
-    topic_id: number
+  async updateRecommendation(
+    feedback_id: number,
+    updateRecommendationDto: UpdateRecommendationDto
   ) {
-    // Get all saved answers for this assessment
-    const answeredCheckpoints =
-      await this.checkpointService.getSavedCheckpoints({
-        assessment_id,
-        template_id,
-      } as AssessmentDto);
+    const feedback = await this.prisma.feedback.findUnique({
+      where: {
+        feedback_id,
+      },
+    });
 
-    answeredCheckpoints.filter((saved) => saved.answer_id);
+    if (!feedback) {
+      throw new NotFoundException('Feedback not found');
+    }
+
+    const newOrder = updateRecommendationDto.order;
+    // Check if new order is valid
+    if (newOrder) {
+      const maxOrder = await this.prisma.feedback.count({
+        where: {
+          assessment_id: feedback.assessment_id,
+        },
+      });
+
+      if (newOrder > maxOrder) {
+        throw new BadRequestException('Order is too high');
+      }
+    }
+
+    const updatedFeedback = await this.prisma.feedback.update({
+      where: {
+        feedback_id,
+      },
+      data: {
+        ...updateRecommendationDto,
+      },
+    });
+
+    if (newOrder) {
+      // If neworder is lower than current order, increment all orders inbetween by 1
+      if (newOrder < feedback.order) {
+        await this.prisma.feedback.updateMany({
+          where: {
+            assessment_id: feedback.assessment_id,
+            order: {
+              gte: newOrder,
+              lte: feedback.order,
+            },
+            feedback_id: {
+              not: feedback_id,
+            },
+          },
+          data: {
+            order: {
+              increment: 1,
+            },
+          },
+        });
+      }
+      // If neworder is higher than current order, decrement all orders inbetween by 1
+      else if (newOrder > feedback.order) {
+        await this.prisma.feedback.updateMany({
+          where: {
+            assessment_id: feedback.assessment_id,
+            order: {
+              gte: feedback.order,
+              lte: newOrder,
+            },
+            feedback_id: {
+              not: feedback_id,
+            },
+          },
+          data: {
+            order: {
+              decrement: 1,
+            },
+          },
+        });
+      }
+
+      return updatedFeedback;
+    }
+  }
+
+  async getRecommendations(assessment: Assessment, topic_id: number) {
+    let recommendations: RecommendationDto[] = [];
+    if (!assessment.completed_at) {
+      recommendations = await this.calculateRecommendations(assessment);
+    } else {
+      recommendations = await this.prisma.feedback.findMany({
+        where: {
+          assessment_id: assessment.assessment_id,
+        },
+        select: {
+          feedback_id: true,
+          feedback_text: true,
+          feedback_additional_information: true,
+          order: true,
+          topic_ids: true,
+        },
+        orderBy: {
+          order: 'asc',
+        },
+      });
+    }
+
+    if (topic_id) {
+      recommendations.sort(this.compareTopic(topic_id));
+      for (let i = 0; i < recommendations.length; i++) {
+        recommendations[i].order = i + 1;
+        delete recommendations[i].topic_ids;
+      }
+    }
+
+    return recommendations;
+  }
+
+  async saveRecommendations(assessment: Assessment) {
+    const recommendations = await this.calculateRecommendations(assessment);
+    await this.prisma.feedback.createMany({
+      data: recommendations.map((recommendation) => {
+        return {
+          assessment_id: assessment.assessment_id,
+          ...(recommendation as any),
+        };
+      }),
+    });
+  }
+
+  async calculateRecommendations({ assessment_id, template_id }: Assessment) {
+    // Get all saved answers for this assessment
+    let answeredCheckpoints = await this.saveService.getSavedCheckpoints({
+      assessment_id,
+      template_id,
+    } as AssessmentDto);
 
     // Get all checkpoint ids of the saved answers
     const checkpoints = await this.getCheckpointsObject(answeredCheckpoints);
 
     // Get all answer ids of the saved answers
     const answers = await this.getAnswersObject(answeredCheckpoints);
+
+    answeredCheckpoints = answeredCheckpoints.filter(
+      (saved) => answers[saved.answer_id]
+    );
 
     // Map answered objective to object for sorting and returning
     const list: ISort[] = answeredCheckpoints
@@ -53,35 +179,33 @@ export class FeedbackService {
         );
         const checkpointWeight = checkpoint.weight;
         const answerWeight = answers[saved.answer_id].answer_weight;
-        const maturityOrder = checkpoint.Maturity.maturity_order;
+        const maturityOrder = checkpoint.Maturity.order;
         const categoryOrder = checkpoint.Category.category_order;
         return {
           data: {
-            feedback_text: checkpoint.checkpoint_name,
-            feedback_additional_information: checkpoint.checkpoint_description,
+            feedback_text: checkpoint.checkpoint_description,
+            feedback_additional_information:
+              checkpoint.checkpoint_additional_information,
+            topic_ids,
           },
           answerWeight,
           maturityOrder,
           categoryOrder,
           checkpointWeight,
-          topic_ids,
         };
       })
       // Filter out checkpoints that are fully completed
-      .filter((item) => item.answerWeight < 100);
+      .filter((item) => item.answerWeight >= 0 && item.answerWeight < 100);
 
     // Sort answer by maturity order, answer score, category order, and weight
     list.sort(this.compareMaturity.bind(this));
-
-    // Prioritize topic
-    list.sort(this.compareTopic(topic_id));
 
     // Return data as list of recommendations
     return list.map((item, index) => {
       return {
         ...item.data,
         order: ++index,
-      };
+      } as RecommendationDto;
     });
   }
 
@@ -93,9 +217,9 @@ export class FeedbackService {
   private async getAnswersObject(
     answeredCheckpoints: CheckpointAndAnswersInAssessments[]
   ) {
-    const answerIds = answeredCheckpoints.map(
-      (checkpoint) => checkpoint.answer_id
-    );
+    const answerIds = answeredCheckpoints
+      .map((checkpoint) => checkpoint.answer_id)
+      .filter((answer_id) => answer_id);
 
     const answersList = await this.prisma.answer.findMany({
       where: {
@@ -107,7 +231,9 @@ export class FeedbackService {
 
     const answers = {};
     answersList.forEach((answer) => {
-      answers[answer.answer_id] = answer;
+      if (answer.answer_id) {
+        answers[answer.answer_id] = answer;
+      }
     });
     return answers;
   }
@@ -152,7 +278,7 @@ export class FeedbackService {
    * @returns -1 if topic id is found in a, 0 if equal and 1 if topic id is found in b
    */
   compareTopic(topic_id: number) {
-    return function (a: ISort, b: ISort) {
+    return function (a: RecommendationDto, b: RecommendationDto) {
       if (a.topic_ids.includes(topic_id)) {
         if (b.topic_ids.includes(topic_id)) {
           return 0;

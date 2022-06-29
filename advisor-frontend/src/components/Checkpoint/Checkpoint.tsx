@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import {
   ThemeProvider,
   FormControlLabel,
@@ -9,62 +9,97 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import PropTypes from "prop-types";
 import { ThemeOptions } from "@mui/material/styles/experimental_extendTheme";
+import { AnswerAPP } from "../../api/AnswerAPI";
+import { TopicAPP } from "../../api/TopicAPI";
+import { usePostSaveAssessment } from "../../api/AssessmentAPI";
 
 /*
 passing parameter of the optional description of the checkpoints
 description of checkpoint = description
 description might be empty string
-main function returning a checkpoint component 
+main function returning a checkpoint omponent 
 */
 function Checkpoint({
   description,
+  checkpointId,
+  assessmentId,
   number,
-  checkpointlabels,
-  checkpointvalues,
+  topicIds,
+  topicList,
+  answers,
+  selectedAnswer,
+  setCheckpointAnswerList,
   theme,
+  feedback,
 }: {
   description: string;
+  checkpointId: number;
+  assessmentId: number;
   number: number;
-  checkpointlabels: string[];
-  checkpointvalues: number[];
+  topicIds: number[];
+  topicList: TopicAPP[];
+  answers: AnswerAPP[];
+  selectedAnswer: string;
+  setCheckpointAnswerList:
+    | React.Dispatch<
+        React.SetStateAction<Record<number, number | undefined> | undefined>
+      >
+    | undefined;
   theme: ThemeOptions;
+  feedback: boolean;
 }) {
   /*
-  initial value of the checkpoint set to empty string
-  using the State Hook in React
   set the value when clicking one of the radio-buttons
   */
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(selectedAnswer);
 
-  const handleClick = useCallback(
-    (event) => {
-      if (event.target.value === value) {
-        setValue("");
-      } else if (event.target.value !== undefined) {
-        setValue(event.target.value);
-      }
-    },
-    [value]
-  );
+  React.useEffect(() => {
+    setValue(selectedAnswer);
+  }, [selectedAnswer]);
 
-  /*
-  the following for loop is used to dynamically generate an amount of checkpoints
-  the amount of checkpoints is defined in checkpointvalues, which is an array of strings
-  */
-  const items = [];
+  const postCheckpointAnswer = usePostSaveAssessment(assessmentId, value);
 
-  for (let i = 0; i < checkpointvalues.length; i += 1) {
-    items.push(
-      <FormControlLabel
-        control={<Radio color="primary" />}
-        label={checkpointlabels[i]}
-        value={checkpointvalues[i].toString()}
-      />
-    );
-  }
+  const changeAnswerList = (newAnswer: string) => {
+    if (setCheckpointAnswerList) {
+      setCheckpointAnswerList((old) => {
+        if (old) {
+          const newList = old;
+          newList[checkpointId] =
+            newAnswer !== "-" ? Number(newAnswer) : undefined;
+          return newList;
+        }
+        return old;
+      });
+    }
+  };
+
+  const changeCheckpointAnswer = (newValue: string) => {
+    const newAssessmentCheckpoint = {
+      checkpointId,
+      answerId: newValue !== "-" ? Number(newValue) : undefined,
+    };
+    postCheckpointAnswer.mutate(newAssessmentCheckpoint, {
+      onSuccess: () => {
+        setValue(newValue);
+      },
+      onError: (err, _, context) => {
+        // eslint-disable-next-line no-console
+        console.log(err);
+        if (context) {
+          setValue(context.oldValue);
+          changeAnswerList(context.oldValue);
+        }
+      },
+    });
+  };
+
+  const handleClick = (newValue: string) => {
+    setValue(newValue);
+    changeAnswerList(newValue);
+    changeCheckpointAnswer(newValue);
+  };
 
   return (
     /*  
@@ -77,7 +112,7 @@ function Checkpoint({
     darkgrey when not active and ING orange when selected/clicked
     */
     <ThemeProvider theme={theme}>
-      <Card sx={{ width: "95%", alignSelf: "center" }}>
+      <Card sx={{ width: "inherit", alignSelf: "center" }}>
         <CardContent>
           <Typography
             sx={{
@@ -86,11 +121,21 @@ function Checkpoint({
               float: "left",
               fontSize: "24px",
               fontWeight: "bold",
+              pb: "125px",
             }}
             id="checkpointnrlabel"
           >
             {number}
           </Typography>
+
+          {topicIds.length > 0 && (
+            <Typography sx={{ textAlign: "left" }} id="checkpoint-topics">
+              {`Topics: ${topicList
+                .filter((t) => topicIds.includes(Number(t.id)))
+                .map((t) => t.name)
+                .join(", ")}`}
+            </Typography>
+          )}
           <Typography sx={{ textAlign: "left" }} id="checkpointnamelabel">
             {description}
           </Typography>
@@ -101,32 +146,23 @@ function Checkpoint({
             name="checkpointname"
             aria-labelledby="checkpointnamelabel"
             value={value}
-            onClick={handleClick}
+            onChange={(e) => handleClick(e.target.value)}
             row
           >
-            <div>{items}</div>
+            {answers.map((a) => (
+              <FormControlLabel
+                key={`answers-${a.id ? a.id.toString() : "-"}`}
+                control={<Radio color="primary" />}
+                label={a.label}
+                value={a.id ? a.id.toString() : "-"}
+                disabled={feedback}
+              />
+            ))}
           </RadioGroup>
-          {/* {console.log(value)}  */}
         </CardActions>
       </Card>
     </ThemeProvider>
   );
 }
-
-/*
-Props of the checkpoints consisting of the description,
-the id number,
-the values of the checkpoints,
-and theme
-*/
-Checkpoint.propTypes = {
-  description: PropTypes.string.isRequired,
-  number: PropTypes.number.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  checkpointvalues: PropTypes.any.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  checkpointlabels: PropTypes.any.isRequired,
-  theme: PropTypes.node.isRequired,
-};
 
 export default Checkpoint;

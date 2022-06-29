@@ -41,7 +41,7 @@ function CardImage(ch: string, img: string) {
     <div style={{ minWidth: "33vw", height: ch, backgroundColor: "#FF6222" }}>
       <img
         style={{
-          minWidth: "33vw",
+          width: "33vw",
           height: ch,
           objectFit: "cover",
           opacity: 0.4,
@@ -72,7 +72,7 @@ export default function PageCard({
       sx={{
         display: "flex",
         verticalAlign: "middle",
-        width: "100vw",
+        width: "inherit",
         borderRadius: "20px",
         marginBottom: "10px",
       }}

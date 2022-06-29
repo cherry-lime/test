@@ -9,6 +9,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -73,7 +74,9 @@ describe('CategoryService', () => {
 
   describe('findAll', () => {
     it('should return all categories', async () => {
-      expect(categoryService.findAll(1)).resolves.toEqual([aCategory]);
+      expect(categoryService.findAll(1, Role.ADMIN)).resolves.toEqual([
+        aCategory,
+      ]);
     });
   });
 
@@ -96,9 +99,7 @@ describe('CategoryService', () => {
     });
 
     it('should throw NotFoundException on not existing category_id', async () => {
-      jest
-        .spyOn(prisma.category, 'update')
-        .mockRejectedValueOnce({ code: 'P2025' });
+      jest.spyOn(prisma.category, 'findUnique').mockResolvedValueOnce(null);
       expect(categoryService.update(0, aCategory)).rejects.toThrowError(
         NotFoundException
       );

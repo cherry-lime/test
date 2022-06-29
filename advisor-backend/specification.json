@@ -146,7 +146,7 @@
         }
       }
     },
-    "/user/all": {
+    "/user/": {
       "get": {
         "tags": [
           "user"
@@ -175,20 +175,20 @@
         ]
       }
     },
-    "/user/{username}": {
+    "/user/{user_id}": {
       "get": {
         "tags": [
           "user"
         ],
-        "summary": "Get user by user name",
+        "summary": "Get user by user id", 
         "description": "This can only be done by an assessor or admin",
-        "operationId": "getUserByName",
+        "operationId": "getUserById",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "name": "username",
+            "user_id": "user_id",
             "in": "path",
             "description": "The name that needs to be fetched.",
             "required": true,
@@ -1002,14 +1002,14 @@
         "tags": [
           "assessment"
         ],
-        "summary": "Get assessment score from id",
+        "summary": "Get assessment score from assessment_id (all topics)",
         "description": "Only allowed by users within the assessment",
         "operationId": "getAssessmentScore",
         "parameters": [
           {
             "in": "path",
             "name": "assessment_id",
-            "description": "assessment to get report for",
+            "description": "assessment to get score for",
             "required": true,
             "type": "integer"
           }
@@ -1024,6 +1024,58 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/Score"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "testingadvisor_auth": []
+          }
+        ]
+      }
+    },
+    "/assessment/{assessment_id}/score/{topic_id}": {
+      "get": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Get assessment score from assessment_id for topic_id",
+        "description": "Only allowed by users within the assessment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "assessment_id",
+            "description": "assessment to get score for",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "path",
+            "name": "topic_id",
+            "description": "checkpoint topic to get score for",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of categories and maturities with score and topic info",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "topic_id": {
+                  "type": "integer"
+                },
+                "scores": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Score"
+                  }
+                }
               }
             }
           }

@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma, Role, Checkpoint } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateTopicDto } from './dto/update-topic.dto';
 
@@ -33,6 +34,7 @@ export class TopicService {
           // Throw error if topic not found
           throw new NotFoundException('Topic not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -42,12 +44,18 @@ export class TopicService {
    * @param template_id template id
    * @returns all topics in template
    */
-  async findAll(template_id: number) {
-    return await this.prisma.topic.findMany({
+  async findAll(template_id: number, role: Role) {
+    const data: Prisma.TopicFindManyArgs = {
       where: {
         template_id,
       },
-    });
+    };
+
+    if (role !== Role.ADMIN) {
+      data.where.disabled = false;
+    }
+
+    return await this.prisma.topic.findMany(data);
   }
 
   /**
@@ -99,6 +107,7 @@ export class TopicService {
           // Throw error if topic not found
           throw new NotFoundException('Topic not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
   }
@@ -121,7 +130,51 @@ export class TopicService {
           // Throw error if topic not found
           throw new NotFoundException('Topic not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
+  }
+
+  // Replace topics with topics in topic_ids
+  async updateTopics(checkpoint: Checkpoint, topic_ids: number[]) {
+    // Get topics of template
+    let topics = await this.prisma.topic.findMany({
+      where: {
+        topic_id: {
+          in: topic_ids,
+        },
+      },
+    });
+
+    // Get category of checkpoint
+    const category = await this.prisma.category.findUnique({
+      where: {
+        category_id: checkpoint.category_id,
+      },
+    });
+
+    // Filter topics to topics in template
+    topics = topics.filter((t) => t.template_id === category.template_id);
+
+    // Delete all current relations
+    await this.prisma.checkpointInTopic.deleteMany({
+      where: {
+        checkpoint_id: checkpoint.checkpoint_id,
+      },
+    });
+
+    // Create data for new relations
+    const entries = topics.map((t) => ({
+      checkpoint_id: checkpoint.checkpoint_id,
+      topic_id: t.topic_id,
+    }));
+
+    // Create new relations
+    await this.prisma.checkpointInTopic.createMany({
+      data: entries,
+    });
+
+    // Return entries
+    return entries;
   }
 }

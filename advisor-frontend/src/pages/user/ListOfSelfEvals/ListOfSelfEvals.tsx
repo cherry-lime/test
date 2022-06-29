@@ -1,53 +1,35 @@
-import { Link, useLocation } from "react-router-dom";
+import { Theme } from "@mui/material";
+import PageLayout from "../../PageLayout";
+import userTypes from "../../../components/Sidebar/listUsersTypes";
+import AssessmentOngoingGrid from "../../../components/Grids/Specific/Assessment/AssessmentOngoing/AssessmentOngoingGrid";
+import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessment/AssessmentCompleted/AssessmentCompletedGrid";
 
 /**
- * Page with the list of self evaluations that belog to the user
+ * Page with the list of self evaluations that belong to the user
  */
-function ListOfSelfEvals() {
-  const location = useLocation();
-  const data = location.state;
-  const assessmentIds = [43, 67, 40];
-  const feedbackIds = [35, 66, 39];
-
+function ListOfSelfEvals({ theme }: { theme: Theme }) {
+  // only users can see this page, no need to fetch role
+  const userRole = "USER";
+  /*
+  return page with individual evaluations as title
+  together with the ongoing evaluation grid and
+  completed evaluations grid
+  */
   return (
-    <div>
-      <h2> Individual Evaluations Page </h2>
+    <PageLayout
+      title="Individual Evaluations"
+      sidebarType={userTypes[userRole]}
+    >
+      <h2>Ongoing Evaluations</h2>
+      <AssessmentOngoingGrid
+        theme={theme}
+        userRole={userRole}
+        assessmentType="INDIVIDUAL"
+      />
 
-      <Link to="/user" state={data}>
-        {" "}
-        Go Back to User Interface{" "}
-      </Link>
-
-      <h3>List of evaluations</h3>
-
-      {assessmentIds.map((assessmentId) => (
-        <div key={`se-${assessmentId}`}>
-          <Link
-            to={`/user/self_evaluations/${assessmentId}`}
-            state={data}
-            data-testid={`user-eval-${assessmentId}`}
-          >
-            {" "}
-            Evaluation with id {assessmentId}{" "}
-          </Link>
-          <br />
-        </div>
-      ))}
-
-      {feedbackIds.map((feedbackId) => (
-        <div key={`f-${feedbackId}`}>
-          <Link
-            to={`/user/self_evaluations/feedback/${feedbackId}`}
-            state={data}
-            data-testid={`user-feedback-${feedbackId}`}
-          >
-            {" "}
-            Completed Evaluation with id {feedbackId}{" "}
-          </Link>
-          <br />
-        </div>
-      ))}
-    </div>
+      <h2>Completed Evaluations</h2>
+      <AssessmentCompletedGrid theme={theme} assessmentType="INDIVIDUAL" />
+    </PageLayout>
   );
 }
 

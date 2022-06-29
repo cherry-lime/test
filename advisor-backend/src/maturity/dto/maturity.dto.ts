@@ -8,9 +8,12 @@ export class MaturityDto {
   @ApiProperty({ default: 'New Maturity' })
   maturity_name: string;
 
-  @ApiProperty()
+  @ApiProperty({ default: 1 })
   @Min(1)
-  maturity_order: number;
+  order: number;
+
+  @ApiProperty({ default: false })
+  disabled: boolean;
 
   @ApiProperty({ default: 1 })
   template_id: number;

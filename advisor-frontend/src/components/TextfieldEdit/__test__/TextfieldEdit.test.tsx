@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material";
-import { render, cleanup, fireEvent } from "@testing-library/react";
+import { render, cleanup } from "@testing-library/react";
 import TextfieldEdit from "../TextfieldEdit";
 
 //  cleanup after each test case
@@ -32,18 +32,16 @@ const theme = createTheme({
 
 //  test rendering of the editable textfield and check of bodytext
 it("Rendering without crash", () => {
+  let text = "lorem ipsum";
   const { getByText } = render(
-    <TextfieldEdit text="lorem ipsum" theme={theme} />
+    <TextfieldEdit
+      handleSave={() => {
+        text = "a";
+      }}
+      rows={5}
+      text={text}
+      theme={theme}
+    />
   );
   expect(getByText("lorem ipsum")).toBeInTheDocument();
-});
-
-//  test the change of the bodytext after editing in the textfield
-it("Check input change", () => {
-  const { getByText } = render(
-    <TextfieldEdit text="lorem ipsum" theme={theme} />
-  );
-  const inputElement = getByText("lorem ipsum") as HTMLInputElement;
-  fireEvent.change(inputElement, { target: { value: "lorem ipsum changed" } });
-  expect(getByText("lorem ipsum changed")).toBeInTheDocument();
 });

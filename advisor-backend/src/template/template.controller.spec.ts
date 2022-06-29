@@ -1,13 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TemplateController } from './template.controller';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { aTemplate, updateTemplate } from '../prisma/mock/mockTemplate';
+import {
+  aTemplate,
+  updateTemplate,
+  updateTemplateDto,
+} from '../prisma/mock/mockTemplate';
 import { TemplateService } from './template.service';
-import { updateTemplateDto } from './template.service.spec';
 import { CategoryService } from '../category/category.service';
 import { aCategory } from '../prisma/mock/mockCategory';
 import { aMaturity } from '../prisma/mock/mockMaturity';
 import { MaturityService } from '../maturity/maturity.service';
+import { CloneTemplateService } from './clone-template.service';
+import { aFullUser } from '../prisma/mock/mockUser';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -28,8 +33,12 @@ describe('TemplateController', () => {
             findOne: jest.fn().mockResolvedValue(aTemplate),
             update: jest.fn().mockResolvedValue(updateTemplate),
             findAll: jest.fn().mockResolvedValue([aTemplate]),
-            clone: jest.fn().mockResolvedValue(aTemplate),
             delete: jest.fn().mockResolvedValue(aTemplate),
+          };
+        }
+        if (token === CloneTemplateService) {
+          return {
+            clone: jest.fn().mockResolvedValue(aTemplate),
           };
         }
         if (token === CategoryService) {
@@ -93,7 +102,7 @@ describe('TemplateController', () => {
 
   describe('getAllTemplates', () => {
     it('Should return all templates', async () => {
-      expect(templateController.findAll()).resolves.toEqual(
+      expect(templateController.findAll(aFullUser)).resolves.toEqual(
         expect.arrayContaining([aTemplate])
       );
     });
@@ -113,9 +122,9 @@ describe('TemplateController', () => {
 
   describe('getAllCategories', () => {
     it('Should return all categories', async () => {
-      expect(templateController.findAllCategories(1)).resolves.toEqual([
-        aCategory,
-      ]);
+      expect(
+        templateController.findAllCategories(1, aFullUser)
+      ).resolves.toEqual([aCategory]);
     });
   });
 
@@ -127,9 +136,9 @@ describe('TemplateController', () => {
 
   describe('getAllMaturities', () => {
     it('Should return all maturities', async () => {
-      expect(templateController.findAllMaturities(1)).resolves.toEqual([
-        aMaturity,
-      ]);
+      expect(
+        templateController.findAllMaturities(1, aFullUser)
+      ).resolves.toEqual([aMaturity]);
     });
   });
 });

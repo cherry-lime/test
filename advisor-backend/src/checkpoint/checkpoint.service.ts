@@ -7,15 +7,24 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { SaveCheckpointDto } from '../assessment/dto/save-checkpoint.dto';
-import { AssessmentDto } from '../assessment/dto/assessment.dto';
 import { TemplateService } from '../template/template.service';
+import { TopicService } from '../topic/topic.service';
+import { Prisma, Role } from '@prisma/client';
+
 @Injectable()
 export class CheckpointService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly templateService: TemplateService
+    private readonly templateService: TemplateService,
+    private readonly topicService: TopicService
   ) {}
+
+  formatTopics(checkpoint: any) {
+    checkpoint.topics = checkpoint.CheckpointInTopic.map((c) => c.topic_id);
+    delete checkpoint.CheckpointInTopic;
+    return checkpoint;
+  }
+
   /**
    * Create checkpoint
    * @param category_id category id to which checkpoint belongs
@@ -31,7 +40,42 @@ export class CheckpointService {
       },
     });
 
-    return await this.prisma.checkpoint
+    const category = await this.prisma.category.findUnique({
+      where: {
+        category_id,
+      },
+      include: {
+        Template: true,
+      },
+    });
+
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+
+    const maturity = await this.prisma.maturity.findFirst({
+      where: {
+        template_id: category.Template.template_id,
+        disabled: false,
+      },
+    });
+
+    let weight = 3;
+
+    const isInRange = await this.templateService.checkWeightRange(
+      category.template_id,
+      weight
+    );
+
+    if (!isInRange) {
+      weight = category.Template.weight_range_min;
+    }
+
+    if (!maturity) {
+      throw new NotFoundException('No enabled maturities found');
+    }
+
+    const createdCheckpoint = await this.prisma.checkpoint
       .create({
         data: {
           Category: {
@@ -39,7 +83,16 @@ export class CheckpointService {
               category_id,
             },
           },
+          Maturity: {
+            connect: {
+              maturity_id: maturity.maturity_id,
+            },
+          },
           order: order + 1,
+          weight,
+        },
+        include: {
+          CheckpointInTopic: true,
         },
       })
       .catch((error) => {
@@ -51,10 +104,12 @@ export class CheckpointService {
         }
         if (error.code === 'P2025') {
           // Throw error if category not found
-          throw new NotFoundException('Category not found');
+          throw new NotFoundException('Maturity not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
+    return this.formatTopics(createdCheckpoint);
   }
 
   /**
@@ -62,12 +117,34 @@ export class CheckpointService {
    * @param category_id category id
    * @returns all checkpoints in category
    */
-  async findAll(category_id: number) {
-    return await this.prisma.checkpoint.findMany({
+  async findAll(category_id: number, role: Role) {
+    const disabledMaturities = await this.prisma.maturity.findMany({
+      where: {
+        disabled: true,
+      },
+    });
+
+    const data: Prisma.CheckpointFindManyArgs = {
       where: {
         category_id,
       },
-    });
+      include: {
+        CheckpointInTopic: true,
+      },
+    };
+
+    let foundCheckpoints = await this.prisma.checkpoint.findMany(data);
+
+    if (role != Role.ADMIN) {
+      foundCheckpoints = foundCheckpoints
+        .filter((c) => !c.disabled)
+        .filter(
+          (c) =>
+            !disabledMaturities.some((m) => m.maturity_id === c.maturity_id)
+        );
+    }
+
+    return foundCheckpoints.map((c) => this.formatTopics(c));
   }
 
   /**
@@ -78,9 +155,12 @@ export class CheckpointService {
    */
   async findOne(checkpoint_id: number) {
     // Get checkpoint by id from prisma
-    const checkpoint = await this.prisma.checkpoint.findUnique({
+    const checkpoint: any = await this.prisma.checkpoint.findUnique({
       where: {
         checkpoint_id,
+      },
+      include: {
+        CheckpointInTopic: true,
       },
     });
 
@@ -89,7 +169,7 @@ export class CheckpointService {
       throw new NotFoundException('the checkpoint was not found');
     }
 
-    return checkpoint;
+    return this.formatTopics(checkpoint);
   }
 
   /**
@@ -102,6 +182,12 @@ export class CheckpointService {
     checkpoint_id: number,
     updateCheckpointDto: UpdateCheckpointDto
   ) {
+    let topics;
+    if (updateCheckpointDto.topics) {
+      topics = [...updateCheckpointDto.topics];
+      delete updateCheckpointDto.topics;
+    }
+
     // Get checkpoint by id from prisma
     const checkpoint = await this.prisma.checkpoint.findUnique({
       where: {
@@ -145,8 +231,10 @@ export class CheckpointService {
       throw new BadRequestException('Weight is outside of range');
     }
 
+    const newOrder = updateCheckpointDto.order;
+
     // Update orders if order changed
-    if (updateCheckpointDto.order) {
+    if (newOrder) {
       // Check if order is valid (not more than number of categories in template)
       const order = await this.prisma.checkpoint.count({
         where: {
@@ -159,49 +247,21 @@ export class CheckpointService {
           'Order must be less than number of checkpoints in the category'
         );
       }
-      // If new order is smaller than old order, increase order of all categories with between new and old order
-      if (updateCheckpointDto.order < checkpoint.order) {
-        await this.prisma.checkpoint.updateMany({
-          where: {
-            category_id: checkpoint.category_id,
-            order: {
-              gte: updateCheckpointDto.order,
-              lte: checkpoint.order,
-            },
-          },
-          data: {
-            order: {
-              increment: 1,
-            },
-          },
-        });
-      } else if (updateCheckpointDto.order > checkpoint.order) {
-        // If new order is bigger than old order, decrease order of all categories with between old and new order
-        await this.prisma.checkpoint.updateMany({
-          where: {
-            category_id: checkpoint.category_id,
-            order: {
-              gte: checkpoint.order,
-              lte: updateCheckpointDto.order,
-            },
-          },
-          data: {
-            order: {
-              decrement: 1,
-            },
-          },
-        });
-      }
     }
 
+    const updateData: any = {
+      where: {
+        checkpoint_id,
+      },
+      data: updateCheckpointDto,
+      include: {
+        CheckpointInTopic: true,
+      },
+    };
+
     // Update checkpoint
-    return await this.prisma.checkpoint
-      .update({
-        where: {
-          checkpoint_id,
-        },
-        data: updateCheckpointDto,
-      })
+    const updatedCheckpoint: any = await this.prisma.checkpoint
+      .update(updateData)
       .catch((error) => {
         if (error.code === 'P2002') {
           // Throw error ïf name not unique
@@ -212,8 +272,60 @@ export class CheckpointService {
           // Throw error if category not found
           throw new NotFoundException('Category not found');
         }
+        console.log(error);
         throw new InternalServerErrorException();
       });
+
+    // If new order is smaller than old order, increase order of all categories with between new and old order
+    if (newOrder && newOrder < checkpoint.order) {
+      await this.prisma.checkpoint.updateMany({
+        where: {
+          category_id: checkpoint.category_id,
+          checkpoint_id: {
+            not: checkpoint.checkpoint_id,
+          },
+          order: {
+            gte: updateCheckpointDto.order,
+            lte: checkpoint.order,
+          },
+        },
+        data: {
+          order: {
+            increment: 1,
+          },
+        },
+      });
+    } else if (newOrder && newOrder > checkpoint.order) {
+      // If new order is bigger than old order, decrease order of all categories with between old and new order
+      await this.prisma.checkpoint.updateMany({
+        where: {
+          category_id: checkpoint.category_id,
+          checkpoint_id: {
+            not: checkpoint.checkpoint_id,
+          },
+          order: {
+            gte: checkpoint.order,
+            lte: updateCheckpointDto.order,
+          },
+        },
+        data: {
+          order: {
+            decrement: 1,
+          },
+        },
+      });
+    }
+
+    // Update relations of topics if specified
+    if (topics) {
+      const newTopics = await this.topicService.updateTopics(
+        updatedCheckpoint,
+        topics
+      );
+      updatedCheckpoint.CheckpointInTopic = newTopics;
+    }
+
+    return this.formatTopics(updatedCheckpoint);
   }
 
   /**
@@ -223,24 +335,31 @@ export class CheckpointService {
    * @throws checkpoint not found
    */
   async delete(checkpoint_id: number) {
-    // Get checkpoint by id from prisma
-    const checkpoint = await this.prisma.checkpoint.findUnique({
-      where: {
-        checkpoint_id,
-      },
-    });
-
-    // Throw NotFoundException if checkpoint not found
-    if (!checkpoint) {
-      throw new NotFoundException('checkpoint not found');
-    }
+    // Delete checkpoint
+    const deletedCheckpoint = await this.prisma.checkpoint
+      .delete({
+        where: {
+          checkpoint_id,
+        },
+        include: {
+          CheckpointInTopic: true,
+        },
+      })
+      .catch((error) => {
+        if (error.code === 'P2025') {
+          // Throw error if checkpoint not found
+          throw new NotFoundException('Checkpoint not found');
+        }
+        console.log(error);
+        throw new InternalServerErrorException();
+      });
 
     // Decrement order of all categories with order bigger than deleted checkpoint
     await this.prisma.checkpoint.updateMany({
       where: {
-        checkpoint_id: checkpoint.checkpoint_id,
+        category_id: deletedCheckpoint.category_id,
         order: {
-          gte: checkpoint.order,
+          gte: deletedCheckpoint.order,
         },
       },
       data: {
@@ -250,135 +369,12 @@ export class CheckpointService {
       },
     });
 
-    // Delete checkpoint
-    return await this.prisma.checkpoint
-      .delete({
-        where: {
-          checkpoint_id,
-        },
-      })
-      .catch((error) => {
-        // Throw error if checkpoint not found
-        if (error.code === 'P2025') {
-          throw new NotFoundException('checkpoint was not found');
-        }
-        throw new InternalServerErrorException();
-      });
-  }
-
-  /**
-   * Save checkpoint for assessment
-   * @param assessment_id assessment_id
-   * @param saveCheckpointDto checkpoint data
-   * @returns checkpoint saved
-   * @throws Assessment not found
-   */
-  async saveCheckpoint(
-    { assessment_id, template_id }: AssessmentDto,
-    { checkpoint_id, answer_id }: SaveCheckpointDto
-  ) {
-    const upsertData = {
+    await this.prisma.checkpointInTopic.deleteMany({
       where: {
-        assessment_id_checkpoint_id: {
-          assessment_id,
-          checkpoint_id,
-        },
-      },
-      update: {
-        answer_id,
-      },
-      create: {
-        assessment: {
-          connect: {
-            assessment_id,
-          },
-        },
-        checkpoint: {
-          connect: {
-            checkpoint_id,
-          },
-        },
-        Answer: {
-          connect: {
-            answer_id,
-          },
-        },
-      },
-    };
-
-    // Save NA to checkpoint if no answer_id is provided
-    if (!answer_id) {
-      // Check if NA is allowed
-      const template = await this.prisma.template.findUnique({
-        where: {
-          template_id,
-        },
-      });
-
-      if (!template.include_no_answer) {
-        throw new BadRequestException(
-          'No answer is not allowed in this template'
-        );
-      }
-
-      upsertData.update.answer_id = null;
-      delete upsertData.create.Answer;
-    }
-
-    // Upsert checkpoint and answer
-    await this.prisma.checkpointAndAnswersInAssessments
-      .upsert(upsertData)
-      .catch(() => {
-        // Throw BadRequestException if anything doesn't exist
-        throw new BadRequestException();
-      });
-
-    return {
-      msg: 'Checkpoint saved',
-    };
-  }
-
-  /**
-   * Find all saved checkpoints for assessment
-   * @param assessment_id assessment_id
-   * @returns all saved checkpoints
-   * @throws Assessment not found
-   */
-  async getSavedCheckpoints({ assessment_id, template_id }: AssessmentDto) {
-    // Get categories in assessment template
-    const categories = await this.prisma.category.findMany({
-      where: {
-        template_id,
-      },
-      include: {
-        Checkpoint: true,
+        checkpoint_id,
       },
     });
 
-    // Get possible answers for template
-    const answers = await this.prisma.answer.findMany({
-      where: {
-        template_id,
-      },
-    });
-
-    // Get checkpoints in assessment
-    const checkpoints = categories.flatMap((category) => category.Checkpoint);
-
-    // find all saved answers in assessment
-    return (
-      await this.prisma.checkpointAndAnswersInAssessments.findMany({
-        where: {
-          assessment_id,
-          checkpoint_id: {
-            in: checkpoints.map((checkpoint) => checkpoint.checkpoint_id),
-          },
-        },
-      })
-    ).filter(
-      (saved) =>
-        saved.answer_id === null ||
-        answers.map((answer) => answer.answer_id).includes(saved.answer_id)
-    );
+    return this.formatTopics(deletedCheckpoint);
   }
 }

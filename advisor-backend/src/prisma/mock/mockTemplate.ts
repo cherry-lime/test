@@ -1,3 +1,5 @@
+import { UpdateTemplateDto } from '../../template/dto/update-template.dto';
+
 export const aTemplate = {
   template_id: 1,
   template_name: 'test',
@@ -6,8 +8,8 @@ export const aTemplate = {
   disabled: false,
   weight_range_min: 1,
   weight_range_max: 3,
-  score_formula: 'sum(x)',
   include_no_answer: false,
+  Category: [],
 };
 
 export const updateTemplate = {
@@ -18,7 +20,15 @@ export const updateTemplate = {
   disabled: false,
   weight_range_min: 1,
   weight_range_max: 5,
-  score_formula: 'avg(x)',
+  include_no_answer: true,
+  Category: [],
+};
+
+export const updateTemplateDto: UpdateTemplateDto = {
+  template_name: 'new_name',
+  enabled: false,
+  weight_range_min: 1,
+  weight_range_max: 5,
   include_no_answer: true,
 };
 
