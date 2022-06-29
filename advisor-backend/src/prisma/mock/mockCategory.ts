@@ -4,6 +4,9 @@ export const aCategory = {
   color: '#FF0000',
   template_id: 1,
   order: 1,
+  Template: {
+    weight_range_min: 1,
+  },
 };
 
 export const mockCategory = {

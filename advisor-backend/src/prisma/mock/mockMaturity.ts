@@ -8,6 +8,7 @@ export const aMaturity = {
 export const mockMaturity = {
   create: jest.fn().mockResolvedValue(aMaturity),
   findMany: jest.fn().mockResolvedValue([aMaturity]),
+  findFirst: jest.fn().mockResolvedValue(aMaturity),
   findUnique: jest.fn().mockResolvedValue(aMaturity),
   update: jest.fn().mockResolvedValue(aMaturity),
   delete: jest.fn().mockResolvedValue(aMaturity),
