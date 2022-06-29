@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import {
   ThemeProvider,
   FormControlLabel,
@@ -40,7 +40,7 @@ function Checkpoint({
   topicIds: number[];
   topicList: TopicAPP[];
   answers: AnswerAPP[];
-  selectedAnswer: string | undefined;
+  selectedAnswer: string;
   setCheckpointAnswerList:
     | React.Dispatch<
         React.SetStateAction<Record<number, number | undefined> | undefined>
@@ -52,7 +52,12 @@ function Checkpoint({
   /*
   set the value when clicking one of the radio-buttons
   */
-  const [value, setValue] = useState(selectedAnswer || "");
+
+  const [value, setValue] = useState(selectedAnswer);
+
+  React.useEffect(() => {
+    setValue(selectedAnswer);
+  }, [selectedAnswer]);
 
   const postCheckpointAnswer = usePostSaveAssessment(assessmentId, value);
 
@@ -90,31 +95,11 @@ function Checkpoint({
     });
   };
 
-  const handleClick = useCallback(
-    (event) => {
-      const newValue = event.target.value;
-      if (newValue && event.target.value !== value) {
-        setValue(newValue);
-        changeAnswerList(newValue);
-        changeCheckpointAnswer(event.target.value);
-      }
-    },
-    [value]
-  );
-
-  /*
-  the following for loop is used to dynamically generate an amount of checkpoints
-  the amount of checkpoints is defined in checkpointvalues, which is an array of strings
-  */
-  const items = answers.map((a) => (
-    <FormControlLabel
-      key={`answers-${a.id ? a.id.toString() : "-"}`}
-      control={<Radio color="primary" />}
-      label={a.label}
-      value={a.id ? a.id.toString() : "-"}
-      disabled={feedback}
-    />
-  ));
+  const handleClick = (newValue: string) => {
+    setValue(newValue);
+    changeAnswerList(newValue);
+    changeCheckpointAnswer(newValue);
+  };
 
   return (
     /*  
@@ -161,10 +146,18 @@ function Checkpoint({
             name="checkpointname"
             aria-labelledby="checkpointnamelabel"
             value={value}
-            onClick={handleClick}
+            onChange={(e) => handleClick(e.target.value)}
             row
           >
-            <div>{items}</div>
+            {answers.map((a) => (
+              <FormControlLabel
+                key={`answers-${a.id ? a.id.toString() : "-"}`}
+                control={<Radio color="primary" />}
+                label={a.label}
+                value={a.id ? a.id.toString() : "-"}
+                disabled={feedback}
+              />
+            ))}
           </RadioGroup>
         </CardActions>
       </Card>
