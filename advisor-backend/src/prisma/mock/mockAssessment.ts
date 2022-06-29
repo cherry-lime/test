@@ -1,12 +1,17 @@
-import { AssessmentType } from '@prisma/client';
+import { Assessment, AssessmentType } from '@prisma/client';
 
-export const aAssessment = {
+export const aAssessment: Assessment = {
   assessment_id: 1,
   assessment_type: AssessmentType.INDIVIDUAL,
   country_name: 'Netherlands',
   department_name: 'Test Department',
-  enabled: false,
   template_id: 1,
+  completed_at: new Date(),
+  created_at: new Date(),
+  feedback_text: 'Test feedback',
+  information: 'Test information',
+  updated_at: new Date(),
+  team_id: null,
 };
 
 export const aTeamAssessment = {

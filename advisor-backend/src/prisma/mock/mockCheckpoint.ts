@@ -10,8 +10,17 @@ export const aCheckpoint = {
   topics: [],
   Category: {
     template_id: 1,
+    order: 1,
   },
-  CheckpointInTopic: [],
+  Maturity: {
+    order: 1,
+  },
+  CheckpointInTopic: [
+    {
+      topic_id: 1,
+      checkpoint_id: 1,
+    },
+  ],
 };
 
 export const mockCheckpoint = {
