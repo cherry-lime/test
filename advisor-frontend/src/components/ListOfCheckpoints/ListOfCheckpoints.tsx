@@ -92,11 +92,11 @@ function ListOfCheckpoints({
       checkpointAnswerResponse.data &&
       checkpointAnswerResponse.status === "success"
     ) {
-        const answerDictionary: Record<number, number | undefined> = {};
-        checkpointAnswerResponse.data.forEach((a) => {
-          answerDictionary[a.checkpointId] = a.answerId;
-        });
-        setCheckpointAnswerList(answerDictionary);
+      const answerDictionary: Record<number, number | undefined> = {};
+      checkpointAnswerResponse.data.forEach((a) => {
+        answerDictionary[a.checkpointId] = a.answerId;
+      });
+      setCheckpointAnswerList(answerDictionary);
     }
   }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
 

@@ -330,7 +330,11 @@ export default function ProgressEvaluationCard({
                 );
 
                 if (displayedObject) {
-                  return <p key={displayedObject.id}>{`${displayedObject.name}: ${score.score}%`}</p>;
+                  return (
+                    <p
+                      key={displayedObject.id}
+                    >{`${displayedObject.name}: ${score.score}%`}</p>
+                  );
                 }
 
                 return "";
