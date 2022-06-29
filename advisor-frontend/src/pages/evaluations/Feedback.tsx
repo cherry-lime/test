@@ -220,7 +220,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           />
         )}
 
-      {team && value === "Recommendations" && <h2>Assessor Feedback</h2>}
+      {team && value === "Recommendations" && <h2>Facilitator Feedback</h2>}
 
       {assessmentInfo &&
         showFeedbackTextAssessor(team, userRole, value, assessmentInfo) && (
