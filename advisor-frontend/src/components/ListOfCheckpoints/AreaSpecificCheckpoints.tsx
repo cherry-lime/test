@@ -81,7 +81,10 @@ function AreaSpecificCheckpoints({
   // set the checkpoint list value
   React.useEffect(() => {
     if (checkpointResponse.data && checkpointResponse.status === "success") {
-      setCheckpointList(checkpointResponse.data);
+      const orderedCheckpoints = checkpointResponse.data.sort(
+        (a: CheckpointAPP, b: CheckpointAPP) => a.order - b.order
+      );
+      setCheckpointList(orderedCheckpoints);
     }
   }, [checkpointResponse]);
 
