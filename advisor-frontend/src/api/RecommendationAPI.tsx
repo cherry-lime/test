@@ -21,11 +21,11 @@ export type RecommendationAPI = {
 
 export function recommendationToAPP(recommendationAPI: RecommendationAPI) {
   // Define an unique rowId, in case the evaluation is not finished yet.
-  let uniqueID = 0
-  if(recommendationAPI.feedback_id === undefined) {
-    uniqueID = recommendationAPI.order
+  let uniqueID = 0;
+  if (recommendationAPI.feedback_id === undefined) {
+    uniqueID = recommendationAPI.order;
   } else {
-    uniqueID = recommendationAPI.feedback_id
+    uniqueID = recommendationAPI.feedback_id;
   }
   return {
     id: uniqueID,
