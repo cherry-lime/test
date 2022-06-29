@@ -26,7 +26,6 @@ import {
   Decimation,
   Filler,
   Legend,
-  Title,
   Tooltip,
 } from "chart.js";
 import { useEffect, useRef, useState } from "react";
@@ -51,7 +50,6 @@ Chart.register(
   Decimation,
   Filler,
   Legend,
-  Title,
   Tooltip
 );
 
