@@ -22,10 +22,12 @@ function ListOfRecommendations({
   theme,
   assessmentId,
   templateId,
+  completedAt,
 }: {
   theme: Theme;
   assessmentId: number;
   templateId: number;
+  completedAt: string,
 }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { userId, userRole } = useSelector(
@@ -80,7 +82,7 @@ function ListOfRecommendations({
           theme={theme}
           assessmentId={assessmentId}
           topicId={topic}
-          isEditable={userRole === "ASSESSOR"} // TODO: Add && assessment === done later
+          isEditable={userRole === "ASSESSOR" && completedAt !== null} // TODO: Add && assessment === done later
         />
         <ErrorPopup ref={ref} />
       </ThemeProvider>

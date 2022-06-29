@@ -112,6 +112,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
             theme={theme}
             assessmentId={Number(assessmentId)}
             templateId={assessmentInfo.templateId}
+            completedAt={assessmentInfo.completedAt}
           />
         )}
 
