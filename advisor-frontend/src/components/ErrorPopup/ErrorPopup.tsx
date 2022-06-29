@@ -22,42 +22,53 @@ export const handleError = (
   }
 };
 
-const ErrorPopup = forwardRef((props, ref: Ref<RefObject>) => {
-  // Use error states
-  const [errorPopup, setErrorPopup] = useState<{ msg: string; open: boolean }>({
-    msg: "",
-    open: false,
-  });
+const ErrorPopup = forwardRef(
+  // eslint-disable-next-line react/require-default-props
+  (props: { isWarning?: boolean }, ref: Ref<RefObject>) => {
+    // Use error states
+    const [errorPopup, setErrorPopup] = useState<{
+      msg: string;
+      open: boolean;
+    }>({
+      msg: "",
+      open: false,
+    });
 
-  const handleErrorPopup = (msg: string) => setErrorPopup({ msg, open: true });
+    const handleErrorPopup = (msg: string) =>
+      setErrorPopup({ msg, open: true });
 
-  // Handle error close
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
+    // Handle error close
+    const handleClose = (
+      event?: React.SyntheticEvent | Event,
+      reason?: string
+    ) => {
+      if (reason === "clickaway") {
+        return;
+      }
 
-    setErrorPopup({ msg: "", open: false });
-  };
+      setErrorPopup({ msg: "", open: false });
+    };
 
-  // Use imperative handle for parent class
-  useImperativeHandle(ref, () => ({ handleErrorPopup }));
+    // Use imperative handle for parent class
+    useImperativeHandle(ref, () => ({ handleErrorPopup }));
 
-  return (
-    <Snackbar
-      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      open={errorPopup.open}
-      autoHideDuration={6000}
-      onClose={handleClose}
-    >
-      <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-        {errorPopup.msg}
-      </Alert>
-    </Snackbar>
-  );
-});
+    return (
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={errorPopup.open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={props.isWarning ? "warning" : "error"}
+          sx={{ width: "100%" }}
+        >
+          {errorPopup.msg}
+        </Alert>
+      </Snackbar>
+    );
+  }
+);
 
 export default ErrorPopup;

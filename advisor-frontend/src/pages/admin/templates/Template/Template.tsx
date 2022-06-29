@@ -35,6 +35,13 @@ function Template({ theme }: { theme: Theme }) {
   const ref = React.useRef<RefObject>(null);
 
   React.useEffect(() => {
+    handleError(
+      ref,
+      "Warning: Editing templates will influence evaluations that use this template."
+    );
+  }, []);
+
+  React.useEffect(() => {
     if (status === "success") {
       setTemplateInfo(data);
     }
@@ -180,7 +187,7 @@ function Template({ theme }: { theme: Theme }) {
           <AnswerGrid theme={theme} templateId={Number(templateId)} />
         </PageLayout>
       )}
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={ref} isWarning />
     </div>
   );
 }
