@@ -1,5 +1,10 @@
 import { createTheme } from "@mui/material";
 
+/*
+In this Theme.tsx file you can see the colors below that will be used
+a lot in the front-end UI for TestING Advisor
+for e.g.: colour of the texts in components and background colour
+*/
 const INGTheme = createTheme({
   palette: {
     primary: {

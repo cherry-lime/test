@@ -168,7 +168,13 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       );
     }
   };
-
+  /*
+  return page with title,
+  tabs for recommendations + checkpoints + progress (from left to right)
+  followed by (automated) feedback
+  An import note is that once you receive automated feedback,
+  the checkpoint answers are not editable
+  */
   return (
     <PageLayout
       title={
@@ -250,7 +256,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           templateId={Number(assessmentInfo.templateId)}
         />
       )}
-
+      {/* create button component at the bottom of the page
+      in which you will see a download as pdf button */}
       <Button className="widthInherited" variant="contained" onClick={download}>
         <Stack direction="row">
           <CloudDownloadOutlinedIcon sx={{ fontSize: 40 }} />

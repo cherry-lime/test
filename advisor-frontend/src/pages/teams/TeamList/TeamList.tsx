@@ -24,6 +24,7 @@ function TeamList({ theme }: { theme: Theme }) {
   // Team query
   const teamResponse = useGetMyTeams(ref);
 
+  // Define token, setToken as a state hook in React that is set initially to empty
   const [token, setToken] = useState("");
 
   const patchToken = useJoinInviteTokenTeam(token, ref);
@@ -35,7 +36,11 @@ function TeamList({ theme }: { theme: Theme }) {
       },
     });
   }, []);
-
+  /* 
+  function that allows you to join team as token once
+  token has been filled in editable textfield (at the left of the button) following
+  with clicking on the button "join team with token" 
+  */
   return (
     <PageLayout title="Teams" sidebarType={userTypes[userRole]}>
       {userRole !== "ADMIN" && (

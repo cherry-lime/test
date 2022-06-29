@@ -85,7 +85,13 @@ function Team({ theme }: { theme: Theme }) {
       changeInfo(newInfo);
     }
   };
-
+  /*
+  return page with e.g. the following: 
+  team information, country, IT Area/ Department, 
+  grids for ongoing evaluations, completed evaluations,
+  grids for members, assessors that contains e.g. the name(s)
+  of team members / assessors
+  */
   return (
     <PageLayout title={data?.name as string} sidebarType={userTypes[userRole]}>
       <h2> Team Information </h2>
@@ -155,7 +161,6 @@ function Team({ theme }: { theme: Theme }) {
         </FormControl>
       )}
       <h3>Assessors</h3>
-
       <MemberGrid
         theme={theme}
         userRole={userRole}

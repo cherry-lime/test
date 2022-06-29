@@ -58,6 +58,11 @@ function TextfieldEdit({
     setIntermediateValue(text);
   }, [text]);
 
+  /*
+  once you edit a text in textfield, and you click 
+  away from the textfield , the value can be stored. 
+  This is what the ClickAwayListener can do. 
+  */
   return (
     <ThemeProvider theme={theme}>
       <ClickAwayListener onClickAway={handleSaveDecorator}>
