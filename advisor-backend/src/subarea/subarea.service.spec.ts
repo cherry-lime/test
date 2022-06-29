@@ -5,7 +5,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { aSubarea } from '../prisma/mock/mockSubarea';
 import {
-  BadRequestException,
   ConflictException,
   InternalServerErrorException,
   NotFoundException,
