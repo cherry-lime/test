@@ -101,7 +101,7 @@ function Team({ theme }: { theme: Theme }) {
 
           {userRole === "ASSESSOR" && (
             <TextfieldEdit
-              text={teamInfo ? teamInfo.country : ""}
+              text={teamInfo.country}
               theme={theme}
               rows={1}
               handleSave={changeCountry}
@@ -110,7 +110,7 @@ function Team({ theme }: { theme: Theme }) {
 
           {userRole !== "ASSESSOR" && (
             <Textfield
-              text={teamInfo ? teamInfo.country : ""}
+              text={teamInfo.country}
               theme={theme}
               rows={1}
               columns="inherit"
@@ -121,7 +121,7 @@ function Team({ theme }: { theme: Theme }) {
 
           {userRole === "ASSESSOR" && (
             <TextfieldEdit
-              text={teamInfo ? teamInfo.department : ""}
+              text={teamInfo.department}
               theme={theme}
               rows={1}
               handleSave={changeDept}
@@ -130,7 +130,7 @@ function Team({ theme }: { theme: Theme }) {
 
           {userRole !== "ASSESSOR" && (
             <Textfield
-              text={teamInfo ? teamInfo.department : ""}
+              text={teamInfo.department}
               theme={theme}
               rows={1}
               columns="inherit"
