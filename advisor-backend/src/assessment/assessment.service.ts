@@ -223,7 +223,29 @@ export class AssessmentService {
    * @throws Assessment not found
    */
   async complete(id: number) {
-    const assessment = await this.prisma.assessment
+    const assessment = await this.prisma.assessment.findUnique({
+      where: {
+        assessment_id: id,
+      },
+    });
+
+    if (!assessment) {
+      throw new NotFoundException('Assessment not found');
+    }
+
+    const areAllCheckpointsFilled = await this.saveService.areAllAnswersFilled(
+      assessment
+    );
+
+    if (!areAllCheckpointsFilled) {
+      throw new BadRequestException(
+        'All checkpoints must be filled before marking assessment as complete'
+      );
+    }
+
+    await this.feedbackService.saveRecommendations(assessment);
+
+    return await this.prisma.assessment
       .update({
         where: {
           assessment_id: id,
@@ -240,20 +262,6 @@ export class AssessmentService {
           throw new InternalServerErrorException();
         }
       });
-
-    const areAllCheckpointsFilled = await this.saveService.areAllAnswersFilled(
-      assessment
-    );
-
-    if (!areAllCheckpointsFilled) {
-      throw new BadRequestException(
-        'All checkpoints must be filled before marking assessment as complete'
-      );
-    }
-
-    await this.feedbackService.saveRecommendations(assessment);
-
-    return assessment;
   }
 
   /**
