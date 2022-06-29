@@ -211,7 +211,7 @@ export function useDeleteMemberTeamOne(
     ["DELETE", "/teams", teamId, "/members", "/user_id"],
     async (userId: number) => {
       // Get response data from database
-      const { data } = await API.delete(`/teams/${teamId}/members/${userId}`);
+      const { data } = await API.delete(`/teams/${teamId}/member/${userId}`);
 
       // Convert data to userAPP
       return userToAPP(data) as UserAPP;
