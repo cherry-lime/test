@@ -195,7 +195,7 @@ export class FeedbackService {
         };
       })
       // Filter out checkpoints that are fully completed
-      .filter((item) => item.answerWeight && item.answerWeight < 100);
+      .filter((item) => item.answerWeight >= 0 && item.answerWeight < 100);
 
     // Sort answer by maturity order, answer score, category order, and weight
     list.sort(this.compareMaturity.bind(this));
@@ -231,7 +231,7 @@ export class FeedbackService {
 
     const answers = {};
     answersList.forEach((answer) => {
-      if (answer.answer_weight) {
+      if (answer.answer_id) {
         answers[answer.answer_id] = answer;
       }
     });
