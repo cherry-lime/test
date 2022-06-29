@@ -11,6 +11,8 @@ description of subarea = description
 description might be empty string
 theme of app
 main function returning a subarea component
+prop tip is used to make sure that when tip = true,
+that only the word/string "TIP" will be coloured/printed in ING orange in a card
 */
 function Subarea({
   title,

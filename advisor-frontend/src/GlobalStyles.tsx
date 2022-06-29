@@ -1,6 +1,12 @@
 import { createGlobalStyle } from "styled-components";
 import Theme from "./Theme";
 
+/*
+In this file the global styles are defined that is used 
+for e.g. user/admin/assessor pages related to CSS that can be used/linked in 
+different files in which e.g. components have been made 
+An example of this would be the right arrow button color in grids for redirection
+*/
 const GlobalStyles = createGlobalStyle`
   h2 {
     color: ${Theme.palette.text.secondary};

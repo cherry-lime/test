@@ -5,12 +5,16 @@ import AssessmentOngoingGrid from "../../../components/Grids/Specific/Assessment
 import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessment/AssessmentCompleted/AssessmentCompletedGrid";
 
 /**
- * Page with the list of self evaluations that belog to the user
+ * Page with the list of self evaluations that belong to the user
  */
 function ListOfSelfEvals({ theme }: { theme: Theme }) {
-  // only users sees this page, no need to fetch role
+  // only users can see this page, no need to fetch role
   const userRole = "USER";
-
+  /*
+  return page with individual evaluations as title
+  together with the ongoing evaluation grid and
+  completed evaluations grid
+  */
   return (
     <PageLayout
       title="Individual Evaluations"
