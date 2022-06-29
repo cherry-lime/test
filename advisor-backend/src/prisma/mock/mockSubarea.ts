@@ -4,6 +4,7 @@ export const aSubarea = {
   subarea_description: 'Subarea 1 description',
   subarea_summary: 'Subarea 1 summary',
   category_id: 1,
+  order: 1,
 };
 
 export const mockSubarea = {

@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { aSubarea } from '../prisma/mock/mockSubarea';
 import {
+  BadRequestException,
   ConflictException,
   InternalServerErrorException,
   NotFoundException,
@@ -72,9 +73,7 @@ describe('SubareaService', () => {
 
   describe('findAll', () => {
     it('should return all subareas', async () => {
-      expect(subareaService.findAll(1, Role.ADMIN)).resolves.toEqual([
-        aSubarea,
-      ]);
+      expect(subareaService.findAll(1, Role.USER)).resolves.toEqual([aSubarea]);
     });
   });
 
@@ -114,6 +113,13 @@ describe('SubareaService', () => {
       jest.spyOn(prisma.subArea, 'update').mockRejectedValue({ code: 'TEST' });
       await expect(subareaService.update(1, aSubarea)).rejects.toThrowError(
         InternalServerErrorException
+      );
+    });
+
+    it('Should throw BadRequestException if order is too high', async () => {
+      jest.spyOn(prisma.subArea, 'count').mockResolvedValueOnce(-1);
+      expect(subareaService.update(1, aSubarea)).rejects.toThrowError(
+        ConflictException
       );
     });
   });
