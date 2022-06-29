@@ -279,6 +279,7 @@ export default function ProgressEvaluationCard({
                   sx={{
                     width: "inherit",
                     marginTop: "5px",
+                    flexWrap: "nowrap",
                   }}
                   name="switch-filter"
                   value={filter === "Category"}
