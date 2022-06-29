@@ -108,17 +108,20 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         field: "actions",
         type: "actions",
         width: 100,
-        getActions: (params: { id: GridRowId }) => [
-          <GridActionsCellItem
-            icon={
-              <Tooltip title="Remove">
-                <RemoveIcon />
-              </Tooltip>
-            }
-            label="Remove"
-            onClick={handleDeleteDecorator(params.id)}
-          />,
-        ],
+        getActions: (params: { id: GridRowId; row: Row }) =>
+          params.row.role !== "ADMIN"
+            ? [
+                <GridActionsCellItem
+                  icon={
+                    <Tooltip title="Remove">
+                      <RemoveIcon />
+                    </Tooltip>
+                  }
+                  label="Remove"
+                  onClick={handleDeleteDecorator(params.id)}
+                />,
+              ]
+            : [],
       },
     ],
     [handleRoleChange, handleDeleteDecorator]
