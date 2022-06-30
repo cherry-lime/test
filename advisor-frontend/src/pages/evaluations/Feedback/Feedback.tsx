@@ -23,7 +23,9 @@ import {
 import { CategoryAPP, useGetCategories } from "../../../api/CategoryAPI";
 import { AnswerAPP, useGetAnswers } from "../../../api/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI";
-import ErrorPopup, { RefObject } from "../../../components/ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  RefObject,
+} from "../../../components/ErrorPopup/ErrorPopup";
 import checkAssessmentRouting, { checkTeamRouting } from "../../routingHelpers";
 import { useGetTeam } from "../../../api/TeamAPI";
 
