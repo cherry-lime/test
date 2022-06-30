@@ -83,7 +83,7 @@ export default function ProgressEvaluationCard({
     assessmentId,
     topicSelected
   );
-
+  // using useEffect hooks from React in order to prevent writing a class
   useEffect(() => {
     setFilter("Category");
     setFilterSelected(null);
@@ -112,13 +112,19 @@ export default function ProgressEvaluationCard({
       setScores(dataScores);
     }
   }, [statusScores, dataScores]);
-
+  /* 
+  use handletopicchange constant to define an event handler
+  w.r.t. changing topics
+  */
   const handleTopicChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "-")
       setTopicSelected(Number(event.target.value));
     else setTopicSelected(undefined);
   };
-
+  /*
+  use handlecategorychange constant to define an event handler
+  w.r.t changing category 
+  */
   const handleCategoryChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "total")
       setFilterSelected(Number(event.target.value));
@@ -136,7 +142,7 @@ export default function ProgressEvaluationCard({
   ) {
     return <>...</>;
   }
-
+  // constant declarations for filtered + displayed objects with their corresponding id's
   const filteredObjects = filter === "Category" ? categories : maturities;
   const displayedObjects = filter === "Category" ? maturities : categories;
 
@@ -152,7 +158,7 @@ export default function ProgressEvaluationCard({
       setFilterSelected(null);
     }
   };
-
+  // constant declaration to get the scores in an array
   const getFilteredScores = () =>
     scores.filter(
       (score: ScoreAPP) =>
@@ -160,7 +166,7 @@ export default function ProgressEvaluationCard({
         score[displayedId] !== null &&
         score.score !== -1
     ) as ScoreAPP[];
-
+  // constant declaration to get the labels
   const getLabels = () =>
     getFilteredScores().map((score: ScoreAPP) => {
       const displayedObject = displayedObjects.find(
@@ -173,7 +179,7 @@ export default function ProgressEvaluationCard({
 
       return "";
     });
-
+  // constant declaration to get the score data
   const getData = () =>
     getFilteredScores().map((score: ScoreAPP) => score.score);
   /*

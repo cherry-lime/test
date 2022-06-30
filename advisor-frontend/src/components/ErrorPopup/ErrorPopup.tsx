@@ -52,6 +52,10 @@ const ErrorPopup = forwardRef(
     // Use imperative handle for parent class
     useImperativeHandle(ref, () => ({ handleErrorPopup }));
 
+    /*
+    Return the errorpopup at the bottom of the screen by means
+    of a snackbar component which provide brief notifications
+    */
     return (
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
