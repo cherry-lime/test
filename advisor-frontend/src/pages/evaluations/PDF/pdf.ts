@@ -4,7 +4,6 @@ import { AnswerAPP } from "../../../api/AnswerAPI";
 import { CategoryAPP } from "../../../api/CategoryAPI";
 import { TopicAPP } from "../../../api/TopicAPI";
 import {
-  getAreas,
   getAssessment,
   getTemplate,
   getTopicRecommendations,
@@ -255,10 +254,9 @@ export default async function createPDF(
 
   tables.push(getRecTable(recs, recsHeaders, feedbackSections));
 
-  const allAreas = await getAreas(areas.map((a) => Number(a.id)));
   (
     await getAreaTables(
-      allAreas,
+      areas,
       checkpointHeaders,
       checkpointAnswers,
       answerList,

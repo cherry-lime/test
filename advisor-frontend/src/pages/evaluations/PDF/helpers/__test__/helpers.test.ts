@@ -60,13 +60,13 @@ describe("Testing PDF helper function", () => {
 
   const checkpointHeaders = ["Order", "Description", "Topics", "Answer"];
 
-  it("transform checkpoints", () => {
+  it("transform checkpoints for pdf functions", () => {
     expect(
       helpers.transformCheckpoints([checkpoint], answers, [answer], [topic])
     ).toStrictEqual([checkpointAnswer]);
   });
 
-  it("transform area", () => {
+  it("transform area for pdf functions", () => {
     expect(
       helpers.transformArea(
         area,
