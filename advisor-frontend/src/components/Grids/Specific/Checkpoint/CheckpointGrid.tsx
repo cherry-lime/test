@@ -120,15 +120,10 @@ export default function CheckpointGrid({
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: CheckpointAPP) => () => {
-      handleMove(
-        setRows,
-        patchCheckpoint as UseMutationResult,
-        {
-          ...row,
-          order: row.order - 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchCheckpoint as UseMutationResult, {
+        ...row,
+        order: row.order - 1,
+      });
     },
     []
   );
@@ -136,15 +131,10 @@ export default function CheckpointGrid({
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: CheckpointAPP) => () => {
-      handleMove(
-        setRows,
-        patchCheckpoint as UseMutationResult,
-        {
-          ...row,
-          order: row.order + 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchCheckpoint as UseMutationResult, {
+        ...row,
+        order: row.order + 1,
+      });
     },
     []
   );
