@@ -2,6 +2,7 @@ import * as React from "react";
 import { GridRowModel } from "@mui/x-data-grid";
 
 /**
+ * Initializes the rows of the grid
  * @param setRows - Set function for rows state
  * @param rows - Rows that will be initialized
  */
@@ -25,6 +26,7 @@ export function initRows(
 }
 
 /**
+ * Updates the order of the rows in the grid
  * @param setRows - Set function for rows state
  */
 export function updateOrderRows(
@@ -43,6 +45,7 @@ export function updateOrderRows(
 }
 
 /**
+ * Moves a row in the grid
  * @param setRows - Set function for rows state
  * @param row - The row that should be moved
  * @param order - The new order it should be moved to
@@ -74,6 +77,7 @@ export function moveRow(
 }
 
 /**
+ * Updates a row in the grid
  * @param setRows - Set function for rows state
  * @param newRow - The row after update
  * @param oldRow - The row before update
@@ -99,6 +103,7 @@ export function updateRow(
 }
 
 /**
+ * Adds a row to the grid
  * @param setRows - Set function for rows state
  * @param row - The row that should be added
  */
@@ -111,6 +116,7 @@ export function addRow(
 }
 
 /**
+ * Deletes a row from the grid
  * @param setRows - Set function for rows state
  * @param row - The row that should be deleted
  */

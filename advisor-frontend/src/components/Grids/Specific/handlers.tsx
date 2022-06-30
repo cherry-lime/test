@@ -6,6 +6,25 @@ import { RefObject, handleError } from "../../ErrorPopup/ErrorPopup";
 import { TemplateAPP } from "../../../api/TemplateAPI";
 
 /**
+ * Initializes the rows of the grid
+ * @param setRows - Set function for rows state
+ * @param status - Status of query
+ * @param data - Data of query
+ */
+export function handleInit(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  status: "error" | "idle" | "loading" | "success",
+  data: GridRowModel[] | undefined
+) {
+  if (status === "success") {
+    if (data) {
+      initRows(setRows, data);
+    }
+  }
+}
+
+/**
+ * Preprocesses the order when a row is edited
  * @param rows - Current rows of the grid
  * @param params - Props for editing a cell
  * @param ref - Reference to error popup
@@ -29,23 +48,7 @@ export function preProcessEditOrder(
 }
 
 /**
- * @param setRows - Set function for rows state
- * @param status - Status of query
- * @param data - Data of query
- */
-export function handleInit(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  status: "error" | "idle" | "loading" | "success",
-  data: GridRowModel[] | undefined
-) {
-  if (status === "success") {
-    if (data) {
-      initRows(setRows, data);
-    }
-  }
-}
-
-/**
+ * Handles processing of old and new row for when edited
  * @param setRows - Set function for rows state
  * @param patchMutation - Mutation for patch request
  * @param newRow - The row after update
@@ -81,29 +84,7 @@ export async function processRowUpdate(
 }
 
 /**
- *
- * @param setRows - Set function for rows state
- * @param patchMutation - Mutation for PATCH request
- * @param row - The row that should be moved
- * @param ref - Reference to error popup
- */
-export function handleMove(
-  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
-  patchMutation: UseMutationResult,
-  row: GridRowModel,
-  ref?: React.RefObject<RefObject>
-) {
-  patchMutation.mutate(row, {
-    onSuccess: (movedRow: GridRowModel) => {
-      moveRow(setRows, movedRow, movedRow.order);
-    },
-    onError: () => {
-      if (ref) handleError(ref, "Error: Unable to move row");
-    },
-  });
-}
-
-/**
+ * Handles adding of row to grid
  * @param setRows - Set function for rows state
  * @param addMutation - Mutation for ADD request
  * @param templateResponse - Result of template query
@@ -127,6 +108,7 @@ export function handleAdd(
 }
 
 /**
+ * Handles deletion of row from grid
  * @param setRows - Set function for rows state
  * @param deleteMutation - Mutation for DELETE request
  * @param rowId - ID of the row that should be deleted
@@ -152,6 +134,7 @@ export function handleDelete(
 }
 
 /**
+ * Handles duplication of row in grid
  * @param setRows - Set function for rows state
  * @param duplicateMutation - Mutation for DELETE request
  * @param row - The row that should be deleted
@@ -177,6 +160,7 @@ export function handleDuplicate(
 }
 
 /**
+ * Handles change of row in grid
  * @param setRows - Set function for rows state
  * @param patchMutation - Mutation for PATCH request
  * @param newRow - The row after change
@@ -196,6 +180,29 @@ export function handleChange(
     },
     onError: () => {
       if (ref) handleError(ref, "Error: Unable to save the changes");
+    },
+  });
+}
+
+/**
+ * Handles moving of row to new position
+ * @param setRows - Set function for rows state
+ * @param patchMutation - Mutation for PATCH request
+ * @param row - The row that should be moved
+ * @param ref - Reference to error popup
+ */
+export function handleMove(
+  setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
+  patchMutation: UseMutationResult,
+  row: GridRowModel,
+  ref?: React.RefObject<RefObject>
+) {
+  patchMutation.mutate(row, {
+    onSuccess: (movedRow: GridRowModel) => {
+      moveRow(setRows, movedRow, movedRow.order);
+    },
+    onError: () => {
+      if (ref) handleError(ref, "Error: Unable to move row");
     },
   });
 }
