@@ -1,6 +1,10 @@
 import * as React from "react";
 import { GridRowModel } from "@mui/x-data-grid";
 
+/**
+ * @param setRows - Set function for rows state
+ * @param rows - Rows that will be initialized
+ */
 export function initRows(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   rows: GridRowModel[]
@@ -20,6 +24,9 @@ export function initRows(
   });
 }
 
+/**
+ * @param setRows - Set function for rows state
+ */
 export function updateOrderRows(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>
 ) {
@@ -35,6 +42,11 @@ export function updateOrderRows(
   });
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param row - The row that should be moved
+ * @param order - The new order it should be moved to
+ */
 export function moveRow(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   row: GridRowModel,
@@ -61,6 +73,11 @@ export function moveRow(
   updateOrderRows(setRows);
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param newRow - The row after update
+ * @param oldRow - The row before update
+ */
 export function updateRow(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   newRow: GridRowModel,
@@ -81,6 +98,10 @@ export function updateRow(
   }
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param row - The row that should be added
+ */
 export function addRow(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   row: GridRowModel
@@ -89,6 +110,10 @@ export function addRow(
   setRows((prevRows) => [...prevRows, row]);
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param row - The row that should be deleted
+ */
 export function deleteRow(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   row: GridRowModel
