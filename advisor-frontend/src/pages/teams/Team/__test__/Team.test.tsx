@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -16,7 +16,7 @@ const teamInfo = {
 };
 
 test("team info rendering for user", async () => {
-  render(
+  const result = render(
     <QueryClientProvider client={client}>
       <Provider store={store}>
         <BrowserRouter>
@@ -40,6 +40,37 @@ test("team info rendering for user", async () => {
   expect(screen.getByText(/Members/i)).toBeInTheDocument();
   expect(screen.getByText(/Ongoing Evaluations/i)).toBeInTheDocument();
   expect(screen.getByText(/Completed evaluations/i)).toBeInTheDocument();
+  expect(result.container.querySelector("#token-info")).not.toBeInTheDocument();
+});
+
+test("team info rendering for assessor", async () => {
+  const result = render(
+    <QueryClientProvider client={client}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <Team
+            theme={INGTheme}
+            presetTeamInfo={teamInfo}
+            presetUserRole="ASSESSOR"
+          />
+        </BrowserRouter>
+      </Provider>
+    </QueryClientProvider>
+  );
+
+  const copy = () => {
+    navigator.clipboard.readText();
+  };
+
+  expect(screen.getByText(/Team Information/i)).toBeInTheDocument();
+  expect(screen.getByText(/Country/i)).toBeInTheDocument();
+  expect(screen.getByText(/Facilitators/i)).toBeInTheDocument();
+  expect(screen.getByText(/Members/i)).toBeInTheDocument();
+  expect(screen.getByText(/Ongoing Evaluations/i)).toBeInTheDocument();
+  expect(screen.getByText(/Completed evaluations/i)).toBeInTheDocument();
+  expect(result.container.querySelector("#token-info")).toBeInTheDocument();
+  const copyTokenButton = screen.getByTestId("copy-token");
+  fireEvent.click(copyTokenButton);
 });
 
 // describe block = test suite

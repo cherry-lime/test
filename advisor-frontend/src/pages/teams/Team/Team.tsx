@@ -157,28 +157,35 @@ function Team({
             />
           )}
 
-          {userRole === "ASSESSOR" && <h3>Invite Token</h3> && (
-            <FormControl sx={{ width: "inherit" }} variant="standard">
-              <OutlinedInput
-                readOnly
-                sx={{ backgroundColor: "white" }}
-                id="token"
-                value={teamInfo.inviteToken}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <IconButton
-                      onClick={() =>
-                        navigator.clipboard.writeText(
-                          teamInfo.inviteToken.toString()
-                        )
-                      }
-                    >
-                      <ContentCopyIcon />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
+          {userRole === "ASSESSOR" && (
+            <div
+              id="token-info"
+              style={{ width: "inherit", display: "contents" }}
+            >
+              <h3>Invite Token</h3>
+              <FormControl sx={{ width: "inherit" }} variant="standard">
+                <OutlinedInput
+                  readOnly
+                  sx={{ backgroundColor: "white" }}
+                  id="token"
+                  value={teamInfo.inviteToken}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <IconButton
+                        data-testid="copy-token"
+                        onClick={() =>
+                          navigator.clipboard.writeText(
+                            teamInfo.inviteToken.toString()
+                          )
+                        }
+                      >
+                        <ContentCopyIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </div>
           )}
 
           <h3>Facilitators</h3>
@@ -189,7 +196,7 @@ function Team({
             teamId={Number(teamId)}
             forAssessors
           />
-          
+
           <h3>Members</h3>
           <MemberGrid
             theme={theme}
