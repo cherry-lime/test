@@ -23,18 +23,38 @@ import ErrorPopup, {
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
 import { checkTeamRouting } from "../../routingHelpers";
+import { UserRole } from "../../../types/UserRole";
 
 /**
  * Page providing team details
  * This should only be accessible to the users and assessors in the team
  * Assessors can modify team details
  */
-function Team({ theme }: { theme: Theme }) {
+function Team({
+  theme,
+  presetTeamInfo,
+  presetUserRole,
+}: {
+  theme: Theme;
+  presetTeamInfo?: TeamAPP | undefined;
+  presetUserRole?: UserRole;
+}) {
   const { teamId } = useParams();
+  const [userRole, setUserRole] = useState<UserRole>();
 
-  const { userRole, userId } = useSelector(
+  React.useEffect(() => {
+    setUserRole(presetUserRole);
+  }, [presetUserRole]);
+
+  const { userRole: gotUserRole, userId } = useSelector(
     (state: RootState) => state.userData
   );
+
+  React.useEffect(() => {
+    if (!presetUserRole) {
+      setUserRole(gotUserRole);
+    }
+  }, [gotUserRole]);
 
   // Ref for error popup
   const ref = useRef<RefObject>(null);
@@ -43,6 +63,12 @@ function Team({ theme }: { theme: Theme }) {
   const teamResponse = useGetTeam(Number(teamId), ref);
 
   const [teamInfo, setTeamInfo] = useState<TeamAPP>();
+
+  React.useEffect(() => {
+    if (presetTeamInfo) {
+      setTeamInfo(presetTeamInfo);
+    }
+  }, [presetTeamInfo]);
 
   React.useEffect(() => {
     const rerouting = checkTeamRouting(teamResponse);
@@ -92,21 +118,19 @@ function Team({ theme }: { theme: Theme }) {
   */
   return (
     <div>
-      {teamInfo && (
+      {teamInfo && userRole && (
         <PageLayout title={teamInfo.name} sidebarType={userTypes[userRole]}>
           <h2> Team Information </h2>
           <h3> Country </h3>
 
-          {userRole === "ASSESSOR" && (
+          {userRole === "ASSESSOR" ? (
             <TextfieldEdit
               text={teamInfo.country}
               theme={theme}
               rows={1}
               handleSave={changeCountry}
             />
-          )}
-
-          {userRole !== "ASSESSOR" && (
+          ) : (
             <Textfield
               text={teamInfo.country}
               theme={theme}
@@ -117,16 +141,14 @@ function Team({ theme }: { theme: Theme }) {
 
           <h3> IT Area / Department </h3>
 
-          {userRole === "ASSESSOR" && (
+          {userRole === "ASSESSOR" ? (
             <TextfieldEdit
               text={teamInfo.department}
               theme={theme}
               rows={1}
               handleSave={changeDept}
             />
-          )}
-
-          {userRole !== "ASSESSOR" && (
+          ) : (
             <Textfield
               text={teamInfo.department}
               theme={theme}
@@ -135,9 +157,7 @@ function Team({ theme }: { theme: Theme }) {
             />
           )}
 
-          {userRole === "ASSESSOR" && <h3>Invite Token</h3>}
-
-          {userRole === "ASSESSOR" && (
+          {userRole === "ASSESSOR" && <h3>Invite Token</h3> && (
             <FormControl sx={{ width: "inherit" }} variant="standard">
               <OutlinedInput
                 readOnly
@@ -160,6 +180,7 @@ function Team({ theme }: { theme: Theme }) {
               />
             </FormControl>
           )}
+
           <h3>Facilitators</h3>
           <MemberGrid
             theme={theme}
@@ -168,6 +189,7 @@ function Team({ theme }: { theme: Theme }) {
             teamId={Number(teamId)}
             forAssessors
           />
+          
           <h3>Members</h3>
           <MemberGrid
             theme={theme}
@@ -197,5 +219,10 @@ function Team({ theme }: { theme: Theme }) {
     </div>
   );
 }
+
+Team.defaultProps = {
+  presetTeamInfo: undefined,
+  presetUserRole: undefined,
+};
 
 export default Team;

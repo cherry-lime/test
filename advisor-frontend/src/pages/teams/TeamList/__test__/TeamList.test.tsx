@@ -12,7 +12,7 @@ test("app rendering/navigating from assessor view to specific team", async () =>
     <QueryClientProvider client={client}>
       <Provider store={store}>
         <BrowserRouter>
-          <TeamList theme={INGTheme}/>
+          <TeamList theme={INGTheme} />
         </BrowserRouter>
       </Provider>
     </QueryClientProvider>
@@ -20,7 +20,7 @@ test("app rendering/navigating from assessor view to specific team", async () =>
   const tokenButton = screen.getByText(/Join team with token/i);
   const tokenField = screen.getByLabelText(/Enter token/i);
   expect(tokenButton).toBeInTheDocument();
-  fireEvent.change(tokenField, {target: {value: '23'}})
+  fireEvent.change(tokenField, { target: { value: "23" } });
   fireEvent.click(tokenButton);
 });
 
