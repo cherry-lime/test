@@ -207,6 +207,7 @@ export default function ProgressEvaluationCard({
   /*
   return the progressevaluationcard in which the polar area chart is at the right side,
   and on the left side you see the scores for e.g. the maturity levels and the dropdown menus for topics and areas 
+  with a vertical line that seperates the polar area chart with the scores , for readability purposes 
   */
   return (
     <Card
