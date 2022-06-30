@@ -2,16 +2,17 @@ import { render } from "@testing-library/react";
 import { QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import App from "../../../../App";
 import client from "../../../../app/client";
 import { store } from "../../../../app/store";
+import INGTheme from "../../../../Theme";
+import TeamList from "../TeamList";
 
 test("app rendering/navigating from assessor view to specific team", async () => {
   render(
     <QueryClientProvider client={client}>
       <Provider store={store}>
         <BrowserRouter>
-          <App />
+          <TeamList theme={INGTheme}/>
         </BrowserRouter>
       </Provider>
     </QueryClientProvider>
