@@ -39,14 +39,38 @@ describe('UserService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
-  it('should be defined', () => {
-    expect(userService).toBeDefined();
+  describe('should be defined', () => {
+    it('userService', () => {
+      expect(userService).toBeDefined();
+    });
+
+    it('createUser function', () => {
+      expect(userService.createUser).toBeDefined();
+    });
+
+    it('delete function', () => {
+      expect(userService.delete).toBeDefined();
+    });
+
+    it('findAll function', () => {
+      expect(userService.findAll).toBeDefined();
+    });
+
+    it('getUser function', () => {
+      expect(userService.getUser).toBeDefined();
+    });
+
+    it('updateUser function', () => {
+      expect(userService.updateUser).toBeDefined();
+    });
   });
+
 
   describe('getUser', () => {
     it('Should return the found users', async () => {
       expect(userService.getUser(1)).resolves.toBe(aUser);
     });
+
     //it('should reject if username is not found', async() => {
     //  jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(null);
     //  expect(userService.getUser(3)).rejects.toThrowError(NotFoundException);

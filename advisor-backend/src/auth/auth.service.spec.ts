@@ -65,16 +65,18 @@ describe('AuthService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
-  it('Authentication should be defined', () => {
-    expect(authService).toBeDefined();
-  });
+  describe('should be defined', () => {
+    it('Authentication', () => {
+      expect(authService).toBeDefined();
+    });
 
-  it('Authentication login should be defined', () => {
-    expect(authService.login(userDto)).toBeDefined();
-  });
+    it('login function', () => {
+      expect(authService.login(userDto)).toBeDefined();
+    });
 
-  it('Authentication registration should be defined', () => {
-    expect(authService.register(registerDto)).toBeDefined();
+    it('registration function', () => {
+      expect(authService.register(registerDto)).toBeDefined();
+    });
   });
 
   describe('When registering', () => {

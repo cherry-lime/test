@@ -49,20 +49,22 @@ describe('AuthController', () => {
     authController = module.get<AuthController>(AuthController);
   });
 
-  it('should be defined', () => {
-    expect(authController).toBeDefined();
-  });
+  describe('should be defined', () => {
+    it('authController', () => {
+      expect(authController).toBeDefined();
+    });
 
-  it('should be defined', () => {
-    expect(authController.register(registerDto, req.res)).toBeDefined();
-  });
+    it('register function', () => {
+      expect(authController.register(registerDto, req.res)).toBeDefined();
+    });
 
-  it('should be defined', () => {
-    expect(authController.logout(req.res)).toBeDefined();
-  });
+    it('logout function', () => {
+      expect(authController.logout(req.res)).toBeDefined();
+    });
 
-  it('should be defined', () => {
-    expect(authController.getLoggedUser(userinfo)).toBeDefined();
+    it('getLoggedUser function', () => {
+      expect(authController.getLoggedUser(userinfo)).toBeDefined();
+    });
   });
 
   describe('register', () => {
@@ -91,17 +93,19 @@ describe('AuthController', () => {
     it('Should return a message showing a successful login', async () => {
       expect(
         ((await authController.login(loginDto, req.res)).msg)
-      ).toEqual(
-        mockLogin.msg
-      );
+      )
+        .toEqual(
+          mockLogin.msg
+        );
     });
   });
 
   describe('get a user', () => {
     it('Should return user information', async () => {
-      expect(authController.getLoggedUser(userinfo)).toEqual(
-        userinfo
-      );
+      expect(authController.getLoggedUser(userinfo))
+        .toEqual(
+          userinfo
+        );
     });
   });
 });
