@@ -14,7 +14,7 @@ type ScoreAPI = {
   score: number;
 };
 
-function scoreToAPP(scoreAPI: ScoreAPI) {
+export function scoreToAPP(scoreAPI: ScoreAPI) {
   return {
     maturityId: scoreAPI.maturity_id,
     categoryId: scoreAPI.category_id,

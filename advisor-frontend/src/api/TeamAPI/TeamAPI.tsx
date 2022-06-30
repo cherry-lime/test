@@ -20,7 +20,7 @@ type TeamAPI = {
   team_department: string;
 };
 
-function teamToAPP(teamAPI: TeamAPI) {
+export function teamToAPP(teamAPI: TeamAPI) {
   return {
     id: teamAPI.team_id,
     name: teamAPI.team_name,
@@ -30,7 +30,7 @@ function teamToAPP(teamAPI: TeamAPI) {
   } as TeamAPP;
 }
 
-function teamToAPI(teamAPP: TeamAPP) {
+export function teamToAPI(teamAPP: TeamAPP) {
   return {
     team_id: teamAPP.id,
     team_name: teamAPP.name,

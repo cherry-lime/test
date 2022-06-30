@@ -1,6 +1,8 @@
 import { renderHook } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import {
+  topicToAPI,
+  topicToAPP,
   useDeleteTopic,
   useGetTopic,
   useGetTopics,
@@ -9,8 +11,40 @@ import {
 } from "../TopicAPI";
 
 describe("Testing TopicAPI", () => {
+  it("toAPP should give APP object", () => {
+    expect(
+      topicToAPP({
+        topic_id: 0,
+        topic_name: "",
+        template_id: 0,
+        disabled: false,
+      })
+    ).toStrictEqual({
+      id: 0,
+      name: "",
+      templateId: 0,
+      enabled: true,
+    });
+  });
+
+  it("toAPP should give API object", () => {
+    expect(
+      topicToAPI({
+        id: 0,
+        name: "",
+        templateId: 0,
+        enabled: true,
+      })
+    ).toStrictEqual({
+      topic_id: 0,
+      topic_name: "",
+      template_id: 0,
+      disabled: false,
+    });
+  });
+
   const queryClient = new QueryClient();
-  const wrapper = ({ children }: { children: any }) => (
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 

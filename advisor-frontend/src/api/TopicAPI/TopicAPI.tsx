@@ -18,7 +18,7 @@ type TopicAPI = {
   disabled: boolean;
 };
 
-function topicToAPP(topicAPI: TopicAPI) {
+export function topicToAPP(topicAPI: TopicAPI) {
   return {
     id: topicAPI.topic_id,
     name: topicAPI.topic_name,
@@ -27,7 +27,7 @@ function topicToAPP(topicAPI: TopicAPI) {
   } as TopicAPP;
 }
 
-function topicToAPI(topicAPP: TopicAPP) {
+export function topicToAPI(topicAPP: TopicAPP) {
   return {
     topic_id: topicAPP.id,
     topic_name: topicAPP.name,

@@ -6,11 +6,49 @@ import {
   useGetMaturities,
   usePatchMaturity,
   usePostMaturity,
+  maturityToAPP,
+  maturityToAPI,
 } from "../MaturityAPI";
 
 describe("Testing MaturityAPI", () => {
+  it("toAPP should give APP object", () => {
+    expect(
+      maturityToAPP({
+        maturity_id: 0,
+        maturity_name: "",
+        order: 0,
+        template_id: 0,
+        disabled: false,
+      })
+    ).toStrictEqual({
+      id: 0,
+      name: "",
+      order: 0,
+      templateId: 0,
+      enabled: true,
+    });
+  });
+
+  it("toAPP should give API object", () => {
+    expect(
+      maturityToAPI({
+        id: 0,
+        name: "",
+        order: 0,
+        templateId: 0,
+        enabled: true,
+      })
+    ).toStrictEqual({
+      maturity_id: 0,
+      maturity_name: "",
+      order: 0,
+      template_id: 0,
+      disabled: false,
+    });
+  });
+
   const queryClient = new QueryClient();
-  const wrapper = ({ children }: { children: any }) => (
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 

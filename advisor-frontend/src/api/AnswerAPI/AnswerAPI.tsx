@@ -20,7 +20,7 @@ type AnswerAPI = {
   disabled: boolean;
 };
 
-function answerToAPP(answerAPI: AnswerAPI) {
+export function answerToAPP(answerAPI: AnswerAPI) {
   return {
     id: answerAPI.answer_id,
     label: answerAPI.answer_text,
@@ -30,7 +30,7 @@ function answerToAPP(answerAPI: AnswerAPI) {
   } as AnswerAPP;
 }
 
-function answerToAPI(answerAPP: AnswerAPP) {
+export function answerToAPI(answerAPP: AnswerAPP) {
   return {
     answer_id: answerAPP.id,
     answer_text: answerAPP.label,

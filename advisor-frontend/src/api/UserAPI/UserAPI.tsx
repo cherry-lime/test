@@ -21,7 +21,7 @@ export type UserAPI = {
   updated_at: string;
 };
 
-function userToAPP(userAPI: UserAPI) {
+export function userToAPP(userAPI: UserAPI) {
   return {
     id: userAPI.user_id,
     name: userAPI.username,
@@ -31,7 +31,7 @@ function userToAPP(userAPI: UserAPI) {
   } as UserAPP;
 }
 
-function userToAPI(userAPP: UserAPP) {
+export function userToAPI(userAPP: UserAPP) {
   return {
     user_id: userAPP.id,
     username: userAPP.name,

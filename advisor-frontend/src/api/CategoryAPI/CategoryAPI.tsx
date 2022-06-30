@@ -33,7 +33,7 @@ export function categoryToAPP(categoryAPI: CategoryAPI) {
   } as CategoryAPP;
 }
 
-function categoryToAPI(categoryAPP: CategoryAPP) {
+export function categoryToAPI(categoryAPP: CategoryAPP) {
   return {
     category_id: categoryAPP.id,
     category_name: categoryAPP.name,

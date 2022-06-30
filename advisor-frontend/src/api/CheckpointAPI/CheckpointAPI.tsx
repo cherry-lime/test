@@ -42,7 +42,7 @@ export function checkpointToAPP(checkpointAPI: CheckpointAPI) {
   } as CheckpointAPP;
 }
 
-function checkpointToAPI(checkpointAPP: CheckpointAPP) {
+export function checkpointToAPI(checkpointAPP: CheckpointAPP) {
   return {
     checkpoint_id: checkpointAPP.id,
     checkpoint_description: checkpointAPP.description,

@@ -1,6 +1,8 @@
 import { renderHook } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import {
+  teamToAPI,
+  teamToAPP,
   useDeleteTeam,
   useGetInviteTokenTeam,
   useGetMyTeams,
@@ -11,8 +13,44 @@ import {
 } from "../TeamAPI";
 
 describe("Testing TeamAPI", () => {
+  it("toAPP should give APP object", () => {
+    expect(
+      teamToAPP({
+        team_id: 0,
+        team_name: "",
+        invite_token: 0,
+        team_country: "",
+        team_department: "",
+      })
+    ).toStrictEqual({
+      id: 0,
+      name: "",
+      inviteToken: 0,
+      country: "",
+      department: "",
+    });
+  });
+
+  it("toAPP should give API object", () => {
+    expect(
+      teamToAPI({
+        id: 0,
+        name: "",
+        inviteToken: 0,
+        country: "",
+        department: "",
+      })
+    ).toStrictEqual({
+      team_id: 0,
+      team_name: "",
+      invite_token: 0,
+      team_country: "",
+      team_department: "",
+    });
+  });
+
   const queryClient = new QueryClient();
-  const wrapper = ({ children }: { children: any }) => (
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 
