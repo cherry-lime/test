@@ -58,7 +58,15 @@ describe("Testing PDF helper function", () => {
     answer: answer.label,
   };
 
+  const rec = {
+    id: 4,
+    order: 1,
+    description: "g",
+    additionalInfo: "j",
+  };
+
   const checkpointHeaders = ["Order", "Description", "Topics", "Answer"];
+  const recsHeaders = ["Priority", "Recommendation", "Additional Info"];
 
   it("transform checkpoints for pdf functions", () => {
     expect(
@@ -89,6 +97,54 @@ describe("Testing PDF helper function", () => {
         ],
       ],
       headers: checkpointHeaders,
+    });
+  });
+
+  const feedback = "some feedback";
+  const assessorFeedback = "assessor feedback";
+  const assessorFeedbackSec = {
+    title: "Facilitator Feedback",
+    text: [assessorFeedback],
+  };
+  const feedbackSec = { title: "", text: [feedback] };
+
+  const recObject = {
+    title: `Recommendations`,
+    data: [[rec.order, rec.description, rec.additionalInfo]],
+    headers: recsHeaders,
+  };
+
+  it("get recs table with feedback and assessor feedback for pdf functions", () => {
+    expect(
+      helpers.getRecTable([rec], recsHeaders, feedback, assessorFeedback)
+    ).toStrictEqual({
+      ...recObject,
+      sections: [feedbackSec, assessorFeedbackSec],
+    });
+  });
+
+  it("get recs table with feedback and no assessor feedback for pdf functions", () => {
+    expect(helpers.getRecTable([rec], recsHeaders, feedback, "")).toStrictEqual(
+      {
+        ...recObject,
+        sections: [feedbackSec],
+      }
+    );
+  });
+
+  it("get recs table with no feedback and no assessor feedback for pdf functions", () => {
+    expect(helpers.getRecTable([rec], recsHeaders, "", "")).toStrictEqual({
+      ...recObject,
+      sections: [],
+    });
+  });
+
+  it("get recs table with no feedback and assessor feedback for pdf functions", () => {
+    expect(
+      helpers.getRecTable([rec], recsHeaders, "", assessorFeedback)
+    ).toStrictEqual({
+      ...recObject,
+      sections: [assessorFeedbackSec],
     });
   });
 });
