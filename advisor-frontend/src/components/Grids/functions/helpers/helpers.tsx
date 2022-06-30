@@ -1,9 +1,9 @@
 import { GridRowModel } from "@mui/x-data-grid";
 
 /**
- * Initializes the rows of the grid
- * @param setRows - Set function for rows state
+ * Initializes rows of the grid
  * @param rows - Rows that will be initialized
+ * @returns Initialized rows
  */
 export function initRows(rows: GridRowModel[]) {
   // If the rows are nonempty ordered
@@ -20,7 +20,8 @@ export function initRows(rows: GridRowModel[]) {
 
 /**
  * Updates the order of the rows in the grid
- * @param setRows - Set function for rows state
+ * @param rows - Row that should be updated
+ * @returns Rows with updated order
  */
 export function updateOrderRows(rows: GridRowModel[]) {
   // Map each row's order to its index + 1
@@ -35,9 +36,10 @@ export function updateOrderRows(rows: GridRowModel[]) {
 
 /**
  * Moves a row in the grid
- * @param setRows - Set function for rows state
+ * @param prevRows - Previous rows of the grid
  * @param row - The row that should be moved
  * @param order - The new order it should be moved to
+ * @returns Rows with moved row
  */
 export function moveRow(
   prevRows: GridRowModel[],
@@ -63,9 +65,10 @@ export function moveRow(
 
 /**
  * Updates a row in the grid
- * @param setRows - Set function for rows state
+ * @param prevRows - Previous rows of the grid
  * @param newRow - The row after update
  * @param oldRow - The row before update
+ * @returns Updated rows
  */
 export function updateRow(
   prevRows: GridRowModel[],
@@ -89,8 +92,9 @@ export function updateRow(
 
 /**
  * Adds a row to the grid
- * @param setRows - Set function for rows state
+ * @param prevRows - Previous rows of the grid
  * @param row - The row that should be added
+ * @returns Rows with added row
  */
 export function addRow(prevRows: GridRowModel[], row: GridRowModel) {
   // Add row the the previous rows
@@ -99,18 +103,18 @@ export function addRow(prevRows: GridRowModel[], row: GridRowModel) {
 
 /**
  * Deletes a row from the grid
- * @param setRows - Set function for rows state
+ * @param prevRows - Previous rows of the grid
  * @param row - The row that should be deleted
+ * @returns Rows without deleted row
  */
 export function deleteRow(prevRows: GridRowModel[], row: GridRowModel) {
   // Filter row with rowId from state
   const newRows = prevRows.filter((prevRow) => prevRow.id !== row.id);
 
-  // Update rows state with deleted row
-  return newRows;
-
   // If this grid is ordered
   if (Object.prototype.hasOwnProperty.call(row, "order")) {
-    updateOrderRows(newRows);
+    return updateOrderRows(newRows);
   }
+
+  return newRows;
 }
