@@ -48,7 +48,7 @@ export default function ProgressEvaluationCard({
 }: ProgressEvaluationCardProps) {
   // Ref for error popup
   const ref = useRef<RefObject>(null);
-
+  // define topics, categories, maturities, scores etc as contstants using the React usestate hook
   const [topics, setTopics] = useState<TopicAPP[]>();
   const [categories, setCategories] = useState<CategoryAPP[]>();
   const [maturities, setMaturities] = useState<MaturityAPP[]>();
@@ -176,7 +176,10 @@ export default function ProgressEvaluationCard({
 
   const getData = () =>
     getFilteredScores().map((score: ScoreAPP) => score.score);
-
+  /*
+  Apply the conditional colouring in the scores, e.g. 0%=red and 100% is green,
+  so once the score gets higher the colour changes accordingly  
+  */
   const getBackgroundColor = () =>
     getFilteredScores().map(
       (score: ScoreAPP) =>
@@ -184,7 +187,9 @@ export default function ProgressEvaluationCard({
           (255 / 100) * score.score
         )},0,0.4)`
     );
-
+  /*
+  scale the polar area chart in such a way the values are between 0 and 100
+  */
   const options = {
     scales: {
       r: {
@@ -193,7 +198,10 @@ export default function ProgressEvaluationCard({
       },
     },
   };
-
+  /*
+  return the progressevaluationcard in which the polar area chart is at the right side,
+  and on the left side you see the scores and the dropdown menus for topics and areas 
+  */
   return (
     <Card
       sx={{
@@ -239,7 +247,6 @@ export default function ProgressEvaluationCard({
                   </Select>
                 )}
               </Box>
-
               <Box width="15vw">
                 <h2>View</h2>
                 <RadioGroup
@@ -258,7 +265,6 @@ export default function ProgressEvaluationCard({
                     label="Area"
                     value
                   />
-
                   <FormControlLabel
                     control={<Radio color="primary" />}
                     label="Maturity"
