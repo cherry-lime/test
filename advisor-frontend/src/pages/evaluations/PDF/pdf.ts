@@ -9,7 +9,8 @@ import {
   getTopicRecommendations,
 } from "./pdfHelpersAPI";
 import { Table, getRecTable, getAreaTables } from "./helpers/pdfHelpers";
-import nextYCheckEndOfPage, {
+import {
+  nextYCheckEndOfPage,
   generateTableHeaders,
   generateTableRow,
   generateText,
@@ -50,7 +51,7 @@ function addTable(
       doc,
       section.title,
       docProps,
-      titleFontSize,
+      sectFontSize,
       nextY,
       "bold"
     );
@@ -71,7 +72,7 @@ function addTable(
 
   const { xPositions, nextY: nextYGenerated } = generateTableHeaders(
     doc,
-    table,
+    table.headers,
     docProps,
     nextY,
     firstColWidth,
@@ -86,7 +87,7 @@ function addTable(
   table.data.forEach((row: (string | number)[]) => {
     const rowHeights = generateTableRow(
       doc,
-      table,
+      table.headers,
       row,
       colWidth,
       padding,

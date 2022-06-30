@@ -1,14 +1,13 @@
 import JsPDF from "jspdf";
-import { Table } from "../helpers/pdfHelpers";
 
-export default function nextYCheckEndOfPage(
+export function nextYCheckEndOfPage(
   doc: JsPDF,
   nextY: number,
   endOfPage: number,
   pageMargin: number,
   addition = 0
 ) {
-  if (nextY + addition > endOfPage) {
+  if (nextY + addition >= endOfPage) {
     doc.addPage();
     return pageMargin;
   }
@@ -17,7 +16,7 @@ export default function nextYCheckEndOfPage(
 
 export function generateTableHeaders(
   doc: JsPDF,
-  table: Table,
+  headers: string[],
   docProps: {
     pageMargin: number;
     liveArea: { width: number; height: number };
@@ -30,7 +29,7 @@ export function generateTableHeaders(
   let nextY = nextYValue;
   const { liveArea, pageMargin, padding } = docProps;
   const xPositions: number[] = [];
-  table.headers.forEach((heading: string, index: number) => {
+  headers.forEach((heading: string, index: number) => {
     // Here we are starting at pageMargin's xPosition plus whatever index we are on
     // multiplied by the number of columns needed
     // the first col has fixed width, the others have equal widths
@@ -67,7 +66,7 @@ export function generateTableHeaders(
 
 export function generateTableRow(
   doc: JsPDF,
-  table: Table,
+  headers: string[],
   row: (string | number)[],
   colWidth: number,
   padding: number,
@@ -77,7 +76,7 @@ export function generateTableRow(
 ) {
   const rowHeights: number[] = [];
   // iterate columns
-  table.headers.forEach((_column: string, cIndex) => {
+  headers.forEach((_column: string, cIndex) => {
     const longText = doc.splitTextToSize(
       String(row[cIndex]),
       cIndex !== 0 ? colWidth - padding * 2 : firstColWidth - padding * 2
