@@ -10,7 +10,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { aCategory } from '../prisma/mock/mockCategory';
 
 const moduleMocker = new ModuleMocker(global);
 
