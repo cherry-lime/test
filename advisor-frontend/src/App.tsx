@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import { useSelector } from "react-redux";
 import UserInterface from "./pages/user/UserInterface/UserInterface";
-import Home from "./Home";
 import Evaluation from "./pages/evaluations/Evaluation/Evaluation";
 import ListOfSelfEvals from "./pages/user/ListOfSelfEvals/ListOfSelfEvals";
 import Feedback from "./pages/evaluations/Feedback";
@@ -25,6 +24,9 @@ import DetailGen from "./components/SignInUP/DetailGen";
 import ErrorPopup, { RefObject } from "./components/ErrorPopup/ErrorPopup";
 import ErrorPage from "./pages/ErrorPage";
 
+/**
+ * This component is the root element for the React application.
+ */
 function App() {
   // Import the global state variables that will be used throughout the session
   const { userRole } = useSelector((state: RootState) => state.userData);
@@ -58,7 +60,6 @@ function App() {
             path="/signup/details"
             element={<DetailGen theme={INGTheme} />}
           />
-          <Route path="/home" element={<Home />} />
           {/* Only route to the user pages if the user has USER rights */}
           {userRole === "USER" ? (
             <>

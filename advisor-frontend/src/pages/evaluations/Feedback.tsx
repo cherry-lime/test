@@ -24,6 +24,8 @@ import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
 import ErrorPopup, { RefObject } from "../../components/ErrorPopup/ErrorPopup";
+import checkAssessmentRouting, { checkTeamRouting } from "../routingHelpers";
+import { useGetTeam } from "../../api/TeamAPI";
 
 const showFeedbackTextUser = (
   team: boolean,
@@ -70,18 +72,31 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
 
   const assessmentResponse = useGetAssessment(Number(assessmentId), ref);
 
+  if (team) {
+    const teamResponse = useGetTeam(Number(teamId), ref);
+    React.useEffect(() => {
+      const rerouting = checkTeamRouting(teamResponse);
+      if (rerouting) {
+        navigate(rerouting);
+      }
+    }, [teamResponse]);
+  }
+
   React.useEffect(() => {
     if (assessmentResponse.status === "success" && assessmentResponse.data) {
       setAssessmentInfo(assessmentResponse.data);
-      if (!assessmentResponse.data.completedAt) {
-        navigate(
-          team
-            ? `/teams/${teamId}/${assessmentId}`
-            : `/user/self_evaluations/${assessmentId}`
-        );
-      }
     }
-  }, [assessmentResponse.status, assessmentResponse.data]);
+    const rerouting = checkAssessmentRouting(
+      assessmentResponse,
+      team,
+      true,
+      teamId,
+      assessmentId
+    );
+    if (rerouting) {
+      navigate(rerouting);
+    }
+  }, [assessmentResponse]);
 
   const postFeedback = usePostFeedbackAssessment(Number(assessmentId), ref);
 
