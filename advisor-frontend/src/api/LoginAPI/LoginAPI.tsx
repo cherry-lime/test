@@ -1,15 +1,15 @@
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import API from "./_API";
-import { UserAPI } from "./UserAPI";
+import API from "../_API";
+import { UserAPI } from "../UserAPI/UserAPI";
 import {
   setUserRole,
   setUserId,
   setUserName,
   setPassword,
-} from "../app/userDataSlice";
-import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
+} from "../../app/userDataSlice";
+import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 /**
  * @params {role: "USERTYPE"} object that contains the body for the POST request

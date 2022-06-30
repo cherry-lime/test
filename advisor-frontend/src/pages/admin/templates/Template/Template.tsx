@@ -14,7 +14,7 @@ import {
   TemplateAPP,
   useGetTemplate,
   usePatchTemplate,
-} from "../../../../api/TemplateAPI";
+} from "../../../../api/TemplateAPI/TemplateAPI";
 import ErrorPopup, {
   handleError,
   RefObject,

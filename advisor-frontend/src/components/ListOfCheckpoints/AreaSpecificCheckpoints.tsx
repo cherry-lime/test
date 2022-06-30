@@ -8,12 +8,15 @@ import {
   ThemeOptions,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { AnswerAPP } from "../../api/AnswerAPI";
-import { CheckpointAPP, useGetCheckpoints } from "../../api/CheckpointAPI";
-import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI";
+import { AnswerAPP } from "../../api/AnswerAPI/AnswerAPI";
+import {
+  CheckpointAPP,
+  useGetCheckpoints,
+} from "../../api/CheckpointAPI/CheckpointAPI";
+import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI/SubareaAPI";
 import Checkpoint from "../Checkpoint/Checkpoint";
 import Subarea from "../Subarea/Subarea";
-import { TopicAPP } from "../../api/TopicAPI";
+import { TopicAPP } from "../../api/TopicAPI/TopicAPI";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 
 /**

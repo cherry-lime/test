@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { resetUser } from "../../app/userDataSlice";
-import { useLogout } from "../../api/LoginAPI";
+import { useLogout } from "../../api/LoginAPI/LoginAPI";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 
 type SidebarListProps = {

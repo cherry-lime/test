@@ -30,7 +30,7 @@ import {
   usePostSubarea,
   useDeleteSubarea,
   useGetSubareas,
-} from "../../../../api/SubareaAPI";
+} from "../../../../api/SubareaAPI/SubareaAPI";
 
 import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
 

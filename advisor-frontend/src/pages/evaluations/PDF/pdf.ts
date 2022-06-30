@@ -1,8 +1,8 @@
 /* eslint-disable max-lines */
 import JsPDF from "jspdf";
-import { AnswerAPP } from "../../../api/AnswerAPI";
-import { CategoryAPP } from "../../../api/CategoryAPI";
-import { TopicAPP } from "../../../api/TopicAPI";
+import { AnswerAPP } from "../../../api/AnswerAPI/AnswerAPI";
+import { CategoryAPP } from "../../../api/CategoryAPI/CategoryAPI";
+import { TopicAPP } from "../../../api/TopicAPI/TopicAPI";
 import {
   getAssessment,
   getTemplate,

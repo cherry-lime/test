@@ -1,6 +1,6 @@
 import { UseQueryResult } from "react-query";
-import { AssessmentAPP } from "../api/AssessmentAPI";
-import { TeamAPP } from "../api/TeamAPI";
+import { AssessmentAPP } from "../api/AssessmentAPI/AssessmentAPI";
+import { TeamAPP } from "../api/TeamAPI/TeamAPI";
 
 export default function checkAssessmentRouting(
   assessmentResponse: UseQueryResult<AssessmentAPP, unknown>,

@@ -2,8 +2,8 @@ import { useQuery, useMutation } from "react-query";
 
 import { GridRowId } from "@mui/x-data-grid";
 
-import API from "./_API";
-import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
+import API from "../_API";
+import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type RecommendationAPP = {
   id: GridRowId;

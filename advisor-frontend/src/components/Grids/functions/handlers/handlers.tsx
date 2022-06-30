@@ -9,7 +9,7 @@ import {
   moveRow,
 } from "../helpers/helpers";
 import { RefObject, handleError } from "../../../ErrorPopup/ErrorPopup";
-import { TemplateAPP } from "../../../../api/TemplateAPI";
+import { TemplateAPP } from "../../../../api/TemplateAPI/TemplateAPI";
 
 /**
  * Initializes the rows of the grid

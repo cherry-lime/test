@@ -30,8 +30,8 @@ import {
   useDeleteTeam,
   usePatchTeam,
   usePostTeam,
-} from "../../../../api/TeamAPI";
-import { useDeleteMemberTeamTwo } from "../../../../api/UserAPI";
+} from "../../../../api/TeamAPI/TeamAPI";
+import { useDeleteMemberTeamTwo } from "../../../../api/UserAPI/UserAPI";
 
 type TeamGridProps = {
   theme: Theme;

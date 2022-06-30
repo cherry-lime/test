@@ -34,7 +34,7 @@ import {
   useGetCategories,
   usePatchCategory,
   usePostCategory,
-} from "../../../../api/CategoryAPI";
+} from "../../../../api/CategoryAPI/CategoryAPI";
 
 import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
 

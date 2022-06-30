@@ -22,7 +22,7 @@ import {
   useGetTopics,
   usePatchTopic,
   usePostTopic,
-} from "../../../../api/TopicAPI";
+} from "../../../../api/TopicAPI/TopicAPI";
 
 type TopicGridProps = {
   theme: Theme;

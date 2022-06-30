@@ -20,7 +20,7 @@ import {
   useDuplicateTemplate,
   usePatchTemplate,
   usePostTemplate,
-} from "../../../../api/TemplateAPI";
+} from "../../../../api/TemplateAPI/TemplateAPI";
 
 import {
   handleAdd,

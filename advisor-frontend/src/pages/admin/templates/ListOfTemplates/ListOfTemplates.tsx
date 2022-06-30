@@ -7,7 +7,7 @@ import {
   TemplateAPP,
   useGetTemplates,
   usePatchTemplate,
-} from "../../../../api/TemplateAPI";
+} from "../../../../api/TemplateAPI/TemplateAPI";
 import ErrorPopup, {
   RefObject,
 } from "../../../../components/ErrorPopup/ErrorPopup";

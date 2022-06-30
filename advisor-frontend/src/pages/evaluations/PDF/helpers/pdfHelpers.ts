@@ -1,9 +1,9 @@
-import { AnswerAPP } from "../../../../api/AnswerAPI";
-import { CategoryAPP } from "../../../../api/CategoryAPI";
-import { CheckpointAPP } from "../../../../api/CheckpointAPI";
-import { RecommendationAPP } from "../../../../api/RecommendationAPI";
-import { SubareaAPP } from "../../../../api/SubareaAPI";
-import { TopicAPP } from "../../../../api/TopicAPI";
+import { AnswerAPP } from "../../../../api/AnswerAPI/AnswerAPI";
+import { CategoryAPP } from "../../../../api/CategoryAPI/CategoryAPI";
+import { CheckpointAPP } from "../../../../api/CheckpointAPI/CheckpointAPI";
+import { RecommendationAPP } from "../../../../api/RecommendationAPI/RecommendationAPI";
+import { SubareaAPP } from "../../../../api/SubareaAPI/SubareaAPI";
+import { TopicAPP } from "../../../../api/TopicAPI/TopicAPI";
 import { getCheckpointsSubareas } from "../pdfHelpersAPI";
 
 export type Section = {
