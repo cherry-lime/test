@@ -60,7 +60,7 @@ export function preProcessEditOrder(
  * @param patchMutation - Mutation for patch request
  * @param newRow - The row after update
  * @param oldRow - The row before update
- * @returns
+ * @returns Updated row
  */
 export async function processRowUpdate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
@@ -95,7 +95,6 @@ export async function processRowUpdate(
  * @param setRows - Set function for rows state
  * @param addMutation - Mutation for ADD request
  * @param templateResponse - Result of template query
- * @param ref - Reference to error popup
  */
 export function handleAdd(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
@@ -116,7 +115,6 @@ export function handleAdd(
  * @param deleteMutation - Mutation for DELETE request
  * @param rowId - ID of the row that should be deleted
  * @param templateResponse - Result of template query
- * @param ref - Reference to error popup
  */
 export function handleDelete(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
@@ -138,7 +136,6 @@ export function handleDelete(
  * @param duplicateMutation - Mutation for DELETE request
  * @param row - The row that should be deleted
  * @param templateResponse - Result of template query
- * @param ref - Reference to error popup
  */
 export function handleDuplicate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
@@ -160,7 +157,6 @@ export function handleDuplicate(
  * @param patchMutation - Mutation for PATCH request
  * @param newRow - The row after change
  * @param oldRow - The row before change
- * @param ref - Reference to error popup
  */
 export function handleChange(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
@@ -180,7 +176,6 @@ export function handleChange(
  * @param setRows - Set function for rows state
  * @param patchMutation - Mutation for PATCH request
  * @param row - The row that should be moved
- * @param ref - Reference to error popup
  */
 export function handleMove(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
