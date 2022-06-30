@@ -75,6 +75,7 @@ describe("Testing PDF helper function", () => {
         checkpointHeaders
       )
     ).toStrictEqual({
+      order: area.order,
       title: `Checkpoints: ${area.name}`,
       sections: [
         { title: subarea.name, text: [subarea.summary, subarea.description] },
