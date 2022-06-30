@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import API from "./_API";
-import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
+import API from "../_API";
+import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type ScoreAPP = {
   maturityId: number;

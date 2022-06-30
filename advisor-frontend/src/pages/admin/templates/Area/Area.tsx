@@ -6,7 +6,10 @@ import SubareaGrid from "../../../../components/Grids/Specific/Subarea/SubareaGr
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
 import CheckpointGrid from "../../../../components/Grids/Specific/Checkpoint/CheckpointGrid";
-import { CategoryAPP, useGetCategory } from "../../../../api/CategoryAPI";
+import {
+  CategoryAPP,
+  useGetCategory,
+} from "../../../../api/CategoryAPI/CategoryAPI";
 import { getUpdatedTheme } from "./colorHelpers";
 
 /**

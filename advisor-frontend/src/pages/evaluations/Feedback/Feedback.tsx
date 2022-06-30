@@ -19,15 +19,18 @@ import {
   useGetAssessment,
   useGetSaveAssessment,
   usePostFeedbackAssessment,
-} from "../../../api/AssessmentAPI";
-import { CategoryAPP, useGetCategories } from "../../../api/CategoryAPI";
+} from "../../../api/AssessmentAPI/AssessmentAPI";
+import {
+  CategoryAPP,
+  useGetCategories,
+} from "../../../api/CategoryAPI/CategoryAPI";
 import { AnswerAPP, useGetAnswers } from "../../../api/AnswerAPI/AnswerAPI";
-import { TopicAPP, useGetTopics } from "../../../api/TopicAPI";
+import { TopicAPP, useGetTopics } from "../../../api/TopicAPI/TopicAPI";
 import ErrorPopup, {
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
 import checkAssessmentRouting, { checkTeamRouting } from "../../routingHelpers";
-import { useGetTeam } from "../../../api/TeamAPI";
+import { useGetTeam } from "../../../api/TeamAPI/TeamAPI";
 
 const showFeedbackTextUser = (
   team: boolean,

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
+import { TopicAPP, useGetTopics } from "../../api/TopicAPI/TopicAPI";
 import { RootState } from "../../app/store";
 import INGTheme from "../../Theme";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";

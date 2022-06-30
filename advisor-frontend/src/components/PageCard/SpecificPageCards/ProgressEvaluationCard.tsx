@@ -21,10 +21,16 @@ import {
 } from "chart.js";
 import { useEffect, useRef, useState } from "react";
 import { PolarArea } from "react-chartjs-2";
-import { CategoryAPP, useGetCategories } from "../../../api/CategoryAPI";
-import { MaturityAPP, useGetMaturities } from "../../../api/MaturityAPI";
-import { ScoreAPP, useGetScores } from "../../../api/ScoreAPI";
-import { TopicAPP, useGetTopics } from "../../../api/TopicAPI";
+import {
+  CategoryAPP,
+  useGetCategories,
+} from "../../../api/CategoryAPI/CategoryAPI";
+import {
+  MaturityAPP,
+  useGetMaturities,
+} from "../../../api/MaturityAPI/MaturityAPI";
+import { ScoreAPP, useGetScores } from "../../../api/ScoreAPI/ScoreAPI";
+import { TopicAPP, useGetTopics } from "../../../api/TopicAPI/TopicAPI";
 import ErrorPopup, { RefObject } from "../../ErrorPopup/ErrorPopup";
 
 Chart.register(ArcElement, CategoryScale, RadialLinearScale, Legend, Tooltip);

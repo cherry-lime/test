@@ -17,7 +17,7 @@ import {
   useDeleteMemberTeamOne,
   useGetMembersTeam,
   UserAPP,
-} from "../../../../api/UserAPI";
+} from "../../../../api/UserAPI/UserAPI";
 
 type MemberGridProps = {
   theme: Theme;

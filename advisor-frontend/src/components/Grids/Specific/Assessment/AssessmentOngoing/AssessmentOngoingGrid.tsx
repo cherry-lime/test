@@ -22,7 +22,7 @@ import {
   useGetMyIndividualAssessments,
   useGetMyTeamAssessments,
   usePostAssessment,
-} from "../../../../../api/AssessmentAPI";
+} from "../../../../../api/AssessmentAPI/AssessmentAPI";
 
 import ErrorPopup, { RefObject } from "../../../../ErrorPopup/ErrorPopup";
 

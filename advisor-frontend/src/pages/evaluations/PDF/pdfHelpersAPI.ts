@@ -4,15 +4,15 @@ import {
   CheckpointAPI,
   CheckpointAPP,
   checkpointToAPP,
-} from "../../../api/CheckpointAPI";
-import { SubareaAPI, SubareaAPP, subareaToAPP } from "../../../api/SubareaAPI";
+} from "../../../api/CheckpointAPI/CheckpointAPI";
+import { SubareaAPI, SubareaAPP, subareaToAPP } from "../../../api/SubareaAPI/SubareaAPI";
 import {
   RecommendationAPI,
   RecommendationAPP,
   recommendationToAPP,
-} from "../../../api/RecommendationAPI";
-import { AssessmentAPP, assessmentToAPP } from "../../../api/AssessmentAPI";
-import { TemplateAPP, templateToAPP } from "../../../api/TemplateAPI";
+} from "../../../api/RecommendationAPI/RecommendationAPI";
+import { AssessmentAPP, assessmentToAPP } from "../../../api/AssessmentAPI/AssessmentAPI";
+import { TemplateAPP, templateToAPP } from "../../../api/TemplateAPI/TemplateAPI";
 
 export async function getCheckpoints(areaId: number) {
   const { data } = await API.get(`/category/${areaId}/checkpoint`);

@@ -5,7 +5,10 @@ import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import TeamGrid from "../../../components/Grids/Specific/Team/TeamGrid";
 import { RootState } from "../../../app/store";
-import { useGetMyTeams, useJoinInviteTokenTeam } from "../../../api/TeamAPI";
+import {
+  useGetMyTeams,
+  useJoinInviteTokenTeam,
+} from "../../../api/TeamAPI/TeamAPI";
 import ErrorPopup, {
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";

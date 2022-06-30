@@ -8,9 +8,15 @@ import {
 } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI/AnswerAPI";
-import { AssessmentAPP, useGetSaveAssessment } from "../../api/AssessmentAPI";
-import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
-import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
+import {
+  AssessmentAPP,
+  useGetSaveAssessment,
+} from "../../api/AssessmentAPI/AssessmentAPI";
+import {
+  CategoryAPP,
+  useGetCategories,
+} from "../../api/CategoryAPI/CategoryAPI";
+import { TopicAPP, useGetTopics } from "../../api/TopicAPI/TopicAPI";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
 

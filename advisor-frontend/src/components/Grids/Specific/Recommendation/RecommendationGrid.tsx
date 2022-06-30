@@ -21,7 +21,7 @@ import {
   RecommendationAPP,
   useGetRecommendations,
   usePatchRecommendation,
-} from "../../../../api/RecommendationAPI";
+} from "../../../../api/RecommendationAPI/RecommendationAPI";
 
 type RecommendationGridProps = {
   theme: Theme;

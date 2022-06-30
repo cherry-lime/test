@@ -18,7 +18,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useLogin } from "../../api/LoginAPI";
+import { useLogin } from "../../api/LoginAPI/LoginAPI";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 

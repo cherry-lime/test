@@ -1,9 +1,9 @@
 /* eslint-disable max-lines */
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
-import API from "./_API";
-import { AssessmentType } from "../types/AssessmentType";
-import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
+import API from "../_API";
+import { AssessmentType } from "../../types/AssessmentType";
+import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type AssessmentAPP = {
   id: GridRowId;

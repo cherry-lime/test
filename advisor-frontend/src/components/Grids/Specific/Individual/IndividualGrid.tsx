@@ -23,7 +23,7 @@ import {
   useGetUsers,
   usePatchUser,
   UserAPP,
-} from "../../../../api/UserAPI";
+} from "../../../../api/UserAPI/UserAPI";
 
 import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
 

@@ -2,11 +2,11 @@
 import JsPDF from "jspdf";
 import { AnswerAPP } from "../../../api/AnswerAPI/AnswerAPI";
 import { CategoryAPP } from "../../../api/CategoryAPI";
-import { TopicAPP } from "../../../api/TopicAPI";
+import { TopicAPP } from "../../../api/TopicAPI/TopicAPI";
 import {
   getAssessment,
   getTemplate,
-  getTopicRecommendations,
+  getTopicRecommendations,../../../api/CategoryAPI/CategoryAPI
 } from "./pdfHelpersAPI";
 import {
   Table,

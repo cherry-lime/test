@@ -21,8 +21,11 @@ import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
 import GenericGrid from "../../Generic/GenericGrid";
 
-import { TopicAPP, useGetTopics } from "../../../../api/TopicAPI";
-import { MaturityAPP, useGetMaturities } from "../../../../api/MaturityAPI";
+import { TopicAPP, useGetTopics } from "../../../../api/TopicAPI/TopicAPI";
+import {
+  MaturityAPP,
+  useGetMaturities,
+} from "../../../../api/MaturityAPI/MaturityAPI";
 
 import {
   CheckpointAPP,
@@ -30,7 +33,7 @@ import {
   useGetCheckpoints,
   usePatchCheckpoint,
   usePostCheckpoint,
-} from "../../../../api/CheckpointAPI";
+} from "../../../../api/CheckpointAPI/CheckpointAPI";
 
 import {
   handleAdd,

@@ -30,7 +30,7 @@ import {
   useGetMaturities,
   usePatchMaturity,
   usePostMaturity,
-} from "../../../../api/MaturityAPI";
+} from "../../../../api/MaturityAPI/MaturityAPI";
 
 import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
 

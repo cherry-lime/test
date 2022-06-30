@@ -11,8 +11,8 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { ThemeOptions } from "@mui/material/styles/experimental_extendTheme";
 import { AnswerAPP } from "../../api/AnswerAPI/AnswerAPI";
-import { TopicAPP } from "../../api/TopicAPI";
-import { usePostSaveAssessment } from "../../api/AssessmentAPI";
+import { TopicAPP } from "../../api/TopicAPI/TopicAPI";
+import { usePostSaveAssessment } from "../../api/AssessmentAPI/AssessmentAPI";
 
 /*
 passing parameter of the optional description of the checkpoints

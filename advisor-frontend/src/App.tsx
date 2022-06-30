@@ -19,7 +19,7 @@ import INGTheme from "./Theme";
 import SignIn from "./components/SignInUP/SignIn";
 import Chooserole from "./components/SignInUP/Chooserole";
 import { RootState } from "./app/store";
-import { authProfile } from "./api/LoginAPI";
+import { authProfile } from "./api/LoginAPI/LoginAPI";
 import DetailGen from "./components/SignInUP/DetailGen";
 import ErrorPopup, { RefObject } from "./components/ErrorPopup/ErrorPopup";
 import ErrorPage from "./pages/ErrorPage";

@@ -11,13 +11,13 @@ import {
   AssessmentAPP,
   useGetAssessment,
   usePostCompleteAssessment,
-} from "../../../api/AssessmentAPI";
+} from "../../../api/AssessmentAPI/AssessmentAPI";
 import ErrorPopup, {
   handleError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
 import { getUpdatedTheme } from "../../admin/templates/Area/colorHelpers";
-import { useGetTeam } from "../../../api/TeamAPI";
+import { useGetTeam } from "../../../api/TeamAPI/TeamAPI";
 import checkAssessmentRouting, { checkTeamRouting } from "../../routingHelpers";
 
 /**
