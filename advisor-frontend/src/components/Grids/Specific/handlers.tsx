@@ -7,6 +7,12 @@ import { initRows, addRow, deleteRow, updateRow, moveRow } from "./helpers";
 import { RefObject, handleError } from "../../ErrorPopup/ErrorPopup";
 import { TemplateAPP } from "../../../api/TemplateAPI";
 
+/**
+ * @param rows - Current rows of the grid
+ * @param params - Props for editing a cell
+ * @param ref - Reference to error popup
+ * @returns - Edit cell props and whether there is an error
+ */
 export function preProcessEditOrder(
   rows: GridRowModel[],
   params: GridPreProcessEditCellProps,
@@ -24,6 +30,11 @@ export function preProcessEditOrder(
   return { ...params.props, error: hasError };
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param status - Status of query
+ * @param data - Data of query
+ */
 export function handleInit(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   status: "error" | "idle" | "loading" | "success",
@@ -36,6 +47,13 @@ export function handleInit(
   }
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param patchMutation - Mutation for patch request
+ * @param newRow - The row after update
+ * @param oldRow - The row before update
+ * @returns
+ */
 export async function processRowUpdate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   patchMutation: UseMutationResult,
@@ -64,6 +82,11 @@ export async function processRowUpdate(
   }
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param patchMutation - Mutation for PATCH request
+ * @param row - The row that should be moved
+ */
 export function handleMove(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   patchMutation: UseMutationResult,
@@ -76,6 +99,12 @@ export function handleMove(
   });
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param addMutation - Mutation for ADD request
+ * @param templateResponse - Result of template query
+ * @param ref - Reference to error popup
+ */
 export function handleAdd(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   addMutation: UseMutationResult,
@@ -93,6 +122,13 @@ export function handleAdd(
   });
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param deleteMutation - Mutation for DELETE request
+ * @param rowId - ID of the row that should be deleted
+ * @param templateResponse - Result of template query
+ * @param ref - Reference to error popup
+ */
 export function handleDelete(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   deleteMutation: UseMutationResult,
@@ -111,6 +147,13 @@ export function handleDelete(
   });
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param duplicateMutation - Mutation for DELETE request
+ * @param row - The row that should be deleted
+ * @param templateResponse - Result of template query
+ * @param ref - Reference to error popup
+ */
 export function handleDuplicate(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   duplicateMutation: UseMutationResult,
@@ -129,6 +172,13 @@ export function handleDuplicate(
   });
 }
 
+/**
+ * @param setRows - Set function for rows state
+ * @param patchMutation - Mutation for PATCH request
+ * @param newRow - The row after change
+ * @param oldRow - The row before change
+ * @param ref - Reference to error popup
+ */
 export function handleChange(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   patchMutation: UseMutationResult,
