@@ -1,6 +1,7 @@
 import { Template } from '@prisma/client';
-import { UpdateTemplateDto } from '../../template/dto/update-template.dto';
 import { aAnswer } from './mockAnswer';
+import { aCategory } from './mockCategory';
+import { aMaturity } from './mockMaturity';
 import { aTopic } from './mockTopic';
 
 export const aTemplate: Template & {
@@ -16,8 +17,8 @@ export const aTemplate: Template & {
   include_no_answer: true,
   information: 'test',
   template_feedback: 'test',
-  Category: [],
-  Maturity: [],
+  Category: [aCategory],
+  Maturity: [aMaturity],
   Topic: [aTopic],
   Answers: [aAnswer],
 };
@@ -34,20 +35,13 @@ export const updateTemplate = {
   Category: [],
 };
 
-export const updateTemplateDto: UpdateTemplateDto = {
-  template_name: 'new_name',
-  enabled: false,
-  weight_range_min: 1,
-  weight_range_max: 5,
-  include_no_answer: true,
-};
-
 export const mockTemplate = {
   create: jest.fn().mockResolvedValue(aTemplate),
   findUnique: jest.fn().mockResolvedValue(aTemplate),
   findFirst: jest.fn().mockResolvedValue(aTemplate),
   count: jest.fn().mockResolvedValue(1),
-  update: jest.fn().mockResolvedValue(updateTemplate),
+  update: jest.fn().mockResolvedValue(aTemplate),
   findMany: jest.fn().mockResolvedValue([aTemplate]),
   delete: jest.fn().mockResolvedValue(aTemplate),
+  updateMany: jest.fn().mockResolvedValue({}),
 };
