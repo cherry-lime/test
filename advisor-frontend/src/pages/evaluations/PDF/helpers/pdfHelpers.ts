@@ -65,6 +65,7 @@ export const transformArea = (
   headers: checkpointHeaders,
 });
 
+// not testable: uses api
 async function processArea(
   area: CategoryAPP,
   checkpointAnswers: Record<number, number | undefined>,
@@ -85,6 +86,7 @@ async function processArea(
   return transformArea(area, subareas, tCheckpoints, checkpointHeaders);
 }
 
+// not testable: uses api
 export async function getAreaTables(
   allAreas: CategoryAPP[],
   checkpointHeaders: string[],
@@ -104,8 +106,19 @@ export async function getAreaTables(
 export function getRecTable(
   recs: RecommendationAPP[],
   recsHeaders: string[],
-  sections: { title: string; text: string[] }[]
+  feedback: string,
+  assessorFeedback: string
 ) {
+  const sections: Section[] = [];
+
+  if (feedback) {
+    sections.push({ title: "", text: [feedback] });
+  }
+
+  if (assessorFeedback) {
+    sections.push({ title: "Facilitator Feedback", text: [assessorFeedback] });
+  }
+
   return {
     title: `Recommendations`,
     sections,

@@ -8,12 +8,7 @@ import {
   getTemplate,
   getTopicRecommendations,
 } from "./pdfHelpersAPI";
-import {
-  Table,
-  Section,
-  getRecTable,
-  getAreaTables,
-} from "./helpers/pdfHelpers";
+import { Table, getRecTable, getAreaTables } from "./helpers/pdfHelpers";
 
 function addTable(
   doc: JsPDF,
@@ -237,22 +232,12 @@ export default async function createPDF(
 
   const templateInfo = await getTemplate(Number(assessmentInfo.templateId));
 
-  const feedbackSections: Section[] = [];
-
   const feedback = templateInfo.information;
   const assessorFeedback = assessmentInfo.feedbackText;
 
-  if (feedback !== "") feedbackSections.push({ title: "", text: [feedback] });
-
-  if (templateInfo.templateType === "TEAM" && assessorFeedback !== "") {
-    feedbackSections.push({
-      title: "Assessor Feedback",
-      text: [assessorFeedback],
-    });
-  }
   const recs = await getTopicRecommendations(assessmentId, undefined);
 
-  tables.push(getRecTable(recs, recsHeaders, feedbackSections));
+  tables.push(getRecTable(recs, recsHeaders, feedback, assessorFeedback));
 
   (
     await getAreaTables(
@@ -264,5 +249,5 @@ export default async function createPDF(
     )
   ).forEach((s) => tables.push(s));
 
-  pdf(tables, `Feedback for assessment ${assessmentId}`, filename);
+  pdf(tables, `Feedback for evaluation ${assessmentId}`, filename);
 }
