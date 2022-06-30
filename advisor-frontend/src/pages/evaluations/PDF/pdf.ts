@@ -9,144 +9,97 @@ import {
   getTopicRecommendations,
 } from "./pdfHelpersAPI";
 import { Table, getRecTable, getAreaTables } from "./helpers/pdfHelpers";
+import nextYCheckEndOfPage, {
+  generateTableHeaders,
+  generateTableRow,
+  generateText,
+} from "./tableHelpers/tableHelpers";
 
 function addTable(
   doc: JsPDF,
   table: Table,
-  pageMargin: number,
-  liveArea: { width: number; height: number },
-  padding: number,
+  docProps: {
+    pageMargin: number;
+    liveArea: { width: number; height: number };
+    padding: number;
+  },
   nextYValue: number,
   textFontSize: number,
   sectFontSize: number,
   titleFontSize: number
 ) {
-  const xPositions: number[] = [];
   let nextY = nextYValue;
+  const { padding, liveArea, pageMargin } = docProps;
 
-  if (table.title !== "") {
-    if (nextY > liveArea.height) {
-      doc.addPage();
-      nextY = pageMargin;
-    }
-    doc.setFontSize(titleFontSize).setFont(doc.getFont().fontName, "bold");
-    const title = doc.splitTextToSize(String(table.title), liveArea.width);
-    const titleHeight = title.length * doc.getLineHeight();
+  const getNextYWrapper = (y: number, addition = 0) =>
+    nextYCheckEndOfPage(doc, y, liveArea.height, pageMargin, addition);
 
-    doc.text(table.title, pageMargin, nextY);
-
-    nextY += padding + titleHeight;
-  }
+  nextY = generateText(
+    doc,
+    table.title,
+    docProps,
+    titleFontSize,
+    nextY,
+    "bold"
+  );
 
   table.sections.forEach((section) => {
-    if (nextY > liveArea.height) {
-      doc.addPage();
-      nextY = pageMargin;
-    }
+    nextY = getNextYWrapper(nextY);
 
-    if (section.title !== "") {
-      doc.setFontSize(sectFontSize).setFont(doc.getFont().fontName, "bold");
-
-      const sectTitle = doc.splitTextToSize(
-        String(section.title),
-        liveArea.width
-      );
-      const sectTitleHeight = sectTitle.length * doc.getLineHeight();
-
-      if (nextY + sectTitleHeight > liveArea.height) {
-        doc.addPage();
-        nextY = pageMargin;
-      }
-
-      doc.text(section.title, pageMargin, nextY);
-
-      nextY += 3 + sectTitleHeight;
-    }
-
-    doc.setFontSize(textFontSize).setFont(doc.getFont().fontName, "normal");
+    nextY = generateText(
+      doc,
+      section.title,
+      docProps,
+      titleFontSize,
+      nextY,
+      "bold"
+    );
 
     section.text.forEach((t) => {
-      if (t === "") return;
-      const sectText = doc.splitTextToSize(String(t), liveArea.width);
-      const sectTextHeight = sectText.length * doc.getLineHeight();
-
-      if (nextY + sectTextHeight > liveArea.height) {
-        doc.addPage();
-        nextY = pageMargin;
-      }
-
-      doc.text(sectText, pageMargin, nextY);
-
-      nextY += sectTextHeight + 3;
+      nextY = generateText(doc, t, docProps, textFontSize, nextY);
     });
 
     nextY += 7 + padding;
   });
 
   const firstColWidth = 50;
+
   const colWidth =
     (liveArea.width - firstColWidth) / (table.headers.length - 1);
+
   doc.setFontSize(textFontSize).setFont(doc.getFont().fontName, "normal");
 
-  table.headers.forEach((heading: string, index: number) => {
-    // Here we are starting at pageMargin's xPosition plus whatever index we are on
-    // multiplied by the number of columns needed
-    // the first col has fixed width, the others have equal widths
-    const xPositionForCurrentHeader =
-      index === 0
-        ? pageMargin
-        : pageMargin + firstColWidth + (index - 1) * colWidth;
+  const { xPositions, nextY: nextYGenerated } = generateTableHeaders(
+    doc,
+    table,
+    docProps,
+    nextY,
+    firstColWidth,
+    colWidth
+  );
 
-    const yPositionForHeaders = nextY;
-    doc.text(
-      heading,
-      index === 0
-        ? xPositionForCurrentHeader
-        : xPositionForCurrentHeader + padding,
-      yPositionForHeaders
-    );
+  nextY = nextYGenerated;
 
-    xPositions.push(
-      index === 0
-        ? xPositionForCurrentHeader
-        : xPositionForCurrentHeader + padding
-    );
-  });
-
-  nextY += +5;
-
-  doc.line(pageMargin, nextY, liveArea.width, nextY);
-
-  nextY += padding;
-
-  if (nextY > liveArea.height) {
-    doc.addPage();
-    nextY = pageMargin;
-  }
+  nextY = getNextYWrapper(nextY);
 
   // ROWS
   table.data.forEach((row: (string | number)[]) => {
-    const rowHeights: number[] = [];
-
-    // COLUMNS
-    table.headers.forEach((_column: string, cIndex) => {
-      const longText = doc.splitTextToSize(
-        String(row[cIndex]),
-        cIndex !== 0 ? colWidth - padding * 2 : firstColWidth - padding * 2
-      );
-      const rowHeight = longText.length * doc.getLineHeight();
-      rowHeights.push(rowHeight);
-
-      doc.text(longText, xPositions[cIndex], nextY);
-    });
+    const rowHeights = generateTableRow(
+      doc,
+      table,
+      row,
+      colWidth,
+      padding,
+      firstColWidth,
+      xPositions,
+      nextY
+    );
 
     nextY = nextY + padding + Math.max(...rowHeights);
 
-    if (nextY > liveArea.height) {
-      doc.addPage();
-      nextY = pageMargin;
-    }
+    nextY = getNextYWrapper(nextY);
   });
+
   return nextY;
 }
 
@@ -186,25 +139,22 @@ function pdf(tables: Table[], title: string, filename: string) {
   // Let's set up a standard padding that we can add to known coordinates
   const padding = 15;
 
+  const docProps = {
+    padding,
+    liveArea,
+    pageMargin,
+  };
+
   let nextY = pageMargin;
 
-  doc.setFontSize(titleFontSize).setFont(doc.getFont().fontName, "bold");
-
-  const titleText = doc.splitTextToSize(String(title), liveArea.width);
-  const titleHeight = titleText.length * doc.getLineHeight();
-
-  doc.text(titleText, pageMargin, nextY);
-
-  nextY += padding + titleHeight;
+  nextY = generateText(doc, title, docProps, titleFontSize, nextY, "bold") + 10;
 
   tables.forEach((table) => {
     nextY =
       addTable(
         doc,
         table,
-        pageMargin,
-        liveArea,
-        padding,
+        docProps,
         nextY,
         textFontSize,
         sectFontSize,

@@ -57,7 +57,10 @@ function ListOfRecommendations({
   }, [status]);
 
   return (
-    <div style={{ width: "inherit", display: "contents" }} data-testid="recommendationTest">
+    <div
+      style={{ width: "inherit", display: "contents" }}
+      data-testid="recommendationTest"
+    >
       <ThemeProvider theme={INGTheme}>
         {topicList !== undefined && (
           <FormControl sx={{ width: "inherit" }}>
