@@ -1,9 +1,10 @@
-import { AnswerAPP } from "../../../api/AnswerAPI";
-import { CategoryAPP } from "../../../api/CategoryAPI";
-import { CheckpointAPP } from "../../../api/CheckpointAPI";
-import { RecommendationAPP } from "../../../api/RecommendationAPI";
-import { TopicAPP } from "../../../api/TopicAPI";
-import { getCheckpoints, getSubareas } from "./pdfHelpersAPI";
+import { AnswerAPP } from "../../../../api/AnswerAPI";
+import { CategoryAPP } from "../../../../api/CategoryAPI";
+import { CheckpointAPP } from "../../../../api/CheckpointAPI";
+import { RecommendationAPP } from "../../../../api/RecommendationAPI";
+import { SubareaAPP } from "../../../../api/SubareaAPI";
+import { TopicAPP } from "../../../../api/TopicAPI";
+import { getCheckpoints, getSubareas } from "../pdfHelpersAPI";
 
 export type Section = {
   title: string;
@@ -48,6 +49,21 @@ export const transformCheckpoints = (
     return object;
   });
 
+export const transformArea = (
+  area: CategoryAPP,
+  subareas: SubareaAPP[],
+  checkpoints: CheckpointAnswer[],
+  checkpointHeaders: string[]
+) => ({
+  title: `Checkpoints: ${area.name}`,
+  sections: subareas.map((s) => ({
+    title: s.name,
+    text: [s.summary, s.description],
+  })),
+  data: checkpoints.map((c) => [c.order, c.description, c.topics, c.answer]),
+  headers: checkpointHeaders,
+});
+
 export async function getAreaTables(
   allAreas: CategoryAPP[],
   checkpointHeaders: string[],
@@ -69,20 +85,7 @@ export async function getAreaTables(
 
     // eslint-disable-next-line no-await-in-loop
     const subareas = await getSubareas(Number(a.id));
-    tables.push({
-      title: `Checkpoints: ${a.name}`,
-      sections: subareas.map((s) => ({
-        title: s.name,
-        text: [s.summary, s.description],
-      })),
-      data: tCheckpoints.map((c) => [
-        c.order,
-        c.description,
-        c.topics,
-        c.answer,
-      ]),
-      headers: checkpointHeaders,
-    });
+    tables.push(transformArea(a, subareas, tCheckpoints, checkpointHeaders));
   }
   return tables;
 }

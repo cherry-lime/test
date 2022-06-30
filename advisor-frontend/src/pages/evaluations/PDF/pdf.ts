@@ -9,7 +9,12 @@ import {
   getTemplate,
   getTopicRecommendations,
 } from "./pdfHelpersAPI";
-import { Table, Section, getRecTable, getAreaTables } from "./pdfHelpers";
+import {
+  Table,
+  Section,
+  getRecTable,
+  getAreaTables,
+} from "./helpers/pdfHelpers";
 
 function addTable(
   doc: JsPDF,

@@ -7,7 +7,7 @@ import { handleError, RefObject } from "../components/ErrorPopup/ErrorPopup";
 export type CheckpointAPP = {
   id: GridRowId;
   description: string;
-  additionalInfo: number;
+  additionalInfo: string;
   weight: number;
   order: number;
   categoryId: number;
@@ -19,7 +19,7 @@ export type CheckpointAPP = {
 export type CheckpointAPI = {
   checkpoint_id: number;
   checkpoint_description: string;
-  checkpoint_additional_information: number;
+  checkpoint_additional_information: string;
   weight: number;
   order: number;
   category_id: number;
