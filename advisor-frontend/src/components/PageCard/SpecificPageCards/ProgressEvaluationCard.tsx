@@ -309,7 +309,6 @@ export default function ProgressEvaluationCard({
                     }: ${Math.round(score.score)}%`}</p>
                   );
                 }
-
                 return "";
               })}
             </Box>
