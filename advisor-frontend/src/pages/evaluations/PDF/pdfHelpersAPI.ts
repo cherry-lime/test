@@ -72,3 +72,12 @@ export async function getTopicRecommendations(
   // Return response
   return recommendationsAPP as RecommendationAPP[];
 }
+
+export async function getCheckpointsSubareas(areaId: number) {
+  const checkpoints = await getCheckpoints(areaId);
+  const subareas = await getSubareas(areaId);
+  return {
+    checkpoints,
+    subareas,
+  };
+}

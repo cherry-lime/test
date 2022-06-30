@@ -4,7 +4,7 @@ import { CheckpointAPP } from "../../../../api/CheckpointAPI";
 import { RecommendationAPP } from "../../../../api/RecommendationAPI";
 import { SubareaAPP } from "../../../../api/SubareaAPI";
 import { TopicAPP } from "../../../../api/TopicAPI";
-import { getCheckpoints, getSubareas } from "../pdfHelpersAPI";
+import { getCheckpointsSubareas } from "../pdfHelpersAPI";
 
 export type Section = {
   title: string;
@@ -55,6 +55,7 @@ export const transformArea = (
   checkpoints: CheckpointAnswer[],
   checkpointHeaders: string[]
 ) => ({
+  order: area.order,
   title: `Checkpoints: ${area.name}`,
   sections: subareas.map((s) => ({
     title: s.name,
@@ -64,6 +65,26 @@ export const transformArea = (
   headers: checkpointHeaders,
 });
 
+async function processArea(
+  area: CategoryAPP,
+  checkpointAnswers: Record<number, number | undefined>,
+  answerList: AnswerAPP[],
+  topics: TopicAPP[],
+  checkpointHeaders: string[]
+) {
+  const checkpointsSubareas = await getCheckpointsSubareas(Number(area.id));
+  const { checkpoints, subareas } = checkpointsSubareas;
+
+  const tCheckpoints = transformCheckpoints(
+    checkpoints,
+    checkpointAnswers,
+    answerList,
+    topics
+  );
+
+  return transformArea(area, subareas, tCheckpoints, checkpointHeaders);
+}
+
 export async function getAreaTables(
   allAreas: CategoryAPP[],
   checkpointHeaders: string[],
@@ -71,22 +92,12 @@ export async function getAreaTables(
   answerList: AnswerAPP[],
   topics: TopicAPP[]
 ) {
-  const tables: Table[] = [];
-  // eslint-disable-next-line no-restricted-syntax
-  for (const a of allAreas) {
-    // eslint-disable-next-line no-await-in-loop
-    const checkpoints = await getCheckpoints(Number(a.id));
-    const tCheckpoints = transformCheckpoints(
-      checkpoints,
-      checkpointAnswers,
-      answerList,
-      topics
-    );
+  const areaPromises = allAreas.map((a) =>
+    processArea(a, checkpointAnswers, answerList, topics, checkpointHeaders)
+  );
 
-    // eslint-disable-next-line no-await-in-loop
-    const subareas = await getSubareas(Number(a.id));
-    tables.push(transformArea(a, subareas, tCheckpoints, checkpointHeaders));
-  }
+  const responses = await Promise.all(areaPromises);
+  const tables = responses.sort((a, b) => a.order - b.order) as Table[];
   return tables;
 }
 
