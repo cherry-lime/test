@@ -13,15 +13,7 @@ export const userArray = [
     role: Role.USER,
     created_at: myStartDate,
     updated_at: myEndDate,
-  },
-  {
-    username: 'Jeremy',
-    password: 'hashbrown',
-    user_id: 2,
-    role: Role.USER,
-    created_at: myStartDate,
-    updated_at: myEndDate,
-  },
+  }
 ];
 
 // Mock single user
@@ -48,37 +40,11 @@ export const aFullUser1 = {
   updated_at: myEndDate,
 };
 
-// Mock individual user 2
-export const aFullUser2 = {
-  username: 'Foofi',
-  password: 'examplehashedpassword',
-  user_id: 2,
-  role: Role.USER,
-  created_at: myStartDate,
-  updated_at: myEndDate,
-};
-
-// Mock user without a password
-export const UserWithoutPassword = {
-  username: 'Foofi',
-  user_id: 2,
-  role: Role.USER,
-  created_at: myStartDate,
-  updated_at: myEndDate,
-};
-
 // Mock authentication token dto for login
-export const userAuthenticationLog = {
+export const userAuthentication = {
   token:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InppcHBlcl9wYXJlbnRfaW5zdGVhZCIsImlhdCI6MTY1NDI0ODg5OSwiZXhwIjoxNjU0MjUyNDk5fQ.zYng49r6BXoY0m27RYkAeQZUfbG7Su9iBRqliEylOpU',
   user: aFullUser1,
-};
-
-// Mock authentication token dto for registration
-export const userAuthenticationReg = {
-  token:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InppcHBlcl9wYXJlbnRfaW5zdGVhZCIsImlhdCI6MTY1NDI0ODg5OSwiZXhwIjoxNjU0MjUyNDk5fQ.zYng49r6BXoY0m27RYkAeQZUfbG7Su9iBRqliEylOpU',
-  user: aFullUser2,
 };
 
 // Mock prisma service

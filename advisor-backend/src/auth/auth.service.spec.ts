@@ -7,13 +7,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import {
   userDto,
-  UserWithoutPassword,
-  userAuthenticationLog,
   mockPrisma,
-  userArray,
   aUser,
   registerDto,
-  userAuthenticationReg,
+  userAuthentication,
 } from '../prisma/mock/mockAuthService';
 import { JwtStrategy } from './jwt.strategy';
 import { NotFoundException } from '@nestjs/common';
@@ -76,55 +73,62 @@ describe('AuthService', () => {
     expect(authService.login(userDto)).toBeDefined();
   });
 
-  // it('Authentication registration should be defined', () => {
-  //   expect(authService.register(registerDto)).toBeDefined();
-  // });
+  it('Authentication registration should be defined', () => {
+    expect(authService.register(registerDto)).toBeDefined();
+  });
 
-  // describe('When registering', () => {
-  //   it('should return the correct AuthResponse type', async () => {
-  //     expect(typeof authService.register(registerDto)).toEqual(
-  //       typeof userAuthenticationReg
-  //     );
-  //   });
-  // });
+  describe('When registering', () => {
+    it('should return an AuthResponse type', async () => {
+      expect(typeof authService.register(registerDto))
+        .toEqual(
+          typeof userAuthentication
+        );
+    });
+
+    it('should return the same first 45 characters of the token', async () => {
+      expect((await authService.register(registerDto)).token.substring(0, 45))
+        .toEqual(
+          userAuthentication.token.substring(0, 45)
+        );
+    });
+
+    it('should return the correct user', async () => {
+      expect((await authService.register(registerDto)).user)
+        .toEqual(
+          userAuthentication.user
+        );
+    });
+  });
 
   describe('When logging in', () => {
-    it('should return an AuthResponse type', () => {
-      expect(typeof authService.login(userDto)).toEqual(
-        typeof userAuthenticationLog
-      );
+    it('should return an AuthResponse type', async () => {
+      expect(typeof authService.login(userDto))
+        .toEqual(
+          typeof userAuthentication
+        );
+    });
+
+    it('should return the correct user', async () => {
+      expect((await authService.login(userDto)).token.substring(0, 45))
+        .toEqual(
+          userAuthentication.token.substring(0, 45)
+        );
+    });
+
+    it('should return the same first 45 characters of the token', async () => {
+      expect((await authService.login(userDto)).user)
+        .toEqual(
+          userAuthentication.user
+        );
     });
 
     it('should reject if username is not found', async () => {
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
-      expect(authService.login(userDto)).rejects.toThrowError(
-        NotFoundException
-      );
+      expect(authService.login(userDto))
+        .rejects
+        .toThrowError(
+          NotFoundException
+        );
     });
-    // it('should return an AuthResponse type', () => {
-    //   // const userId = 1;
-    //   expect(
-    //    authService.login(userDto)
-    //   ).resolves.toBe(userAuthenticationLog)
-    // })
-
-    // it("should", async () => {
-    // expect.assertions(1);
-    // try {
-    //   expect(authService.login(userDtoNotFound))
-    // } catch(error) {
-    //   expect(error.message).toBe("user not found")
-    // }
-    // expect(() => {
-    //   authService.login(userDtoNotFound);
-    // }).toThrowError("user not found");
-    // })
-
-    // it('should return a NotFoundException on the user', () => {
-    //   // const userId = 1;
-    //   expect( () =>{
-    //     authService.login(userDtoNotFound);}
-    //   ).toThrow(new NotFoundException('user not found')) //.toEqual(userAuthenticationLog)
-    // })
   });
 });
