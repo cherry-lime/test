@@ -80,15 +80,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: SubareaAPP) => () => {
-      handleMove(
-        setRows,
-        patchSubarea as UseMutationResult,
-        {
-          ...row,
-          order: row.order - 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchSubarea as UseMutationResult, {
+        ...row,
+        order: row.order - 1,
+      });
     },
     []
   );
@@ -96,15 +91,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: SubareaAPP) => () => {
-      handleMove(
-        setRows,
-        patchSubarea as UseMutationResult,
-        {
-          ...row,
-          order: row.order + 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchSubarea as UseMutationResult, {
+        ...row,
+        order: row.order + 1,
+      });
     },
     []
   );
