@@ -42,4 +42,6 @@ it("Rendering without crash and check title and text on card", () => {
     />
   );
   expect(getByText("Title")).toBeInTheDocument();
+  expect(getByText("Summary")).toBeInTheDocument();
+  expect(getByText("Description")).toBeInTheDocument();
 });
