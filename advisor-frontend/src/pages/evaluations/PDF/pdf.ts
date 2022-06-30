@@ -1,12 +1,12 @@
 /* eslint-disable max-lines */
 import JsPDF from "jspdf";
 import { AnswerAPP } from "../../../api/AnswerAPI/AnswerAPI";
-import { CategoryAPP } from "../../../api/CategoryAPI";
+import { CategoryAPP } from "../../../api/CategoryAPI/CategoryAPI";
 import { TopicAPP } from "../../../api/TopicAPI/TopicAPI";
 import {
   getAssessment,
   getTemplate,
-  getTopicRecommendations,../../../api/CategoryAPI/CategoryAPI
+  getTopicRecommendations,
 } from "./pdfHelpersAPI";
 import {
   Table,
