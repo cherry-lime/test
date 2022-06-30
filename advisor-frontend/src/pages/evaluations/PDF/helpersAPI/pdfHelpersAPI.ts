@@ -1,28 +1,28 @@
 /* eslint-disable import/prefer-default-export */
-import API from "../../../api/_API";
+import API from "../../../../api/_API";
 import {
   CheckpointAPI,
   CheckpointAPP,
   checkpointToAPP,
-} from "../../../api/CheckpointAPI/CheckpointAPI";
+} from "../../../../api/CheckpointAPI/CheckpointAPI";
 import {
   SubareaAPI,
   SubareaAPP,
   subareaToAPP,
-} from "../../../api/SubareaAPI/SubareaAPI";
+} from "../../../../api/SubareaAPI/SubareaAPI";
 import {
   RecommendationAPI,
   RecommendationAPP,
   recommendationToAPP,
-} from "../../../api/RecommendationAPI/RecommendationAPI";
+} from "../../../../api/RecommendationAPI/RecommendationAPI";
 import {
   AssessmentAPP,
   assessmentToAPP,
-} from "../../../api/AssessmentAPI/AssessmentAPI";
+} from "../../../../api/AssessmentAPI/AssessmentAPI";
 import {
   TemplateAPP,
   templateToAPP,
-} from "../../../api/TemplateAPI/TemplateAPI";
+} from "../../../../api/TemplateAPI/TemplateAPI";
 
 export async function getCheckpoints(areaId: number) {
   const { data } = await API.get(`/category/${areaId}/checkpoint`);

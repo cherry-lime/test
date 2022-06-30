@@ -1,22 +1,22 @@
 /* eslint-disable max-lines */
 import JsPDF from "jspdf";
-import { AnswerAPP } from "../../../api/AnswerAPI/AnswerAPI";
-import { CategoryAPP } from "../../../api/CategoryAPI/CategoryAPI";
-import { TopicAPP } from "../../../api/TopicAPI/TopicAPI";
+import { AnswerAPP } from "../../../../api/AnswerAPI/AnswerAPI";
+import { CategoryAPP } from "../../../../api/CategoryAPI/CategoryAPI";
+import { TopicAPP } from "../../../../api/TopicAPI/TopicAPI";
 import {
   getAssessment,
   getTemplate,
   getTopicRecommendations,
-} from "./pdfHelpersAPI";
-import { Table, getRecTable, getAreaTables } from "./helpers/pdfHelpers";
+} from "../helpersAPI/pdfHelpersAPI";
+import { Table, getRecTable, getAreaTables } from "../helpers/pdfHelpers";
 import {
   nextYCheckEndOfPage,
   generateTableHeaders,
   generateTableRow,
   generateText,
-} from "./tableHelpers/tableHelpers";
+} from "../tableHelpers/tableHelpers";
 
-function addTable(
+export function addTable(
   doc: JsPDF,
   table: Table,
   docProps: {
