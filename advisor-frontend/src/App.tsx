@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import UserInterface from "./pages/user/UserInterface/UserInterface";
 import Evaluation from "./pages/evaluations/Evaluation/Evaluation";
 import ListOfSelfEvals from "./pages/user/ListOfSelfEvals/ListOfSelfEvals";
-import Feedback from "./pages/evaluations/Feedback";
+import Feedback from "./pages/evaluations/Feedback/Feedback";
 import TeamList from "./pages/teams/TeamList/TeamList";
 import Team from "./pages/teams/Team/Team";
 import AssessorInterface from "./pages/assessor/AssessorInterface";

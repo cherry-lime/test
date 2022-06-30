@@ -3,29 +3,29 @@ import React, { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
-import userTypes from "../../components/Sidebar/listUsersTypes";
-import Subarea from "../../components/Subarea/Subarea";
-import PageLayout from "../PageLayout";
-import ListOfCheckpoints from "../../components/ListOfCheckpoints/ListOfCheckpoints";
-import TextfieldEdit from "../../components/TextfieldEdit/TextfieldEdit";
-import Textfield from "../../components/Textfield/Textfield";
-import { RootState } from "../../app/store";
-import createPDF from "./pdf";
-import ProgressEvaluationCard from "../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
-import ListOfRecommendations from "../../components/ListOfRecommendations/ListOfRecommendations";
+import userTypes from "../../../components/Sidebar/listUsersTypes";
+import Subarea from "../../../components/Subarea/Subarea";
+import PageLayout from "../../PageLayout";
+import ListOfCheckpoints from "../../../components/ListOfCheckpoints/ListOfCheckpoints";
+import TextfieldEdit from "../../../components/TextfieldEdit/TextfieldEdit";
+import Textfield from "../../../components/Textfield/Textfield";
+import { RootState } from "../../../app/store";
+import createPDF from "../PDF/pdf";
+import ProgressEvaluationCard from "../../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
+import ListOfRecommendations from "../../../components/ListOfRecommendations/ListOfRecommendations";
 import {
   AssessmentAPP,
   AssessmentCheckpointAPP,
   useGetAssessment,
   useGetSaveAssessment,
   usePostFeedbackAssessment,
-} from "../../api/AssessmentAPI";
-import { CategoryAPP, useGetCategories } from "../../api/CategoryAPI";
-import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI";
-import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
-import ErrorPopup, { RefObject } from "../../components/ErrorPopup/ErrorPopup";
-import checkAssessmentRouting, { checkTeamRouting } from "../routingHelpers";
-import { useGetTeam } from "../../api/TeamAPI";
+} from "../../../api/AssessmentAPI";
+import { CategoryAPP, useGetCategories } from "../../../api/CategoryAPI";
+import { AnswerAPP, useGetAnswers } from "../../../api/AnswerAPI";
+import { TopicAPP, useGetTopics } from "../../../api/TopicAPI";
+import ErrorPopup, { RefObject } from "../../../components/ErrorPopup/ErrorPopup";
+import checkAssessmentRouting, { checkTeamRouting } from "../../routingHelpers";
+import { useGetTeam } from "../../../api/TeamAPI";
 
 const showFeedbackTextUser = (
   team: boolean,

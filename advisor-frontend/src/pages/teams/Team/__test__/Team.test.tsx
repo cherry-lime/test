@@ -58,10 +58,6 @@ test("team info rendering for assessor", async () => {
     </QueryClientProvider>
   );
 
-  const copy = () => {
-    navigator.clipboard.readText();
-  };
-
   expect(screen.getByText(/Team Information/i)).toBeInTheDocument();
   expect(screen.getByText(/Country/i)).toBeInTheDocument();
   expect(screen.getByText(/Facilitators/i)).toBeInTheDocument();

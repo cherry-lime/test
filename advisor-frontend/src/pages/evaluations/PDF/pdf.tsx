@@ -1,10 +1,10 @@
 /* eslint-disable max-lines */
 import JsPDF from "jspdf";
-import { AnswerAPP } from "../../api/AnswerAPI";
-import { RecommendationAPP } from "../../api/RecommendationAPI";
-import { CategoryAPP } from "../../api/CategoryAPI";
-import { CheckpointAPP } from "../../api/CheckpointAPI";
-import { TopicAPP } from "../../api/TopicAPI";
+import { AnswerAPP } from "../../../api/AnswerAPI";
+import { RecommendationAPP } from "../../../api/RecommendationAPI";
+import { CategoryAPP } from "../../../api/CategoryAPI";
+import { CheckpointAPP } from "../../../api/CheckpointAPI";
+import { TopicAPP } from "../../../api/TopicAPI";
 import {
   getAreas,
   getAssessment,

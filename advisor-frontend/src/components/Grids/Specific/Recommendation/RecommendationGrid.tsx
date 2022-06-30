@@ -74,15 +74,10 @@ export default function RecommendationGrid({
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: RecommendationAPP) => () => {
-      handleMove(
-        setRows,
-        patchRecommendation as UseMutationResult,
-        {
-          ...row,
-          order: row.order - 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchRecommendation as UseMutationResult, {
+        ...row,
+        order: row.order - 1,
+      });
     },
     []
   );
@@ -90,15 +85,10 @@ export default function RecommendationGrid({
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: RecommendationAPP) => () => {
-      handleMove(
-        setRows,
-        patchRecommendation as UseMutationResult,
-        {
-          ...row,
-          order: row.order + 1,
-        },
-        ref
-      );
+      handleMove(setRows, patchRecommendation as UseMutationResult, {
+        ...row,
+        order: row.order + 1,
+      });
     },
     []
   );

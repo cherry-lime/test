@@ -1,19 +1,19 @@
 /* eslint-disable import/prefer-default-export */
-import API from "../../api/_API";
-import { categoryToAPP, CategoryAPP } from "../../api/CategoryAPI";
+import API from "../../../api/_API";
+import { categoryToAPP, CategoryAPP } from "../../../api/CategoryAPI";
 import {
   CheckpointAPI,
   CheckpointAPP,
   checkpointToAPP,
-} from "../../api/CheckpointAPI";
-import { SubareaAPI, SubareaAPP, subareaToAPP } from "../../api/SubareaAPI";
+} from "../../../api/CheckpointAPI";
+import { SubareaAPI, SubareaAPP, subareaToAPP } from "../../../api/SubareaAPI";
 import {
   RecommendationAPI,
   RecommendationAPP,
   recommendationToAPP,
-} from "../../api/RecommendationAPI";
-import { AssessmentAPP, assessmentToAPP } from "../../api/AssessmentAPI";
-import { TemplateAPP, templateToAPP } from "../../api/TemplateAPI";
+} from "../../../api/RecommendationAPI";
+import { AssessmentAPP, assessmentToAPP } from "../../../api/AssessmentAPI";
+import { TemplateAPP, templateToAPP } from "../../../api/TemplateAPI";
 
 export async function getArea(areaId: number) {
   const area = await API.get(`/category/${areaId}`);
