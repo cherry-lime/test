@@ -34,7 +34,7 @@ function Area({ theme }: { theme: Theme }) {
   }, [areaResponse]);
 
   return (
-    <div>
+    <div data-testid="areaTest">
       {areaInfo && (
         <PageLayout
           title={`${areaInfo.name}`}
