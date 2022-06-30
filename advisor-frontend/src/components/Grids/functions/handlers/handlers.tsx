@@ -20,11 +20,12 @@ import { TemplateAPP } from "../../../../api/TemplateAPI";
 export function handleInit(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   status: "error" | "idle" | "loading" | "success",
-  data: GridRowModel[] | undefined
+  rows: GridRowModel[] | undefined
 ) {
   if (status === "success") {
-    if (data) {
-      initRows(setRows, data);
+    if (rows) {
+      // Initialize rows
+      setRows(() => initRows(rows));
     }
   }
 }
@@ -79,7 +80,7 @@ export async function processRowUpdate(
     await patchMutation.mutateAsync(newRow);
 
     // Update row state with new row
-    updateRow(setRows, newRow, oldRow);
+    setRows((prevRows) => updateRow(prevRows, newRow, oldRow));
 
     // Update internal state
     return newRow;
@@ -104,7 +105,7 @@ export function handleAdd(
 ) {
   addMutation.mutate(undefined, {
     onSuccess: (addedRow: GridRowModel) => {
-      addRow(setRows, addedRow);
+      setRows((prevRows) => addRow(prevRows, addedRow));
       if (templateResponse) templateResponse.refetch();
     },
     onError: () => {
@@ -130,7 +131,7 @@ export function handleDelete(
 ) {
   deleteMutation.mutate(rowId, {
     onSuccess: (deletedRow: GridRowModel) => {
-      deleteRow(setRows, deletedRow);
+      setRows((prevRows) => deleteRow(prevRows, deletedRow));
       if (templateResponse) templateResponse.refetch();
     },
     onError: () => {
@@ -156,7 +157,7 @@ export function handleDuplicate(
 ) {
   duplicateMutation.mutate(row, {
     onSuccess: (duplicatedRow: GridRowModel) => {
-      addRow(setRows, duplicatedRow);
+      setRows((prevRows) => addRow(prevRows, duplicatedRow));
       if (templateResponse) templateResponse.refetch();
     },
     onError: () => {
@@ -182,7 +183,7 @@ export function handleChange(
 ) {
   patchMutation.mutate(newRow, {
     onSuccess: (changedRow: GridRowModel) => {
-      updateRow(setRows, changedRow, oldRow);
+      setRows((prevRows) => updateRow(prevRows, changedRow, oldRow));
     },
     onError: () => {
       if (ref) handleError(ref, "Error: Unable to save the changes");
@@ -205,7 +206,7 @@ export function handleMove(
 ) {
   patchMutation.mutate(row, {
     onSuccess: (movedRow: GridRowModel) => {
-      moveRow(setRows, movedRow, movedRow.order);
+      setRows((prevRows) => moveRow(prevRows, movedRow, movedRow.order));
     },
     onError: () => {
       if (ref) handleError(ref, "Error: Unable to move row");
