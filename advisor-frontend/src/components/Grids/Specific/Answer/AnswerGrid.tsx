@@ -19,7 +19,7 @@ import {
   handleDelete,
   handleInit,
   processRowUpdate,
-} from "../handlers";
+} from "../../functions/handlers/handlers";
 
 import {
   AnswerAPP,

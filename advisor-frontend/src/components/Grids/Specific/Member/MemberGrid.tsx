@@ -9,7 +9,7 @@ import RemoveIcon from "@mui/icons-material/HighlightOff";
 import GenericGrid from "../../Generic/GenericGrid";
 import { UserRole } from "../../../../types/UserRole";
 
-import { handleDelete, handleInit } from "../handlers";
+import { handleDelete, handleInit } from "../../functions/handlers/handlers";
 
 import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
 

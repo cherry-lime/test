@@ -1,9 +1,15 @@
 import * as React from "react";
 import { UseMutationResult, UseQueryResult } from "react-query";
 import { GridPreProcessEditCellProps, GridRowModel } from "@mui/x-data-grid";
-import { initRows, addRow, deleteRow, updateRow, moveRow } from "./helpers";
-import { RefObject, handleError } from "../../ErrorPopup/ErrorPopup";
-import { TemplateAPP } from "../../../api/TemplateAPI";
+import {
+  initRows,
+  addRow,
+  deleteRow,
+  updateRow,
+  moveRow,
+} from "../helpers/helpers";
+import { RefObject, handleError } from "../../../ErrorPopup/ErrorPopup";
+import { TemplateAPP } from "../../../../api/TemplateAPI";
 
 /**
  * Initializes the rows of the grid

@@ -13,7 +13,11 @@ import {
 import RemoveIcon from "@mui/icons-material/HighlightOff";
 
 import GenericGrid from "../../Generic/GenericGrid";
-import { handleChange, handleDelete, handleInit } from "../handlers";
+import {
+  handleChange,
+  handleDelete,
+  handleInit,
+} from "../../functions/handlers/handlers";
 import {
   useDeleteUser,
   useGetUsers,

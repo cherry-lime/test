@@ -28,7 +28,7 @@ import {
   handleDuplicate,
   handleInit,
   processRowUpdate,
-} from "../handlers";
+} from "../../functions/handlers/handlers";
 import DeleteDialog from "../../../Dialog/DeleteDialog";
 
 type TemplateGridProps = {

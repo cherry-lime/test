@@ -14,7 +14,7 @@ import {
   handleMove,
   preProcessEditOrder,
   processRowUpdate,
-} from "../handlers";
+} from "../../functions/handlers/handlers";
 
 import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
 import {

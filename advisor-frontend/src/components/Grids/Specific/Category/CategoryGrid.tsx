@@ -26,7 +26,7 @@ import {
   handleMove,
   preProcessEditOrder,
   processRowUpdate,
-} from "../handlers";
+} from "../../functions/handlers/handlers";
 
 import {
   CategoryAPP,
