@@ -10,7 +10,7 @@ export default function ProgressOverallCard() {
     <PageCard
       bodyText={bodytext}
       headerText="Overall Progress Score"
-      cardHeight="10vh"
+      cardHeight="15vh"
       icon={
         <TrendingUpIcon
           color="info"
