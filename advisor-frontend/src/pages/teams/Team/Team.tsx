@@ -5,7 +5,7 @@ import {
   OutlinedInput,
   Theme,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import React, { useRef, useState } from "react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -19,8 +19,10 @@ import { RootState } from "../../../app/store";
 import Textfield from "../../../components/Textfield/Textfield";
 import { TeamAPP, useGetTeam, usePatchTeam } from "../../../api/TeamAPI";
 import ErrorPopup, {
+  handleError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
+import { checkTeamRouting } from "../../routingHelpers";
 
 /**
  * Page providing team details
@@ -36,27 +38,22 @@ function Team({ theme }: { theme: Theme }) {
 
   // Ref for error popup
   const ref = useRef<RefObject>(null);
+  const navigate = useNavigate();
 
-  const { status, data, error } = useGetTeam(Number(teamId), ref);
+  const teamResponse = useGetTeam(Number(teamId), ref);
 
   const [teamInfo, setTeamInfo] = useState<TeamAPP>();
 
-  // Called when "status" of team query is changed
   React.useEffect(() => {
-    switch (status) {
-      case "error":
-        // eslint-disable-next-line no-console
-        console.log(error);
-        break;
-      case "success":
-        if (data) {
-          setTeamInfo(data);
-        }
-        break;
-      default:
-        break;
+    const rerouting = checkTeamRouting(teamResponse);
+    if (rerouting) {
+      navigate(rerouting);
     }
-  }, [status, data]);
+
+    if (teamResponse.data && teamResponse.status === "success") {
+      setTeamInfo(teamResponse.data);
+    }
+  }, [teamResponse]);
 
   const patchTeam = usePatchTeam(ref);
 
@@ -65,9 +62,8 @@ function Team({ theme }: { theme: Theme }) {
       onSuccess: (teamAPP: TeamAPP) => {
         setTeamInfo(teamAPP);
       },
-      onError: (e: unknown) => {
-        // eslint-disable-next-line no-console
-        console.log(e);
+      onError: (error) => {
+        handleError(ref, error);
       },
     });
   };
