@@ -80,10 +80,15 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: MaturityAPP) => () => {
-      handleMove(setRows, patchMaturity as UseMutationResult, {
-        ...row,
-        order: row.order - 1,
-      });
+      handleMove(
+        setRows,
+        patchMaturity as UseMutationResult,
+        {
+          ...row,
+          order: row.order - 1,
+        },
+        ref
+      );
     },
     []
   );
@@ -91,10 +96,15 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: MaturityAPP) => () => {
-      handleMove(setRows, patchMaturity as UseMutationResult, {
-        ...row,
-        order: row.order + 1,
-      });
+      handleMove(
+        setRows,
+        patchMaturity as UseMutationResult,
+        {
+          ...row,
+          order: row.order + 1,
+        },
+        ref
+      );
     },
     []
   );

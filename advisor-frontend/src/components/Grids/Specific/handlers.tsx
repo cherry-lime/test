@@ -1,8 +1,6 @@
 import * as React from "react";
 import { UseMutationResult, UseQueryResult } from "react-query";
-
 import { GridPreProcessEditCellProps, GridRowModel } from "@mui/x-data-grid";
-
 import { initRows, addRow, deleteRow, updateRow, moveRow } from "./helpers";
 import { RefObject, handleError } from "../../ErrorPopup/ErrorPopup";
 import { TemplateAPP } from "../../../api/TemplateAPI";
@@ -83,18 +81,24 @@ export async function processRowUpdate(
 }
 
 /**
+ *
  * @param setRows - Set function for rows state
  * @param patchMutation - Mutation for PATCH request
  * @param row - The row that should be moved
+ * @param ref - Reference to error popup
  */
 export function handleMove(
   setRows: React.Dispatch<React.SetStateAction<GridRowModel[]>>,
   patchMutation: UseMutationResult,
-  row: GridRowModel
+  row: GridRowModel,
+  ref?: React.RefObject<RefObject>
 ) {
   patchMutation.mutate(row, {
     onSuccess: (movedRow: GridRowModel) => {
       moveRow(setRows, movedRow, movedRow.order);
+    },
+    onError: () => {
+      if (ref) handleError(ref, "Error: Unable to move row");
     },
   });
 }
@@ -117,7 +121,7 @@ export function handleAdd(
       if (templateResponse) templateResponse.refetch();
     },
     onError: () => {
-      if (ref) handleError(ref, "Error: Unable to add");
+      if (ref) handleError(ref, "Error: Unable to add row");
     },
   });
 }
@@ -142,7 +146,7 @@ export function handleDelete(
       if (templateResponse) templateResponse.refetch();
     },
     onError: () => {
-      if (ref) handleError(ref, "Error: Unable to delete");
+      if (ref) handleError(ref, "Error: Unable to delete row");
     },
   });
 }
@@ -167,7 +171,7 @@ export function handleDuplicate(
       if (templateResponse) templateResponse.refetch();
     },
     onError: () => {
-      if (ref) handleError(ref, "Error: Unable to duplicate");
+      if (ref) handleError(ref, "Error: Unable to duplicate row");
     },
   });
 }

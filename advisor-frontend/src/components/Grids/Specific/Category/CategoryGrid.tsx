@@ -84,10 +84,15 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Upward" action is pressed
   const handleUpwardDecorator = React.useCallback(
     (row: CategoryAPP) => () => {
-      handleMove(setRows, patchCategory as UseMutationResult, {
-        ...row,
-        order: row.order - 1,
-      });
+      handleMove(
+        setRows,
+        patchCategory as UseMutationResult,
+        {
+          ...row,
+          order: row.order - 1,
+        },
+        ref
+      );
     },
     []
   );
@@ -95,10 +100,15 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the "Downward" action is pressed
   const handleDownwardDecorator = React.useCallback(
     (row: CategoryAPP) => () => {
-      handleMove(setRows, patchCategory as UseMutationResult, {
-        ...row,
-        order: row.order + 1,
-      });
+      handleMove(
+        setRows,
+        patchCategory as UseMutationResult,
+        {
+          ...row,
+          order: row.order + 1,
+        },
+        ref
+      );
     },
     []
   );
