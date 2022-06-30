@@ -20,7 +20,7 @@ type MaturityAPI = {
   disabled: boolean;
 };
 
-function MaturityToAPP(maturityAPI: MaturityAPI) {
+export function maturityToAPP(maturityAPI: MaturityAPI) {
   return {
     id: maturityAPI.maturity_id,
     name: maturityAPI.maturity_name,
@@ -30,7 +30,7 @@ function MaturityToAPP(maturityAPI: MaturityAPI) {
   } as MaturityAPP;
 }
 
-function MaturityToAPI(maturityAPP: MaturityAPP) {
+export function maturityToAPI(maturityAPP: MaturityAPP) {
   return {
     maturity_id: maturityAPP.id,
     maturity_name: maturityAPP.name,
@@ -54,7 +54,7 @@ export function useGetMaturities(
 
       // Convert data to maturitiesAPP
       const maturitiesAPP = data.map((maturityAPI: MaturityAPI) =>
-        MaturityToAPP(maturityAPI)
+        maturityToAPP(maturityAPI)
       );
 
       // If defined, filter on enabled/disabled
@@ -87,7 +87,7 @@ export function useGetMaturity(ref?: React.RefObject<RefObject>) {
       const { data } = await API.get(`/maturity/${maturityId}`);
 
       // Convert data to maturityAPP
-      return MaturityToAPP(data) as MaturityAPP;
+      return maturityToAPP(data) as MaturityAPP;
     },
     {
       onError: (error) => {
@@ -111,7 +111,7 @@ export function usePostMaturity(
       const { data } = await API.post(`/template/${templateId}/maturity`);
 
       // Convert data to maturityAPP
-      return MaturityToAPP(data) as MaturityAPP;
+      return maturityToAPP(data) as MaturityAPP;
     },
     {
       onError: (error) => {
@@ -129,7 +129,7 @@ export function usePatchMaturity(ref?: React.RefObject<RefObject>) {
     ["PATCH", "/maturity", "/{maturity_id}"],
     async (maturityAPP: MaturityAPP) => {
       // Convert maturityAPP to template
-      const maturityAPI = MaturityToAPI(maturityAPP);
+      const maturityAPI = maturityToAPI(maturityAPP);
 
       // Get response data from database
       const { data } = await API.patch(
@@ -138,7 +138,7 @@ export function usePatchMaturity(ref?: React.RefObject<RefObject>) {
       );
 
       // Convert data to maturityAPP
-      return MaturityToAPP(data) as MaturityAPP;
+      return maturityToAPP(data) as MaturityAPP;
     },
     {
       onError: (error) => {
@@ -159,7 +159,7 @@ export function useDeleteMaturity(ref?: React.RefObject<RefObject>) {
       const { data } = await API.delete(`/maturity/${maturityId}`);
 
       // Convert data to maturityAPP
-      return MaturityToAPP(data) as MaturityAPP;
+      return maturityToAPP(data) as MaturityAPP;
     },
     {
       onError: (error) => {

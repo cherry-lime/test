@@ -1,6 +1,8 @@
 import { renderHook } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import {
+  assessmentToAPI,
+  assessmentToAPP,
   useDeleteAssessment,
   useGetAssessment,
   useGetAssessments,
@@ -15,8 +17,72 @@ import {
 } from "../AssessmentAPI";
 
 describe("Testing AssessmentAPI", () => {
+  it("toAPP should give APP object", () => {
+    expect(
+      assessmentToAPP({
+        assessment_id: 0,
+        assessment_name: "",
+        assessment_type: "TEAM",
+        country_name: "",
+        department_name: "",
+        template_id: 0,
+        feedback_text: "",
+        information: "",
+        created_at: "",
+        updated_at: "",
+        completed_at: "",
+        team_id: 0,
+      })
+    ).toStrictEqual({
+      id: 0,
+      name: "",
+      assessmentType: "TEAM",
+      countryName: "",
+      departmentName: "",
+      templateId: 0,
+      feedbackText: "",
+      information: "",
+      createdAt: "",
+      updatedAt: "",
+      completedAt: "",
+      teamId: 0,
+    });
+  });
+
+  it("toAPP should give API object", () => {
+    expect(
+      assessmentToAPI({
+        id: 0,
+        name: "",
+        assessmentType: "TEAM",
+        countryName: "",
+        departmentName: "",
+        templateId: 0,
+        feedbackText: "",
+        information: "",
+        createdAt: "",
+        updatedAt: "",
+        completedAt: "",
+        teamId: 0,
+      })
+    ).toStrictEqual({
+      assessment_id: 0,
+      assessment_name: "",
+      assessment_type: "TEAM",
+      country_name: "",
+      department_name: "",
+      template_id: 0,
+      feedback_text: "",
+      information: "",
+      created_at: "",
+      updated_at: "",
+      completed_at: "",
+      team_id: 0,
+    });
+  });
+
   const queryClient = new QueryClient();
-  const wrapper = ({ children }: { children: any }) => (
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 

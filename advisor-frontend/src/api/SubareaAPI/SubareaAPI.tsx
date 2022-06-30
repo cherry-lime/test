@@ -36,7 +36,7 @@ export function subareaToAPP(subareaAPI: SubareaAPI) {
   } as SubareaAPP;
 }
 
-function subareaToAPI(subareaAPP: SubareaAPP) {
+export function subareaToAPI(subareaAPP: SubareaAPP) {
   return {
     subarea_id: subareaAPP.id,
     subarea_name: subareaAPP.name,

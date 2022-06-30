@@ -9,11 +9,49 @@ import {
   useGetUsers,
   useIsUserInTeam,
   usePatchUser,
+  userToAPI,
+  userToAPP,
 } from "../UserAPI";
 
 describe("Testing UserAPI", () => {
+  it("toAPP should give APP object", () => {
+    expect(
+      userToAPP({
+        user_id: 0,
+        username: "",
+        role: "USER",
+        created_at: "",
+        updated_at: "",
+      })
+    ).toStrictEqual({
+      id: 0,
+      name: "",
+      role: "USER",
+      createdAt: "",
+      updatedAt: "",
+    });
+  });
+
+  it("toAPI should give APP object", () => {
+    expect(
+      userToAPI({
+        id: 0,
+        name: "",
+        role: "USER",
+        createdAt: "",
+        updatedAt: "",
+      })
+    ).toStrictEqual({
+      user_id: 0,
+      username: "",
+      role: "USER",
+      created_at: "",
+      updated_at: "",
+    });
+  });
+
   const queryClient = new QueryClient();
-  const wrapper = ({ children }: { children: any }) => (
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 
