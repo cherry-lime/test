@@ -1,6 +1,6 @@
 import { Button, Theme, ThemeProvider } from "@mui/material";
 import { useSelector } from "react-redux";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ListOfCheckpoints from "../../../components/ListOfCheckpoints/ListOfCheckpoints";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
@@ -17,6 +17,8 @@ import ErrorPopup, {
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
 import { getUpdatedTheme } from "../../admin/templates/Area/colorHelpers";
+import { useGetTeam } from "../../../api/TeamAPI";
+import checkAssessmentRouting, { checkTeamRouting } from "../../routingHelpers";
 
 /**
  * Page with a self evaluation that can be filled in
@@ -46,7 +48,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
 
   const postCompleteEval = usePostCompleteAssessment(Number(assessmentId), ref);
 
-  const handleClickFinish = useCallback(() => {
+  const handleClickFinish = () => {
     postCompleteEval.mutate(undefined, {
       onError: () => {
         handleError(
@@ -62,82 +64,98 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
         );
       },
     });
-  }, []);
+  };
 
   const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
 
   // get assessment information from API
-  const { status: assessmentStatus, data: assessmentData } = useGetAssessment(
-    Number(assessmentId),
-    ref
-  );
+  const assessmentResponse = useGetAssessment(Number(assessmentId), ref);
 
   // set assessment info value
   React.useEffect(() => {
-    if (assessmentData && assessmentStatus === "success") {
-      setAssessmentInfo(assessmentData);
-      if (assessmentData.completedAt) {
-        navigate(
-          team
-            ? `/teams/${teamId}/feedback/${assessmentId}`
-            : `/user/self_evaluations/feedback/${assessmentId}`
-        );
-      }
+    if (assessmentResponse.status === "success" && assessmentResponse.data) {
+      setAssessmentInfo(assessmentResponse.data);
     }
-  }, [assessmentStatus, assessmentData]);
+    const rerouting = checkAssessmentRouting(
+      assessmentResponse,
+      team,
+      false,
+      teamId,
+      assessmentId
+    );
+    if (rerouting) {
+      navigate(rerouting);
+    }
+  }, [assessmentResponse]);
+
+  if (team) {
+    const teamResponse = useGetTeam(Number(teamId), ref);
+    React.useEffect(() => {
+      const rerouting = checkTeamRouting(teamResponse);
+      if (rerouting) {
+        navigate(rerouting);
+      }
+    }, [teamResponse]);
+  }
 
   return (
-    <PageLayout
-      title={team ? "Team Evaluation" : "Individual Evaluation"}
-      sidebarType={userTypes[userRole]}
-      headerColor={primaryColor}
-    >
-      <ThemeProvider theme={checkpointView ? currentTheme : theme}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            width: "inherit",
-          }}
+    <div>
+      {assessmentResponse.status === "success" && (
+        <PageLayout
+          title={team ? "Team Evaluation" : "Individual Evaluation"}
+          sidebarType={userTypes[userRole]}
+          headerColor={primaryColor}
         >
-          <Button onClick={handleViewChange} variant="contained">
-            {checkpointView ? "See Recommendations" : "Go back to checkpoints"}
-          </Button>
-        </div>
+          <ThemeProvider theme={checkpointView ? currentTheme : theme}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                width: "inherit",
+              }}
+            >
+              <Button onClick={handleViewChange} variant="contained">
+                {checkpointView
+                  ? "See Recommendations"
+                  : "Go back to checkpoints"}
+              </Button>
+            </div>
 
-        {checkpointView && assessmentInfo && (
-          <ListOfCheckpoints
-            feedback={false || (team && userRole === "USER")}
-            theme={currentTheme}
-            assessmentInfo={assessmentInfo}
-            setPrimaryColor={setPrimaryColor}
-          />
-        )}
+            {checkpointView && assessmentInfo && (
+              <ListOfCheckpoints
+                feedback={false || (team && userRole === "USER")}
+                theme={currentTheme}
+                assessmentInfo={assessmentInfo}
+                setPrimaryColor={setPrimaryColor}
+              />
+            )}
 
-        {!checkpointView && assessmentInfo && (
-          <ListOfRecommendations
-            theme={theme}
-            assessmentId={Number(assessmentId)}
-            templateId={assessmentInfo.templateId}
-            completedAt={assessmentInfo.completedAt}
-          />
-        )}
+            {!checkpointView && assessmentInfo && (
+              <ListOfRecommendations
+                theme={theme}
+                assessmentId={Number(assessmentId)}
+                templateId={assessmentInfo.templateId}
+                completedAt={assessmentInfo.completedAt}
+              />
+            )}
 
-        <div
-          style={{
-            width: "inherit",
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          <Button variant="contained" onClick={handleClickFinish}>
-            {" "}
-            Finish Evaluation{" "}
-          </Button>
-          <ErrorPopup ref={ref} />
-        </div>
-      </ThemeProvider>
-    </PageLayout>
+            <div
+              style={{
+                width: "inherit",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Button variant="contained" onClick={handleClickFinish}>
+                {" "}
+                Finish Evaluation{" "}
+              </Button>
+              <ErrorPopup ref={ref} />
+            </div>
+          </ThemeProvider>
+        </PageLayout>
+      )}
+    </div>
   );
 }
 

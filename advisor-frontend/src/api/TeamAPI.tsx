@@ -79,6 +79,7 @@ export function useGetTeam(teamId: number, ref?: React.RefObject<RefObject>) {
           handleError(ref, error);
         }
       },
+      enabled: !!teamId,
     }
   );
 }
