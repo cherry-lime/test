@@ -1,6 +1,5 @@
 /* eslint-disable import/prefer-default-export */
 import API from "../../../api/_API";
-import { categoryToAPP, CategoryAPP } from "../../../api/CategoryAPI";
 import {
   CheckpointAPI,
   CheckpointAPP,
@@ -14,22 +13,6 @@ import {
 } from "../../../api/RecommendationAPI";
 import { AssessmentAPP, assessmentToAPP } from "../../../api/AssessmentAPI";
 import { TemplateAPP, templateToAPP } from "../../../api/TemplateAPI";
-
-export async function getArea(areaId: number) {
-  const area = await API.get(`/category/${areaId}`);
-  return categoryToAPP(area.data) as CategoryAPP;
-}
-
-export async function getAreas(areaIds: number[]) {
-  let areaList: CategoryAPP[] = [];
-  // eslint-disable-next-line no-restricted-syntax
-  for (const id of areaIds) {
-    // eslint-disable-next-line no-await-in-loop
-    const area = await getArea(id);
-    areaList = [...areaList, area];
-  }
-  return areaList;
-}
 
 export async function getCheckpoints(areaId: number) {
   const { data } = await API.get(`/category/${areaId}/checkpoint`);

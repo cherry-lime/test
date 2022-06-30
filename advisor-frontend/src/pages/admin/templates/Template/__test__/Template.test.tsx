@@ -6,7 +6,6 @@ import { store } from "../../../../../app/store";
 import INGTheme from "../../../../../Theme";
 import Template from "../Template";
 
-
 const queryClient = new QueryClient();
 
 test("app rendering the individual list", async () => {
@@ -14,7 +13,7 @@ test("app rendering the individual list", async () => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <Template theme={INGTheme}/>
+          <Template theme={INGTheme} />
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>

@@ -13,7 +13,7 @@ test("app showing login screen", async () => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <App testRender/>
+          <App testRender />
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>
@@ -35,7 +35,6 @@ test("app showing blank page", async () => {
   const apphtml = screen.getByTestId("emptyPage");
   expect(apphtml).toBeInTheDocument();
 });
-
 
 // test("app rendering/navigating to assessor interface", async () => {
 //   render(

@@ -13,7 +13,7 @@ test("app rendering the individual list", async () => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <Area theme={INGTheme}/>
+          <Area theme={INGTheme} />
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>

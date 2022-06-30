@@ -24,16 +24,16 @@ import DetailGen from "./components/SignInUP/DetailGen";
 import ErrorPopup, { RefObject } from "./components/ErrorPopup/ErrorPopup";
 import ErrorPage from "./pages/ErrorPage";
 
-type appProp ={
-  testRender ?: boolean
+type appProp = {
+  testRender?: boolean;
 };
 const defaultProps = {
-  testRender: false
-}
+  testRender: false,
+};
 /**
  * This component is the root element for the React application.
  */
-function App({testRender}: appProp) {
+function App({ testRender }: appProp) {
   // Import the global state variables that will be used throughout the session
   const { userRole } = useSelector((state: RootState) => state.userData);
   // Ref for error popup
@@ -167,8 +167,12 @@ function App({testRender}: appProp) {
     );
   }
   // If the authentication is in progress, show blank page
-  return <div className="App" data-testid="emptyPage"> </div>;
+  return (
+    <div className="App" data-testid="emptyPage">
+      {" "}
+    </div>
+  );
 }
-App.defaultProps = defaultProps
+App.defaultProps = defaultProps;
 
 export default App;
