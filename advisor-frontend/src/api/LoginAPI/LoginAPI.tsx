@@ -18,8 +18,10 @@ import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 export function useRegister(ref?: React.RefObject<RefObject>) {
   // Navigation hook, to be used after the user is logged in
   const navigate = useNavigate();
+
   // Make the global state variable functions available
   const dispatch = useDispatch();
+
   return useMutation(
     ["Register new user"],
     async (userRole: { role: string }) => {
@@ -68,6 +70,7 @@ export function authProfile(ref?: React.RefObject<RefObject>) {
     }
   );
 }
+
 /**
  * Login API function that uses an object as specified in the backend API.
  * @param username String value
@@ -76,7 +79,6 @@ export function authProfile(ref?: React.RefObject<RefObject>) {
  */
 export function useLogin(ref?: React.RefObject<RefObject>) {
   // Calls authentication API this way to avoid hook-in-hook issues
-
   const auth = authProfile(ref);
 
   // Navigation hook, to be used after the user is logged in
