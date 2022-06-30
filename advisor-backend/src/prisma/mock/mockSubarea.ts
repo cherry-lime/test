@@ -15,4 +15,5 @@ export const mockSubarea = {
   delete: jest.fn().mockResolvedValue(aSubarea),
   count: jest.fn().mockResolvedValue(1),
   updateMany: jest.fn().mockResolvedValue([aSubarea]),
+  createMany: jest.fn().mockResolvedValue({}),
 };

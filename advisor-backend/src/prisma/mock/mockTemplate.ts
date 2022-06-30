@@ -1,5 +1,7 @@
 import { Template } from '@prisma/client';
 import { UpdateTemplateDto } from '../../template/dto/update-template.dto';
+import { aAnswer } from './mockAnswer';
+import { aTopic } from './mockTopic';
 
 export const aTemplate: Template & {
   [key: string]: any;
@@ -15,6 +17,9 @@ export const aTemplate: Template & {
   information: 'test',
   template_feedback: 'test',
   Category: [],
+  Maturity: [],
+  Topic: [aTopic],
+  Answers: [aAnswer],
 };
 
 export const updateTemplate = {

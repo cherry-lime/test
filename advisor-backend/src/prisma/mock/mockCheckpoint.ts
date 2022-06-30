@@ -31,4 +31,5 @@ export const mockCheckpoint = {
   count: jest.fn().mockResolvedValue(1),
   delete: jest.fn().mockResolvedValue(aCheckpoint),
   updateMany: jest.fn().mockResolvedValue([aCheckpoint]),
+  createMany: jest.fn().mockResolvedValue({}),
 };

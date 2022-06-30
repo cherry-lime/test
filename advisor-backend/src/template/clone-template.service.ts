@@ -110,32 +110,31 @@ export class CloneTemplateService {
    * @param template
    * @param categoriesList
    */
-  private async linkTopics(
+  async linkTopics(
     newTemplate: any,
     template: any,
     categoriesList: number[],
     checkpoints: Checkpoint[]
   ) {
-    // Get topics from old checkpoints and new checkpoints
-    const [checkpointInTopics, newCheckpoints] = await this.prisma.$transaction(
-      [
-        this.prisma.checkpointInTopic.findMany({
-          where: {
-            topic_id: {
-              in: template.Topic.map((t) => t.topic_id),
-            },
-          },
-        }),
-        this.prisma.checkpoint.findMany({
-          where: {
-            category_id: {
-              in: categoriesList,
-            },
-          },
-        }),
-      ]
-    );
+    // Get topics from old checkpoints
+    const checkpointInTopics = await this.prisma.checkpointInTopic.findMany({
+      where: {
+        topic_id: {
+          in: template.Topic.map((t) => t.topic_id),
+        },
+      },
+    });
 
+    // Get new created checkpoints
+    const newCheckpoints = await this.prisma.checkpoint.findMany({
+      where: {
+        category_id: {
+          in: categoriesList,
+        },
+      },
+    });
+
+    // Create map from old checkpoint id to new checkpoint id
     const checkpointsMap = this.createMap(
       checkpoints,
       newCheckpoints,
@@ -144,18 +143,21 @@ export class CloneTemplateService {
       'category_id'
     );
 
+    // Create map from old topic id to new topic id
     const topicsMap = this.createMap(
       template.Topic,
       newTemplate.Topic,
       'topic'
     );
 
+    // Create new topic data using created maps
     const newCheckpointInTopics = checkpointInTopics.map((c) => {
       c.topic_id = topicsMap[c.topic_id];
       c.checkpoint_id = checkpointsMap[c.checkpoint_id];
       return c;
     });
 
+    // Create new relationship between topics and checkpoints
     await this.prisma.checkpointInTopic.createMany({
       data: newCheckpointInTopics,
     });
