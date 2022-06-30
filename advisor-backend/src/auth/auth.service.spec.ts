@@ -10,6 +10,10 @@ import {
   UserWithoutPassword,
   userAuthenticationLog,
   mockPrisma,
+  userArray,
+  aUser,
+  registerDto,
+  userAuthenticationReg,
 } from '../prisma/mock/mockAuthService';
 import { JwtStrategy } from './jwt.strategy';
 import { NotFoundException } from '@nestjs/common';
@@ -19,34 +23,6 @@ const moduleMocker = new ModuleMocker(global);
 describe('AuthService', () => {
   let authService: AuthService;
   let prisma: PrismaService;
-  // ---------------- Working when using the local database (or azure) ----------------
-  // beforeEach(async () => {
-  //   authService = new AuthService(
-  //     new PrismaService(),
-  //     new JwtService({
-  //       secretOrPrivateKey: 'mycustomuselongsecret'
-  //     }),
-  //     new UserService(
-  //       new PrismaService()
-  //     )
-  //   );
-  // });
-
-  // describe('Login', () => {
-  //   // it('should return an object', () => {
-  //   //   // const loginDto = new LoginDto()
-  //   //   expect(
-  //   //     typeof authService.login(userDto)
-  //   //   ).toEqual('object')
-  //   // });
-  //   it('should return a function', () => {
-  //     // const loginDto = new LoginDto()
-  //     expect(
-  //       typeof authService.login(userDto)
-  //     ).toEqual(typeof userAuthentication)
-  //   });
-  // });
-  // ---------------- Working ----------------
 
   beforeEach(async () => {
     process.env = {
@@ -65,9 +41,7 @@ describe('AuthService', () => {
         }),
       ],
       providers: [
-        // UserService,
         JwtStrategy,
-        // LocalStrategy,
         AuthService,
         {
           provide: PrismaService,
@@ -78,7 +52,7 @@ describe('AuthService', () => {
       .useMocker((token) => {
         if (token === UserService) {
           return {
-            createUser: jest.fn().mockResolvedValue(UserWithoutPassword),
+            createUser: jest.fn().mockResolvedValue(aUser)
           };
         }
         if (typeof token === 'function') {
@@ -116,7 +90,6 @@ describe('AuthService', () => {
 
   describe('When logging in', () => {
     it('should return an AuthResponse type', () => {
-      // const userId = 1;
       expect(typeof authService.login(userDto)).toEqual(
         typeof userAuthenticationLog
       );

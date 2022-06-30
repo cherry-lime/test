@@ -2,11 +2,17 @@ import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { loginDto, mockLogin, mockLogout, mockUser, registerDto, userinfo } from '../prisma/mock/mockAuthController';
+import { loginDto, mockLogin, mockLogout, mockUser, registerDto, userAuthentication, userinfo } from '../prisma/mock/mockAuthController';
+
 const moduleMocker = new ModuleMocker(global);
 
-var ejs = require('ejs');
-var MockExpressResponse = require('mock-express-response');
+var httpMocks = require('node-mocks-http');
+
+// Basic request object
+const req = httpMocks.createRequest()
+
+// Basic response object
+req.res = httpMocks.createResponse()
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -17,7 +23,6 @@ describe('AuthController', () => {
       JWT_SECRET: 'mycustomuselongsecret',
       EXPIRESIN: '60 days',
     };
-    //const mock_AuthGuard: CanActivate = {canActivate: jest.fn(() => true)};
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
@@ -25,7 +30,7 @@ describe('AuthController', () => {
       .useMocker((token) => {
         if (token === AuthService) {
           return {
-            register: jest.fn().mockResolvedValue(mockUser),
+            register: jest.fn().mockResolvedValue(userAuthentication),
             login: jest.fn().mockResolvedValue(mockLogin),
             logout: jest.fn().mockResolvedValue(mockLogout),
             getLoggedUser: jest.fn().mockResolvedValue(userinfo)
@@ -39,7 +44,6 @@ describe('AuthController', () => {
           return new Mock();
         }
       })
-      //.overrideGuard(AuthGuard).useValue(mock_AuthGuard)
       .compile();
 
     authController = module.get<AuthController>(AuthController);
@@ -49,39 +53,53 @@ describe('AuthController', () => {
     expect(authController).toBeDefined();
   });
 
+  it('should be defined', () => {
+    expect(authController.register(registerDto, req.res)).toBeDefined();
+  });
+
+  it('should be defined', () => {
+    expect(authController.logout(req.res)).toBeDefined();
+  });
+
+  it('should be defined', () => {
+    expect(authController.getLoggedUser(userinfo)).toBeDefined();
+  });
+
   describe('register', () => {
-    // Basic response
-    var response = new MockExpressResponse();
-    it('Should return the created user', async () => {
-      expect(authController.register(registerDto, response)).resolves.toBe(
-        mockUser
-      );
+    it('Should return the username of the created user', async () => {
+      expect(
+        ((await authController.register(registerDto, req.res)).username)
+      )
+        .toEqual(
+          userinfo.username
+        );
+    });
+  });
+
+  describe('register', () => {
+    it('Should return the password of the created user', async () => {
+      expect(
+        ((await authController.register(registerDto, req.res)).password)
+      )
+        .toEqual(
+          userinfo.password
+        );
     });
   });
 
   describe('login', () => {
-    // Basic response
-    var response = new MockExpressResponse();
     it('Should return a message showing a successful login', async () => {
-      expect(authController.login(loginDto, response)).resolves.toBe(
-        mockLogin
-      );
-    });
-  });
-
-  describe('logout', () => {
-    // Basic response
-    var response = new MockExpressResponse();
-    it('Should return a message showing a successful logout', async () => {
-      expect(authController.logout(response)).resolves.toBe(
-        mockLogout
+      expect(
+        ((await authController.login(loginDto, req.res)).msg)
+      ).toEqual(
+        mockLogin.msg
       );
     });
   });
 
   describe('get a user', () => {
     it('Should return user information', async () => {
-      expect(authController.getLoggedUser(userinfo)).resolves.toBe(
+      expect(authController.getLoggedUser(userinfo)).toEqual(
         userinfo
       );
     });
