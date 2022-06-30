@@ -64,7 +64,7 @@ export class UserService {
       })
       .catch((error) => {
         if (error.code === 'P2025') {
-          throw new NotFoundException('Team with given team id not found');
+          throw new NotFoundException('User with given user id is not found');
         }
         console.log(error);
         throw new InternalServerErrorException();
