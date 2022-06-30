@@ -1,6 +1,6 @@
 import { Box, Button, Stack, TextField, Theme } from "@mui/material";
 import { useSelector } from "react-redux";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import PageLayout from "../../PageLayout";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
 import TeamGrid from "../../../components/Grids/Specific/Team/TeamGrid";
@@ -29,13 +29,13 @@ function TeamList({ theme }: { theme: Theme }) {
 
   const patchToken = useJoinInviteTokenTeam(token, ref);
 
-  const handleJoinTeam = useCallback(() => {
+  const handleJoinTeam = () => {
     patchToken.mutate(undefined, {
       onSuccess: () => {
         teamResponse.refetch();
       },
     });
-  }, []);
+  }
   /* 
   function that allows you to join team as token once
   token has been filled in editable textfield (at the left of the button) following
