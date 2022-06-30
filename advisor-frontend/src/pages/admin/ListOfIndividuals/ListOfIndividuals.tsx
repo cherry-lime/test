@@ -9,7 +9,7 @@ import IndividualGrid from "../../../components/Grids/Specific/Individual/Indivi
  */
 function ListOfIndividuals({ theme }: { theme: Theme }) {
   return (
-    <div>
+    <div data-testid="individualTests">
       <PageLayout title="Individuals" sidebarType={userType.ADMIN}>
         <IndividualGrid theme={theme} />
       </PageLayout>

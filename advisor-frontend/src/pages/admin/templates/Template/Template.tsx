@@ -95,7 +95,7 @@ function Template({ theme }: { theme: Theme }) {
   }, [minWeight, minWeight]);
 
   return (
-    <div>
+    <div data-testid="templateTest">
       {templateInfo && (
         <PageLayout
           title={`Template "${templateInfo.name}"`}
