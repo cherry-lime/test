@@ -8,7 +8,7 @@ import {
   ThemeOptions,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { AnswerAPP } from "../../api/AnswerAPI";
+import { AnswerAPP } from "../../api/AnswerAPI/AnswerAPI";
 import { CheckpointAPP, useGetCheckpoints } from "../../api/CheckpointAPI";
 import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI";
 import Checkpoint from "../Checkpoint/Checkpoint";

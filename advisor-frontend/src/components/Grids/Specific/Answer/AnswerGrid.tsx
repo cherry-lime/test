@@ -27,7 +27,7 @@ import {
   useGetAnswers,
   usePatchAnswer,
   usePostAnswer,
-} from "../../../../api/AnswerAPI";
+} from "../../../../api/AnswerAPI/AnswerAPI";
 
 import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
 

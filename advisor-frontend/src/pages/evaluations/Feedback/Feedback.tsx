@@ -21,9 +21,11 @@ import {
   usePostFeedbackAssessment,
 } from "../../../api/AssessmentAPI";
 import { CategoryAPP, useGetCategories } from "../../../api/CategoryAPI";
-import { AnswerAPP, useGetAnswers } from "../../../api/AnswerAPI";
+import { AnswerAPP, useGetAnswers } from "../../../api/AnswerAPI/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI";
-import ErrorPopup, { RefObject } from "../../../components/ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  RefObject,
+} from "../../../components/ErrorPopup/ErrorPopup";
 import checkAssessmentRouting, { checkTeamRouting } from "../../routingHelpers";
 import { useGetTeam } from "../../../api/TeamAPI";
 
