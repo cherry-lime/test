@@ -5,4 +5,6 @@ export const mockUserInTeamRecord = {
 
 export const mockUserInTeam = {
   create: jest.fn().mockResolvedValue(mockUserInTeamRecord),
+  deleteMany: jest.fn().mockResolvedValue([mockUserInTeamRecord]),
+  delete: jest.fn().mockResolvedValue(mockUserInTeamRecord),
 };
