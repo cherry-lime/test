@@ -249,13 +249,13 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       <GenericGrid
         theme={theme}
         rows={rows}
-        columns={columns}
-        processRowUpdate={processRowUpdateDecorator}
-        hasToolbar
         add={{
           text: "CREATE NEW AREA",
           handler: handleAddDecorator,
         }}
+        processRowUpdate={processRowUpdateDecorator}
+        columns={columns}
+        hasToolbar
       />
       <ErrorPopup ref={refErrorCategory} />
     </>

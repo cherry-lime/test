@@ -183,7 +183,6 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   return (
     <>
       <GenericGrid
-        theme={theme}
         rows={rows}
         columns={columns}
         processRowUpdate={processRowUpdateDecorator}
@@ -192,6 +191,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
           text: "CREATE NEW MATURITY LEVEL",
           handler: handleAddDecorator,
         }}
+        theme={theme}
       />
       <ErrorPopup ref={refErrorMaturity} />
     </>
