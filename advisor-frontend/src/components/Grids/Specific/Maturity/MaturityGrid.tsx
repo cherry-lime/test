@@ -173,10 +173,10 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
       },
     ],
     [
-      handleUpwardDecorator,
       handleDownwardDecorator,
       preProcessEditOrderDecorator,
       handleDeleteDecorator,
+      handleUpwardDecorator,
     ]
   );
 

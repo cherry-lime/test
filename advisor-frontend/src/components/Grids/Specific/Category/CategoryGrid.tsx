@@ -227,17 +227,17 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
             label="Visit"
           />,
           <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
             onClick={handleDeleteDecorator(params.id)}
+            icon={<DeleteIcon />}
             showInMenu
+            label="Delete"
           />,
         ],
       },
     ],
     [
-      handleUpwardDecorator,
       handleDownwardDecorator,
+      handleUpwardDecorator,
       preProcessEditOrderDecorator,
       handleColorChange,
       handleDeleteDecorator,

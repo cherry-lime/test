@@ -34,11 +34,15 @@ function ListOfRecommendations({
     (state: RootState) => state.userData
   );
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   */
   const refErrorRecommendations = useRef<RefObject>(null);
   const onErrorRecommendations = getOnError(refErrorRecommendations);
 
-  // Fetch the GetTopics API
+  /**
+   * Fetch the GetTopics API
+   */
   const { status, data } = useGetTopics(
     templateId,
     undefined,
@@ -48,13 +52,17 @@ function ListOfRecommendations({
   const [topicList, setTopicList] = useState<TopicAPP[]>();
 
   const [topic, setTopic] = useState<number>();
-  // constant declaration that handles the changing of topics
+  /**
+   * constant declaration that handles the changing of topics
+   */
   const handleTopicChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "-") setTopic(Number(event.target.value));
     else setTopic(undefined);
   };
 
-  // first render: get the area list and set the area
+  /**
+   * first render: get the area list and set the area
+   */
   React.useEffect(() => {
     if (status === "success") {
       setTopicList(data);

@@ -299,10 +299,10 @@ export default function CheckpointGrid({
         width: 75,
         getActions: (params: { id: GridRowId; row: CheckpointAPP }) => [
           <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteDecorator(params.id)}
             showInMenu
+            icon={<DeleteIcon />}
+            onClick={handleDeleteDecorator(params.id)}
+            label="Delete"
           />,
         ],
       },

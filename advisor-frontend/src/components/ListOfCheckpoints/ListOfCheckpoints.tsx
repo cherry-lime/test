@@ -38,7 +38,9 @@ function ListOfCheckpoints({
 }) {
   const [activeArea, setActiveArea] = useState<number>();
 
-  // GET ASSESSMENT INFORMATION
+  /**
+   * GET ASSESSMENT INFORMATION
+   */
 
   const [areaList, setAreaList] = useState<CategoryAPP[]>();
   const [answerList, setAnswerList] = useState<AnswerAPP[]>([]);
@@ -56,38 +58,51 @@ function ListOfCheckpoints({
     }
   }, [activeArea]);
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   */
   const refErrorCheckpoints = useRef<RefObject>(null);
   const onErrorCheckpoints = getOnError(refErrorCheckpoints);
 
-  // get area list from API
+  /**
+   * get area list from API
+   */
   const areasResponse = useGetCategories(
     Number(assessmentInfo?.templateId),
     true,
     onErrorCheckpoints
   );
 
-  // get answer list from API
+  /**
+   * get answer list from API
+   */
   const answersResponse = useGetAnswers(
     Number(assessmentInfo?.templateId),
     true,
     onErrorCheckpoints
   );
 
-  // get checkpoint answer list from API
+  /**
+   * get checkpoint answer list from API
+   */
   const checkpointAnswerResponse = useGetSaveAssessment(
     Number(assessmentInfo?.id),
     onErrorCheckpoints
   );
 
-  // set the area list value
+  /**
+   * set the area list value
+   */
   React.useEffect(() => {
     if (areasResponse.data && areasResponse.status === "success") {
       setAreaList(areasResponse.data);
     }
   }, [areasResponse]);
 
-  // set the answer list value
+  /**
+   * set the answer list value
+   * using the useEffect hooks from React
+   */
   React.useEffect(() => {
     if (answersResponse.data && answersResponse.status === "success") {
       setAnswerList(answersResponse.data);
@@ -110,7 +125,9 @@ function ListOfCheckpoints({
   const [topicList, setTopicList] = useState<TopicAPP[]>([]);
   const topicResponse = useGetTopics(assessmentInfo?.templateId);
 
-  // set assessment info value
+  /**
+   * set assessment info value
+   */
   React.useEffect(() => {
     if (topicResponse.status === "success" && topicResponse.data) {
       setTopicList(topicResponse.data);
