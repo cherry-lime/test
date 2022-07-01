@@ -8,7 +8,9 @@ import {
 } from "@mui/material";
 import React from "react";
 
-// Interface to pass through the template delete API call
+/**
+ * Interface to pass through the template delete API call
+ */
 export interface SimpleDialogProps {
   open: boolean;
   onClose: () => void;

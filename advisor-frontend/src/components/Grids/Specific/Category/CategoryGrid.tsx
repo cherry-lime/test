@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import {
   GridActionsCellItem,
   GridColumns,
-  GridPreProcessEditCellProps,
   GridRowId,
+  GridPreProcessEditCellProps,
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
@@ -18,10 +18,10 @@ import GenericGrid from "../../Generic/GenericGrid";
 
 import {
   handleAdd,
-  handleChange,
   handleDelete,
   handleInit,
   handleMove,
+  handleChange,
   preProcessEditOrder,
   processRowUpdate,
 } from "../../functions/handlers/handlers";
