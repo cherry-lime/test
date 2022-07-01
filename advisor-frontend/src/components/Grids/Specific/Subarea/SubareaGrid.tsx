@@ -1,25 +1,26 @@
 import * as React from "react";
-import { UseMutationResult } from "react-query";
 
 import {
   GridActionsCellItem,
+  GridRowId,
   GridColumns,
   GridPreProcessEditCellProps,
-  GridRowId,
 } from "@mui/x-data-grid";
-import { Theme } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Theme } from "@mui/material/styles";
 
-import GenericGrid from "../../Generic/GenericGrid";
+import { UseMutationResult } from "react-query";
 
 import {
-  handleAdd,
+  processRowUpdate,
   handleDelete,
-  handleInit,
   handleMove,
   preProcessEditOrder,
-  processRowUpdate,
+  handleInit,
+  handleAdd,
 } from "../../functions/handlers/handlers";
+
+import GenericGrid from "../../Generic/GenericGrid";
 
 import {
   SubareaAPP,

@@ -4,9 +4,9 @@ import { UseMutationResult } from "react-query";
 import {
   GridActionsCellItem,
   GridColumns,
-  GridPreProcessEditCellProps,
   GridRowId,
   GridValueFormatterParams,
+  GridPreProcessEditCellProps,
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
@@ -17,8 +17,8 @@ import GenericGrid from "../../Generic/GenericGrid";
 import {
   handleAdd,
   handleDelete,
-  handleInit,
   processRowUpdate,
+  handleInit,
 } from "../../functions/handlers/handlers";
 
 import {

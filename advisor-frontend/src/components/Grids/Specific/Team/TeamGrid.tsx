@@ -13,25 +13,25 @@ import GenericGrid from "../../Generic/GenericGrid";
 
 import { UserRole } from "../../../../types/UserRole";
 
-import ErrorPopup, {
-  getOnError,
-  RefObject,
-} from "../../../ErrorPopup/ErrorPopup";
-
 import {
   handleAdd,
-  handleDelete,
   handleInit,
+  handleDelete,
   processRowUpdate,
 } from "../../functions/handlers/handlers";
 
+import { useDeleteMemberTeamTwo } from "../../../../api/UserAPI/UserAPI";
 import {
   TeamAPP,
   useDeleteTeam,
   usePatchTeam,
   usePostTeam,
 } from "../../../../api/TeamAPI/TeamAPI";
-import { useDeleteMemberTeamTwo } from "../../../../api/UserAPI/UserAPI";
+
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 type TeamGridProps = {
   theme: Theme;
