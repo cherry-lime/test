@@ -39,11 +39,11 @@ function ListOfRecommendations({
 
   // Fetch the GetTopics API
   const { status, data } = useGetTopics(templateId, undefined, ref);
-
+  // use react useState hooks to set a topiclist and a topic
   const [topicList, setTopicList] = useState<TopicAPP[]>();
 
   const [topic, setTopic] = useState<number>();
-
+  // constant declaration that handles the changing of topics
   const handleTopicChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "-") setTopic(Number(event.target.value));
     else setTopic(undefined);

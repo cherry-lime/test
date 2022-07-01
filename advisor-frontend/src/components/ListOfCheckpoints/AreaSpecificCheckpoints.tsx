@@ -22,6 +22,14 @@ import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 /**
  * Page with a self evaluation that can be filled in
  * This should only be accessible to the user whose assement this belongs to
+ * It contains the assessmentId,
+ * the list of topics,
+ * the id of an area,
+ * the list of answers,
+ * a list of checkpointanswers,
+ * a list that sets the answers of the checkpoints,
+ * the 'global' theme,
+ * and feedback
  */
 function AreaSpecificCheckpoints({
   assessmentId,
@@ -44,6 +52,7 @@ function AreaSpecificCheckpoints({
   theme: ThemeOptions;
   feedback: boolean;
 }) {
+  // using react useState hook it sets up a page and the changes of a page
   const [page, setPage] = React.useState(1);
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -51,7 +60,7 @@ function AreaSpecificCheckpoints({
   ) => {
     setPage(value);
   };
-
+  // set the value initially to the "Single" tab on the page
   const [value, setValue] = React.useState("Single");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -118,7 +127,7 @@ function AreaSpecificCheckpoints({
     }
     return "";
   };
-
+  // constant declaration that creates a checkpointcard
   const createCheckpointCard = (checkpoint: CheckpointAPP) => (
     <Checkpoint
       key={`checkpoint-card-${checkpoint.id}`}
@@ -135,7 +144,7 @@ function AreaSpecificCheckpoints({
       answers={answerList}
     />
   );
-
+  // return Single / List tabs with the areaspecific checkpoints
   return (
     <div style={{ width: "inherit", display: "contents" }}>
       <Card
