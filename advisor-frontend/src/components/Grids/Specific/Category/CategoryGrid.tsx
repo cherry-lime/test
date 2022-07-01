@@ -143,8 +143,8 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   const columns = React.useMemo<GridColumns<CategoryAPP>>(
     () => [
       {
-        field: "",
         width: 50,
+        field: "",
         renderCell: (params: { row: CategoryAPP }) => (
           <RenderEditCell
             handleUpward={handleUpwardDecorator(params.row)}
@@ -153,14 +153,14 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         ),
       },
       {
+        headerAlign: "center",
         field: "order",
         headerName: "Order",
-        headerAlign: "center",
         align: "center",
         type: "number",
+        preProcessEditCellProps: preProcessEditOrderDecorator,
         width: 75,
         editable: true,
-        preProcessEditCellProps: preProcessEditOrderDecorator,
       },
       {
         field: "name",

@@ -25,11 +25,15 @@ export const getOnError = (ref: React.RefObject<RefObject>) => {
 
   return onError;
 };
-// constant declaration for errorpopup
+/**
+ * constant declaration for errorpopup
+ */
 const ErrorPopup = forwardRef(
   // eslint-disable-next-line react/require-default-props
   (props: { isWarning?: boolean }, ref: Ref<RefObject>) => {
-    // Use error states
+    /**
+     * Use error states
+     */
     const [errorPopup, setErrorPopup] = useState<{
       msg: string;
       open: boolean;
@@ -37,11 +41,15 @@ const ErrorPopup = forwardRef(
       msg: "",
       open: false,
     });
-    // constant declaration for errorpopup handling
+    /**
+     * constant declaration for errorpopup handling
+     */
     const handleErrorPopup = (msg: string) =>
       setErrorPopup({ msg, open: true });
 
-    // Handle error close
+    /**
+     * Handle error close
+     */
     const handleClose = (
       event?: React.SyntheticEvent | Event,
       reason?: string
@@ -49,11 +57,15 @@ const ErrorPopup = forwardRef(
       if (reason === "clickaway") {
         return;
       }
-      // set error popup
+      /**
+       * set error popup
+       */
       setErrorPopup({ msg: "", open: false });
     };
 
-    // Use imperative handle for parent class
+    /**
+     * Use imperative handle for parent class
+     */
     useImperativeHandle(ref, () => ({ handleErrorPopup }));
 
     /**
