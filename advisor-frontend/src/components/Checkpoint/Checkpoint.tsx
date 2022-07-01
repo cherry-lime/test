@@ -53,7 +53,6 @@ function Checkpoint({
    * set the value when clicking on
    * one of the radio-buttons
    */
-
   const [value, setValue] = useState(selectedAnswer);
 
   React.useEffect(() => {
@@ -61,6 +60,7 @@ function Checkpoint({
   }, [selectedAnswer]);
 
   const postCheckpointAnswer = usePostSaveAssessment(assessmentId, value);
+
   /**
    * constant declaration changeAnswerList that returns a (new) list of the answers once changing them
    */
@@ -77,6 +77,7 @@ function Checkpoint({
       });
     }
   };
+
   /**
    * constant declaration that lets you to change the answer
    * of the checkpoints in assessments/evaluations
@@ -91,8 +92,6 @@ function Checkpoint({
         setValue(newValue);
       },
       onError: (err, _, context) => {
-        // eslint-disable-next-line no-console
-        console.log(err);
         if (context) {
           setValue(context.oldValue);
           changeAnswerList(context.oldValue);
@@ -100,6 +99,7 @@ function Checkpoint({
       },
     });
   };
+
   /**
    * constant declaration handleClick that assigns value, when clicking
    * on the radiobuttons/checkpoints, even if you switch between checkpoints / radiobutton

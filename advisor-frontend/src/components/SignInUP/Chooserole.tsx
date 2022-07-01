@@ -63,7 +63,7 @@ export default function Chooserole() {
           Continue
         </Button>
       </LoginLayout>
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorChooserole} />
     </ThemeProvider>
   );
 }

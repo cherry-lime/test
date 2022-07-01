@@ -18,7 +18,6 @@ const defaultProps = {
  * @param bgColor Optional string used to give a specific background color.
  * @returns React header component.
  */
-
 export default function Header({ name, bgColor }: headerProps) {
   const [text] = useState(name);
   return (
