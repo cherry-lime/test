@@ -99,7 +99,7 @@ export class CheckpointService {
         if (error.code === 'P2002') {
           // Throw error ïf name and type not unique
           throw new ConflictException(
-            'category with this name and type already exists'
+            'Checkpoint with this description already exists'
           );
         }
         if (error.code === 'P2025') {
