@@ -41,11 +41,11 @@ function TeamList({ theme }: { theme: Theme }) {
       },
     });
   };
-  /* 
-  function that allows you to join team as token once
-  token has been filled in editable textfield (at the left of the button) following
-  with clicking on the button "join team with token" 
-  */
+  /**
+   * function that allows you to join team as token once
+   * token has been filled in editable textfield (at the left of the button) following
+   * with clicking on the button "join team with token"
+   */
   return (
     <PageLayout title="Teams" sidebarType={userTypes[userRole]}>
       {userRole !== "ADMIN" && (

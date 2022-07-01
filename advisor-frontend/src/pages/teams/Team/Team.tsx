@@ -113,13 +113,13 @@ function Team({
       changeInfo(newInfo);
     }
   };
-  /*
-  return page with e.g. the following: 
-  team information, country, IT Area/ Department, 
-  grids for ongoing evaluations, completed evaluations,
-  grids for members, assessors that contains e.g. the name(s)
-  of team members / assessors
-  */
+  /**
+   * return page with e.g. the following:
+   * team information, country, IT Area/ Department,
+   * grids for ongoing evaluations, completed evaluations,
+   * grids for members, assessors that contains e.g. the name(s)
+   * of team members / assessors
+   */
   return (
     <div>
       {teamInfo && userRole && (

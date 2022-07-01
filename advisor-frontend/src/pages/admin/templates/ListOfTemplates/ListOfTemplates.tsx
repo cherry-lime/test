@@ -112,10 +112,10 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
     },
     [activeIndividualTemplate]
   );
-  /*
-  return page with list of templates, e.g.:
-  individual templates, team templates 
-  */
+  /**
+   * return page with list of templates, e.g.:
+   * individual templates, team templates
+   */
   return (
     <div>
       <PageLayout title="Templates" sidebarType={userType.ADMIN}>
