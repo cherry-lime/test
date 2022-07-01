@@ -15,13 +15,9 @@ import ProgressEvaluationCard from "../../../components/PageCard/SpecificPageCar
 import ListOfRecommendations from "../../../components/ListOfRecommendations/ListOfRecommendations";
 import {
   AssessmentAPP,
-  AssessmentCheckpointAPP,
   useGetAssessment,
-  useGetSaveAssessment,
   usePostFeedbackAssessment,
 } from "../../../api/AssessmentAPI/AssessmentAPI";
-import { AnswerAPP, useGetAnswers } from "../../../api/AnswerAPI/AnswerAPI";
-import { TopicAPP, useGetTopics } from "../../../api/TopicAPI/TopicAPI";
 import ErrorPopup, {
   getOnError,
   RefObject,
@@ -90,13 +86,13 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     if (assessmentResponse.status === "success" && assessmentResponse.data) {
       setAssessmentInfo(assessmentResponse.data);
     }
-    const rerouting = checkAssessmentRouting(
+    const rerouting = checkAssessmentRouting({
       assessmentResponse,
       team,
-      true,
+      completed: true,
       teamId,
-      assessmentId
-    );
+      assessmentId,
+    });
     if (rerouting) {
       navigate(rerouting);
     }
@@ -115,61 +111,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     });
   };
 
-  const [answerList, setAnswerList] = useState<AnswerAPP[]>();
-  const [checkpointAnswerList, setCheckpointAnswerList] =
-    useState<Record<number, number | undefined>>();
-
-  // get answer list from API
-  const answersResponse = useGetAnswers(
-    Number(assessmentInfo?.templateId),
-    true,
-    onErrorFeedback
-  );
-
-  // get checkpoint answer list from API
-  const checkpointAnswerResponse = useGetSaveAssessment(
-    Number(assessmentInfo?.id),
-    onErrorFeedback
-  );
-
-  // set the answer list value
-  React.useEffect(() => {
-    if (answersResponse.data && answersResponse.status === "success") {
-      setAnswerList(answersResponse.data);
-    }
-  }, [answersResponse]);
-
-  React.useEffect(() => {
-    if (
-      checkpointAnswerResponse.data &&
-      checkpointAnswerResponse.status === "success"
-    ) {
-      const answerDictionary: Record<number, number | undefined> = {};
-      checkpointAnswerResponse.data.forEach((a: AssessmentCheckpointAPP) => {
-        answerDictionary[a.checkpointId] = a.answerId;
-      });
-      setCheckpointAnswerList(answerDictionary);
-    }
-  }, [checkpointAnswerResponse.status, checkpointAnswerResponse.data]);
-
-  const [topicList, setTopicList] = useState<TopicAPP[]>([]);
-  const topicResponse = useGetTopics(
-    Number(assessmentInfo?.templateId),
-    true,
-    onErrorFeedback
-  );
-
-  // set assessment info value
-  React.useEffect(() => {
-    if (topicResponse.status === "success" && topicResponse.data) {
-      setTopicList(topicResponse.data);
-    }
-  }, [topicResponse.status, topicResponse.data]);
-
   const download = () => {
-    if (assessmentInfo && answerList && checkpointAnswerList && topicList) {
-      createPDF(assessmentInfo, checkpointAnswerList, topicList, answerList);
-    }
+    if (assessmentInfo) createPDF(assessmentInfo);
   };
   /**
    * return page with title,

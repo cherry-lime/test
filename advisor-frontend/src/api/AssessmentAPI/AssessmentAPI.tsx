@@ -72,12 +72,12 @@ export type AssessmentCheckpointAPP = {
   answerId: number | undefined;
 };
 
-type AssessmentCheckpointAPI = {
+export type AssessmentCheckpointAPI = {
   checkpoint_id: number;
   answer_id: number | undefined;
 };
 
-function assessmentCheckpointToAPP(
+export function assessmentCheckpointToAPP(
   assessmentCheckpointAPI: AssessmentCheckpointAPI
 ) {
   return {
@@ -86,7 +86,7 @@ function assessmentCheckpointToAPP(
   } as AssessmentCheckpointAPP;
 }
 
-function assessmentCheckpointToAPI(
+export function assessmentCheckpointToAPI(
   assessmentCheckpointAPP: AssessmentCheckpointAPP
 ) {
   return {
@@ -114,17 +114,15 @@ export function useGetAssessments(onError?: (err: unknown) => void) {
   );
 }
 
-const filterCompletedAssessments = (
+export const filterCompletedAssessments = (
   data: AssessmentAPI[],
   isCompleted: boolean
 ) => {
   // Filter data on whether it is completed
   const dataFiltered = isCompleted
-    ? data.filter(
-        (assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at !== null
-      )
+    ? data.filter((assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at)
     : data.filter(
-        (assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at === null
+        (assessmentAPI: AssessmentAPI) => !assessmentAPI.completed_at
       );
 
   // Convert filtered data to assessmentsAPP
@@ -272,7 +270,6 @@ export function usePostCompleteAssessment(
 }
 
 // Save assessment checkpoint in database
-
 export function usePostSaveAssessment(
   assessmentId: number,
   oldValue: string,

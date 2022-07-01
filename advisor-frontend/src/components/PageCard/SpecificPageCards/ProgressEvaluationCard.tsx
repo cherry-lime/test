@@ -35,7 +35,7 @@ import ErrorPopup, { getOnError, RefObject } from "../../ErrorPopup/ErrorPopup";
  * use the Chart.js libraries and properties from www.chartjs.org
  */
 Chart.register(ArcElement, CategoryScale, RadialLinearScale, Legend, Tooltip);
-
+// define type that contains ids of assessment + template
 type ProgressEvaluationCardProps = {
   assessmentId: number;
   templateId: number;
@@ -66,7 +66,6 @@ export default function ProgressEvaluationCard({
   );
   const [filter, setFilter] = useState<Filter>();
   const [filterSelected, setFilterSelected] = useState<number | null>();
-
   /**
    * constant delcaration for getting the topics
    */
@@ -75,7 +74,6 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-
   /**
    * constant declaration for getting the categories
    */
@@ -84,7 +82,6 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-
   /**
    * constant declaration for getting the maturitylevels
    */
@@ -93,7 +90,6 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-
   /**
    * constant declaration for getting the scores
    */
@@ -102,7 +98,6 @@ export default function ProgressEvaluationCard({
     topicSelected,
     onErrorProgress
   );
-
   /**
    * using useEffect hooks from React in order to prevent writing a class
    */

@@ -1,4 +1,9 @@
-// Imports
+/**
+ * Imports,
+ * e.g. the theming,
+ * layout of login,
+ * error popups etc
+ */
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -12,19 +17,32 @@ import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
 export default function Chooserole() {
-  // Defines the role state to keep track of the selected role
+  /**
+   * Defines the role state to keep track of the selected role
+   */
   const [userRole, setUserRole] = React.useState("");
   const handleChange = (event: SelectChangeEvent) => {
     setUserRole(event.target.value as string);
   };
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   */
   const refErrorChooserole = React.useRef<RefObject>(null);
   const onErrorChooserole = getOnError(refErrorChooserole);
 
-  // Imports the API hook for registering
+  /**
+   * Imports the API hook for registering
+   */
   const userReg = useRegister(onErrorChooserole);
-
+  /**
+   * Return a box containing an icon at the top
+   * a text: "Please, select your role"
+   * followed by a dropdown list which contains
+   * user and facilitator
+   * followed with a continue button, which can be pressed once
+   * a role has been selected
+   */
   return (
     <ThemeProvider theme={INGTheme}>
       <LoginLayout>
