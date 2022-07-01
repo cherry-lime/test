@@ -8,24 +8,34 @@ import { createTheme } from "@mui/material";
 const INGTheme = createTheme({
   palette: {
     primary: {
-      light: "#FFD6B1", // Light Orange
-      main: "#FF6200", // Orange
-      dark: "#AA3909", // Dark Orange
+      // Light Orange
+      light: "#FFD6B1",
+      // Orange
+      main: "#FF6200",
+      // Dark Orange
+      dark: "#AA3909",
     },
     secondary: {
-      light: "#EDE6E2", // Light Grey
-      main: "#8B817C", // Grey
-      dark: "#5A534F", // Dark Grey
+      // Light Grey
+      light: "#EDE6E2",
+      // Grey
+      main: "#8B817C",
+      // Dark Grey
+      dark: "#5A534F",
     },
     text: {
-      secondary: "#5A534F", // Dark Grey
+      // Dark Grey
+      secondary: "#5A534F",
     },
     info: {
-      light: "#FAF6F3", // Lightest Grey
-      main: "#ffffff", // White color for icons.
+      // Lightest Grey
+      light: "#FAF6F3",
+      // White color for icons.
+      main: "#ffffff",
     },
     background: {
-      default: "#ffffff", // Used to define the custom sidebar text color.
+      // Used to define the custom sidebar text color.
+      default: "#ffffff",
     },
   },
 });
