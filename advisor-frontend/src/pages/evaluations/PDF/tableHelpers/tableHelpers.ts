@@ -1,5 +1,11 @@
 import JsPDF from "jspdf";
 
+export type DocProps = {
+  pageMargin: number;
+  liveArea: { width: number; height: number };
+  padding: number;
+};
+
 export function nextYCheckEndOfPage(
   doc: JsPDF,
   nextY: number,
@@ -17,11 +23,7 @@ export function nextYCheckEndOfPage(
 export function generateTableHeaders(
   doc: JsPDF,
   headers: string[],
-  docProps: {
-    pageMargin: number;
-    liveArea: { width: number; height: number };
-    padding: number;
-  },
+  docProps: DocProps,
   nextYValue: number,
   firstColWidth: number,
   colWidth: number
