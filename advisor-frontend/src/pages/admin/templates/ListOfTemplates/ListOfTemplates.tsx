@@ -105,6 +105,12 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
   const handleActiveTeamTemplateChange = (teamTemplateId: number) => {
     handleActiveTemplateChange(teamTemplateId, { individual: false });
   };
+
+  const addTemplateMenuItem = (template: TemplateAPP) => {
+    <MenuItem key={template.name} value={template.id.toString()}>
+      {template.name}
+    </MenuItem>;
+  };
   /**
    * return page with list of templates, e.g.:
    * individual templates, team templates
@@ -123,11 +129,9 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
               handleActiveIndividualTemplateChange(Number(e.target.value))
             }
           >
-            {individualTemplates.map((template) => (
-              <MenuItem key={template.name} value={template.id.toString()}>
-                {template.name}
-              </MenuItem>
-            ))}
+            {individualTemplates.map((individualTemplate) =>
+              addTemplateMenuItem(individualTemplate)
+            )}
           </Select>
         </FormControl>
 
@@ -149,11 +153,9 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
               handleActiveTeamTemplateChange(Number(e.target.value))
             }
           >
-            {teamTemplates.map((template) => (
-              <MenuItem key={template.name} value={template.id.toString()}>
-                {template.name}
-              </MenuItem>
-            ))}
+            {teamTemplates.map((teamTemplate) =>
+              addTemplateMenuItem(teamTemplate)
+            )}
           </Select>
         </FormControl>
         <TemplateGrid
