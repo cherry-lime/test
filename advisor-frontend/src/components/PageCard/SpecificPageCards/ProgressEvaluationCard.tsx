@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-
 import {
   Chart,
   ArcElement,
@@ -32,66 +31,81 @@ import {
 import { ScoreAPP, useGetScores } from "../../../api/ScoreAPI/ScoreAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI/TopicAPI";
 import ErrorPopup, { getOnError, RefObject } from "../../ErrorPopup/ErrorPopup";
-
+/**
+ * use the Chart.js libraries and properties from www.chartjs.org
+ */
 Chart.register(ArcElement, CategoryScale, RadialLinearScale, Legend, Tooltip);
 
 type ProgressEvaluationCardProps = {
   assessmentId: number;
   templateId: number;
 };
-
+/**
+ * apply filter for category or maturity
+ */
 type Filter = "Category" | "Maturity";
 
 export default function ProgressEvaluationCard({
   assessmentId,
   templateId,
 }: ProgressEvaluationCardProps) {
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   */
   const refErrorProgress = useRef<RefObject>(null);
   const onErrorProgress = getOnError(refErrorProgress);
-
-  // define topics, categories, maturities, scores etc as contstants using the React usestate hook
+  /**
+   * define topics, categories, maturities, scores etc as contstants using the React usestate hook
+   */
   const [topics, setTopics] = useState<TopicAPP[]>();
   const [categories, setCategories] = useState<CategoryAPP[]>();
   const [maturities, setMaturities] = useState<MaturityAPP[]>();
   const [scores, setScores] = useState<ScoreAPP[]>();
-
   const [topicSelected, setTopicSelected] = useState<number | undefined>(
     undefined
   );
-
   const [filter, setFilter] = useState<Filter>();
   const [filterSelected, setFilterSelected] = useState<number | null>();
-
-  // constant delcaration for getting the topics
+  
+  /**
+   * constant delcaration for getting the topics
+   */
   const { status: statusTopics, data: dataTopics } = useGetTopics(
     templateId,
     true,
     onErrorProgress
   );
-
-  // constant declaration for getting the categories
+  
+  /**
+   * constant declaration for getting the categories
+   */
   const { status: statusCategories, data: dataCategories } = useGetCategories(
     templateId,
     true,
     onErrorProgress
   );
-
-  // constant declaration for getting the maturitylevels
+  
+  /**
+   * constant declaration for getting the maturitylevels
+   */
   const { status: statusMaturities, data: dataMaturities } = useGetMaturities(
     templateId,
     true,
     onErrorProgress
   );
-
-  // constant declaration for getting the scores
+  
+  /**
+   * constant declaration for getting the scores
+   */
   const { status: statusScores, data: dataScores } = useGetScores(
     assessmentId,
     topicSelected,
     onErrorProgress
   );
-
-  // using useEffect hooks from React in order to prevent writing a class
+  
+  /**
+   * using useEffect hooks from React in order to prevent writing a class
+   */
   useEffect(() => {
     setFilter("Category");
     setFilterSelected(null);
@@ -152,16 +166,24 @@ export default function ProgressEvaluationCard({
   ) {
     return <>...</>;
   }
-
-  // constant declarations for filtered + displayed objects
+  
+  /**
+   * constant declarations for filtered
+   * and the displayed objects
+   */
   const filteredObjects = filter === "Category" ? categories : maturities;
   const displayedObjects = filter === "Category" ? maturities : categories;
-
-  // constant declarations for the corresponding id's of the filters and displayed ones
+  
+  /**
+   * constant declarations for the corresponding id's of the filters
+   * and the displayed ones
+   */
   const filteredId = filter === "Category" ? "categoryId" : "maturityId";
   const displayedId = filter === "Category" ? "maturityId" : "categoryId";
-
-  // constant declaration for handling the changing of the filters
+  
+  /**
+   * constant declaration for handling the changing of the filters
+   */
   const handleFilterChange = () => {
     if (filter === "Category") {
       setFilter("Maturity");
@@ -171,8 +193,10 @@ export default function ProgressEvaluationCard({
       setFilterSelected(null);
     }
   };
-
-  // constant declaration to get the scores in an array
+  
+  /**
+   * constant declaration to get the scores in an array
+   */
   const getFilteredScores = () =>
     scores.filter(
       (score: ScoreAPP) =>
@@ -180,8 +204,10 @@ export default function ProgressEvaluationCard({
         score[displayedId] !== null &&
         score.score !== -1
     ) as ScoreAPP[];
-
-  // constant declaration to get the labels
+    
+  /**
+   * constant declaration to get the labels
+   */
   const getLabels = () =>
     getFilteredScores().map((score: ScoreAPP) => {
       const displayedObject = displayedObjects.find(
@@ -194,8 +220,10 @@ export default function ProgressEvaluationCard({
 
       return "";
     });
-
-  // constant declaration to get the score data
+    
+  /**
+   * constant declaration to get the score data
+   */
   const getData = () =>
     getFilteredScores().map((score: ScoreAPP) => score.score);
 

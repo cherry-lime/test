@@ -152,12 +152,12 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
         theme={theme}
         rows={rows}
         columns={columns}
-        processRowUpdate={processRowUpdateDecorator}
-        hasToolbar
         add={{
           text: "ADD ANSWER OPTION",
           handler: handleAddDecorator,
         }}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
       />
       <ErrorPopup ref={refErrorAnswer} />
     </>

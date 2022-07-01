@@ -324,13 +324,13 @@ export default function CheckpointGrid({
       <GenericGrid
         theme={theme}
         rows={rows}
-        columns={columns}
-        processRowUpdate={processRowUpdateDecorator}
-        hasToolbar
         add={{
           text: "CREATE CHECKPOINT",
           handler: handleAddDecorator,
         }}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
       />
       <ErrorPopup ref={refErrorCheckpoint} />
     </>

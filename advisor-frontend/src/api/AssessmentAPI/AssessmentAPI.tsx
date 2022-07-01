@@ -114,6 +114,27 @@ export function useGetAssessments(onError?: (err: unknown) => void) {
   );
 }
 
+const filterCompletedAssessments = (
+  data: AssessmentAPI[],
+  isCompleted: boolean
+) => {
+  // Filter data on whether it is completed
+  const dataFiltered = isCompleted
+    ? data.filter(
+        (assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at !== null
+      )
+    : data.filter(
+        (assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at === null
+      );
+
+  // Convert filtered data to assessmentsAPP
+  const assessmentsAPP = dataFiltered.map((assessmentAPI: AssessmentAPI) =>
+    assessmentToAPP(assessmentAPI)
+  );
+
+  return assessmentsAPP as AssessmentAPP[];
+};
+
 // Get all my individual assessments from database
 export function useGetMyIndividualAssessments(
   isCompleted: boolean,
@@ -124,24 +145,7 @@ export function useGetMyIndividualAssessments(
     async () => {
       // Get response data from database
       const { data } = await API.get(`/assessment/my`);
-
-      // Filter data on whether it is completed
-      const dataFiltered = isCompleted
-        ? data.filter(
-            (assessmentAPI: AssessmentAPI) =>
-              assessmentAPI.completed_at !== null
-          )
-        : data.filter(
-            (assessmentAPI: AssessmentAPI) =>
-              assessmentAPI.completed_at === null
-          );
-
-      // Convert filtered data to assessmentsAPP
-      const assessmentsAPP = dataFiltered.map((assessmentAPI: AssessmentAPI) =>
-        assessmentToAPP(assessmentAPI)
-      );
-
-      return assessmentsAPP as AssessmentAPP[];
+      return filterCompletedAssessments(data, isCompleted);
     },
     { onError }
   );
@@ -158,24 +162,7 @@ export function useGetMyTeamAssessments(
     async () => {
       // Get response data from database
       const { data } = await API.get(`/teams/${teamId}/assessments`);
-
-      // Filter data on whether it is completed
-      const dataFiltered = isCompleted
-        ? data.filter(
-            (assessmentAPI: AssessmentAPI) =>
-              assessmentAPI.completed_at !== null
-          )
-        : data.filter(
-            (assessmentAPI: AssessmentAPI) =>
-              assessmentAPI.completed_at === null
-          );
-
-      // Convert filtered data to assessmentsAPP
-      const assessmentsAPP = dataFiltered.map((assessmentAPI: AssessmentAPI) =>
-        assessmentToAPP(assessmentAPI)
-      );
-
-      return assessmentsAPP as AssessmentAPP[];
+      return filterCompletedAssessments(data, isCompleted);
     },
     { onError }
   );

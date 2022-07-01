@@ -74,10 +74,7 @@ export function useGetSubareas(
 
       return subareasAPP as SubareaAPP[];
     },
-    {
-      onError,
-      enabled: !!categoryId,
-    }
+    { onError, enabled: !!categoryId }
   );
 }
 

@@ -83,10 +83,7 @@ export function useGetCheckpoints(
 
       return checkpointsAPP as CheckpointAPP[];
     },
-    {
-      onError,
-      enabled: !!categoryId,
-    }
+    { onError, enabled: !!categoryId }
   );
 }
 
