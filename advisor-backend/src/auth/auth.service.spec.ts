@@ -134,11 +134,20 @@ describe('AuthService', () => {
         );
     });
 
-    it('should reject if username is not found', async () => {
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.user, 'findUnique')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      expect(
+        authService.login(userDto)
+      ).rejects.toThrowError(InternalServerErrorException);
+    });
+
+    it('should reject if the password is invalid', async () => {
       // mocking bcrypt compare method
       const bcryptCompare =
         jest
-          .fn().mockRejectedValue(
+          .fn().mockRejectedValueOnce(
             new UnauthorizedException('invalid password')
           );
       (bcrypt.compare as jest.Mock) = bcryptCompare;

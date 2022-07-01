@@ -29,8 +29,14 @@ export class AuthService {
    */
   async login({ username, password }: LoginDto): Promise<AuthResponse> {
     const user = await this.prismaService.user.findUnique({
-      where: { username },
-    });
+      where: {
+        username
+      },
+    })
+      .catch((error) => {
+        console.log(error)
+        throw new InternalServerErrorException()
+      });
 
     if (!user) {
       throw new NotFoundException('user not found');
@@ -65,7 +71,7 @@ export class AuthService {
     const user = await this.usersService
       .createUser(
         createUserDto
-      )
+      );
 
     return {
       token: this.jwtService
