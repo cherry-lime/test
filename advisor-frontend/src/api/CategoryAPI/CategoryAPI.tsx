@@ -70,10 +70,7 @@ export function useGetCategories(
 
       return categoriesAPP as CategoryAPP[];
     },
-    {
-      onError,
-      enabled: !!templateId,
-    }
+    { onError, enabled: !!templateId }
   );
 }
 
