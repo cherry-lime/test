@@ -63,15 +63,12 @@ function App({ testRender }: appProp) {
               userRole !== "NONE" ? (
                 <Navigate to={`/${userRole}`} />
               ) : (
-                <SignIn theme={INGTheme} />
+                <SignIn />
               )
             }
           />
-          <Route path="/signup" element={<Chooserole theme={INGTheme} />} />
-          <Route
-            path="/signup/details"
-            element={<DetailGen theme={INGTheme} />}
-          />
+          <Route path="/signup" element={<Chooserole />} />
+          <Route path="/signup/details" element={<DetailGen />} />
           {/* Only route to the user pages if the user has USER rights */}
           {userRole === "USER" ? (
             <>

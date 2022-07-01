@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormControl, MenuItem, Select, Theme } from "@mui/material";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
@@ -71,47 +71,46 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
     }
   }, [teamResponse.status, teamResponse.data]);
 
-  const handleActiveIndividualTemplateChange = useCallback(
-    (event) => {
-      const templateId = parseInt(event.target.value, 10);
+  const handleActiveTemplateChange = (
+    templateId: number,
+    options: { individual: boolean }
+  ) => {
+    const { individual } = options;
+    const templates = individual ? individualTemplates : teamTemplates;
+    const oldTemplate = templates.find(
+      (template) => template.id === templateId
+    );
 
-      const oldTemplate = individualTemplates.find(
-        (template) => template.id === templateId
-      );
+    if (oldTemplate) {
+      const newTemplate = { ...oldTemplate, enabled: true };
 
-      if (oldTemplate) {
-        const newTemplate = { ...oldTemplate, enabled: true };
-
-        patchTemplate.mutate(newTemplate, {
-          onSuccess: (templateAPP: TemplateAPP) => {
+      patchTemplate.mutate(newTemplate, {
+        onSuccess: (templateAPP: TemplateAPP) => {
+          if (individual) {
             setActiveIndividualTemplate(templateAPP);
-          },
-        });
-      }
-    },
-    [activeIndividualTemplate]
-  );
-
-  const handleActiveTeamTemplateChange = useCallback(
-    (event) => {
-      const templateId = parseInt(event.target.value, 10);
-
-      const oldTemplate = teamTemplates.find(
-        (template) => template.id === templateId
-      );
-
-      if (oldTemplate) {
-        const newTemplate = { ...oldTemplate, enabled: true };
-
-        patchTemplate.mutate(newTemplate, {
-          onSuccess: (templateAPP: TemplateAPP) => {
+          } else {
             setActiveTeamTemplate(templateAPP);
-          },
-        });
-      }
-    },
-    [activeIndividualTemplate]
-  );
+          }
+        },
+      });
+    }
+  };
+
+  const handleActiveIndividualTemplateChange = (
+    individualTemplateId: number
+  ) => {
+    handleActiveTemplateChange(individualTemplateId, { individual: true });
+  };
+
+  const handleActiveTeamTemplateChange = (teamTemplateId: number) => {
+    handleActiveTemplateChange(teamTemplateId, { individual: false });
+  };
+
+  const addTemplateMenuItem = (template: TemplateAPP) => {
+    <MenuItem key={template.name} value={template.id.toString()}>
+      {template.name}
+    </MenuItem>;
+  };
   /**
    * return page with list of templates, e.g.:
    * individual templates, team templates
@@ -126,13 +125,13 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         <FormControl sx={{ width: "inherit" }}>
           <Select
             value={activeIndividualTemplate ? activeIndividualTemplate.id : ""}
-            onChange={handleActiveIndividualTemplateChange}
+            onChange={(e) =>
+              handleActiveIndividualTemplateChange(Number(e.target.value))
+            }
           >
-            {individualTemplates.map((template) => (
-              <MenuItem key={template.name} value={template.id.toString()}>
-                {template.name}
-              </MenuItem>
-            ))}
+            {individualTemplates.map((individualTemplate) =>
+              addTemplateMenuItem(individualTemplate)
+            )}
           </Select>
         </FormControl>
 
@@ -150,13 +149,13 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         <FormControl sx={{ width: "inherit" }}>
           <Select
             value={activeTeamTemplate ? activeTeamTemplate.id : ""}
-            onChange={handleActiveTeamTemplateChange}
+            onChange={(e) =>
+              handleActiveTeamTemplateChange(Number(e.target.value))
+            }
           >
-            {teamTemplates.map((template) => (
-              <MenuItem key={template.name} value={template.id.toString()}>
-                {template.name}
-              </MenuItem>
-            ))}
+            {teamTemplates.map((teamTemplate) =>
+              addTemplateMenuItem(teamTemplate)
+            )}
           </Select>
         </FormControl>
         <TemplateGrid
