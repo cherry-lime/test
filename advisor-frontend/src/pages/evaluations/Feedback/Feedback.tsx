@@ -20,10 +20,6 @@ import {
   useGetSaveAssessment,
   usePostFeedbackAssessment,
 } from "../../../api/AssessmentAPI/AssessmentAPI";
-import {
-  CategoryAPP,
-  useGetCategories,
-} from "../../../api/CategoryAPI/CategoryAPI";
 import { AnswerAPP, useGetAnswers } from "../../../api/AnswerAPI/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI/TopicAPI";
 import ErrorPopup, {
@@ -119,17 +115,9 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     });
   };
 
-  const [areaList, setAreaList] = useState<CategoryAPP[]>();
   const [answerList, setAnswerList] = useState<AnswerAPP[]>();
   const [checkpointAnswerList, setCheckpointAnswerList] =
     useState<Record<number, number | undefined>>();
-
-  // get area list from API
-  const areasResponse = useGetCategories(
-    Number(assessmentInfo?.templateId),
-    true,
-    onErrorFeedback
-  );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
@@ -143,13 +131,6 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     Number(assessmentInfo?.id),
     onErrorFeedback
   );
-
-  // set the area list value
-  React.useEffect(() => {
-    if (areasResponse.data && areasResponse.status === "success") {
-      setAreaList(areasResponse.data);
-    }
-  }, [areasResponse]);
 
   // set the answer list value
   React.useEffect(() => {
@@ -186,20 +167,8 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   }, [topicResponse.status, topicResponse.data]);
 
   const download = () => {
-    if (
-      assessmentId &&
-      areaList &&
-      answerList &&
-      checkpointAnswerList &&
-      topicList
-    ) {
-      createPDF(
-        Number(assessmentId),
-        areaList,
-        checkpointAnswerList,
-        topicList,
-        answerList
-      );
+    if (assessmentInfo && answerList && checkpointAnswerList && topicList) {
+      createPDF(assessmentInfo, checkpointAnswerList, topicList, answerList);
     }
   };
   /**

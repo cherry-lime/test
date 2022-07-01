@@ -11,7 +11,7 @@ export type CategoryAPP = {
   templateId: number;
 };
 
-type CategoryAPI = {
+export type CategoryAPI = {
   category_id: number;
   category_name: string;
   color: string;

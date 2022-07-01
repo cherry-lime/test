@@ -23,10 +23,26 @@ import {
   TemplateAPP,
   templateToAPP,
 } from "../../../../api/TemplateAPI/TemplateAPI";
+import {
+  CategoryAPI,
+  CategoryAPP,
+  categoryToAPP,
+} from "../../../../api/CategoryAPI/CategoryAPI";
+
+export async function getAreas(templateId: number) {
+  const { data } = await API.get(`/template/${templateId}/category`);
+  const areas = data.map((categoryAPI: CategoryAPI) =>
+    categoryToAPP(categoryAPI)
+  );
+
+  const areasFiltered = areas.filter(
+    (categoryAPP: CategoryAPP) => categoryAPP.enabled
+  );
+  return areasFiltered as CategoryAPP[];
+}
 
 export async function getCheckpoints(areaId: number) {
   const { data } = await API.get(`/category/${areaId}/checkpoint`);
-  // Convert data to checkpointsAPP
   const checkpointsAPP = data
     .map((checkpointAPI: CheckpointAPI) => checkpointToAPP(checkpointAPI))
     .sort((a: CheckpointAPI, b: CheckpointAPI) => a.order - b.order);
@@ -36,12 +52,6 @@ export async function getCheckpoints(areaId: number) {
   );
 
   return checkpointsFilteredAPP as CheckpointAPP[];
-}
-
-export async function getAssessment(assessmentId: number) {
-  const { data } = await API.get(`/assessment/${assessmentId}`);
-
-  return assessmentToAPP(data) as AssessmentAPP;
 }
 
 export async function getTemplate(templateId: number) {

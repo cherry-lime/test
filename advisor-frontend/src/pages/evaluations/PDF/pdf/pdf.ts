@@ -1,10 +1,9 @@
 /* eslint-disable max-lines */
 import JsPDF from "jspdf";
 import { AnswerAPP } from "../../../../api/AnswerAPI/AnswerAPI";
-import { CategoryAPP } from "../../../../api/CategoryAPI/CategoryAPI";
 import { TopicAPP } from "../../../../api/TopicAPI/TopicAPI";
 import {
-  getAssessment,
+  getAreas,
   getTemplate,
   getTopicRecommendations,
 } from "../helpersAPI/pdfHelpersAPI";
@@ -16,6 +15,7 @@ import {
   generateText,
   DocProps,
 } from "../tableHelpers/tableHelpers";
+import { AssessmentAPP } from "../../../../api/AssessmentAPI/AssessmentAPI";
 
 export function addTable(
   doc: JsPDF,
@@ -164,26 +164,24 @@ function pdf(tables: Table[], title: string, filename: string) {
 }
 
 export default async function createPDF(
-  assessmentId: number,
-  areas: CategoryAPP[],
+  assessment: AssessmentAPP,
   checkpointAnswers: Record<number, number | undefined>,
   topics: TopicAPP[],
   answerList: AnswerAPP[]
 ) {
-  const filename = `Feedback-${assessmentId}.pdf`;
+  const filename = `Feedback-${assessment.id}.pdf`;
   const recsHeaders = ["Priority", "Recommendation", "Additional Info"];
   const checkpointHeaders = ["Order", "Description", "Topics", "Answer"];
 
   const tables: Table[] = [];
 
-  const assessmentInfo = await getAssessment(Number(assessmentId));
-
-  const templateInfo = await getTemplate(Number(assessmentInfo.templateId));
+  const templateInfo = await getTemplate(Number(assessment.templateId));
+  const areas = await getAreas(Number(templateInfo.id));
 
   const feedback = templateInfo.information;
-  const assessorFeedback = assessmentInfo.feedbackText;
+  const assessorFeedback = assessment.feedbackText;
 
-  const recs = await getTopicRecommendations(assessmentId, undefined);
+  const recs = await getTopicRecommendations(Number(assessment.id), undefined);
 
   tables.push(getRecTable(recs, recsHeaders, feedback, assessorFeedback));
 
@@ -197,5 +195,5 @@ export default async function createPDF(
     )
   ).forEach((s) => tables.push(s));
 
-  pdf(tables, `Feedback for evaluation ${assessmentId}`, filename);
+  pdf(tables, `Feedback for evaluation ${assessment.id}`, filename);
 }
