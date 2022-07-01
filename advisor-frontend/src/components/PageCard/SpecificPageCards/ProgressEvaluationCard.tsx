@@ -54,6 +54,7 @@ export default function ProgressEvaluationCard({
    */
   const refErrorProgress = useRef<RefObject>(null);
   const onErrorProgress = getOnError(refErrorProgress);
+  
   /**
    * define topics, categories, maturities, scores etc as contstants using the React usestate hook
    */
@@ -110,25 +111,21 @@ export default function ProgressEvaluationCard({
     setFilter("Category");
     setFilterSelected(null);
   }, []);
-
   useEffect(() => {
     if (statusTopics === "success") {
       setTopics(dataTopics);
     }
   }, [statusTopics, dataTopics]);
-
   useEffect(() => {
     if (statusCategories === "success") {
       setCategories(dataCategories);
     }
   }, [statusCategories, dataCategories]);
-
   useEffect(() => {
     if (statusMaturities === "success") {
       setMaturities(dataMaturities);
     }
   }, [statusMaturities, dataMaturities]);
-
   useEffect(() => {
     if (statusScores === "success") {
       setScores(dataScores);
@@ -154,7 +151,6 @@ export default function ProgressEvaluationCard({
       setFilterSelected(Number(event.target.value));
     else setFilterSelected(null);
   };
-
   if (
     !(
       scores &&
@@ -166,7 +162,7 @@ export default function ProgressEvaluationCard({
   ) {
     return <>...</>;
   }
-
+  
   /**
    * constant declarations for filtered
    * and the displayed objects
@@ -180,7 +176,7 @@ export default function ProgressEvaluationCard({
    */
   const filteredId = filter === "Category" ? "categoryId" : "maturityId";
   const displayedId = filter === "Category" ? "maturityId" : "categoryId";
-
+ 
   /**
    * constant declaration for handling the changing of the filters
    */
@@ -193,7 +189,7 @@ export default function ProgressEvaluationCard({
       setFilterSelected(null);
     }
   };
-
+  
   /**
    * constant declaration to get the scores in an array
    */
@@ -213,11 +209,9 @@ export default function ProgressEvaluationCard({
       const displayedObject = displayedObjects.find(
         (o) => o.id === score[displayedId]
       );
-
       if (displayedObject) {
         return displayedObject.name;
       }
-
       return "";
     });
 

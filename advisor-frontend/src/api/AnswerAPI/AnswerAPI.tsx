@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
-
+// export AnswerApp as a type
 export type AnswerAPP = {
   id: GridRowId;
   label: string;
@@ -9,7 +9,15 @@ export type AnswerAPP = {
   templateId: number;
   enabled: boolean;
 };
-
+/**
+ * declare type AnswerAPI, that consists of
+ * answer_id which is a number,
+ * answer_text which is a text expressed in strings,
+ * answer_weight which is a value/number for the weights per answer,
+ * template_id which states the id of each template (expressed in numbers)
+ * a boolean value disabled (that makes sure that e.g. answers to the checkpoints get disabled)
+ * once completing evaluations
+ */
 export type AnswerAPI = {
   answer_id: number;
   answer_text: string;

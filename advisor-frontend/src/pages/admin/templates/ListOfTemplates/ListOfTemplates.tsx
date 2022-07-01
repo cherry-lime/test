@@ -18,6 +18,9 @@ import ErrorPopup, {
  * This should only be accessible to admins
  */
 function ListOfTemplates({ theme }: { theme: Theme }) {
+  /**
+   * Use states for templates and active templates
+   */
   const [individualTemplates, setIndividualTemplates] = useState<TemplateAPP[]>(
     []
   );
@@ -111,6 +114,7 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
       {template.name}
     </MenuItem>;
   };
+
   /**
    * return page with list of templates, e.g.:
    * individual templates, team templates

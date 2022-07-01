@@ -12,7 +12,9 @@ import { Grid } from "@mui/material";
 // import  mainListItems  from "./listItems";
 import SidebarList from "./listItems";
 
-// Used to define the maximum width of the sidebar.
+/**
+ * Used to define the maximum width of the sidebar.
+ */
 const drawerWidth = 220;
 
 /**
@@ -45,7 +47,9 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 /**
- * Defines the props type used in Sidebar that takes in React.ReactNode children and a Map that defines the user-viewability
+ * Defines the props type used in Sidebar
+ * that takes in React.ReactNode children and
+ * a Map that defines the user-viewability
  */
 type SidebarProps = {
   children?: React.ReactNode;

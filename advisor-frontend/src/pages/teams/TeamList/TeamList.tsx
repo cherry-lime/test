@@ -41,6 +41,7 @@ function TeamList({ theme }: { theme: Theme }) {
       },
     });
   };
+
   /**
    * function that allows you to join team as token once
    * token has been filled in editable textfield (at the left of the button) following
