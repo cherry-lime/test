@@ -10,14 +10,11 @@ import {
 import { Theme } from "@mui/material/styles";
 import {
   FormControl,
-  IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
-import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
 import GenericGrid from "../../Generic/GenericGrid";
 
@@ -49,6 +46,7 @@ import ErrorPopup, {
   getOnError,
   RefObject,
 } from "../../../ErrorPopup/ErrorPopup";
+import { RenderEditCell } from "../columns";
 
 type CheckpointGridProps = {
   theme: Theme;
@@ -203,18 +201,10 @@ export default function CheckpointGrid({
         field: "",
         width: 50,
         renderCell: (params: { row: CheckpointAPP }) => (
-          <div className="parent">
-            <div className="child">
-              <IconButton onClick={handleUpwardDecorator(params.row)}>
-                <UpwardIcon />
-              </IconButton>
-            </div>
-            <div className="child">
-              <IconButton onClick={handleDownwardDecorator(params.row)}>
-                <DownwardIcon />
-              </IconButton>
-            </div>
-          </div>
+          <RenderEditCell
+            handleUpward={handleUpwardDecorator(params.row)}
+            handleDownward={handleDownwardDecorator(params.row)}
+          />
         ),
       },
       {

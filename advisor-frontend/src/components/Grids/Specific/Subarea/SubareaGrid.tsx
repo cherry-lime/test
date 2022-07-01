@@ -9,9 +9,6 @@ import {
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
-import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
-import { IconButton } from "@mui/material";
 
 import GenericGrid from "../../Generic/GenericGrid";
 
@@ -36,6 +33,7 @@ import ErrorPopup, {
   getOnError,
   RefObject,
 } from "../../../ErrorPopup/ErrorPopup";
+import { RenderEditCell } from "../columns";
 
 type SubareaGridProps = {
   theme: Theme;
@@ -130,18 +128,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
         field: "",
         width: 50,
         renderCell: (params: { row: SubareaAPP }) => (
-          <div className="parent">
-            <div className="child">
-              <IconButton onClick={handleUpwardDecorator(params.row)}>
-                <UpwardIcon />
-              </IconButton>
-            </div>
-            <div className="child">
-              <IconButton onClick={handleDownwardDecorator(params.row)}>
-                <DownwardIcon />
-              </IconButton>
-            </div>
-          </div>
+          <RenderEditCell
+            handleUpward={handleUpwardDecorator(params.row)}
+            handleDownward={handleDownwardDecorator(params.row)}
+          />
         ),
       },
       {

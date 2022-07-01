@@ -3,9 +3,6 @@ import { UseMutationResult } from "react-query";
 
 import { GridColumns, GridPreProcessEditCellProps } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
-import { IconButton } from "@mui/material";
-import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
-import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
 import GenericGrid from "../../Generic/GenericGrid";
 
@@ -25,6 +22,7 @@ import {
   useGetRecommendations,
   usePatchRecommendation,
 } from "../../../../api/RecommendationAPI/RecommendationAPI";
+import { RenderEditCell } from "../columns";
 
 type RecommendationGridProps = {
   theme: Theme;
@@ -109,18 +107,10 @@ export default function RecommendationGrid({
               field: "",
               width: 50,
               renderCell: (params: { row: RecommendationAPP }) => (
-                <div className="parent">
-                  <div className="child">
-                    <IconButton onClick={handleUpwardDecorator(params.row)}>
-                      <UpwardIcon />
-                    </IconButton>
-                  </div>
-                  <div className="child">
-                    <IconButton onClick={handleDownwardDecorator(params.row)}>
-                      <DownwardIcon />
-                    </IconButton>
-                  </div>
-                </div>
+                <RenderEditCell
+                  handleUpward={handleUpwardDecorator(params.row)}
+                  handleDownward={handleDownwardDecorator(params.row)}
+                />
               ),
             },
           ]
