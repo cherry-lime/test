@@ -212,7 +212,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         editable: true,
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 125,
         getActions: (params: { id: GridRowId; row: CategoryAPP }) => [

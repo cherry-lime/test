@@ -83,7 +83,7 @@ export default function AssessmentCompletedGrid({
           `${new Date(params.value).toLocaleString()}`,
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 125,
         getActions: (params: { id: GridRowId }) => [

@@ -173,7 +173,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
         editable: true,
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 75,
         getActions: (params: { id: GridRowId }) => [
