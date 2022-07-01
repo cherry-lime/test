@@ -54,7 +54,7 @@ export default function ProgressEvaluationCard({
    */
   const refErrorProgress = useRef<RefObject>(null);
   const onErrorProgress = getOnError(refErrorProgress);
-  
+
   /**
    * define topics, categories, maturities, scores etc as contstants using the React usestate hook
    */
@@ -76,7 +76,6 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-
   /**
    * constant declaration for getting the categories
    */
@@ -85,7 +84,6 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-
   /**
    * constant declaration for getting the maturitylevels
    */
@@ -94,7 +92,6 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-
   /**
    * constant declaration for getting the scores
    */
@@ -103,7 +100,6 @@ export default function ProgressEvaluationCard({
     topicSelected,
     onErrorProgress
   );
-
   /**
    * using useEffect hooks from React in order to prevent writing a class
    */
@@ -131,7 +127,6 @@ export default function ProgressEvaluationCard({
       setScores(dataScores);
     }
   }, [statusScores, dataScores]);
-
   /**
    * use handletopicchange constant to define an event handler
    * w.r.t. changing topics
@@ -141,7 +136,6 @@ export default function ProgressEvaluationCard({
       setTopicSelected(Number(event.target.value));
     else setTopicSelected(undefined);
   };
-
   /**
    * use handlecategorychange constant to define an event handler
    * w.r.t changing category
@@ -162,21 +156,18 @@ export default function ProgressEvaluationCard({
   ) {
     return <>...</>;
   }
-  
   /**
    * constant declarations for filtered
    * and the displayed objects
    */
   const filteredObjects = filter === "Category" ? categories : maturities;
   const displayedObjects = filter === "Category" ? maturities : categories;
-
   /**
    * constant declarations for the corresponding id's of the filters
    * and the displayed ones
    */
   const filteredId = filter === "Category" ? "categoryId" : "maturityId";
   const displayedId = filter === "Category" ? "maturityId" : "categoryId";
- 
   /**
    * constant declaration for handling the changing of the filters
    */
@@ -189,7 +180,6 @@ export default function ProgressEvaluationCard({
       setFilterSelected(null);
     }
   };
-  
   /**
    * constant declaration to get the scores in an array
    */
