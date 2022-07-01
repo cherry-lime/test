@@ -136,6 +136,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
         ),
       },
       {
+        preProcessEditCellProps: preProcessEditOrderDecorator,
         field: "order",
         headerName: "Order",
         headerAlign: "center",
@@ -143,7 +144,6 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
         type: "number",
         width: 75,
         editable: true,
-        preProcessEditCellProps: preProcessEditOrderDecorator,
       },
       {
         field: "name",
