@@ -23,13 +23,19 @@ export interface SimpleDialogProps {
  * @returns A dialog that asks if a user wants to delete a template
  */
 export default function DeleteDialog(props: SimpleDialogProps) {
-  // Declare the props
+  /**
+   * Declare the props
+   */
   const { onClose, open, deleteTemplate } = props;
-  // A handler that takes care of only closing the dialog when pressed No
+  /**
+   * A handler that takes care of only closing the dialog when pressed No
+   */
   const handleClose = () => {
     onClose();
   };
-  // A handler that takes care of deleting a template and closing the dialog when pressed Yes
+  /**
+   * A handler that takes care of deleting a template and closing the dialog when pressed Yes
+   */
   const handleDeleteClose = () => {
     onClose();
     deleteTemplate();
