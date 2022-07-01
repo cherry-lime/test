@@ -126,29 +126,29 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     () => [
       {
         field: "",
-        width: 50,
         renderCell: (params: { row: MaturityAPP }) => (
           <RenderEditCell
-            handleUpward={handleUpwardDecorator(params.row)}
             handleDownward={handleDownwardDecorator(params.row)}
+            handleUpward={handleUpwardDecorator(params.row)}
           />
         ),
+        width: 50,
       },
       {
-        field: "order",
         headerName: "Order",
+        field: "order",
+        type: "number",
         headerAlign: "center",
         align: "center",
-        type: "number",
-        width: 75,
         editable: true,
+        width: 75,
         preProcessEditCellProps: preProcessEditOrderDecorator,
       },
       {
-        field: "name",
         headerName: "Name",
-        type: "string",
+        field: "name",
         flex: 1,
+        type: "string",
         editable: true,
       },
       {
