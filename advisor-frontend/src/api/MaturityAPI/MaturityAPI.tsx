@@ -2,7 +2,6 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 
 import API from "../_API";
-import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type MaturityAPP = {
   id: GridRowId;
@@ -44,7 +43,7 @@ export function maturityToAPI(maturityAPP: MaturityAPP) {
 export function useGetMaturities(
   templateId: number,
   enabledFilter?: boolean,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/template", templateId, "/maturity", enabledFilter],
@@ -68,18 +67,12 @@ export function useGetMaturities(
 
       return maturitiesAPP as MaturityAPP[];
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Get maturity with id from database
-export function useGetMaturity(ref?: React.RefObject<RefObject>) {
+export function useGetMaturity(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/maturity", "/{maturity_id}"],
     async (maturityId) => {
@@ -89,20 +82,14 @@ export function useGetMaturity(ref?: React.RefObject<RefObject>) {
       // Convert data to maturityAPP
       return maturityToAPP(data) as MaturityAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Post maturity to database
 export function usePostMaturity(
   templateId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useMutation(
     ["POST", "/template", templateId, "/maturity"],
@@ -113,18 +100,12 @@ export function usePostMaturity(
       // Convert data to maturityAPP
       return maturityToAPP(data) as MaturityAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Patch maturity in database
-export function usePatchMaturity(ref?: React.RefObject<RefObject>) {
+export function usePatchMaturity(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/maturity", "/{maturity_id}"],
     async (maturityAPP: MaturityAPP) => {
@@ -140,18 +121,12 @@ export function usePatchMaturity(ref?: React.RefObject<RefObject>) {
       // Convert data to maturityAPP
       return maturityToAPP(data) as MaturityAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Delete maturity from database
-export function useDeleteMaturity(ref?: React.RefObject<RefObject>) {
+export function useDeleteMaturity(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/maturity", "/{maturity_id}"],
     async (maturityId: number) => {
@@ -161,12 +136,6 @@ export function useDeleteMaturity(ref?: React.RefObject<RefObject>) {
       // Convert data to maturityAPP
       return maturityToAPP(data) as MaturityAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }

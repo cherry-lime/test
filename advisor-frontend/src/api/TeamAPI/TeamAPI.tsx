@@ -1,8 +1,6 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
-
 import API from "../_API";
-import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type TeamAPP = {
   id: GridRowId;
@@ -41,7 +39,7 @@ export function teamToAPI(teamAPP: TeamAPP) {
 }
 
 // Get all teams from database
-export function useGetMyTeams(ref?: React.RefObject<RefObject>) {
+export function useGetMyTeams(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/teams", "/my-teams"],
     async () => {
@@ -53,18 +51,12 @@ export function useGetMyTeams(ref?: React.RefObject<RefObject>) {
 
       return teamsAPP as TeamAPP[];
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Get team with id from database
-export function useGetTeam(teamId: number, ref?: React.RefObject<RefObject>) {
+export function useGetTeam(teamId: number, onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/teams", teamId],
     async () => {
@@ -73,19 +65,12 @@ export function useGetTeam(teamId: number, ref?: React.RefObject<RefObject>) {
 
       return teamToAPP(data) as TeamAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-      enabled: !!teamId,
-    }
+    { onError, enabled: !!teamId }
   );
 }
 
 // Post team to database
-export function usePostTeam(ref?: React.RefObject<RefObject>) {
+export function usePostTeam(onError?: (err: unknown) => void) {
   return useMutation(
     ["POST", "/teams", "/create"],
     async () => {
@@ -95,18 +80,12 @@ export function usePostTeam(ref?: React.RefObject<RefObject>) {
       // Convert data to teamAPP
       return teamToAPP(data) as TeamAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Patch team in database
-export function usePatchTeam(ref?: React.RefObject<RefObject>) {
+export function usePatchTeam(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/teams", "/{team_id}"],
     async (teamAPP: TeamAPP) => {
@@ -119,18 +98,12 @@ export function usePatchTeam(ref?: React.RefObject<RefObject>) {
       // Convert data to teamAPP
       return teamToAPP(data);
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Delete team from database
-export function useDeleteTeam(ref?: React.RefObject<RefObject>) {
+export function useDeleteTeam(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/teams", "/{team_id}"],
     async (teamId: number) => {
@@ -140,20 +113,14 @@ export function useDeleteTeam(ref?: React.RefObject<RefObject>) {
       // Convert data to teamAPP
       return teamToAPP(data);
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Get team with id from database
 export function useGetInviteTokenTeam(
   teamId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/teams", teamId, "invite_token"],
@@ -163,20 +130,14 @@ export function useGetInviteTokenTeam(
 
       return data as string;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Patch team in database
 export function useJoinInviteTokenTeam(
   inviteToken: string,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useMutation(
     ["PATCH", "/teams", "/join", inviteToken],
@@ -186,12 +147,6 @@ export function useJoinInviteTokenTeam(
 
       return data;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }

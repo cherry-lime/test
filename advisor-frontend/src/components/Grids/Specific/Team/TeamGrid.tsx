@@ -14,7 +14,7 @@ import GenericGrid from "../../Generic/GenericGrid";
 import { UserRole } from "../../../../types/UserRole";
 
 import ErrorPopup, {
-  handleError,
+  getOnError,
   RefObject,
 } from "../../../ErrorPopup/ErrorPopup";
 
@@ -49,13 +49,14 @@ export default function TeamGrid({
   const [rows, setRows] = React.useState<TeamAPP[]>([]);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorTeam = React.useRef<RefObject>(null);
+  const onErrorTeam = getOnError(refErrorTeam);
 
   // Team mutations
-  const patchTeam = usePatchTeam(ref);
-  const postTeam = usePostTeam(ref);
-  const deleteTeam = useDeleteTeam(ref);
-  const deleteMemberTeam = useDeleteMemberTeamTwo(ref);
+  const patchTeam = usePatchTeam(onErrorTeam);
+  const postTeam = usePostTeam(onErrorTeam);
+  const deleteTeam = useDeleteTeam(onErrorTeam);
+  const deleteMemberTeam = useDeleteMemberTeamTwo(onErrorTeam);
 
   // Called when "status" of teams query is changed
   React.useEffect(() => {
@@ -78,9 +79,7 @@ export default function TeamGrid({
           onSuccess: () => {
             setRows((prevRows) => prevRows.filter((row) => row.id !== rowId));
           },
-          onError: (error: unknown) => {
-            handleError(ref, error);
-          },
+          onError: onErrorTeam,
         }
       );
     },
@@ -164,7 +163,7 @@ export default function TeamGrid({
             : undefined
         }
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorTeam} />
     </>
   );
 }

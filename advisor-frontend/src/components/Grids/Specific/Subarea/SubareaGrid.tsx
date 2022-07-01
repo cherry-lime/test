@@ -32,7 +32,10 @@ import {
   useGetSubareas,
 } from "../../../../api/SubareaAPI/SubareaAPI";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 type SubareaGridProps = {
   theme: Theme;
@@ -42,16 +45,21 @@ type SubareaGridProps = {
 export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
   const [rows, setRows] = React.useState<SubareaAPP[]>([]);
 
-  // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  // Error handling
+  const refErrorSubarea = React.useRef<RefObject>(null);
+  const onErrorSubarea = getOnError(refErrorSubarea);
 
   // Subarea query
-  const { status, data } = useGetSubareas(categoryId, undefined, ref);
+  const { status, data } = useGetSubareas(
+    categoryId,
+    undefined,
+    onErrorSubarea
+  );
 
   // Subarea mutations
-  const patchSubarea = usePatchSubarea(ref);
-  const postSubarea = usePostSubarea(categoryId, ref);
-  const deleteSubarea = useDeleteSubarea(ref);
+  const patchSubarea = usePatchSubarea(onErrorSubarea);
+  const postSubarea = usePostSubarea(categoryId, onErrorSubarea);
+  const deleteSubarea = useDeleteSubarea(onErrorSubarea);
 
   // Called when "status" of subareas query is changed
   React.useEffect(() => {
@@ -61,7 +69,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrder(rows, params, ref),
+      preProcessEditOrder(rows, params, onErrorSubarea),
     [rows]
   );
 
@@ -209,7 +217,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
           handler: handleAddDecorator,
         }}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorSubarea} />
     </>
   );
 }

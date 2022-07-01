@@ -8,7 +8,7 @@ import { ThemeProvider } from "@mui/material";
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLogin } from "../../api/LoginAPI/LoginAPI";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
@@ -20,10 +20,11 @@ export default function SignIn() {
   };
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorSignIn = useRef<RefObject>(null);
+  const onErrorSignIn = getOnError(refErrorSignIn);
 
   // Import login API calls
-  const login = useLogin(ref);
+  const login = useLogin(onErrorSignIn);
 
   // Create statehooks to store the login details in the textfields
   const [inputUserName, setInputUserName] = useState("");

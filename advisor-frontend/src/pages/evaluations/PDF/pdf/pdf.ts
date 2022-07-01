@@ -14,16 +14,13 @@ import {
   generateTableHeaders,
   generateTableRow,
   generateText,
+  DocProps,
 } from "../tableHelpers/tableHelpers";
 
 export function addTable(
   doc: JsPDF,
   table: Table,
-  docProps: {
-    pageMargin: number;
-    liveArea: { width: number; height: number };
-    padding: number;
-  },
+  docProps: DocProps,
   nextYValue: number,
   textFontSize: number,
   sectFontSize: number,

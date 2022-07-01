@@ -31,7 +31,7 @@ import {
 } from "../../../api/MaturityAPI/MaturityAPI";
 import { ScoreAPP, useGetScores } from "../../../api/ScoreAPI/ScoreAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI/TopicAPI";
-import ErrorPopup, { RefObject } from "../../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../../ErrorPopup/ErrorPopup";
 
 Chart.register(ArcElement, CategoryScale, RadialLinearScale, Legend, Tooltip);
 
@@ -47,7 +47,9 @@ export default function ProgressEvaluationCard({
   templateId,
 }: ProgressEvaluationCardProps) {
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorProgress = useRef<RefObject>(null);
+  const onErrorProgress = getOnError(refErrorProgress);
+
   // define topics, categories, maturities, scores etc as contstants using the React usestate hook
   const [topics, setTopics] = useState<TopicAPP[]>();
   const [categories, setCategories] = useState<CategoryAPP[]>();
@@ -60,28 +62,29 @@ export default function ProgressEvaluationCard({
 
   const [filter, setFilter] = useState<Filter>();
   const [filterSelected, setFilterSelected] = useState<number | null>();
-
+  // constant delcaration for getting the topics
   const { status: statusTopics, data: dataTopics } = useGetTopics(
     templateId,
     true,
-    ref
+    onErrorProgress
   );
-
+  // constant declaration for getting the categories
   const { status: statusCategories, data: dataCategories } = useGetCategories(
     templateId,
     true,
-    ref
+    onErrorProgress
   );
-
+  // constant declaration for getting the maturitylevels
   const { status: statusMaturities, data: dataMaturities } = useGetMaturities(
     templateId,
     true,
-    ref
+    onErrorProgress
   );
-
+  // constant declaration for getting the scores
   const { status: statusScores, data: dataScores } = useGetScores(
     assessmentId,
-    topicSelected
+    topicSelected,
+    onErrorProgress
   );
   // using useEffect hooks from React in order to prevent writing a class
   useEffect(() => {
@@ -112,19 +115,19 @@ export default function ProgressEvaluationCard({
       setScores(dataScores);
     }
   }, [statusScores, dataScores]);
-  /* 
-  use handletopicchange constant to define an event handler
-  w.r.t. changing topics
-  */
+  /**
+   * use handletopicchange constant to define an event handler
+   * w.r.t. changing topics
+   */
   const handleTopicChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "-")
       setTopicSelected(Number(event.target.value));
     else setTopicSelected(undefined);
   };
-  /*
-  use handlecategorychange constant to define an event handler
-  w.r.t changing category 
-  */
+  /**
+   * use handlecategorychange constant to define an event handler
+   * w.r.t changing category
+   */
   const handleCategoryChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "total")
       setFilterSelected(Number(event.target.value));
@@ -142,13 +145,13 @@ export default function ProgressEvaluationCard({
   ) {
     return <>...</>;
   }
-  // constant declarations for filtered + displayed objects with their corresponding id's
+  // constant declarations for filtered + displayed objects
   const filteredObjects = filter === "Category" ? categories : maturities;
   const displayedObjects = filter === "Category" ? maturities : categories;
-
+  // constant declarations for the corresponding id's of the filters and displayed ones
   const filteredId = filter === "Category" ? "categoryId" : "maturityId";
   const displayedId = filter === "Category" ? "maturityId" : "categoryId";
-
+  // constant declaration for handling the changing of the filters
   const handleFilterChange = () => {
     if (filter === "Category") {
       setFilter("Maturity");
@@ -182,10 +185,10 @@ export default function ProgressEvaluationCard({
   // constant declaration to get the score data
   const getData = () =>
     getFilteredScores().map((score: ScoreAPP) => score.score);
-  /*
-  Apply the conditional colouring in the scores, e.g. 0%=red and 100% is green,
-  so once the score gets higher the colour changes accordingly  
-  */
+  /**
+   * Apply the conditional colouring in the scores, e.g. 0%=red and 100% is green,
+   * so once the score gets higher the colour changes accordingly
+   */
   const getBackgroundColor = () =>
     getFilteredScores().map(
       (score: ScoreAPP) =>
@@ -193,9 +196,10 @@ export default function ProgressEvaluationCard({
           (255 / 100) * score.score
         )},0,0.4)`
     );
-  /*
-  scale the polar area chart in such a way the values are between 0 and 100
-  */
+  /**
+   * scale the polar area chart in such a way
+   * the values are between 0 and 100
+   */
   const options = {
     scales: {
       r: {
@@ -204,11 +208,11 @@ export default function ProgressEvaluationCard({
       },
     },
   };
-  /*
-  return the progressevaluationcard in which the polar area chart is at the right side,
-  and on the left side you see the scores for e.g. the maturity levels and the dropdown menus for topics and areas 
-  with a vertical line that seperates the polar area chart with the scores , for readability purposes 
-  */
+  /**
+   * return the progressevaluationcard in which the polar area chart is at the right side,
+   * and on the left side you see the scores for e.g. the maturity levels and the dropdown menus for topics and areas
+   * with a vertical line that seperates the polar area chart with the scores , for readability purposes
+   */
   return (
     <Card
       sx={{
@@ -361,7 +365,7 @@ export default function ProgressEvaluationCard({
           </CardContent>
         </Box>
       </CardContent>
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorProgress} />
     </Card>
   );
 }

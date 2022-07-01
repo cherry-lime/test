@@ -21,12 +21,16 @@ import Chooserole from "./components/SignInUP/Chooserole";
 import { RootState } from "./app/store";
 import { authProfile } from "./api/LoginAPI/LoginAPI";
 import DetailGen from "./components/SignInUP/DetailGen";
-import ErrorPopup, { RefObject } from "./components/ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "./components/ErrorPopup/ErrorPopup";
 import ErrorPage from "./pages/ErrorPage";
-
+// type declaration for appProp that (possibly) assigns a boolean value to testRender
 type appProp = {
   testRender?: boolean;
 };
+// constant declaration for defaultProps that assigns the value of testRender to false
 const defaultProps = {
   testRender: false,
 };
@@ -36,11 +40,13 @@ const defaultProps = {
 function App({ testRender }: appProp) {
   // Import the global state variables that will be used throughout the session
   const { userRole } = useSelector((state: RootState) => state.userData);
+
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorApp = useRef<RefObject>(null);
+  const onErrorApp = getOnError(refErrorApp);
 
   // Call authentication API on pageload once
-  const auth = authProfile(ref);
+  const auth = authProfile(onErrorApp);
   useEffect(() => {
     auth.mutate();
   }, []);
@@ -159,7 +165,7 @@ function App({ testRender }: appProp) {
           />
           <Route path="/error" element={<ErrorPage />} />
         </Routes>
-        <ErrorPopup ref={ref} />
+        <ErrorPopup ref={refErrorApp} />
       </div>
     );
   }

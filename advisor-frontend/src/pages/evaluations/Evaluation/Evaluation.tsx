@@ -13,7 +13,7 @@ import {
   usePostCompleteAssessment,
 } from "../../../api/AssessmentAPI/AssessmentAPI";
 import ErrorPopup, {
-  handleError,
+  getOnError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
 import { getUpdatedTheme } from "../../admin/templates/Area/colorHelpers";
@@ -43,16 +43,20 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   };
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorEvaluation = useRef<RefObject>(null);
+  const onErrorEvaluation = getOnError(refErrorEvaluation);
+
   const navigate = useNavigate();
 
-  const postCompleteEval = usePostCompleteAssessment(Number(assessmentId), ref);
+  const postCompleteEval = usePostCompleteAssessment(
+    Number(assessmentId),
+    onErrorEvaluation
+  );
 
   const handleClickFinish = () => {
     postCompleteEval.mutate(undefined, {
       onError: () => {
-        handleError(
-          ref,
+        onErrorEvaluation(
           "Error: unable to complete the evaluation. Make sure you filled in all the checkpoints."
         );
       },
@@ -69,7 +73,10 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
 
   // get assessment information from API
-  const assessmentResponse = useGetAssessment(Number(assessmentId), ref);
+  const assessmentResponse = useGetAssessment(
+    Number(assessmentId),
+    onErrorEvaluation
+  );
 
   // set assessment info value
   React.useEffect(() => {
@@ -89,7 +96,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   }, [assessmentResponse]);
 
   if (team) {
-    const teamResponse = useGetTeam(Number(teamId), ref);
+    const teamResponse = useGetTeam(Number(teamId), onErrorEvaluation);
     React.useEffect(() => {
       const rerouting = checkTeamRouting(teamResponse);
       if (rerouting) {
@@ -150,7 +157,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
                 {" "}
                 Finish Evaluation{" "}
               </Button>
-              <ErrorPopup ref={ref} />
+              <ErrorPopup ref={refErrorEvaluation} />
             </div>
           </ThemeProvider>
         </PageLayout>

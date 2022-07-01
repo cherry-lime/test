@@ -10,11 +10,11 @@ import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessme
 function ListOfSelfEvals({ theme }: { theme: Theme }) {
   // only users can see this page, no need to fetch role
   const userRole = "USER";
-  /*
-  return page with individual evaluations as title
-  together with the ongoing evaluation grid and
-  completed evaluations grid
-  */
+  /**
+   * return page with individual evaluations as title
+   * together with the ongoing evaluation grid and
+   * completed evaluations grid
+   */
   return (
     <PageLayout
       title="Individual Evaluations"

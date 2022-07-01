@@ -25,7 +25,10 @@ import {
   UserAPP,
 } from "../../../../api/UserAPI/UserAPI";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 type IndividualGridProps = {
   theme: Theme;
@@ -36,14 +39,15 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
   const roles = ["USER", "ASSESSOR", "ADMIN"];
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorIndividual = React.useRef<RefObject>(null);
+  const onErrorIndividual = getOnError(refErrorIndividual);
 
   // User query
-  const { status, data } = useGetUsers(undefined, ref);
+  const { status, data } = useGetUsers(undefined, onErrorIndividual);
 
   // User mutations
-  const patchUser = usePatchUser(ref);
-  const deleteUser = useDeleteUser(ref);
+  const patchUser = usePatchUser(onErrorIndividual);
+  const deleteUser = useDeleteUser(onErrorIndividual);
 
   // Called when "status" of user query is changed
   React.useEffect(() => {
@@ -133,7 +137,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         hasToolbar
         sortModel={[{ field: "name", sort: "asc" }]}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorIndividual} />
     </>
   );
 }

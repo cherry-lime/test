@@ -7,7 +7,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import { useRegister } from "../../api/LoginAPI/LoginAPI";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
@@ -19,10 +19,11 @@ export default function Chooserole() {
   };
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorChooserole = React.useRef<RefObject>(null);
+  const onErrorChooserole = getOnError(refErrorChooserole);
 
   // Imports the API hook for registering
-  const userReg = useRegister(ref);
+  const userReg = useRegister(onErrorChooserole);
 
   return (
     <ThemeProvider theme={INGTheme}>

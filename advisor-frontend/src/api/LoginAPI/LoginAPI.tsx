@@ -9,13 +9,12 @@ import {
   setUserName,
   setPassword,
 } from "../../app/userDataSlice";
-import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 /**
  * @params {role: "USERTYPE"} object that contains the body for the POST request
  * @returns Object of login details for the user
  */
-export function useRegister(ref?: React.RefObject<RefObject>) {
+export function useRegister(onError?: (err: unknown) => void) {
   // Navigation hook, to be used after the user is logged in
   const navigate = useNavigate();
 
@@ -34,11 +33,7 @@ export function useRegister(ref?: React.RefObject<RefObject>) {
         dispatch(setPassword(data.password));
         await navigate(`/signup/details`);
       },
-      onError: (error: unknown) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
+      onError,
     }
   );
 }
@@ -47,7 +42,7 @@ export function useRegister(ref?: React.RefObject<RefObject>) {
  * Checks if the user is logged in and retrieves the userId and userRole.
  * Contains functionality to redirect the user to their homepage and update the global state values.
  */
-export function authProfile(ref?: React.RefObject<RefObject>) {
+export function authProfile(onError?: (err: unknown) => void) {
   // Import the Slice functions to access the Redux functions
   const dispatch = useDispatch();
 
@@ -62,11 +57,7 @@ export function authProfile(ref?: React.RefObject<RefObject>) {
         dispatch(setUserRole(userAPI.role));
         dispatch(setUserId(userAPI.user_id.toString()));
       },
-      onError: (error: unknown) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
+      onError,
     }
   );
 }
@@ -77,9 +68,9 @@ export function authProfile(ref?: React.RefObject<RefObject>) {
  * @param password String value
  * @returns onError: display the error message received from the backend API.
  */
-export function useLogin(ref?: React.RefObject<RefObject>) {
+export function useLogin(onError?: (err: unknown) => void) {
   // Calls authentication API this way to avoid hook-in-hook issues
-  const auth = authProfile(ref);
+  const auth = authProfile(onError);
 
   // Navigation hook, to be used after the user is logged in
   const navigate = useNavigate();
@@ -93,11 +84,7 @@ export function useLogin(ref?: React.RefObject<RefObject>) {
         await auth.mutate();
         await navigate(`/`);
       },
-      onError: (error: unknown) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
+      onError,
     }
   );
 }
@@ -106,12 +93,8 @@ export function useLogin(ref?: React.RefObject<RefObject>) {
  * API Call to logout the current user.
  * Removes the cookie token and resets the session state
  */
-export function useLogout(ref?: React.RefObject<RefObject>) {
+export function useLogout(onError?: (err: unknown) => void) {
   return useMutation(["User Logout"], () => API.post(`/auth/logout`), {
-    onError: (error: unknown) => {
-      if (ref) {
-        handleError(ref, error);
-      }
-    },
+    onError,
   });
 }

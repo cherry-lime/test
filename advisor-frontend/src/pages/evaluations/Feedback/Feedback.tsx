@@ -27,33 +27,31 @@ import {
 import { AnswerAPP, useGetAnswers } from "../../../api/AnswerAPI/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI/TopicAPI";
 import ErrorPopup, {
+  getOnError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
 import checkAssessmentRouting, { checkTeamRouting } from "../../routingHelpers";
 import { useGetTeam } from "../../../api/TeamAPI/TeamAPI";
 
-const showFeedbackTextUser = (
-  team: boolean,
-  userRole: string,
-  value: string,
-  assessmentInfo: AssessmentAPP
-) =>
-  team &&
-  userRole === "USER" &&
-  value === "Recommendations" &&
-  assessmentInfo &&
-  assessmentInfo.feedbackText;
+type ShowFeedbackArgs = {
+  team: boolean;
+  userRole: string;
+  value: string;
+  assessmentInfo: AssessmentAPP;
+};
 
-const showFeedbackTextAssessor = (
-  team: boolean,
-  userRole: string,
-  value: string,
-  assessmentInfo: AssessmentAPP
-) =>
-  team &&
-  userRole === "ASSESSOR" &&
-  value === "Recommendations" &&
-  assessmentInfo;
+const showFeedbackTextUser = (args: ShowFeedbackArgs) =>
+  args.team &&
+  args.userRole === "USER" &&
+  args.value === "Recommendations" &&
+  args.assessmentInfo &&
+  args.assessmentInfo.feedbackText;
+
+const showFeedbackTextAssessor = (args: ShowFeedbackArgs) =>
+  args.team &&
+  args.userRole === "ASSESSOR" &&
+  args.value === "Recommendations" &&
+  args.assessmentInfo;
 
 /**
  * Page with the feedback related to a self assessment
@@ -70,15 +68,20 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   };
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorFeedback = useRef<RefObject>(null);
+  const onErrorFeedback = getOnError(refErrorFeedback);
+
   const navigate = useNavigate();
 
   const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
 
-  const assessmentResponse = useGetAssessment(Number(assessmentId), ref);
+  const assessmentResponse = useGetAssessment(
+    Number(assessmentId),
+    onErrorFeedback
+  );
 
   if (team) {
-    const teamResponse = useGetTeam(Number(teamId), ref);
+    const teamResponse = useGetTeam(Number(teamId), onErrorFeedback);
     React.useEffect(() => {
       const rerouting = checkTeamRouting(teamResponse);
       if (rerouting) {
@@ -103,7 +106,10 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     }
   }, [assessmentResponse]);
 
-  const postFeedback = usePostFeedbackAssessment(Number(assessmentId), ref);
+  const postFeedback = usePostFeedbackAssessment(
+    Number(assessmentId),
+    onErrorFeedback
+  );
 
   const changeFeedback = (newFeedback: string) => {
     postFeedback.mutate(newFeedback, {
@@ -122,20 +128,20 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   const areasResponse = useGetCategories(
     Number(assessmentInfo?.templateId),
     true,
-    ref
+    onErrorFeedback
   );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
     Number(assessmentInfo?.templateId),
     true,
-    ref
+    onErrorFeedback
   );
 
   // get checkpoint answer list from API
   const checkpointAnswerResponse = useGetSaveAssessment(
     Number(assessmentInfo?.id),
-    ref
+    onErrorFeedback
   );
 
   // set the area list value
@@ -169,7 +175,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   const topicResponse = useGetTopics(
     Number(assessmentInfo?.templateId),
     true,
-    ref
+    onErrorFeedback
   );
 
   // set assessment info value
@@ -196,13 +202,13 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       );
     }
   };
-  /*
-  return page with title,
-  tabs for recommendations + checkpoints + progress (from left to right)
-  followed by (automated) feedback
-  An import note is that once you receive automated feedback,
-  the checkpoint answers are not editable
-  */
+  /**
+   * return page with title,
+   * tabs for recommendations + checkpoints + progress (from left to right)
+   * followed by (automated) feedback
+   * An import note is that once you receive automated feedback,
+   * the checkpoint answers are not editable
+   */
   return (
     <PageLayout
       title={
@@ -243,7 +249,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       {team && value === "Recommendations" && <h2>Facilitator Feedback</h2>}
 
       {assessmentInfo &&
-        showFeedbackTextAssessor(team, userRole, value, assessmentInfo) && (
+        showFeedbackTextAssessor({ team, userRole, value, assessmentInfo }) && (
           <TextfieldEdit
             rows={5}
             theme={theme}
@@ -253,7 +259,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         )}
 
       {assessmentInfo &&
-        showFeedbackTextUser(team, userRole, value, assessmentInfo) && (
+        showFeedbackTextUser({ team, userRole, value, assessmentInfo }) && (
           <Textfield
             rows={5}
             columns="inherit"
@@ -298,7 +304,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           </Box>
         </Stack>
       </Button>
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorFeedback} />
     </PageLayout>
   );
 }

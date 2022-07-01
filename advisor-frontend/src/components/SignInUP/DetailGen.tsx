@@ -12,7 +12,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useLogin } from "../../api/LoginAPI/LoginAPI";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
@@ -23,10 +23,11 @@ export default function DetailGen() {
   );
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorDetailGen = React.useRef<RefObject>(null);
+  const onErrorDetailGen = getOnError(refErrorDetailGen);
 
   // Make Login API call available
-  const login = useLogin(ref);
+  const login = useLogin(onErrorDetailGen);
 
   return (
     <ThemeProvider theme={INGTheme}>

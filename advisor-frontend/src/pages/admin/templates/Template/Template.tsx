@@ -16,7 +16,7 @@ import {
   usePatchTemplate,
 } from "../../../../api/TemplateAPI/TemplateAPI";
 import ErrorPopup, {
-  handleError,
+  getOnError,
   RefObject,
 } from "../../../../components/ErrorPopup/ErrorPopup";
 
@@ -37,12 +37,12 @@ function Template({ theme }: { theme: Theme }) {
   const [weightError, setWeightError] = useState(false);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorTemplate = React.useRef<RefObject>(null);
+  const onErrorTemplate = getOnError(refErrorTemplate);
 
   React.useEffect(() => {
-    handleError(
-      ref,
-      "Warning: Editing templates will influence evaluations that use this template."
+    onErrorTemplate(
+      "Warning: Editing templates will influence evaluations that use these templates."
     );
   }, []);
 
@@ -70,7 +70,7 @@ function Template({ theme }: { theme: Theme }) {
         }
       },
       onError: (error: unknown) => {
-        handleError(ref, error);
+        onErrorTemplate(error);
         setTemplateInfo(oldInfo);
         if (weight) {
           setWeightError(true);
@@ -197,7 +197,7 @@ function Template({ theme }: { theme: Theme }) {
           <AnswerGrid theme={theme} templateId={Number(templateId)} />
         </PageLayout>
       )}
-      <ErrorPopup ref={ref} isWarning />
+      <ErrorPopup ref={refErrorTemplate} isWarning />
     </div>
   );
 }
