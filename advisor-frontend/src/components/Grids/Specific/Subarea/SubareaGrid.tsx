@@ -155,42 +155,42 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
         field: "summary",
         headerName: "Summary",
         type: "string",
-        flex: 1,
         editable: true,
+        flex: 1,
       },
       {
         field: "description",
         headerName: "Description",
         type: "string",
-        flex: 1,
         editable: true,
+        flex: 1,
       },
       {
         field: "enabled",
-        headerName: "Enabled",
         type: "boolean",
-        width: 75,
+        headerName: "Enabled",
         editable: true,
+        width: 75,
       },
       {
         field: "Actions",
-        type: "actions",
-        width: 75,
         getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
-            icon={<DeleteIcon />}
             label="Delete"
+            icon={<DeleteIcon />}
             onClick={handleDeleteDecorator(params.id)}
             showInMenu
           />,
         ],
+        type: "actions",
+        width: 75,
       },
     ],
     [
-      handleUpwardDecorator,
-      handleDownwardDecorator,
-      preProcessEditOrderDecorator,
       handleDeleteDecorator,
+      handleUpwardDecorator,
+      preProcessEditOrderDecorator,
+      handleDownwardDecorator,
     ]
   );
 
