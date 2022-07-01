@@ -18,7 +18,12 @@ import DialogTitle from "@mui/material/DialogTitle";
 import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 
-// Sign in functionality to be used later
+/**
+ * Create a login layout that has a pre-styled background,
+ * Title text and div box to place the child components
+ * @param children Pass through the child components that are specifically designed.
+ * @returns The general login layoput that will contain the child components in a Box.
+ */
 export default function LoginLayout({
   children,
 }: {
@@ -29,11 +34,11 @@ export default function LoginLayout({
 
   // State hook to keep track if the dialog is opened or not
   const [open, setOpen] = React.useState(false);
-
+  // Handle the opening of the dialog
   const handleClickOpen = () => {
     setOpen(true);
   };
-
+  // Handle the closing of the box
   const handleClose = () => {
     setOpen(false);
   };
@@ -52,7 +57,6 @@ export default function LoginLayout({
           minHeight: "100vh",
         }}
       >
-        {" "}
         {/* Help button placed on the left */}
         <IconButton
           size="medium"
@@ -64,6 +68,7 @@ export default function LoginLayout({
         >
           <HelpOutlineOutlinedIcon />
         </IconButton>
+        {/* This dialog is used to display the help text */}
         <Dialog
           open={open}
           onClose={handleClose}
@@ -71,6 +76,7 @@ export default function LoginLayout({
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">Our Tool</DialogTitle>
+          {/* Main body of the Dialog component */}
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               TestING Advisor builds on an Excel-based tool by giving users
@@ -85,9 +91,11 @@ export default function LoginLayout({
             </DialogContentText>
           </DialogContent>
           <DialogActions>
+            {/* Button to close the Dialog component */}
             <Button onClick={handleClose}>Go to Login</Button>
           </DialogActions>
         </Dialog>
+        {/* The box contains the title of the page/tool */}
         <Box sx={{ height: "25vh" }}>
           <Typography
             variant="h2"
@@ -110,6 +118,7 @@ export default function LoginLayout({
               pt: 10,
             }}
           >
+            {/* Define the box containing the login functionality */}
             <Box
               sx={{
                 pt: 0,
@@ -126,10 +135,12 @@ export default function LoginLayout({
               <Avatar sx={{ m: 1, bgcolor: theme.palette.primary.main }}>
                 <AccountCircleRoundedIcon sx={{ fontSize: 40 }} />
               </Avatar>
+              {/* Here the children props will be placed */}
               {children}
             </Box>
           </Container>
         </Box>
+        {/* Error popup component renders when an error is received from the API */}
         <ErrorPopup ref={ref} />
       </div>
     </ThemeProvider>
