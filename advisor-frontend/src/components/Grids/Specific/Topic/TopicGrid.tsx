@@ -80,22 +80,22 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   const columns = React.useMemo<GridColumns<TopicAPP>>(
     () => [
       {
+        editable: true,
         field: "name",
-        headerName: "Name",
         type: "string",
+        headerName: "Name",
         flex: 1,
-        editable: true,
       },
       {
-        field: "enabled",
         headerName: "Enabled",
+        field: "enabled",
         type: "boolean",
-        width: 75,
         editable: true,
+        width: 75,
       },
       {
-        field: "Actions",
         type: "actions",
+        field: "Actions",
         width: 100,
         getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
