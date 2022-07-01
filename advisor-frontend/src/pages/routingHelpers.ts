@@ -2,13 +2,19 @@ import { UseQueryResult } from "react-query";
 import { AssessmentAPP } from "../api/AssessmentAPI/AssessmentAPI";
 import { TeamAPP } from "../api/TeamAPI/TeamAPI";
 
-export default function checkAssessmentRouting(
-  assessmentResponse: UseQueryResult<AssessmentAPP, unknown>,
-  team: boolean,
-  completed: boolean,
-  teamId: string | undefined,
-  assessmentId: string | undefined
-) {
+export default function checkAssessmentRouting({
+  assessmentResponse,
+  team,
+  completed,
+  teamId,
+  assessmentId,
+}: {
+  assessmentResponse: UseQueryResult<AssessmentAPP, unknown>;
+  team: boolean;
+  completed: boolean;
+  teamId: string | undefined;
+  assessmentId: string | undefined;
+}) {
   if (assessmentResponse.status === "success" && assessmentResponse.data) {
     if (!!assessmentResponse.data.completedAt !== completed) {
       if (assessmentResponse.data.completedAt) {

@@ -10,7 +10,7 @@ export type AnswerAPP = {
   enabled: boolean;
 };
 
-type AnswerAPI = {
+export type AnswerAPI = {
   answer_id: number;
   answer_text: string;
   answer_weight: number;

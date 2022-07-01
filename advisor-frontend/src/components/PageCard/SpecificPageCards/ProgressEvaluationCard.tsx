@@ -66,7 +66,7 @@ export default function ProgressEvaluationCard({
   );
   const [filter, setFilter] = useState<Filter>();
   const [filterSelected, setFilterSelected] = useState<number | null>();
-  
+
   /**
    * constant delcaration for getting the topics
    */
@@ -75,7 +75,7 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-  
+
   /**
    * constant declaration for getting the categories
    */
@@ -84,7 +84,7 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-  
+
   /**
    * constant declaration for getting the maturitylevels
    */
@@ -93,7 +93,7 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-  
+
   /**
    * constant declaration for getting the scores
    */
@@ -102,7 +102,7 @@ export default function ProgressEvaluationCard({
     topicSelected,
     onErrorProgress
   );
-  
+
   /**
    * using useEffect hooks from React in order to prevent writing a class
    */
@@ -166,21 +166,21 @@ export default function ProgressEvaluationCard({
   ) {
     return <>...</>;
   }
-  
+
   /**
    * constant declarations for filtered
    * and the displayed objects
    */
   const filteredObjects = filter === "Category" ? categories : maturities;
   const displayedObjects = filter === "Category" ? maturities : categories;
-  
+
   /**
    * constant declarations for the corresponding id's of the filters
    * and the displayed ones
    */
   const filteredId = filter === "Category" ? "categoryId" : "maturityId";
   const displayedId = filter === "Category" ? "maturityId" : "categoryId";
-  
+
   /**
    * constant declaration for handling the changing of the filters
    */
@@ -193,7 +193,7 @@ export default function ProgressEvaluationCard({
       setFilterSelected(null);
     }
   };
-  
+
   /**
    * constant declaration to get the scores in an array
    */
@@ -204,7 +204,7 @@ export default function ProgressEvaluationCard({
         score[displayedId] !== null &&
         score.score !== -1
     ) as ScoreAPP[];
-    
+
   /**
    * constant declaration to get the labels
    */
@@ -220,7 +220,7 @@ export default function ProgressEvaluationCard({
 
       return "";
     });
-    
+
   /**
    * constant declaration to get the score data
    */

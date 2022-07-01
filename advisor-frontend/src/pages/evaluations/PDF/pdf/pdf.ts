@@ -1,11 +1,12 @@
 /* eslint-disable max-lines */
 import JsPDF from "jspdf";
-import { AnswerAPP } from "../../../../api/AnswerAPI/AnswerAPI";
-import { TopicAPP } from "../../../../api/TopicAPI/TopicAPI";
 import {
+  getAnswerDictionary,
+  getAnswers,
   getAreas,
   getTemplate,
   getTopicRecommendations,
+  getTopics,
 } from "../helpersAPI/pdfHelpersAPI";
 import { Table, getRecTable, getAreaTables } from "../helpers/pdfHelpers";
 import {
@@ -17,6 +18,17 @@ import {
 } from "../tableHelpers/tableHelpers";
 import { AssessmentAPP } from "../../../../api/AssessmentAPI/AssessmentAPI";
 
+/**
+ * This function adds a specified table to a JsPDF document
+ * @param doc JsPDF document to write the table on
+ * @param table table object with the table properties
+ * @param docProps properties of the JsPDF document
+ * @param nextYValue next y value of where to write on the document
+ * @param textFontSize font size of normal text
+ * @param sectFontSize font size of title of the sections before the table
+ * @param titleFontSize font sie of title of table
+ * @returns next y value on the document after adding the table
+ */
 export function addTable(
   doc: JsPDF,
   table: Table,
@@ -101,6 +113,13 @@ export function addTable(
   return nextY;
 }
 
+/**
+ * This function creates an saves a PDF with the
+ * content specified by the parameters
+ * @param tables tables to add to the PDF
+ * @param title title of the PDF
+ * @param filename file name to save the PDF as
+ */
 function pdf(tables: Table[], title: string, filename: string) {
   const doc = new JsPDF({
     orientation: "l",
@@ -163,12 +182,12 @@ function pdf(tables: Table[], title: string, filename: string) {
   doc.save(filename);
 }
 
-export default async function createPDF(
-  assessment: AssessmentAPP,
-  checkpointAnswers: Record<number, number | undefined>,
-  topics: TopicAPP[],
-  answerList: AnswerAPP[]
-) {
+/**
+ * This function creates a PDF containing the recommendations for a
+ * completed assessment and its checkpoints for each area with the answers given
+ * @param assessment assessment object a completed assessment
+ */
+export default async function createPDF(assessment: AssessmentAPP) {
   const filename = `Feedback-${assessment.id}.pdf`;
   const recsHeaders = ["Priority", "Recommendation", "Additional Info"];
   const checkpointHeaders = ["Order", "Description", "Topics", "Answer"];
@@ -177,6 +196,7 @@ export default async function createPDF(
 
   const templateInfo = await getTemplate(Number(assessment.templateId));
   const areas = await getAreas(Number(templateInfo.id));
+  const answerList = await getAnswers(Number(templateInfo.id));
 
   const feedback = templateInfo.information;
   const assessorFeedback = assessment.feedbackText;
@@ -184,6 +204,10 @@ export default async function createPDF(
   const recs = await getTopicRecommendations(Number(assessment.id), undefined);
 
   tables.push(getRecTable(recs, recsHeaders, feedback, assessorFeedback));
+
+  const topics = await getTopics(Number(templateInfo.id));
+
+  const checkpointAnswers = await getAnswerDictionary(Number(assessment.id));
 
   (
     await getAreaTables(

@@ -9,7 +9,7 @@ export type TopicAPP = {
   enabled: boolean;
 };
 
-type TopicAPI = {
+export type TopicAPI = {
   topic_id: number;
   topic_name: string;
   template_id: number;

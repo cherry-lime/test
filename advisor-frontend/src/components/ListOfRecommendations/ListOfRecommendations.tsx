@@ -49,7 +49,7 @@ function ListOfRecommendations({
   const [topicList, setTopicList] = useState<TopicAPP[]>();
 
   const [topic, setTopic] = useState<number>();
-  
+
   /**
    * constant declaration that handles the changing of topics
    */

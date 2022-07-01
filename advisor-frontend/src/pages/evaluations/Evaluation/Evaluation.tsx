@@ -83,13 +83,13 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
     if (assessmentResponse.status === "success" && assessmentResponse.data) {
       setAssessmentInfo(assessmentResponse.data);
     }
-    const rerouting = checkAssessmentRouting(
+    const rerouting = checkAssessmentRouting({
       assessmentResponse,
       team,
-      false,
+      completed: false,
       teamId,
-      assessmentId
-    );
+      assessmentId,
+    });
     if (rerouting) {
       navigate(rerouting);
     }

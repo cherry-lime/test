@@ -72,12 +72,12 @@ export type AssessmentCheckpointAPP = {
   answerId: number | undefined;
 };
 
-type AssessmentCheckpointAPI = {
+export type AssessmentCheckpointAPI = {
   checkpoint_id: number;
   answer_id: number | undefined;
 };
 
-function assessmentCheckpointToAPP(
+export function assessmentCheckpointToAPP(
   assessmentCheckpointAPI: AssessmentCheckpointAPI
 ) {
   return {
@@ -86,7 +86,7 @@ function assessmentCheckpointToAPP(
   } as AssessmentCheckpointAPP;
 }
 
-function assessmentCheckpointToAPI(
+export function assessmentCheckpointToAPI(
   assessmentCheckpointAPP: AssessmentCheckpointAPP
 ) {
   return {
@@ -270,7 +270,6 @@ export function usePostCompleteAssessment(
 }
 
 // Save assessment checkpoint in database
-
 export function usePostSaveAssessment(
   assessmentId: number,
   oldValue: string,
