@@ -24,7 +24,6 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   // Ref for error popup
   const ref = useRef<RefObject>(null);
 
