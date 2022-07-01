@@ -109,7 +109,10 @@ export function addTable(
 
   // iterate through rows
   table.data.forEach((row: (string | number)[]) => {
-    const rowHeights = generateTableRow(
+    // add row text and
+    // update nextY with padding and taking into account
+    // text with the heighest height in the row
+    nextY = generateTableRow(
       doc,
       table.headers,
       row,
@@ -119,10 +122,6 @@ export function addTable(
       xPositions,
       nextY
     );
-
-    // update nextY with padding and taking into account
-    // text with the heighest height in the row
-    nextY += padding + Math.max(...rowHeights);
 
     // update nextY to account for potential lack of space
     // in the page
