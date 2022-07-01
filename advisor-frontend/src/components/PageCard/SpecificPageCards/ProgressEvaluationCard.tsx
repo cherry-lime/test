@@ -115,19 +115,19 @@ export default function ProgressEvaluationCard({
       setScores(dataScores);
     }
   }, [statusScores, dataScores]);
-  /* 
-  use handletopicchange constant to define an event handler
-  w.r.t. changing topics
-  */
+  /**
+   * use handletopicchange constant to define an event handler
+   * w.r.t. changing topics
+   */
   const handleTopicChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "-")
       setTopicSelected(Number(event.target.value));
     else setTopicSelected(undefined);
   };
-  /*
-  use handlecategorychange constant to define an event handler
-  w.r.t changing category 
-  */
+  /**
+   * use handlecategorychange constant to define an event handler
+   * w.r.t changing category
+   */
   const handleCategoryChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "total")
       setFilterSelected(Number(event.target.value));
@@ -185,10 +185,10 @@ export default function ProgressEvaluationCard({
   // constant declaration to get the score data
   const getData = () =>
     getFilteredScores().map((score: ScoreAPP) => score.score);
-  /*
-  Apply the conditional colouring in the scores, e.g. 0%=red and 100% is green,
-  so once the score gets higher the colour changes accordingly  
-  */
+  /**
+   * Apply the conditional colouring in the scores, e.g. 0%=red and 100% is green,
+   * so once the score gets higher the colour changes accordingly
+   */
   const getBackgroundColor = () =>
     getFilteredScores().map(
       (score: ScoreAPP) =>
@@ -196,9 +196,10 @@ export default function ProgressEvaluationCard({
           (255 / 100) * score.score
         )},0,0.4)`
     );
-  /*
-  scale the polar area chart in such a way the values are between 0 and 100
-  */
+  /**
+   * scale the polar area chart in such a way
+   * the values are between 0 and 100
+   */
   const options = {
     scales: {
       r: {
@@ -207,11 +208,11 @@ export default function ProgressEvaluationCard({
       },
     },
   };
-  /*
-  return the progressevaluationcard in which the polar area chart is at the right side,
-  and on the left side you see the scores for e.g. the maturity levels and the dropdown menus for topics and areas 
-  with a vertical line that seperates the polar area chart with the scores , for readability purposes 
-  */
+  /**
+   * return the progressevaluationcard in which the polar area chart is at the right side,
+   * and on the left side you see the scores for e.g. the maturity levels and the dropdown menus for topics and areas
+   * with a vertical line that seperates the polar area chart with the scores , for readability purposes
+   */
   return (
     <Card
       sx={{

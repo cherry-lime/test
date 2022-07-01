@@ -2,12 +2,12 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import PageCard from "../PageCard";
 import testimageFigma from "../Images/testimageFigma.png";
 
-/*
-function that returns a teamcard with:
-"view your teams" as bodytext,
-"teams" as headertext with a group icon
-with an image on the right side of the page card 
-*/
+/**
+ * function that returns a teamcard with:
+ * "view your teams" as bodytext,
+ * "teams" as headertext with a group icon
+ * with an image on the right side of the page card
+ */
 export default function TeamCard() {
   return (
     <PageCard

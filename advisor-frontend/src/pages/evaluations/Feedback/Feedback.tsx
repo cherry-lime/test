@@ -202,13 +202,13 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       );
     }
   };
-  /*
-  return page with title,
-  tabs for recommendations + checkpoints + progress (from left to right)
-  followed by (automated) feedback
-  An import note is that once you receive automated feedback,
-  the checkpoint answers are not editable
-  */
+  /**
+   * return page with title,
+   * tabs for recommendations + checkpoints + progress (from left to right)
+   * followed by (automated) feedback
+   * An import note is that once you receive automated feedback,
+   * the checkpoint answers are not editable
+   */
   return (
     <PageLayout
       title={

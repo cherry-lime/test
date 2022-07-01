@@ -6,14 +6,14 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
-/*
-size of the textfield is specified with the parameter width (in characters)
-default set to 50
-and by the number of rows
-default set to five
-the background color of the text is white
-text can be edited, after selection
-*/
+/**
+ * size of the textfield is specified with the parameter width (in characters)
+ * default set to 50
+ * and by the number of rows
+ * default set to five
+ * the background color of the text is white
+ * text can be edited, after selection
+ */
 function TextfieldEdit({
   text,
   theme,
@@ -27,11 +27,11 @@ function TextfieldEdit({
   handleSave: (intermediateValue: string) => void;
   label?: string;
 }) {
-  /*
-  initial value of the textfield is set to the bodytext passed as parameter
-  using the State Hook in React
-  the value is updated when you are done entering and click outside the textfield
-  */
+  /**
+   * initial value of the textfield is set to the bodytext passed as parameter
+   * using the State Hook in React
+   * the value is updated when you are done entering and click outside the textfield
+   */
   const [intermediateValue, setIntermediateValue] = useState(text);
   let multiline = false;
 
@@ -43,11 +43,11 @@ function TextfieldEdit({
     handleSave(intermediateValue);
   };
 
-  /*
-  if the textfield has only one row then
-  multiline must be disabled,
-  e.g,. in country + IT department textfields
-  */
+  /**
+   * if the textfield has only one row then
+   * multiline must be disabled,
+   * e.g,. in country + IT department textfields
+   */
   if (rows > 1) {
     multiline = true;
   } else {
@@ -58,11 +58,11 @@ function TextfieldEdit({
     setIntermediateValue(text);
   }, [text]);
 
-  /*
-  once you edit a text in textfield, and you click 
-  away from the textfield , the value can be stored. 
-  This is what the ClickAwayListener can do. 
-  */
+  /**
+   * once you edit a text in textfield, and you click
+   * away from the textfield , the value can be stored.
+   * This is what the ClickAwayListener can do.
+   */
   return (
     <ThemeProvider theme={theme}>
       <ClickAwayListener onClickAway={handleSaveDecorator}>
