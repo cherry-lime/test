@@ -1,4 +1,8 @@
-// Imports
+/**
+ * Define imports for e.g.,
+ * loginlayout , theming, errorpopups,
+ * buttons, icons etc
+ */
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -17,18 +21,31 @@ import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
 export default function DetailGen() {
-  // Make global state variables accessible
+  /**
+   * Make global state variables accessible
+   */
   const { userPassword, userName } = useSelector(
     (state: RootState) => state.userData
   );
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   */
   const refErrorDetailGen = React.useRef<RefObject>(null);
   const onErrorDetailGen = getOnError(refErrorDetailGen);
 
-  // Make Login API call available
+  /**
+   * Make Login API call available
+   */
   const login = useLogin(onErrorDetailGen);
-
+  /**
+   * return a detailgen page that consists of the following:
+   * an icon at the top (person icon)
+   * the text "Your username and password were generated for you"
+   * two textfields containing the detail generations
+   * for username and password
+   * followed by a button called finish and login
+   */
   return (
     <ThemeProvider theme={INGTheme}>
       <LoginLayout>
