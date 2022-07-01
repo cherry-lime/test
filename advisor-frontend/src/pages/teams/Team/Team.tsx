@@ -67,7 +67,7 @@ function Team({
   const teamResponse = useGetTeam(Number(teamId), ref);
 
   const [teamInfo, setTeamInfo] = useState<TeamAPP>();
-
+  // use useeffect hooks , so you don't have to write classes
   React.useEffect(() => {
     if (presetTeamInfo) {
       setTeamInfo(presetTeamInfo);
