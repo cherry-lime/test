@@ -60,25 +60,25 @@ export default function ProgressEvaluationCard({
 
   const [filter, setFilter] = useState<Filter>();
   const [filterSelected, setFilterSelected] = useState<number | null>();
-
+  // constant delcaration for getting the topics
   const { status: statusTopics, data: dataTopics } = useGetTopics(
     templateId,
     true,
     ref
   );
-
+  // constant declaration for getting the categories
   const { status: statusCategories, data: dataCategories } = useGetCategories(
     templateId,
     true,
     ref
   );
-
+  // constant declaration for getting the maturitylevels
   const { status: statusMaturities, data: dataMaturities } = useGetMaturities(
     templateId,
     true,
     ref
   );
-
+  // constant declaration for getting the scores
   const { status: statusScores, data: dataScores } = useGetScores(
     assessmentId,
     topicSelected
@@ -142,10 +142,10 @@ export default function ProgressEvaluationCard({
   ) {
     return <>...</>;
   }
-  // constant declarations for filtered + displayed objects with their corresponding id's
+  // constant declarations for filtered + displayed objects
   const filteredObjects = filter === "Category" ? categories : maturities;
   const displayedObjects = filter === "Category" ? maturities : categories;
-
+  // constant declarations for the corresponding id's of the filters and displayed ones
   const filteredId = filter === "Category" ? "categoryId" : "maturityId";
   const displayedId = filter === "Category" ? "maturityId" : "categoryId";
   // constant declaration for handling the changing of the filters
