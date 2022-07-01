@@ -2,6 +2,13 @@ import { IconButton } from "@mui/material";
 import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 
+/**
+ * Returns component for rendering the up/down order cell
+ * @param handleUpward
+ * @param handleDownward
+ * @returns Component for rendering the up/down order cell
+ */
+// eslint-disable-next-line import/prefer-default-export
 export function RenderEditCell({
   handleUpward,
   handleDownward,
@@ -24,5 +31,3 @@ export function RenderEditCell({
     </div>
   );
 }
-
-export const a = 0;
