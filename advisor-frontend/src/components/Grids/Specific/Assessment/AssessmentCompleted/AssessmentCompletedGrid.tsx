@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-
 import { Theme } from "@mui/material/styles";
 import {
   GridColumns,
@@ -8,19 +7,14 @@ import {
   GridValueFormatterParams,
 } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
-
 import GenericGrid from "../../../Generic/GenericGrid";
-
 import { AssessmentType } from "../../../../../types/AssessmentType";
-
 import { handleInit } from "../../../functions/handlers/handlers";
-
 import {
   AssessmentAPP,
   useGetMyIndividualAssessments,
   useGetMyTeamAssessments,
 } from "../../../../../api/AssessmentAPI/AssessmentAPI";
-
 import ErrorPopup, {
   getOnError,
   RefObject,
@@ -33,19 +27,33 @@ type AssessmentCompletedGridProps = {
   assessmentType: AssessmentType;
 };
 
+/**
+ * Grid for completed assessments
+ * Uses theme, teamId, and assessmentType
+ */
 export default function AssessmentCompletedGrid({
   theme,
   teamId,
   assessmentType,
 }: AssessmentCompletedGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<AssessmentAPP[]>([]);
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   * onError function
+   */
   const refErrorAssessmentCompleted = React.useRef<RefObject>(null);
   const onErrorAssessmentCompleted = getOnError(refErrorAssessmentCompleted);
   const navigate = useNavigate();
 
-  // Assessment query
+  /**
+   * Assessment queries
+   * Gets all individual or team assessments
+   */
   const { status, data } =
     assessmentType === "TEAM" && teamId !== undefined
       ? useGetMyTeamAssessments(true, teamId, onErrorAssessmentCompleted)
@@ -59,7 +67,10 @@ export default function AssessmentCompletedGrid({
     );
   };
 
-  // Called when "status" of assessments query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of assessments query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);

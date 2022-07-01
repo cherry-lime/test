@@ -1,6 +1,5 @@
 import { UseMutationResult } from "react-query";
 import * as React from "react";
-
 import {
   GridColumns,
   GridActionsCellItem,
@@ -9,9 +8,7 @@ import {
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Theme } from "@mui/material/styles";
-
 import GenericGrid from "../../Generic/GenericGrid";
-
 import {
   handleDelete,
   handleAdd,
@@ -20,7 +17,6 @@ import {
   preProcessEditOrder,
   handleMove,
 } from "../../functions/handlers/handlers";
-
 import {
   MaturityAPP,
   useDeleteMaturity,
@@ -28,7 +24,6 @@ import {
   usePatchMaturity,
   usePostMaturity,
 } from "../../../../api/MaturityAPI/MaturityAPI";
-
 import ErrorPopup, {
   getOnError,
   RefObject,
@@ -40,38 +35,66 @@ type MaturityGridProps = {
   templateId: number;
 };
 
+/**
+ * Grid for maturities
+ * Uses theme and templateId
+ */
 export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<MaturityAPP[]>([]);
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   * onError function
+   */
   const refErrorMaturity = React.useRef<RefObject>(null);
   const onErrorMaturity = getOnError(refErrorMaturity);
 
-  // Maturity query
+  /**
+   * Maturity query
+   * Gets all maturities
+   */
   const { status, data } = useGetMaturities(
     templateId,
     undefined,
     onErrorMaturity
   );
 
-  // Maturity mutations
+  /**
+   * Maturity mutations
+   * Patch maturity
+   * Post maturity
+   * Delete maturity
+   */
   const patchMaturity = usePatchMaturity(onErrorMaturity);
   const postMaturity = usePostMaturity(templateId, onErrorMaturity);
   const deleteMaturity = useDeleteMaturity(onErrorMaturity);
 
-  // Called when "status" of maturities query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of maturities query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);
 
-  // Called when the 'Order' column is edited
+  /**
+   * Preprocesses the order when edited
+   * Called when the 'Order' column is edited
+   */
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
       preProcessEditOrder(rows, params, onErrorMaturity),
     [rows]
   );
 
-  // Called when a row is edited
+  /**
+   * Row update handler
+   * Called when a row is edited
+   */
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: MaturityAPP, oldRow: MaturityAPP) =>
       processRowUpdate(
@@ -83,7 +106,10 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     []
   );
 
-  // Called when the "Upward" action is pressed
+  /**
+   * Upward order handler
+   * Called when the "Upward" action is pressed
+   */
   const handleUpwardDecorator = React.useCallback(
     (row: MaturityAPP) => () => {
       handleMove(setRows, patchMaturity as UseMutationResult, {
@@ -94,7 +120,10 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     []
   );
 
-  // Called when the "Downward" action is pressed
+  /**
+   * Downward order handler
+   * Called when the "Downward" action is pressed
+   */
   const handleDownwardDecorator = React.useCallback(
     (row: MaturityAPP) => () => {
       handleMove(setRows, patchMaturity as UseMutationResult, {
@@ -105,7 +134,10 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(
@@ -117,7 +149,10 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
     []
   );
 
-  // Called when the "Add" button is pressed below the grid
+  /**
+   * Row add handler
+   * Called when the "Add" button is pressed below the grid
+   */
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postMaturity as UseMutationResult);
   }, []);

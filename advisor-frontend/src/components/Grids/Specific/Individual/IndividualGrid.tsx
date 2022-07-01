@@ -1,6 +1,5 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
-
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import {
@@ -11,7 +10,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/HighlightOff";
-
 import GenericGrid from "../../Generic/GenericGrid";
 import {
   handleChange,
@@ -24,7 +22,6 @@ import {
   usePatchUser,
   UserAPP,
 } from "../../../../api/UserAPI/UserAPI";
-
 import ErrorPopup, {
   getOnError,
   RefObject,
@@ -34,27 +31,53 @@ type IndividualGridProps = {
   theme: Theme;
 };
 
+/**
+ * Grid for individuals
+ * Uses theme
+ */
 export default function IndividualGrid({ theme }: IndividualGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<UserAPP[]>([]);
+
+  // Roles of users
   const roles = ["USER", "ASSESSOR", "ADMIN"];
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   * onError function
+   */
   const refErrorIndividual = React.useRef<RefObject>(null);
   const onErrorIndividual = getOnError(refErrorIndividual);
 
-  // User query
+  /**
+   * User query
+   * Gets all users
+   */
   const { status, data } = useGetUsers(undefined, onErrorIndividual);
 
-  // User mutations
+  /**
+   * User mutations
+   * Patch user
+   * Delete user
+   */
   const patchUser = usePatchUser(onErrorIndividual);
   const deleteUser = useDeleteUser(onErrorIndividual);
 
-  // Called when "status" of user query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of users query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);
 
-  // Called when maturity level changes
+  /**
+   * Role change handler
+   * Called when role is edited
+   */
   const handleRoleChange = React.useCallback(
     (row: UserAPP, event: SelectChangeEvent<string>) => {
       handleChange(
@@ -67,7 +90,10 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(setRows, deleteUser as UseMutationResult, rowId as number);
