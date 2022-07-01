@@ -19,6 +19,7 @@ import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 
 /**
+ * 
  * Create a login layout that has a pre-styled background,
  * Title text and div box to place the child components
  * @param children Pass through the child components that are specifically designed.

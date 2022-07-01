@@ -12,7 +12,10 @@ import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
-// Sign in functionality to be used later
+/**
+ * This component renders the whole login page
+ * @returns Signin page, based on the login layout
+ */
 export default function SignIn() {
   // Prevents the textfield to automatically refresh the page, after input
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -33,6 +36,7 @@ export default function SignIn() {
   // Login page that contains the login toolbox, a dialog with informationa and a signup button.
   return (
     <ThemeProvider theme={INGTheme}>
+      {/* Import the login page layout  */}
       <LoginLayout>
         <Box
           component="form"
@@ -40,7 +44,7 @@ export default function SignIn() {
           noValidate
           sx={{ p: 4, pt: 1.5 }}
         >
-          {/* Textfield for username and password */}
+          {/* Textfield for username */}
           <TextField
             margin="normal"
             fullWidth
@@ -55,6 +59,7 @@ export default function SignIn() {
               setInputUserName(e.target.value);
             }}
           />
+          {/* Textfield for password  */}
           <TextField
             margin="normal"
             fullWidth
@@ -108,6 +113,7 @@ export default function SignIn() {
           </Grid>
         </Box>
       </LoginLayout>
+      {/* Declare the error popup, in case API returns an error */}
       <ErrorPopup ref={refErrorSignIn} />
     </ThemeProvider>
   );
