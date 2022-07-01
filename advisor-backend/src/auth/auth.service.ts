@@ -66,9 +66,6 @@ export class AuthService {
       .createUser(
         createUserDto
       )
-      .catch(() => {
-        throw new InternalServerErrorException();
-      });
 
     return {
       token: this.jwtService

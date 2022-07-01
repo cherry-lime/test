@@ -4,7 +4,7 @@ import { Role, User } from '@prisma/client';
 export const userArray = [
   {
     user_id: 1,
-    user_name: 'test_user_name',
+    username: 'test_user_name',
     password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
     created_at: new Date(),
     updated_at: new Date(),
@@ -12,7 +12,7 @@ export const userArray = [
   },
   {
     user_id: 2,
-    user_name: 'garry_freak_noname',
+    username: 'garry_freak_noname',
     password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
     created_at: new Date(),
     updated_at: new Date(),

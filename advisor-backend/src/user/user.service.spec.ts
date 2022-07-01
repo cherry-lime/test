@@ -5,9 +5,8 @@ import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { AdminUser, AssessorUser, aUser, updateUserDto, updateUserDtoAdmin, updateUserDtoAssessor, userArray } from '../prisma/mock/mockUser';
 import { ConflictException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateUserDto } from '../auth/dto/register-user.dto';
 import { registerDto } from '../prisma/mock/mockAuthService';
+import * as bcrypt from 'bcrypt';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -28,6 +27,11 @@ describe('UserService', () => {
         if (token === PrismaService) {
           return mockPrisma;
         }
+        if (token === UserService) {
+          return {
+            bcrypt: jest.mock('uuidv4')
+          };
+        }
         if (typeof token === 'function') {
           const mockMetadata = moduleMocker.getMetadata(
             token
@@ -42,7 +46,7 @@ describe('UserService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
-  describe('should be defined:', () => {
+  describe('Should be defined:', () => {
     it('userService', () => {
       expect(userService).toBeDefined();
     });
@@ -68,20 +72,20 @@ describe('UserService', () => {
     });
   });
 
-  describe('findAll', () => {
+  describe('FindAll', () => {
     it('Should return all the found users', async () => {
       expect(userService.findAll()).resolves.toBe(userArray);
     });
   });
 
-  describe('getUser', () => {
+  describe('GetUser', () => {
     it('Should return the found users', async () => {
-      expect(userService.getUser(1)).resolves.toBe(aUser);
+      expect(userService.getUser(aUser.user_id)).resolves.toBe(aUser);
     });
 
     it('Should reject if user with given user_id is not found', async () => {
-      jest.spyOn(prisma.user, 'findFirst').mockResolvedValue(null);
-      expect(userService.getUser(1))
+      jest.spyOn(prisma.user, 'findFirst').mockResolvedValueOnce(null);
+      expect(userService.getUser(aUser.user_id))
         .rejects
         .toThrowError(
           NotFoundException
@@ -89,8 +93,8 @@ describe('UserService', () => {
     });
   });
 
-  describe('updateUser', () => {
-    it('Should throw NotFoundException if not found', async () => {
+  describe('UpdateUser', () => {
+    it('Should throw NotFoundException if user is not found', async () => {
       jest
         .spyOn(prisma.user, 'update')
         .mockRejectedValue({ code: 'P2025' });
@@ -110,7 +114,7 @@ describe('UserService', () => {
 
     it('should return user with role modified to assessor', async () => {
       jest
-        .spyOn(prisma.user, 'update').mockResolvedValue(AssessorUser)
+        .spyOn(prisma.user, 'update').mockResolvedValueOnce(AssessorUser)
       expect(((await userService.updateUser(aUser.user_id, updateUserDtoAssessor)).role))
         .toEqual(
           AssessorUser.role
@@ -119,7 +123,7 @@ describe('UserService', () => {
 
     it('should return user with role modified to admin', async () => {
       jest
-        .spyOn(prisma.user, 'update').mockResolvedValue(AdminUser)
+        .spyOn(prisma.user, 'update').mockResolvedValueOnce(AdminUser)
       expect(((await userService.updateUser(aUser.user_id, updateUserDtoAdmin)).role))
         .toEqual(
           AdminUser.role
@@ -127,46 +131,71 @@ describe('UserService', () => {
     });
   });
 
-  // describe('CreateUsers', () => {
-  //   it('Should throw NotFoundException if not found', async () => {
-  //     jest
-  //       .spyOn(prisma.user, 'findUnique')
-  //     expect(
-  //       userService.createUser(registerDto)
-  //     ).rejects.toThrowError(NotFoundException);
-  //   });
+  describe('CreateUsers', () => {
+    // mocking the bcrypt hashing function
+    const bcryptHash = jest.fn().mockResolvedValue(aUser.password);
+    (bcrypt.hash as jest.Mock) = bcryptHash;
 
-  //   it('Should reject with unknown error', async () => {
-  //     jest
-  //       .spyOn(prisma.user, 'findUnique')
-  //     expect(
-  //       userService.createUser(registerDto)
-  //     ).rejects.toThrowError(InternalServerErrorException);
-  //   });
+    it('Should return the right username', async () => {
+      expect(
+        (await userService.createUser(registerDto)).username
+      ).toEqual(aUser.username);
+    });
 
-  //   it('Should throw NotFoundException if not found', async () => {
-  //     jest
-  //       .spyOn(prisma.user, 'create')
-  //       .mockRejectedValue({ code: 'P2002' });
-  //     expect(
-  //       userService.createUser(registerDto)
-  //     ).rejects.toThrowError(ConflictException);
-  //   });
+    it('Should throw NotFoundException if user is not found', async () => {
+      jest
+        .spyOn(prisma.user, 'findUnique')
+        .mockResolvedValueOnce(null);
+      expect(
+        userService.createUser(registerDto)
+      ).rejects.toThrowError(NotFoundException);
+    });
 
-  //   it('Should reject with unknown error', async () => {
-  //     jest
-  //       .spyOn(prisma.user, 'create')
-  //       .mockRejectedValue({ code: 'TEST' });
-  //     expect(
-  //       userService.createUser(registerDto)
-  //     ).rejects.toThrowError(InternalServerErrorException);
-  //   });
-  //   //it('Should return the found users', async () => {
-  //   //  expect(userService.getUser(1)).resolves.toBe(aUser);
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.user, 'findUnique')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      expect(
+        userService.createUser(registerDto)
+      ).rejects.toThrowError(InternalServerErrorException);
+    });
 
-  //   // it('Should throw NotFoundException if no user is found', async () => {
-  //   //   jest.spyOn(prisma.user, 'findFirst').mockReturnValueOnce(null);
-  //   //   expect(userService.getUser(2)).rejects.toThrow(NotFoundException);
-  //   // });
-  // });
+    it('Should throw ConflictException', async () => {
+      jest
+        .spyOn(prisma.user, 'create')
+        .mockRejectedValueOnce({ code: 'P2002' });
+      expect(
+        userService.createUser(registerDto)
+      ).rejects.toThrowError(ConflictException);
+    });
+
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.user, 'create')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      expect(
+        userService.createUser(registerDto)
+      ).rejects.toThrowError(InternalServerErrorException);
+    });
+  });
+
+  describe('Delete', () => {
+    it('Should throw NotFoundException if not found', async () => {
+      jest
+        .spyOn(prisma.user, 'delete')
+        .mockRejectedValueOnce({ code: 'P2025' });
+      expect(
+        userService.delete(aUser.user_id)
+      ).rejects.toThrowError(NotFoundException);
+    });
+
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.user, 'delete')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      expect(
+        userService.delete(aUser.user_id)
+      ).rejects.toThrowError(InternalServerErrorException);
+    });
+  });
 });

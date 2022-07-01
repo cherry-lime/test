@@ -66,7 +66,7 @@ export class UserService {
         if (error.code === 'P2025') {
           throw new NotFoundException('User with given user id is not found');
         }
-        console.log(error);
+        // console.log(error);
         throw new InternalServerErrorException();
       });
     delete user.password;
@@ -92,8 +92,10 @@ export class UserService {
       .findUnique({
         where: {
           username: new_username
-        },
-      }).catch(() => {
+        }
+      })
+      .catch((error) => {
+        console.log(error);
         throw new InternalServerErrorException();
       });
 
@@ -104,7 +106,7 @@ export class UserService {
     // generate a uuidv4
     const myuuid = uuidv4();
 
-    // hash a password with a salt
+    // compute hash of password
     const salt = 10;
     const hashedPassword = await bcrypt
       .hash(
@@ -125,7 +127,7 @@ export class UserService {
           // Throw error if username already exists
           throw new ConflictException('Username already exists');
         } else {
-          console.log(error);
+          // console.log(error);
           throw new InternalServerErrorException();
         }
       });
@@ -159,7 +161,7 @@ export class UserService {
           // Throw error if user not found
           throw new NotFoundException('User not found');
         }
-        console.log(error);
+        // console.log(error);
         throw new InternalServerErrorException();
       });
   }

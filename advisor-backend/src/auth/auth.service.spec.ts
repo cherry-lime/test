@@ -13,7 +13,8 @@ import {
   userAuthentication,
 } from '../prisma/mock/mockAuthService';
 import { JwtStrategy } from './jwt.strategy';
-import { NotFoundException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -125,11 +126,26 @@ describe('AuthService', () => {
     });
 
     it('should reject if username is not found', async () => {
-      jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(null);
       expect(authService.login(userDto))
         .rejects
         .toThrowError(
           NotFoundException
+        );
+    });
+
+    it('should reject if username is not found', async () => {
+      // mocking bcrypt compare method
+      const bcryptCompare =
+        jest
+          .fn().mockRejectedValue(
+            new UnauthorizedException('invalid password')
+          );
+      (bcrypt.compare as jest.Mock) = bcryptCompare;
+      expect(authService.login(userDto))
+        .rejects
+        .toThrowError(
+          UnauthorizedException
         );
     });
   });
