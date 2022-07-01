@@ -159,7 +159,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
         editable: true,
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 75,
         getActions: (params: { id: GridRowId }) => [

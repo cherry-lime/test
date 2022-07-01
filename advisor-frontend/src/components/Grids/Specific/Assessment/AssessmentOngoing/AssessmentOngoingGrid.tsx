@@ -102,7 +102,7 @@ export default function AssessmentOngoingGrid({
         ? []
         : [
             {
-              field: "actions",
+              field: "Actions",
               type: "actions",
               width: 150,
               getActions: (params: { id: GridRowId }) => [

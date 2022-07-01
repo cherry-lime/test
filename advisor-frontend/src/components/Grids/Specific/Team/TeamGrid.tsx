@@ -109,7 +109,7 @@ export default function TeamGrid({
         editable: userRole === "ASSESSOR",
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 100,
         getActions: (params: { id: GridRowId }) => [

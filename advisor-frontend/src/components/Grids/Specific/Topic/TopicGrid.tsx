@@ -94,7 +94,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
         editable: true,
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 100,
         getActions: (params: { id: GridRowId }) => [

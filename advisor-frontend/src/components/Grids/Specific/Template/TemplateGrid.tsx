@@ -145,7 +145,7 @@ export default function TemplateGrid({
         editable: true,
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 100,
         getActions: (params: { id: GridRowId }) => [

@@ -127,7 +127,7 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
         editable: true,
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 100,
         getActions: (params: { id: GridRowId }) => [

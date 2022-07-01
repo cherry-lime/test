@@ -106,7 +106,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         ),
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 100,
         getActions: (params: { id: GridRowId; row: UserAPP }) =>
