@@ -148,7 +148,7 @@ export default function ProgressEvaluationCard({
 
   const filteredId = filter === "Category" ? "categoryId" : "maturityId";
   const displayedId = filter === "Category" ? "maturityId" : "categoryId";
-
+  // constant declaration for handling the changing of the filters
   const handleFilterChange = () => {
     if (filter === "Category") {
       setFilter("Maturity");
