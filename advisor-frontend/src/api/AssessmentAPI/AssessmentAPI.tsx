@@ -114,17 +114,15 @@ export function useGetAssessments(onError?: (err: unknown) => void) {
   );
 }
 
-const filterCompletedAssessments = (
+export const filterCompletedAssessments = (
   data: AssessmentAPI[],
   isCompleted: boolean
 ) => {
   // Filter data on whether it is completed
   const dataFiltered = isCompleted
-    ? data.filter(
-        (assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at !== null
-      )
+    ? data.filter((assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at)
     : data.filter(
-        (assessmentAPI: AssessmentAPI) => assessmentAPI.completed_at === null
+        (assessmentAPI: AssessmentAPI) => !assessmentAPI.completed_at
       );
 
   // Convert filtered data to assessmentsAPP
