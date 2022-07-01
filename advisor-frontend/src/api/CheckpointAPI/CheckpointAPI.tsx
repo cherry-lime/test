@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
 
+// APP/API types for checkpoints
 export type CheckpointAPP = {
   id: GridRowId;
   description: string;
@@ -26,6 +27,11 @@ export type CheckpointAPI = {
   disabled: boolean;
 };
 
+/**
+ * Convert API object to APP object
+ * @param checkpointAPI
+ * @returns CheckpointAPP object
+ */
 export function checkpointToAPP(checkpointAPI: CheckpointAPI) {
   return {
     id: checkpointAPI.checkpoint_id,
@@ -40,6 +46,11 @@ export function checkpointToAPP(checkpointAPI: CheckpointAPI) {
   } as CheckpointAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param checkpointAPP
+ * @returns CheckpointAPI object
+ */
 export function checkpointToAPI(checkpointAPP: CheckpointAPP) {
   return {
     checkpoint_id: checkpointAPP.id,
@@ -54,7 +65,9 @@ export function checkpointToAPI(checkpointAPP: CheckpointAPP) {
   } as CheckpointAPI;
 }
 
-// Get all checkpoints from database
+/**
+ * Get all checkpoints from database
+ */
 export function useGetCheckpoints(
   categoryId: number,
   enabledFilter?: boolean,
@@ -87,7 +100,9 @@ export function useGetCheckpoints(
   );
 }
 
-// Get checkpoint with id from database
+/**
+ * Get checkpoint with id from database
+ */
 export function useGetCheckpoint(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/checkpoint", "/{checkpoint_id}"],
@@ -101,7 +116,9 @@ export function useGetCheckpoint(onError?: (err: unknown) => void) {
   );
 }
 
-// Post checkpoint to database
+/**
+ * Post checkpoint to database
+ */
 export function usePostCheckpoint(
   categoryId: number,
   onError?: (err: unknown) => void
@@ -119,7 +136,9 @@ export function usePostCheckpoint(
   );
 }
 
-// Patch checkpoint in database
+/**
+ * Patch checkpoint in database
+ */
 export function usePatchCheckpoint(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/checkpoint", "/{checkpoint_id}"],
@@ -140,7 +159,9 @@ export function usePatchCheckpoint(onError?: (err: unknown) => void) {
   );
 }
 
-// Delete checkpoint from database
+/**
+ * Delete checkpoint from database
+ */
 export function useDeleteCheckpoint(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/checkpoint", "/{checkpoint_id}"],

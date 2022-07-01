@@ -1,6 +1,7 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
+
 // export AnswerApp as a type
 export type AnswerAPP = {
   id: GridRowId;
@@ -9,6 +10,7 @@ export type AnswerAPP = {
   templateId: number;
   enabled: boolean;
 };
+
 /**
  * declare type AnswerAPI, that consists of
  * answer_id which is a number,
@@ -26,6 +28,11 @@ export type AnswerAPI = {
   disabled: boolean;
 };
 
+/**
+ * Convert API object to APP object
+ * @param answerAPI
+ * @returns AnswerAPP object
+ */
 export function answerToAPP(answerAPI: AnswerAPI) {
   return {
     id: answerAPI.answer_id,
@@ -36,6 +43,11 @@ export function answerToAPP(answerAPI: AnswerAPI) {
   } as AnswerAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param answerAPP
+ * @returns AnswerAPI object
+ */
 export function answerToAPI(answerAPP: AnswerAPP) {
   return {
     answer_id: answerAPP.id,
@@ -46,7 +58,9 @@ export function answerToAPI(answerAPP: AnswerAPP) {
   } as AnswerAPI;
 }
 
-// Get all answers from database
+/**
+ * Get all answers from database
+ */
 export function useGetAnswers(
   templateId: number,
   enabledFilter?: boolean,
@@ -81,7 +95,9 @@ export function useGetAnswers(
   );
 }
 
-// Get answer with id from database
+/**
+ * Get answer with id from database
+ */
 export function useGetAnswer(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/answer", "/answer_id}"],
@@ -95,7 +111,9 @@ export function useGetAnswer(onError?: (err: unknown) => void) {
   );
 }
 
-// Post answer to database
+/**
+ * Post answer to database
+ */
 export function usePostAnswer(
   templateId: number,
   onError?: (err: unknown) => void
@@ -113,7 +131,9 @@ export function usePostAnswer(
   );
 }
 
-// Patch answer in database
+/**
+ * Patch answer in database
+ */
 export function usePatchAnswer(onError?: (err: unknown) => void) {
   return useMutation<AnswerAPP, Error, AnswerAPP>(
     ["PATCH", "/answer", "/{answer_id}"],
@@ -131,7 +151,9 @@ export function usePatchAnswer(onError?: (err: unknown) => void) {
   );
 }
 
-// Delete answer from database
+/**
+ * Delete answer from database
+ */
 export function useDeleteAnswer(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/answer", "/{answer_id}"],

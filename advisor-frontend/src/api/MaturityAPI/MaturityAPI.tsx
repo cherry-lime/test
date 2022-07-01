@@ -1,8 +1,8 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
-
 import API from "../_API";
 
+// APP/API types for maturities
 export type MaturityAPP = {
   id: GridRowId;
   name: string;
@@ -19,6 +19,11 @@ type MaturityAPI = {
   disabled: boolean;
 };
 
+/**
+ * Convert API object to APP object
+ * @param maturityAPI
+ * @returns MaturityAPP object
+ */
 export function maturityToAPP(maturityAPI: MaturityAPI) {
   return {
     id: maturityAPI.maturity_id,
@@ -29,6 +34,11 @@ export function maturityToAPP(maturityAPI: MaturityAPI) {
   } as MaturityAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param maturityAPP
+ * @returns MaturityAPI object
+ */
 export function maturityToAPI(maturityAPP: MaturityAPP) {
   return {
     maturity_id: maturityAPP.id,
@@ -39,7 +49,9 @@ export function maturityToAPI(maturityAPP: MaturityAPP) {
   } as MaturityAPI;
 }
 
-// Get all maturities from database
+/**
+ * Get all maturities from database
+ */
 export function useGetMaturities(
   templateId: number,
   enabledFilter?: boolean,
@@ -71,7 +83,9 @@ export function useGetMaturities(
   );
 }
 
-// Get maturity with id from database
+/**
+ * Get maturity with id from database
+ */
 export function useGetMaturity(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/maturity", "/{maturity_id}"],
@@ -86,7 +100,9 @@ export function useGetMaturity(onError?: (err: unknown) => void) {
   );
 }
 
-// Post maturity to database
+/**
+ * Post maturity to database
+ */
 export function usePostMaturity(
   templateId: number,
   onError?: (err: unknown) => void
@@ -104,7 +120,9 @@ export function usePostMaturity(
   );
 }
 
-// Patch maturity in database
+/**
+ * Patch maturity in database
+ */
 export function usePatchMaturity(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/maturity", "/{maturity_id}"],
@@ -125,7 +143,9 @@ export function usePatchMaturity(onError?: (err: unknown) => void) {
   );
 }
 
-// Delete maturity from database
+/**
+ * Delete maturity from database
+ */
 export function useDeleteMaturity(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/maturity", "/{maturity_id}"],

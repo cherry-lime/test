@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
 
+// APP/API types for categories
 export type CategoryAPP = {
   id: GridRowId;
   name: string;
@@ -20,6 +21,11 @@ export type CategoryAPI = {
   template_id: number;
 };
 
+/**
+ * Convert API object to APP object
+ * @param categoryAPI
+ * @returns CategoryAPP object
+ */
 export function categoryToAPP(categoryAPI: CategoryAPI) {
   return {
     id: categoryAPI.category_id,
@@ -31,6 +37,11 @@ export function categoryToAPP(categoryAPI: CategoryAPI) {
   } as CategoryAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param categoryAPP
+ * @returns CategoryAPI object
+ */
 export function categoryToAPI(categoryAPP: CategoryAPP) {
   return {
     category_id: categoryAPP.id,
@@ -42,7 +53,9 @@ export function categoryToAPI(categoryAPP: CategoryAPP) {
   } as CategoryAPI;
 }
 
-// Get all categories from database
+/**
+ * Get all categories from database
+ */
 export function useGetCategories(
   templateId: number,
   enabledFilter?: boolean,
@@ -74,7 +87,9 @@ export function useGetCategories(
   );
 }
 
-// Get category with id from database
+/**
+ * Get category with id from database
+ */
 export function useGetCategory(
   categoryId: number,
   onError?: (err: unknown) => void
@@ -94,7 +109,9 @@ export function useGetCategory(
   );
 }
 
-// Post category to database
+/**
+ * Post category to database
+ */
 export function usePostCategory(
   templateId: number,
   onError?: (err: unknown) => void
@@ -112,7 +129,9 @@ export function usePostCategory(
   );
 }
 
-// Patch category in database
+/**
+ * Patch category in database
+ */
 export function usePatchCategory(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/category", "/{category_id}"],
@@ -133,7 +152,9 @@ export function usePatchCategory(onError?: (err: unknown) => void) {
   );
 }
 
-// Delete category from database
+/**
+ * Delete category from database
+ */
 export function useDeleteCategory(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/category", "/{category_id}"],

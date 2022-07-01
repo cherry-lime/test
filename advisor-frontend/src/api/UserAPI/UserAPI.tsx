@@ -3,6 +3,7 @@ import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
 import { UserRole } from "../../types/UserRole";
 
+// APP/API types for topics
 export type UserAPP = {
   id: GridRowId;
   name: string;
@@ -19,6 +20,11 @@ export type UserAPI = {
   updated_at: string;
 };
 
+/**
+ * Convert API object to APP object
+ * @param userAPI
+ * @returns UserAPP object
+ */
 export function userToAPP(userAPI: UserAPI) {
   return {
     id: userAPI.user_id,
@@ -29,6 +35,11 @@ export function userToAPP(userAPI: UserAPI) {
   } as UserAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param userAPP
+ * @returns UserAPI object
+ */
 export function userToAPI(userAPP: UserAPP) {
   return {
     user_id: userAPP.id,
@@ -39,7 +50,9 @@ export function userToAPI(userAPP: UserAPP) {
   };
 }
 
-// Get all users from database
+/**
+ * Get all users from database
+ */
 export function useGetUsers(
   roleFilter?: UserRole,
   onError?: (err: unknown) => void
@@ -68,7 +81,9 @@ export function useGetUsers(
   );
 }
 
-// Get user with id from database
+/**
+ * Get user with id from database
+ */
 export function useGetUser(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/user", "/{user_id}"],
@@ -82,7 +97,9 @@ export function useGetUser(onError?: (err: unknown) => void) {
   );
 }
 
-// Patch user with id in database
+/**
+ * Patch user with id in database
+ */
 export function usePatchUser(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/user", "/{user_id}"],
@@ -99,7 +116,9 @@ export function usePatchUser(onError?: (err: unknown) => void) {
   );
 }
 
-// Delete user with id from database
+/**
+ * Delete user with id from database
+ */
 export function useDeleteUser(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/user", "/{user_id}"],
@@ -113,7 +132,9 @@ export function useDeleteUser(onError?: (err: unknown) => void) {
   );
 }
 
-// Get is user in team with team id from database
+/**
+ * Get is user in team with team id from database
+ */
 export function useIsUserInTeam(
   teamId: number,
   onError?: (err: unknown) => void
@@ -130,7 +151,9 @@ export function useIsUserInTeam(
   );
 }
 
-// Get meembers of team with team id from database
+/**
+ * Get meembers of team with team id from database
+ */
 export function useGetMembersTeam(
   teamId: number,
   roleFilter?: UserRole,
@@ -164,7 +187,9 @@ export function useGetMembersTeam(
   );
 }
 
-// Delete user from team with team id from database
+/**
+ * Delete user from team with team id from database
+ */
 export function useDeleteMemberTeamOne(
   teamId: number,
   onError?: (err: unknown) => void
@@ -182,7 +207,9 @@ export function useDeleteMemberTeamOne(
   );
 }
 
-// Delete user from team with team id from database
+/**
+ * Delete user from team with team id from database
+ */
 export function useDeleteMemberTeamTwo(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/teams", "{team_id}", "/members", "/{user_id}"],

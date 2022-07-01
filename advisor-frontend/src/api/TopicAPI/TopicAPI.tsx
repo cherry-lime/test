@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
 
+// APP/API types for topics
 export type TopicAPP = {
   id: GridRowId;
   name: string;
@@ -16,6 +17,11 @@ export type TopicAPI = {
   disabled: boolean;
 };
 
+/**
+ * Convert API object to APP object
+ * @param topicAPI
+ * @returns TopicAPP object
+ */
 export function topicToAPP(topicAPI: TopicAPI) {
   return {
     id: topicAPI.topic_id,
@@ -25,6 +31,11 @@ export function topicToAPP(topicAPI: TopicAPI) {
   } as TopicAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param topicAPP
+ * @returns TopicAPI object
+ */
 export function topicToAPI(topicAPP: TopicAPP) {
   return {
     topic_id: topicAPP.id,
@@ -34,7 +45,9 @@ export function topicToAPI(topicAPP: TopicAPP) {
   } as TopicAPI;
 }
 
-// Get all topics from database
+/**
+ * Get all topics from database
+ */
 export function useGetTopics(
   templateId: number,
   enabledFilter?: boolean,
@@ -66,7 +79,9 @@ export function useGetTopics(
   );
 }
 
-// Get topic with id from database
+/**
+ * Get topic with id from database
+ */
 export function useGetTopic(topicId: number, onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/topic", "/{topic_id}"],
@@ -83,7 +98,9 @@ export function useGetTopic(topicId: number, onError?: (err: unknown) => void) {
   );
 }
 
-// Post topic to database
+/**
+ * Post topic to database
+ */
 export function usePostTopic(
   templateId: number,
   onError?: (err: unknown) => void
@@ -101,7 +118,9 @@ export function usePostTopic(
   );
 }
 
-// Patch topic in database
+/**
+ * Patch topic in database
+ */
 export function usePatchTopic(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/topic", "/{topic_id}"],
@@ -119,7 +138,9 @@ export function usePatchTopic(onError?: (err: unknown) => void) {
   );
 }
 
-// Delete topic from database
+/**
+ * Delete topic from database
+ */
 export function useDeleteTopic(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/topic", "/{topic_id}"],

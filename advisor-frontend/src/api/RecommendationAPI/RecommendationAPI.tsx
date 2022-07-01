@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
 
+// APP/API types for recommendations
 export type RecommendationAPP = {
   id: GridRowId;
   order: number;
@@ -16,6 +17,11 @@ export type RecommendationAPI = {
   feedback_additional_information: string;
 };
 
+/**
+ * Convert API object to APP object
+ * @param recommendationAPI
+ * @returns RecommendationAPP object
+ */
 export function recommendationToAPP(recommendationAPI: RecommendationAPI) {
   // Define an unique rowId, in case the evaluation is not finished yet.
   let uniqueID = 0;
@@ -32,6 +38,11 @@ export function recommendationToAPP(recommendationAPI: RecommendationAPI) {
   } as RecommendationAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param recommendationAPP
+ * @returns RecommendationAPI object
+ */
 export function recommendationToAPI(recommendationAPP: RecommendationAPP) {
   return {
     feedback_id: recommendationAPP.id,
@@ -41,7 +52,9 @@ export function recommendationToAPI(recommendationAPP: RecommendationAPP) {
   } as RecommendationAPI;
 }
 
-// Get feedback of assessment from database
+/**
+ * Get feedback of assessment from database
+ */
 export function useGetRecommendations(
   assessmentId: number,
   topicId: number | undefined,
@@ -68,7 +81,9 @@ export function useGetRecommendations(
   );
 }
 
-// Patch assessment in database
+/**
+ * Patch assessment in database
+ */
 export function usePatchRecommendation(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/feedback", "/{feedback_id}"],

@@ -3,6 +3,7 @@ import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
 import { AssessmentType } from "../../types/AssessmentType";
 
+// APP/API types for assessments
 export type AssessmentAPP = {
   id: GridRowId;
   name: string;
@@ -33,6 +34,11 @@ export type AssessmentAPI = {
   team_id: number;
 };
 
+/**
+ * Convert API object to APP object
+ * @param assessmentAPI
+ * @returns AssessmentAPP object
+ */
 export function assessmentToAPP(assessmentAPI: AssessmentAPI) {
   return {
     id: assessmentAPI.assessment_id,
@@ -50,6 +56,11 @@ export function assessmentToAPP(assessmentAPI: AssessmentAPI) {
   } as AssessmentAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param assessmentAPP
+ * @returns AssessmentAPI object
+ */
 export function assessmentToAPI(assessmentAPP: AssessmentAPP) {
   return {
     assessment_id: assessmentAPP.id,
@@ -67,6 +78,7 @@ export function assessmentToAPI(assessmentAPP: AssessmentAPP) {
   };
 }
 
+// APP/API types for assessment checkpoints
 export type AssessmentCheckpointAPP = {
   checkpointId: number;
   answerId: number | undefined;
@@ -77,6 +89,11 @@ export type AssessmentCheckpointAPI = {
   answer_id: number | undefined;
 };
 
+/**
+ * Convert API object to APP object
+ * @param assessmentCheckpointAPI
+ * @returns AssessmentCheckpointAPP object
+ */
 export function assessmentCheckpointToAPP(
   assessmentCheckpointAPI: AssessmentCheckpointAPI
 ) {
@@ -86,6 +103,11 @@ export function assessmentCheckpointToAPP(
   } as AssessmentCheckpointAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param assessmentCheckpointAPP
+ * @returns AssessmentCheckpointAPI object
+ */
 export function assessmentCheckpointToAPI(
   assessmentCheckpointAPP: AssessmentCheckpointAPP
 ) {
@@ -95,7 +117,9 @@ export function assessmentCheckpointToAPI(
   } as AssessmentCheckpointAPI;
 }
 
-// Get all assessments from database
+/**
+ * Get all assessments from database
+ */
 export function useGetAssessments(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/assessment"],
@@ -114,6 +138,12 @@ export function useGetAssessments(onError?: (err: unknown) => void) {
   );
 }
 
+/**
+ * Filters assessments
+ * @param data Data to be filtered
+ * @param isCompleted Is the assessment completed?
+ * @returns Filtered data
+ */
 export const filterCompletedAssessments = (
   data: AssessmentAPI[],
   isCompleted: boolean
@@ -133,7 +163,9 @@ export const filterCompletedAssessments = (
   return assessmentsAPP as AssessmentAPP[];
 };
 
-// Get all my individual assessments from database
+/**
+ * Get all my individual assessments from database
+ */
 export function useGetMyIndividualAssessments(
   isCompleted: boolean,
   onError?: (err: unknown) => void
@@ -149,7 +181,9 @@ export function useGetMyIndividualAssessments(
   );
 }
 
-// Get all my team assessments from database
+/**
+ * Get all my team assessments from database
+ */
 export function useGetMyTeamAssessments(
   isCompleted: boolean,
   teamId: number,
@@ -166,7 +200,9 @@ export function useGetMyTeamAssessments(
   );
 }
 
-// Get assessment with id from database
+/**
+ * Get assessment with id from database
+ */
 export function useGetAssessment(
   assessmentId: number,
   onError?: (err: unknown) => void
@@ -186,7 +222,9 @@ export function useGetAssessment(
   );
 }
 
-// Post assessment to database
+/**
+ * Post assessment to database
+ */
 export function usePostAssessment(
   assessmentType: AssessmentType,
   teamId?: number,
@@ -215,7 +253,9 @@ export function usePostAssessment(
   );
 }
 
-// Patch assessment in database
+/**
+ * Patch assessment in database
+ */
 export function usePatchAssessment(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/assessment", "/{assessment_id}"],
@@ -236,7 +276,9 @@ export function usePatchAssessment(onError?: (err: unknown) => void) {
   );
 }
 
-// Delete assessment from database
+/**
+ * Delete assessment from database
+ */
 export function useDeleteAssessment(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/assessment", "/{assessment_id}"],
@@ -251,7 +293,9 @@ export function useDeleteAssessment(onError?: (err: unknown) => void) {
   );
 }
 
-// Complete assessment in database
+/**
+ * Complete assessment in database
+ */
 export function usePostCompleteAssessment(
   assessmentId: number,
   onError?: (err: unknown) => void
@@ -269,7 +313,9 @@ export function usePostCompleteAssessment(
   );
 }
 
-// Save assessment checkpoint in database
+/**
+ * Save assessment checkpoint in database
+ */
 export function usePostSaveAssessment(
   assessmentId: number,
   oldValue: string,
@@ -298,7 +344,9 @@ export function usePostSaveAssessment(
   );
 }
 
-// Get saved assessment checkpoints from database
+/**
+ * Get saved assessment checkpoints from database
+ */
 export function useGetSaveAssessment(
   assessmentId: number,
   onError?: (err: unknown) => void
@@ -324,7 +372,9 @@ export function useGetSaveAssessment(
   );
 }
 
-// Post feedback of assessment to database
+/**
+ * Post feedback of assessment to database
+ */
 export function usePostFeedbackAssessment(
   assessmentId: number,
   onError?: (err: unknown) => void
