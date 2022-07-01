@@ -19,7 +19,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useLogin } from "../../api/LoginAPI/LoginAPI";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 
 // Sign in functionality to be used later
@@ -30,10 +30,11 @@ export default function SignIn({ theme }: { theme: Theme }) {
   };
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorSignIn = useRef<RefObject>(null);
+  const onErrorSignIn = getOnError(refErrorSignIn);
 
   // Import login API calls
-  const login = useLogin(ref);
+  const login = useLogin(onErrorSignIn);
 
   // Create statehooks to store the login details in the textfields
   const [inputUserName, setInputUserName] = useState("");
@@ -211,7 +212,7 @@ export default function SignIn({ theme }: { theme: Theme }) {
             </Box>
           </Container>
         </Box>
-        <ErrorPopup ref={ref} />
+        <ErrorPopup ref={refErrorSignIn} />
       </div>
     </ThemeProvider>
   );

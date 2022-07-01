@@ -17,7 +17,7 @@ import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI/SubareaAPI";
 import Checkpoint from "../Checkpoint/Checkpoint";
 import Subarea from "../Subarea/Subarea";
 import { TopicAPP } from "../../api/TopicAPI/TopicAPI";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 
 /**
  * Page with a self evaluation that can be filled in
@@ -61,15 +61,17 @@ function AreaSpecificCheckpoints({
   // GET ASSESSMENT INFORMATION
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorSubarea = useRef<RefObject>(null);
+  const onErrorSubarea = getOnError(refErrorSubarea);
 
   const [subareaList, setSubareaList] = useState<SubareaAPP[]>();
   const [checkpointList, setCheckpointList] = useState<CheckpointAPP[]>();
+
   // get answer list from API
-  const subareasResponse = useGetSubareas(areaId, true, ref);
+  const subareasResponse = useGetSubareas(areaId, true, onErrorSubarea);
 
   // get checkpoint list from API
-  const checkpointResponse = useGetCheckpoints(areaId, true, ref);
+  const checkpointResponse = useGetCheckpoints(areaId, true, onErrorSubarea);
 
   const [subareaComponents, setSubareaComponents] =
     useState<React.ReactElement[]>();
@@ -180,7 +182,7 @@ function AreaSpecificCheckpoints({
           </Grid>
         </Grid>
       )}
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorSubarea} />
     </div>
   );
 }

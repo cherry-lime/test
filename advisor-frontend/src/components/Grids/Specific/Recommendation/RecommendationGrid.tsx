@@ -16,7 +16,10 @@ import {
   processRowUpdate,
 } from "../../functions/handlers/handlers";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 import {
   RecommendationAPP,
   useGetRecommendations,
@@ -39,13 +42,18 @@ export default function RecommendationGrid({
   const [rows, setRows] = React.useState<RecommendationAPP[]>([]);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorRecommendation = React.useRef<RefObject>(null);
+  const onErrorRecommendation = getOnError(refErrorRecommendation);
 
   // Recommendation query
-  const { status, data } = useGetRecommendations(assessmentId, topicId, ref);
+  const { status, data } = useGetRecommendations(
+    assessmentId,
+    topicId,
+    onErrorRecommendation
+  );
 
   // Recommendation mutation
-  const patchRecommendation = usePatchRecommendation(ref);
+  const patchRecommendation = usePatchRecommendation(onErrorRecommendation);
 
   // Called when "status" of recommendation query is changed
   React.useEffect(() => {
@@ -55,7 +63,7 @@ export default function RecommendationGrid({
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrder(rows, params, ref),
+      preProcessEditOrder(rows, params, onErrorRecommendation),
     [rows]
   );
 
@@ -157,7 +165,7 @@ export default function RecommendationGrid({
         processRowUpdate={processRowUpdateDecorator}
         hasToolbar
       />
-      <ErrorPopup />
+      <ErrorPopup ref={refErrorRecommendation} />
     </>
   );
 }

@@ -22,7 +22,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useLogin } from "../../api/LoginAPI/LoginAPI";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 
 export default function DetailGen({ theme }: { theme: Theme }) {
@@ -32,10 +32,11 @@ export default function DetailGen({ theme }: { theme: Theme }) {
   );
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorDetailGen = React.useRef<RefObject>(null);
+  const onErrorDetailGen = getOnError(refErrorDetailGen);
 
   // Make Login API call available
-  const login = useLogin(ref);
+  const login = useLogin(onErrorDetailGen);
 
   const [open, setOpen] = React.useState(false);
 
@@ -200,7 +201,7 @@ export default function DetailGen({ theme }: { theme: Theme }) {
             </Box>
           </Container>
         </Box>
-        <ErrorPopup ref={ref} />
+        <ErrorPopup ref={refErrorDetailGen} />
       </div>
     </ThemeProvider>
   );

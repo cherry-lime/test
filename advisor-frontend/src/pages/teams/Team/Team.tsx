@@ -23,7 +23,7 @@ import {
   usePatchTeam,
 } from "../../../api/TeamAPI/TeamAPI";
 import ErrorPopup, {
-  handleError,
+  getOnError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
 import { checkTeamRouting } from "../../routingHelpers";
@@ -61,10 +61,12 @@ function Team({
   }, [gotUserRole]);
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorTeam = useRef<RefObject>(null);
+  const onErrorTeam = getOnError(refErrorTeam);
+
   const navigate = useNavigate();
 
-  const teamResponse = useGetTeam(Number(teamId), ref);
+  const teamResponse = useGetTeam(Number(teamId), onErrorTeam);
 
   const [teamInfo, setTeamInfo] = useState<TeamAPP>();
 
@@ -85,16 +87,14 @@ function Team({
     }
   }, [teamResponse]);
 
-  const patchTeam = usePatchTeam(ref);
+  const patchTeam = usePatchTeam(onErrorTeam);
 
   const changeInfo = (newInfo: TeamAPP) => {
     patchTeam.mutate(newInfo, {
       onSuccess: (teamAPP: TeamAPP) => {
         setTeamInfo(teamAPP);
       },
-      onError: (error) => {
-        handleError(ref, error);
-      },
+      onError: onErrorTeam,
     });
   };
 
@@ -224,7 +224,7 @@ function Team({
             teamId={Number(teamId)}
             assessmentType="TEAM"
           />
-          <ErrorPopup ref={ref} />
+          <ErrorPopup ref={refErrorTeam} />
         </PageLayout>
       )}
     </div>

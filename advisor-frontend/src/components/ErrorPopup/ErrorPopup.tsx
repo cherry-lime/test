@@ -6,20 +6,21 @@ export interface RefObject {
   handleErrorPopup: (msg: string) => void;
 }
 
-export const handleError = (
-  ref: React.RefObject<RefObject>,
-  error: unknown
-) => {
-  if (ref && ref.current) {
-    if (error instanceof AxiosError) {
-      const errorMessage = `${error.response?.data.error}: ${error.response?.data.message}`;
-      ref.current.handleErrorPopup(errorMessage);
-    } else if (error instanceof Error) {
-      ref.current.handleErrorPopup(error.toString());
-    } else if (typeof error === "string") {
-      ref.current.handleErrorPopup(error);
+export const getOnError = (ref: React.RefObject<RefObject>) => {
+  const onError = (err: unknown) => {
+    if (ref && ref.current) {
+      if (err instanceof AxiosError) {
+        const errorMessage = `${err.response?.data.error}: ${err.response?.data.message}`;
+        ref.current.handleErrorPopup(errorMessage);
+      } else if (err instanceof Error) {
+        ref.current.handleErrorPopup(err.toString());
+      } else if (typeof err === "string") {
+        ref.current.handleErrorPopup(err);
+      }
     }
-  }
+  };
+
+  return onError;
 };
 
 const ErrorPopup = forwardRef(

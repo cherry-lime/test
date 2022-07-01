@@ -1,9 +1,7 @@
 import { useMutation, useQuery } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
-
 import API from "../_API";
 import { UserRole } from "../../types/UserRole";
-import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type UserAPP = {
   id: GridRowId;
@@ -44,7 +42,7 @@ export function userToAPI(userAPP: UserAPP) {
 // Get all users from database
 export function useGetUsers(
   roleFilter?: UserRole,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     roleFilter === undefined ? ["GET", "/user"] : ["GET", "/user", roleFilter],
@@ -66,18 +64,12 @@ export function useGetUsers(
 
       return usersAPP as UserAPP[];
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Get user with id from database
-export function useGetUser(ref?: React.RefObject<RefObject>) {
+export function useGetUser(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/user", "/{user_id}"],
     async (userId) => {
@@ -86,18 +78,12 @@ export function useGetUser(ref?: React.RefObject<RefObject>) {
 
       return userToAPP(data) as UserAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Patch user with id in database
-export function usePatchUser(ref?: React.RefObject<RefObject>) {
+export function usePatchUser(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/user", "/{user_id}"],
     async (userAPP: UserAPP) => {
@@ -109,18 +95,12 @@ export function usePatchUser(ref?: React.RefObject<RefObject>) {
 
       return userToAPP(data) as UserAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Delete user with id from database
-export function useDeleteUser(ref?: React.RefObject<RefObject>) {
+export function useDeleteUser(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/user", "/{user_id}"],
     async (userId) => {
@@ -129,20 +109,14 @@ export function useDeleteUser(ref?: React.RefObject<RefObject>) {
 
       return userToAPP(data) as UserAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Get is user in team with team id from database
 export function useIsUserInTeam(
   teamId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/teams", teamId, "/isUserInTeam"],
@@ -152,13 +126,7 @@ export function useIsUserInTeam(
 
       return data as boolean;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
@@ -166,7 +134,7 @@ export function useIsUserInTeam(
 export function useGetMembersTeam(
   teamId: number,
   roleFilter?: UserRole,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     roleFilter === undefined
@@ -192,20 +160,14 @@ export function useGetMembersTeam(
 
       return usersAPP as UserAPP[];
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Delete user from team with team id from database
 export function useDeleteMemberTeamOne(
   teamId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useMutation(
     ["DELETE", "/teams", teamId, "/members", "/user_id"],
@@ -216,18 +178,12 @@ export function useDeleteMemberTeamOne(
       // Convert data to userAPP
       return userToAPP(data) as UserAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Delete user from team with team id from database
-export function useDeleteMemberTeamTwo(ref?: React.RefObject<RefObject>) {
+export function useDeleteMemberTeamTwo(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/teams", "{team_id}", "/members", "/{user_id}"],
     async ({ teamId, userId }: { teamId: number; userId: number }) => {
@@ -237,12 +193,6 @@ export function useDeleteMemberTeamTwo(ref?: React.RefObject<RefObject>) {
       // Convert data to userAPP
       return userToAPP(data) as UserAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }

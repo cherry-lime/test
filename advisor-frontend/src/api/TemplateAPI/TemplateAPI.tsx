@@ -1,10 +1,7 @@
 import { useQuery, useMutation } from "react-query";
-
 import { GridRowId } from "@mui/x-data-grid";
-
 import API from "../_API";
 import { AssessmentType } from "../../types/AssessmentType";
-import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type TemplateAPP = {
   id: GridRowId;
@@ -70,7 +67,7 @@ export function templateToAPI(templateAPP: TemplateAPP) {
 export function useGetTemplates(
   templateType: AssessmentType,
   enabledFilter?: boolean,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/template", templateType, enabledFilter],
@@ -99,20 +96,14 @@ export function useGetTemplates(
 
       return templatesAPP as TemplateAPP[];
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Get template with id from database
 export function useGetTemplate(
   templateId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/template", templateId],
@@ -123,11 +114,7 @@ export function useGetTemplate(
       return templateToAPP(data) as TemplateAPP;
     },
     {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
+      onError,
       enabled: !!templateId,
     }
   );
@@ -136,7 +123,7 @@ export function useGetTemplate(
 // Post template to database
 export function usePostTemplate(
   templateType: AssessmentType,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useMutation(
     ["POST", "/template"],
@@ -149,18 +136,12 @@ export function usePostTemplate(
       // Convert data to templateAPP
       return templateToAPP(data) as TemplateAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Patch template in database
-export function usePatchTemplate(ref?: React.RefObject<RefObject>) {
+export function usePatchTemplate(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/template", "/{template_id}"],
     async (templateAPP: TemplateAPP) => {
@@ -176,18 +157,12 @@ export function usePatchTemplate(ref?: React.RefObject<RefObject>) {
       // Convert data to templateAPP
       return templateToAPP(data) as TemplateAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Delete template from database
-export function useDeleteTemplate(ref?: React.RefObject<RefObject>) {
+export function useDeleteTemplate(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/template", "/{template_id}"],
     async (templateId: number) => {
@@ -197,18 +172,12 @@ export function useDeleteTemplate(ref?: React.RefObject<RefObject>) {
       // Convert data to templateAPP
       return templateToAPP(data) as TemplateAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Duplicate template to database
-export function useDuplicateTemplate(ref?: React.RefObject<RefObject>) {
+export function useDuplicateTemplate(onError?: (err: unknown) => void) {
   return useMutation(
     ["POST", "/template", "/{template_id}", "/clone"],
     async (templateId: number) => {
@@ -216,12 +185,6 @@ export function useDuplicateTemplate(ref?: React.RefObject<RefObject>) {
 
       return templateToAPP(data) as TemplateAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }

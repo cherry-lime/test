@@ -12,7 +12,10 @@ import { Link } from "react-router-dom";
 import GenericGrid from "../../Generic/GenericGrid";
 import { AssessmentType } from "../../../../types/AssessmentType";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 import {
   TemplateAPP,
@@ -47,13 +50,14 @@ export default function TemplateGrid({
   const [rows, setRows] = React.useState<TemplateAPP[]>([]);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorTemplate = React.useRef<RefObject>(null);
+  const onErrorTemplate = getOnError(refErrorTemplate);
 
   // Template mutations
-  const patchTemplate = usePatchTemplate(ref);
-  const postTemplate = usePostTemplate(templateType, ref);
-  const deleteTemplate = useDeleteTemplate(ref);
-  const duplicateTemplate = useDuplicateTemplate(ref);
+  const patchTemplate = usePatchTemplate(onErrorTemplate);
+  const postTemplate = usePostTemplate(templateType, onErrorTemplate);
+  const deleteTemplate = useDeleteTemplate(onErrorTemplate);
+  const duplicateTemplate = useDuplicateTemplate(onErrorTemplate);
 
   // Called when "status" of templates query is changed
   React.useEffect(() => {
@@ -189,7 +193,7 @@ export default function TemplateGrid({
           handler: handleAddDecorator,
         }}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorTemplate} />
       <DeleteDialog
         open={open}
         onClose={handleClose}

@@ -1,8 +1,6 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
-
 import API from "../_API";
-import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type AnswerAPP = {
   id: GridRowId;
@@ -44,7 +42,7 @@ export function answerToAPI(answerAPP: AnswerAPP) {
 export function useGetAnswers(
   templateId: number,
   enabledFilter?: boolean,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/template", templateId, "/answer"],
@@ -69,18 +67,14 @@ export function useGetAnswers(
       return answersAPP as AnswerAPP[];
     },
     {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
+      onError,
       enabled: !!templateId,
     }
   );
 }
 
 // Get answer with id from database
-export function useGetAnswer(ref?: React.RefObject<RefObject>) {
+export function useGetAnswer(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/answer", "/answer_id}"],
     async (answerId) => {
@@ -89,20 +83,14 @@ export function useGetAnswer(ref?: React.RefObject<RefObject>) {
 
       return answerToAPP(data) as AnswerAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Post answer to database
 export function usePostAnswer(
   templateId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useMutation(
     ["POST", "/template", templateId, "/answer"],
@@ -113,18 +101,12 @@ export function usePostAnswer(
       // Convert data to answerAPP
       return answerToAPP(data) as AnswerAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Patch answer in database
-export function usePatchAnswer(ref?: React.RefObject<RefObject>) {
+export function usePatchAnswer(onError?: (err: unknown) => void) {
   return useMutation<AnswerAPP, Error, AnswerAPP>(
     ["PATCH", "/answer", "/{answer_id}"],
     async (answerAPP: AnswerAPP) => {
@@ -137,18 +119,12 @@ export function usePatchAnswer(ref?: React.RefObject<RefObject>) {
       // Convert data to answerAPP
       return answerToAPP(data) as AnswerAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Delete answer from database
-export function useDeleteAnswer(ref?: React.RefObject<RefObject>) {
+export function useDeleteAnswer(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/answer", "/{answer_id}"],
     async (answerId: number) => {
@@ -158,12 +134,6 @@ export function useDeleteAnswer(ref?: React.RefObject<RefObject>) {
       // Convert data to answerAPP
       return answerToAPP(data) as AnswerAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }

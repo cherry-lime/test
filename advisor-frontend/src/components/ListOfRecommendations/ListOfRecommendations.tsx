@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI/TopicAPI";
 import { RootState } from "../../app/store";
 import INGTheme from "../../Theme";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import RecommendationGrid from "../Grids/Specific/Recommendation/RecommendationGrid";
 
 /**
@@ -35,10 +35,15 @@ function ListOfRecommendations({
   );
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorRecommendations = useRef<RefObject>(null);
+  const onErrorRecommendations = getOnError(refErrorRecommendations);
 
   // Fetch the GetTopics API
-  const { status, data } = useGetTopics(templateId, undefined, ref);
+  const { status, data } = useGetTopics(
+    templateId,
+    undefined,
+    onErrorRecommendations
+  );
 
   const [topicList, setTopicList] = useState<TopicAPP[]>();
 
@@ -57,7 +62,10 @@ function ListOfRecommendations({
   }, [status]);
 
   return (
-    <div style={{ width: "inherit", display: "contents" }} data-testid="recommendationTest">
+    <div
+      style={{ width: "inherit", display: "contents" }}
+      data-testid="recommendationTest"
+    >
       <ThemeProvider theme={INGTheme}>
         {topicList !== undefined && (
           <FormControl sx={{ width: "inherit" }}>
@@ -84,7 +92,7 @@ function ListOfRecommendations({
           topicId={topic}
           isEditable={userRole === "ASSESSOR" && completedAt !== null} // TODO: Add && assessment === done later
         />
-        <ErrorPopup ref={ref} />
+        <ErrorPopup ref={refErrorRecommendations} />
       </ThemeProvider>
     </div>
   );

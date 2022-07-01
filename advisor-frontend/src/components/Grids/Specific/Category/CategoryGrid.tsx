@@ -36,7 +36,10 @@ import {
   usePostCategory,
 } from "../../../../api/CategoryAPI/CategoryAPI";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 type CategoryGridProps = {
   theme: Theme;
@@ -47,15 +50,20 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   const [rows, setRows] = React.useState<CategoryAPP[]>([]);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorCategory = React.useRef<RefObject>(null);
+  const onErrorCategory = getOnError(refErrorCategory);
 
   // Category query
-  const { status, data } = useGetCategories(templateId, undefined, ref);
+  const { status, data } = useGetCategories(
+    templateId,
+    undefined,
+    onErrorCategory
+  );
 
   // Category mutations
-  const patchCategory = usePatchCategory(ref);
-  const postCategory = usePostCategory(templateId, ref);
-  const deleteCategory = useDeleteCategory(ref);
+  const patchCategory = usePatchCategory(onErrorCategory);
+  const postCategory = usePostCategory(templateId, onErrorCategory);
+  const deleteCategory = useDeleteCategory(onErrorCategory);
 
   // Called when "status" of categories query is changed
   React.useEffect(() => {
@@ -65,7 +73,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrder(rows, params, ref),
+      preProcessEditOrder(rows, params, onErrorCategory),
     [rows]
   );
 
@@ -258,7 +266,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
           handler: handleAddDecorator,
         }}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorCategory} />
     </>
   );
 }

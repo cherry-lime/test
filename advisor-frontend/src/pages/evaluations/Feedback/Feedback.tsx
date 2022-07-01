@@ -27,6 +27,7 @@ import {
 import { AnswerAPP, useGetAnswers } from "../../../api/AnswerAPI/AnswerAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI/TopicAPI";
 import ErrorPopup, {
+  getOnError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
 import checkAssessmentRouting, { checkTeamRouting } from "../../routingHelpers";
@@ -70,15 +71,20 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   };
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorFeedback = useRef<RefObject>(null);
+  const onErrorFeedback = getOnError(refErrorFeedback);
+
   const navigate = useNavigate();
 
   const [assessmentInfo, setAssessmentInfo] = useState<AssessmentAPP>();
 
-  const assessmentResponse = useGetAssessment(Number(assessmentId), ref);
+  const assessmentResponse = useGetAssessment(
+    Number(assessmentId),
+    onErrorFeedback
+  );
 
   if (team) {
-    const teamResponse = useGetTeam(Number(teamId), ref);
+    const teamResponse = useGetTeam(Number(teamId), onErrorFeedback);
     React.useEffect(() => {
       const rerouting = checkTeamRouting(teamResponse);
       if (rerouting) {
@@ -103,7 +109,10 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
     }
   }, [assessmentResponse]);
 
-  const postFeedback = usePostFeedbackAssessment(Number(assessmentId), ref);
+  const postFeedback = usePostFeedbackAssessment(
+    Number(assessmentId),
+    onErrorFeedback
+  );
 
   const changeFeedback = (newFeedback: string) => {
     postFeedback.mutate(newFeedback, {
@@ -122,20 +131,20 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   const areasResponse = useGetCategories(
     Number(assessmentInfo?.templateId),
     true,
-    ref
+    onErrorFeedback
   );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
     Number(assessmentInfo?.templateId),
     true,
-    ref
+    onErrorFeedback
   );
 
   // get checkpoint answer list from API
   const checkpointAnswerResponse = useGetSaveAssessment(
     Number(assessmentInfo?.id),
-    ref
+    onErrorFeedback
   );
 
   // set the area list value
@@ -169,7 +178,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
   const topicResponse = useGetTopics(
     Number(assessmentInfo?.templateId),
     true,
-    ref
+    onErrorFeedback
   );
 
   // set assessment info value
@@ -298,7 +307,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
           </Box>
         </Stack>
       </Button>
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorFeedback} />
     </PageLayout>
   );
 }

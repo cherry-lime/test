@@ -1,9 +1,6 @@
 import { useQuery, useMutation } from "react-query";
-
 import { GridRowId } from "@mui/x-data-grid";
-
 import API from "../_API";
-import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type RecommendationAPP = {
   id: GridRowId;
@@ -48,7 +45,7 @@ export function recommendationToAPI(recommendationAPP: RecommendationAPP) {
 export function useGetRecommendations(
   assessmentId: number,
   topicId: number | undefined,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/assessment", assessmentId, "/feedback", topicId],
@@ -67,18 +64,12 @@ export function useGetRecommendations(
       // Return response
       return recommendationsAPP as RecommendationAPP[];
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Patch assessment in database
-export function usePatchRecommendation(ref?: React.RefObject<RefObject>) {
+export function usePatchRecommendation(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/feedback", "/{feedback_id}"],
     async (recommendationAPP: RecommendationAPP) => {
@@ -94,12 +85,6 @@ export function usePatchRecommendation(ref?: React.RefObject<RefObject>) {
       // Convert data to recommendationAPP
       return recommendationToAPP(data) as RecommendationAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }

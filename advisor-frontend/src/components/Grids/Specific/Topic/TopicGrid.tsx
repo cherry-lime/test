@@ -7,7 +7,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import GenericGrid from "../../Generic/GenericGrid";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 import {
   handleAdd,
@@ -33,15 +36,16 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   const [rows, setRows] = React.useState<TopicAPP[]>([]);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorTopic = React.useRef<RefObject>(null);
+  const onErrorTopic = getOnError(refErrorTopic);
 
   // Topic query
-  const { status, data } = useGetTopics(templateId, undefined, ref);
+  const { status, data } = useGetTopics(templateId, undefined, onErrorTopic);
 
   // Topic mutations
-  const patchTopic = usePatchTopic(ref);
-  const postTopic = usePostTopic(templateId, ref);
-  const deleteTopic = useDeleteTopic(ref);
+  const patchTopic = usePatchTopic(onErrorTopic);
+  const postTopic = usePostTopic(templateId, onErrorTopic);
+  const deleteTopic = useDeleteTopic(onErrorTopic);
 
   // Called when "status" of templates query is changed
   React.useEffect(() => {
@@ -119,7 +123,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
           handler: handleAddDecorator,
         }}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorTopic} />
     </>
   );
 }

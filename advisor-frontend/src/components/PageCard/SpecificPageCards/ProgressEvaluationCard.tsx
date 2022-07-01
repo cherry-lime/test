@@ -31,7 +31,7 @@ import {
 } from "../../../api/MaturityAPI/MaturityAPI";
 import { ScoreAPP, useGetScores } from "../../../api/ScoreAPI/ScoreAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI/TopicAPI";
-import ErrorPopup, { RefObject } from "../../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../../ErrorPopup/ErrorPopup";
 
 Chart.register(ArcElement, CategoryScale, RadialLinearScale, Legend, Tooltip);
 
@@ -47,7 +47,9 @@ export default function ProgressEvaluationCard({
   templateId,
 }: ProgressEvaluationCardProps) {
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorProgress = useRef<RefObject>(null);
+  const onErrorProgress = getOnError(refErrorProgress);
+
   // define topics, categories, maturities, scores etc as contstants using the React usestate hook
   const [topics, setTopics] = useState<TopicAPP[]>();
   const [categories, setCategories] = useState<CategoryAPP[]>();
@@ -64,24 +66,25 @@ export default function ProgressEvaluationCard({
   const { status: statusTopics, data: dataTopics } = useGetTopics(
     templateId,
     true,
-    ref
+    onErrorProgress
   );
 
   const { status: statusCategories, data: dataCategories } = useGetCategories(
     templateId,
     true,
-    ref
+    onErrorProgress
   );
 
   const { status: statusMaturities, data: dataMaturities } = useGetMaturities(
     templateId,
     true,
-    ref
+    onErrorProgress
   );
 
   const { status: statusScores, data: dataScores } = useGetScores(
     assessmentId,
-    topicSelected
+    topicSelected,
+    onErrorProgress
   );
 
   useEffect(() => {
@@ -355,7 +358,7 @@ export default function ProgressEvaluationCard({
           </CardContent>
         </Box>
       </CardContent>
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorProgress} />
     </Card>
   );
 }

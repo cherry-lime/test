@@ -17,7 +17,7 @@ import {
   useGetCategories,
 } from "../../api/CategoryAPI/CategoryAPI";
 import { TopicAPP, useGetTopics } from "../../api/TopicAPI/TopicAPI";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
 
 /**
@@ -57,26 +57,27 @@ function ListOfCheckpoints({
   }, [activeArea]);
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorCheckpoints = useRef<RefObject>(null);
+  const onErrorCheckpoints = getOnError(refErrorCheckpoints);
 
   // get area list from API
   const areasResponse = useGetCategories(
     Number(assessmentInfo?.templateId),
     true,
-    ref
+    onErrorCheckpoints
   );
 
   // get answer list from API
   const answersResponse = useGetAnswers(
     Number(assessmentInfo?.templateId),
     true,
-    ref
+    onErrorCheckpoints
   );
 
   // get checkpoint answer list from API
   const checkpointAnswerResponse = useGetSaveAssessment(
     Number(assessmentInfo?.id),
-    ref
+    onErrorCheckpoints
   );
 
   // set the area list value
@@ -154,7 +155,7 @@ function ListOfCheckpoints({
             assessmentId={Number(assessmentInfo.id)}
           />
         )}
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorCheckpoints} />
     </div>
   );
 }

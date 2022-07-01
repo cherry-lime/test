@@ -8,7 +8,6 @@ import {
   updateRow,
   moveRow,
 } from "../helpers/helpers";
-import { RefObject, handleError } from "../../../ErrorPopup/ErrorPopup";
 import { TemplateAPP } from "../../../../api/TemplateAPI/TemplateAPI";
 
 /**
@@ -40,7 +39,7 @@ export function handleInit(
 export function preProcessEditOrder(
   rows: GridRowModel[],
   params: GridPreProcessEditCellProps,
-  ref: React.RefObject<RefObject>
+  onError: (err: unknown) => void
 ) {
   const { value } = params.props;
 
@@ -48,7 +47,7 @@ export function preProcessEditOrder(
   const hasError = value < 1 || value > rows.length || value === null;
 
   if (hasError) {
-    handleError(ref, "Error: Order out of bounds");
+    onError("Error: Order out of bounds");
   }
 
   return { ...params.props, error: hasError };
