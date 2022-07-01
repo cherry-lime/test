@@ -1,11 +1,17 @@
 import { Alert, Snackbar } from "@mui/material";
 import { AxiosError } from "axios";
 import { forwardRef, Ref, useImperativeHandle, useState } from "react";
-
+/*
+export referenceobject as an interface 
+containing hte errorpopup handler
+*/
 export interface RefObject {
   handleErrorPopup: (msg: string) => void;
 }
-
+/*
+export a handleError constant 
+containing a ref from React.RefObject<RefObject>
+*/
 export const handleError = (
   ref: React.RefObject<RefObject>,
   error: unknown
@@ -21,7 +27,7 @@ export const handleError = (
     }
   }
 };
-
+// constant declaration for errorpopup
 const ErrorPopup = forwardRef(
   // eslint-disable-next-line react/require-default-props
   (props: { isWarning?: boolean }, ref: Ref<RefObject>) => {
@@ -33,7 +39,7 @@ const ErrorPopup = forwardRef(
       msg: "",
       open: false,
     });
-
+    // constant declaration for errorpopup handling
     const handleErrorPopup = (msg: string) =>
       setErrorPopup({ msg, open: true });
 
@@ -45,7 +51,7 @@ const ErrorPopup = forwardRef(
       if (reason === "clickaway") {
         return;
       }
-
+      // set error popup
       setErrorPopup({ msg: "", open: false });
     };
 
