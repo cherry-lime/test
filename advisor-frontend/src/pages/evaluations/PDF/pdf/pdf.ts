@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import JsPDF from "jspdf";
 import { AnswerAPP } from "../../../../api/AnswerAPI/AnswerAPI";
 import { TopicAPP } from "../../../../api/TopicAPI/TopicAPI";
