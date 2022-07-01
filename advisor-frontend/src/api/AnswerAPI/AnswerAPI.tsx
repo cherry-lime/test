@@ -18,7 +18,7 @@ export type AnswerAPP = {
  * a boolean value disabled (that makes sure that e.g. answers to the checkpoints get disabled)
  * once completing evaluations
  */
-type AnswerAPI = {
+export type AnswerAPI = {
   answer_id: number;
   answer_text: string;
   answer_weight: number;

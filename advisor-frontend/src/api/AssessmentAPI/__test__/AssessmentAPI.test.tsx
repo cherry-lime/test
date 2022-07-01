@@ -14,6 +14,9 @@ import {
   usePostCompleteAssessment,
   usePostFeedbackAssessment,
   usePostSaveAssessment,
+  filterCompletedAssessments,
+  AssessmentAPP,
+  AssessmentAPI,
 } from "../AssessmentAPI";
 
 describe("Testing AssessmentAPI", () => {
@@ -49,36 +52,38 @@ describe("Testing AssessmentAPI", () => {
     });
   });
 
+  const assessmentAPP: AssessmentAPP = {
+    id: 0,
+    name: "",
+    assessmentType: "TEAM",
+    countryName: "",
+    departmentName: "",
+    templateId: 0,
+    feedbackText: "",
+    information: "",
+    createdAt: "",
+    updatedAt: "",
+    completedAt: "",
+    teamId: 0,
+  };
+
+  const assessmentAPI: AssessmentAPI = {
+    assessment_id: 0,
+    assessment_name: "",
+    assessment_type: "TEAM",
+    country_name: "",
+    department_name: "",
+    template_id: 0,
+    feedback_text: "",
+    information: "",
+    created_at: "",
+    updated_at: "",
+    completed_at: "",
+    team_id: 0,
+  };
+
   it("toAPP should give API object", () => {
-    expect(
-      assessmentToAPI({
-        id: 0,
-        name: "",
-        assessmentType: "TEAM",
-        countryName: "",
-        departmentName: "",
-        templateId: 0,
-        feedbackText: "",
-        information: "",
-        createdAt: "",
-        updatedAt: "",
-        completedAt: "",
-        teamId: 0,
-      })
-    ).toStrictEqual({
-      assessment_id: 0,
-      assessment_name: "",
-      assessment_type: "TEAM",
-      country_name: "",
-      department_name: "",
-      template_id: 0,
-      feedback_text: "",
-      information: "",
-      created_at: "",
-      updated_at: "",
-      completed_at: "",
-      team_id: 0,
-    });
+    expect(assessmentToAPI(assessmentAPP)).toStrictEqual(assessmentAPI);
   });
 
   const queryClient = new QueryClient();
@@ -151,5 +156,27 @@ describe("Testing AssessmentAPI", () => {
       wrapper,
     });
     expect(result.current.data).toEqual(undefined);
+  });
+
+  const assessmentAPICompleted: AssessmentAPI = {
+    ...assessmentAPI,
+    completed_at: "15-09-2017",
+  };
+
+  const assessmentAPPCompleted: AssessmentAPP = {
+    ...assessmentAPP,
+    completedAt: "15-09-2017",
+  };
+
+  it("filter for completed assessments", () => {
+    expect(
+      filterCompletedAssessments([assessmentAPI, assessmentAPICompleted], true)
+    ).toEqual([assessmentAPPCompleted]);
+  });
+
+  it("filter for ongoing assessments", () => {
+    expect(
+      filterCompletedAssessments([assessmentAPI, assessmentAPICompleted], false)
+    ).toEqual([assessmentAPP]);
   });
 });
