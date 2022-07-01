@@ -74,7 +74,10 @@ function Checkpoint({
       });
     }
   };
-
+  /* 
+  constant declaration that lets you to change the answer 
+  of the checkpoints in assessments/evaluations 
+  */
   const changeCheckpointAnswer = (newValue: string) => {
     const newAssessmentCheckpoint = {
       checkpointId,
