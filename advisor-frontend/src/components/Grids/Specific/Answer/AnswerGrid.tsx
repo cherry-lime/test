@@ -1,6 +1,5 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
-
 import {
   GridActionsCellItem,
   GridColumns,
@@ -11,16 +10,13 @@ import {
 import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import GenericGrid from "../../Generic/GenericGrid";
-
 import {
   handleAdd,
   handleDelete,
   processRowUpdate,
   handleInit,
 } from "../../functions/handlers/handlers";
-
 import {
   AnswerAPP,
   useDeleteAnswer,
@@ -28,7 +24,6 @@ import {
   usePatchAnswer,
   usePostAnswer,
 } from "../../../../api/AnswerAPI/AnswerAPI";
-
 import ErrorPopup, {
   getOnError,
   RefObject,
@@ -39,22 +34,44 @@ type AnswerGridProps = {
   templateId: number;
 };
 
+/**
+ * Grid for answer types in admin panel
+ * Uses theme and templateId
+ */
 export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<AnswerAPP[]>([]);
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   * onError function
+   */
   const refErrorAnswer = React.useRef<RefObject>(null);
   const onErrorAnswer = getOnError(refErrorAnswer);
 
-  // Answer query
+  /**
+   * Answer query
+   * Gets all answers
+   */
   const { status, data } = useGetAnswers(templateId, undefined, onErrorAnswer);
 
-  // Answer mutations
+  /**
+   * Answer mutations
+   * Patch answer
+   * Post answer
+   * Delete answer
+   */
   const patchAnswer = usePatchAnswer(onErrorAnswer);
   const postAnswer = usePostAnswer(templateId, onErrorAnswer);
   const deleteAnswer = useDeleteAnswer(onErrorAnswer);
 
-  // Called when "status" of answers query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of answers query is changed
+   */
   React.useEffect(() => {
     const filteredData = data?.filter((a) => a.id);
     handleInit(setRows, status, filteredData);
@@ -73,7 +90,10 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
     [rows]
   );
 
-  // Called when a row is edited
+  /**
+   * Row update handler
+   * Called when a row is edited
+   */
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: AnswerAPP, oldRow: AnswerAPP) =>
       processRowUpdate(
@@ -85,7 +105,10 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(setRows, deleteAnswer as UseMutationResult, rowId as number);
@@ -93,7 +116,10 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
     []
   );
 
-  // Called when the "Add" button is pressed below the grid
+  /**
+   * Row add handler
+   * Called when the "Add" button is pressed below the grid
+   */
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postAnswer as UseMutationResult);
   }, []);
