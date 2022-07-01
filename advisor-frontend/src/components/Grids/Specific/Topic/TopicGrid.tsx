@@ -113,9 +113,9 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   return (
     <>
       <GenericGrid
+        columns={columns}
         theme={theme}
         rows={rows}
-        columns={columns}
         processRowUpdate={processRowUpdateDecorator}
         hasToolbar
         add={{
