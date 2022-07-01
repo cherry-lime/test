@@ -4,6 +4,11 @@ import { UseMutationResult } from "react-query";
 import { GridColumns, GridPreProcessEditCellProps } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
+
 import GenericGrid from "../../Generic/GenericGrid";
 
 import {
@@ -13,10 +18,6 @@ import {
   processRowUpdate,
 } from "../../functions/handlers/handlers";
 
-import ErrorPopup, {
-  getOnError,
-  RefObject,
-} from "../../../ErrorPopup/ErrorPopup";
 import {
   RecommendationAPP,
   useGetRecommendations,

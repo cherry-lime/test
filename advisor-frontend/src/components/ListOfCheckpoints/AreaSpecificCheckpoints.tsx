@@ -52,7 +52,9 @@ function AreaSpecificCheckpoints({
   theme: ThemeOptions;
   feedback: boolean;
 }) {
-  // using react useState hook it sets up a page and the changes of a page
+  /**
+   * using react useState hook it sets up a page and the changes of a page
+   */
   const [page, setPage] = React.useState(1);
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -60,39 +62,55 @@ function AreaSpecificCheckpoints({
   ) => {
     setPage(value);
   };
-  // set the value initially to the "Single" tab on the page
+  /**
+   * set the value initially to the "Single" tab on the page
+   */
   const [value, setValue] = React.useState("Single");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
-    // here we need to send new value to API
+    /**
+     * here we need to send new value to API
+     */
   };
 
-  // GET ASSESSMENT INFORMATION
+  /**
+   * GET ASSESSMENT INFORMATION
+   */
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   */
   const refErrorSubarea = useRef<RefObject>(null);
   const onErrorSubarea = getOnError(refErrorSubarea);
 
   const [subareaList, setSubareaList] = useState<SubareaAPP[]>();
   const [checkpointList, setCheckpointList] = useState<CheckpointAPP[]>();
 
-  // get answer list from API
+  /**
+   * get answer list from API
+   */
   const subareasResponse = useGetSubareas(areaId, true, onErrorSubarea);
 
-  // get checkpoint list from API
+  /**
+   * get checkpoint list from API
+   */
   const checkpointResponse = useGetCheckpoints(areaId, true, onErrorSubarea);
 
   const [subareaComponents, setSubareaComponents] =
     useState<React.ReactElement[]>();
 
-  // set the subarea list value
+  /**
+   * set the subarea list value
+   */
   React.useEffect(() => {
     if (subareasResponse.data && subareasResponse.status === "success") {
       setSubareaList(subareasResponse.data);
     }
   }, [subareasResponse]);
 
-  // set the checkpoint list value
+  /**
+   * set the checkpoint list value
+   */
   React.useEffect(() => {
     if (checkpointResponse.data && checkpointResponse.status === "success") {
       const orderedCheckpoints = checkpointResponse.data.sort(
@@ -129,7 +147,9 @@ function AreaSpecificCheckpoints({
     }
     return "";
   };
-  // constant declaration that creates a checkpointcard
+  /**
+   * constant declaration that creates a checkpointcard
+   */
   const createCheckpointCard = (checkpoint: CheckpointAPP) => (
     <Checkpoint
       key={`checkpoint-card-${checkpoint.id}`}
@@ -146,7 +166,9 @@ function AreaSpecificCheckpoints({
       answers={answerList}
     />
   );
-  // return Single / List tabs with the areaspecific checkpoints
+  /**
+   * return Single / List tabs with the areaspecific checkpoints
+   */
   return (
     <div style={{ width: "inherit", display: "contents" }}>
       <Card
