@@ -94,7 +94,10 @@ function Checkpoint({
       },
     });
   };
-
+  /*
+  constant declaration handleClick that assigns value, when clicking
+  on the radiobuttons/checkpoints, even if you switch between checkpoints / radiobutton 
+  */
   const handleClick = (newValue: string) => {
     setValue(newValue);
     changeAnswerList(newValue);
