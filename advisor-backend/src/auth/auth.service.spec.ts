@@ -147,8 +147,8 @@ describe('AuthService', () => {
       // mocking bcrypt compare method
       const bcryptCompare =
         jest
-          .fn().mockRejectedValueOnce(
-            new UnauthorizedException('invalid password')
+          .fn().mockResolvedValue(
+            null
           );
       (bcrypt.compare as jest.Mock) = bcryptCompare;
       expect(authService.login(userDto))
