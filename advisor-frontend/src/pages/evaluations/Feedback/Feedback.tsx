@@ -33,28 +33,25 @@ import ErrorPopup, {
 import checkAssessmentRouting, { checkTeamRouting } from "../../routingHelpers";
 import { useGetTeam } from "../../../api/TeamAPI/TeamAPI";
 
-const showFeedbackTextUser = (
-  team: boolean,
-  userRole: string,
-  value: string,
-  assessmentInfo: AssessmentAPP
-) =>
-  team &&
-  userRole === "USER" &&
-  value === "Recommendations" &&
-  assessmentInfo &&
-  assessmentInfo.feedbackText;
+type ShowFeedbackArgs = {
+  team: boolean;
+  userRole: string;
+  value: string;
+  assessmentInfo: AssessmentAPP;
+};
 
-const showFeedbackTextAssessor = (
-  team: boolean,
-  userRole: string,
-  value: string,
-  assessmentInfo: AssessmentAPP
-) =>
-  team &&
-  userRole === "ASSESSOR" &&
-  value === "Recommendations" &&
-  assessmentInfo;
+const showFeedbackTextUser = (args: ShowFeedbackArgs) =>
+  args.team &&
+  args.userRole === "USER" &&
+  args.value === "Recommendations" &&
+  args.assessmentInfo &&
+  args.assessmentInfo.feedbackText;
+
+const showFeedbackTextAssessor = (args: ShowFeedbackArgs) =>
+  args.team &&
+  args.userRole === "ASSESSOR" &&
+  args.value === "Recommendations" &&
+  args.assessmentInfo;
 
 /**
  * Page with the feedback related to a self assessment
@@ -252,7 +249,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
       {team && value === "Recommendations" && <h2>Facilitator Feedback</h2>}
 
       {assessmentInfo &&
-        showFeedbackTextAssessor(team, userRole, value, assessmentInfo) && (
+        showFeedbackTextAssessor({ team, userRole, value, assessmentInfo }) && (
           <TextfieldEdit
             rows={5}
             theme={theme}
@@ -262,7 +259,7 @@ function Feedback({ team, theme }: { team: boolean; theme: Theme }) {
         )}
 
       {assessmentInfo &&
-        showFeedbackTextUser(team, userRole, value, assessmentInfo) && (
+        showFeedbackTextUser({ team, userRole, value, assessmentInfo }) && (
           <Textfield
             rows={5}
             columns="inherit"
