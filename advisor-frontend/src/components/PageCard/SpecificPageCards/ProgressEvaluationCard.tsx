@@ -35,7 +35,7 @@ import ErrorPopup, { getOnError, RefObject } from "../../ErrorPopup/ErrorPopup";
  * use the Chart.js libraries and properties from www.chartjs.org
  */
 Chart.register(ArcElement, CategoryScale, RadialLinearScale, Legend, Tooltip);
-
+// define type that contains ids of assessment + template
 type ProgressEvaluationCardProps = {
   assessmentId: number;
   templateId: number;
@@ -54,7 +54,6 @@ export default function ProgressEvaluationCard({
    */
   const refErrorProgress = useRef<RefObject>(null);
   const onErrorProgress = getOnError(refErrorProgress);
-  
   /**
    * define topics, categories, maturities, scores etc as contstants using the React usestate hook
    */
@@ -67,7 +66,6 @@ export default function ProgressEvaluationCard({
   );
   const [filter, setFilter] = useState<Filter>();
   const [filterSelected, setFilterSelected] = useState<number | null>();
-
   /**
    * constant delcaration for getting the topics
    */
@@ -76,7 +74,6 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-
   /**
    * constant declaration for getting the categories
    */
@@ -85,7 +82,6 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-
   /**
    * constant declaration for getting the maturitylevels
    */
@@ -94,7 +90,6 @@ export default function ProgressEvaluationCard({
     true,
     onErrorProgress
   );
-
   /**
    * constant declaration for getting the scores
    */
@@ -103,7 +98,6 @@ export default function ProgressEvaluationCard({
     topicSelected,
     onErrorProgress
   );
-
   /**
    * using useEffect hooks from React in order to prevent writing a class
    */
@@ -131,7 +125,6 @@ export default function ProgressEvaluationCard({
       setScores(dataScores);
     }
   }, [statusScores, dataScores]);
-
   /**
    * use handletopicchange constant to define an event handler
    * w.r.t. changing topics
@@ -141,7 +134,6 @@ export default function ProgressEvaluationCard({
       setTopicSelected(Number(event.target.value));
     else setTopicSelected(undefined);
   };
-
   /**
    * use handlecategorychange constant to define an event handler
    * w.r.t changing category
@@ -162,21 +154,18 @@ export default function ProgressEvaluationCard({
   ) {
     return <>...</>;
   }
-  
   /**
    * constant declarations for filtered
    * and the displayed objects
    */
   const filteredObjects = filter === "Category" ? categories : maturities;
   const displayedObjects = filter === "Category" ? maturities : categories;
-
   /**
    * constant declarations for the corresponding id's of the filters
    * and the displayed ones
    */
   const filteredId = filter === "Category" ? "categoryId" : "maturityId";
   const displayedId = filter === "Category" ? "maturityId" : "categoryId";
- 
   /**
    * constant declaration for handling the changing of the filters
    */
@@ -189,7 +178,6 @@ export default function ProgressEvaluationCard({
       setFilterSelected(null);
     }
   };
-  
   /**
    * constant declaration to get the scores in an array
    */
@@ -200,7 +188,6 @@ export default function ProgressEvaluationCard({
         score[displayedId] !== null &&
         score.score !== -1
     ) as ScoreAPP[];
-
   /**
    * constant declaration to get the labels
    */
@@ -214,13 +201,11 @@ export default function ProgressEvaluationCard({
       }
       return "";
     });
-
   /**
    * constant declaration to get the score data
    */
   const getData = () =>
     getFilteredScores().map((score: ScoreAPP) => score.score);
-
   /**
    * Apply the conditional colouring in the scores, e.g. 0%=red and 100% is green,
    * so once the score gets higher the colour changes accordingly
@@ -232,7 +217,6 @@ export default function ProgressEvaluationCard({
           (255 / 100) * score.score
         )},0,0.4)`
     );
-
   /**
    * scale the polar area chart in such a way
    * the values are between 0 and 100
@@ -245,7 +229,6 @@ export default function ProgressEvaluationCard({
       },
     },
   };
-
   /**
    * return the progressevaluationcard in which the polar area chart is at the right side,
    * and on the left side you see the scores for e.g. the maturity levels and the dropdown menus for topics and areas
