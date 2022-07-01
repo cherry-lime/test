@@ -32,7 +32,10 @@ import {
   usePostMaturity,
 } from "../../../../api/MaturityAPI/MaturityAPI";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 type MaturityGridProps = {
   theme: Theme;
@@ -43,15 +46,20 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   const [rows, setRows] = React.useState<MaturityAPP[]>([]);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorMaturity = React.useRef<RefObject>(null);
+  const onErrorMaturity = getOnError(refErrorMaturity);
 
   // Maturity query
-  const { status, data } = useGetMaturities(templateId, undefined, ref);
+  const { status, data } = useGetMaturities(
+    templateId,
+    undefined,
+    onErrorMaturity
+  );
 
   // Maturity mutations
-  const patchMaturity = usePatchMaturity(ref);
-  const postMaturity = usePostMaturity(templateId, ref);
-  const deleteMaturity = useDeleteMaturity(ref);
+  const patchMaturity = usePatchMaturity(onErrorMaturity);
+  const postMaturity = usePostMaturity(templateId, onErrorMaturity);
+  const deleteMaturity = useDeleteMaturity(onErrorMaturity);
 
   // Called when "status" of maturities query is changed
   React.useEffect(() => {
@@ -61,7 +69,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrder(rows, params, ref),
+      preProcessEditOrder(rows, params, onErrorMaturity),
     [rows]
   );
 
@@ -195,7 +203,7 @@ export default function MaturityGrid({ theme, templateId }: MaturityGridProps) {
           handler: handleAddDecorator,
         }}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorMaturity} />
     </>
   );
 }

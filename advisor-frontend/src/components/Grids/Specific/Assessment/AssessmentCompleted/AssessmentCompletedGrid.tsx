@@ -21,7 +21,10 @@ import {
   useGetMyTeamAssessments,
 } from "../../../../../api/AssessmentAPI/AssessmentAPI";
 
-import ErrorPopup, { RefObject } from "../../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../../ErrorPopup/ErrorPopup";
 
 type AssessmentCompletedGridProps = {
   theme: Theme;
@@ -38,14 +41,15 @@ export default function AssessmentCompletedGrid({
   const [rows, setRows] = React.useState<AssessmentAPP[]>([]);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorAssessmentCompleted = React.useRef<RefObject>(null);
+  const onErrorAssessmentCompleted = getOnError(refErrorAssessmentCompleted);
   const navigate = useNavigate();
 
   // Assessment query
   const { status, data } =
     assessmentType === "TEAM" && teamId !== undefined
-      ? useGetMyTeamAssessments(true, teamId, ref)
-      : useGetMyIndividualAssessments(true, ref);
+      ? useGetMyTeamAssessments(true, teamId, onErrorAssessmentCompleted)
+      : useGetMyIndividualAssessments(true, onErrorAssessmentCompleted);
 
   const handleReview = (id: number) => {
     navigate(
@@ -104,7 +108,7 @@ export default function AssessmentCompletedGrid({
         hasToolbar
         sortModel={[{ field: "completedAt", sort: "desc" }]}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorAssessmentCompleted} />
     </>
   );
 }

@@ -1,8 +1,6 @@
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
-
 import API from "../_API";
-import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type CategoryAPP = {
   id: GridRowId;
@@ -48,7 +46,7 @@ export function categoryToAPI(categoryAPP: CategoryAPP) {
 export function useGetCategories(
   templateId: number,
   enabledFilter?: boolean,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/template", templateId, "/category", enabledFilter],
@@ -73,11 +71,7 @@ export function useGetCategories(
       return categoriesAPP as CategoryAPP[];
     },
     {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
+      onError,
       enabled: !!templateId,
     }
   );
@@ -86,7 +80,7 @@ export function useGetCategories(
 // Get category with id from database
 export function useGetCategory(
   categoryId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/category", "/{category_id}"],
@@ -97,11 +91,7 @@ export function useGetCategory(
       return categoryToAPP(data) as CategoryAPP;
     },
     {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
+      onError,
       enabled: !!categoryId,
     }
   );
@@ -110,7 +100,7 @@ export function useGetCategory(
 // Post category to database
 export function usePostCategory(
   templateId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useMutation(
     ["POST", "/template", templateId, "/category"],
@@ -121,18 +111,12 @@ export function usePostCategory(
       // Convert data to categoryAPP
       return categoryToAPP(data) as CategoryAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Patch category in database
-export function usePatchCategory(ref?: React.RefObject<RefObject>) {
+export function usePatchCategory(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/category", "/{category_id}"],
     async (categoryAPP: CategoryAPP) => {
@@ -148,18 +132,12 @@ export function usePatchCategory(ref?: React.RefObject<RefObject>) {
       // Convert data to categoryAPP
       return categoryToAPP(data) as CategoryAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Delete category from database
-export function useDeleteCategory(ref?: React.RefObject<RefObject>) {
+export function useDeleteCategory(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/category", "/{category_id}"],
     async (categoryId: number) => {
@@ -169,12 +147,6 @@ export function useDeleteCategory(ref?: React.RefObject<RefObject>) {
       // Convert data to categoryAPP
       return categoryToAPP(data) as CategoryAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }

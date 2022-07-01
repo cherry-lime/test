@@ -31,7 +31,7 @@ import {
 } from "../../../api/MaturityAPI/MaturityAPI";
 import { ScoreAPP, useGetScores } from "../../../api/ScoreAPI/ScoreAPI";
 import { TopicAPP, useGetTopics } from "../../../api/TopicAPI/TopicAPI";
-import ErrorPopup, { RefObject } from "../../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../../ErrorPopup/ErrorPopup";
 
 Chart.register(ArcElement, CategoryScale, RadialLinearScale, Legend, Tooltip);
 
@@ -47,7 +47,9 @@ export default function ProgressEvaluationCard({
   templateId,
 }: ProgressEvaluationCardProps) {
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorProgress = useRef<RefObject>(null);
+  const onErrorProgress = getOnError(refErrorProgress);
+
   // define topics, categories, maturities, scores etc as contstants using the React usestate hook
   const [topics, setTopics] = useState<TopicAPP[]>();
   const [categories, setCategories] = useState<CategoryAPP[]>();
@@ -60,28 +62,29 @@ export default function ProgressEvaluationCard({
 
   const [filter, setFilter] = useState<Filter>();
   const [filterSelected, setFilterSelected] = useState<number | null>();
-
+  // constant delcaration for getting the topics
   const { status: statusTopics, data: dataTopics } = useGetTopics(
     templateId,
     true,
-    ref
+    onErrorProgress
   );
-
+  // constant declaration for getting the categories
   const { status: statusCategories, data: dataCategories } = useGetCategories(
     templateId,
     true,
-    ref
+    onErrorProgress
   );
-
+  // constant declaration for getting the maturitylevels
   const { status: statusMaturities, data: dataMaturities } = useGetMaturities(
     templateId,
     true,
-    ref
+    onErrorProgress
   );
-
+  // constant declaration for getting the scores
   const { status: statusScores, data: dataScores } = useGetScores(
     assessmentId,
-    topicSelected
+    topicSelected,
+    onErrorProgress
   );
   // using useEffect hooks from React in order to prevent writing a class
   useEffect(() => {
@@ -142,13 +145,13 @@ export default function ProgressEvaluationCard({
   ) {
     return <>...</>;
   }
-  // constant declarations for filtered + displayed objects with their corresponding id's
+  // constant declarations for filtered + displayed objects
   const filteredObjects = filter === "Category" ? categories : maturities;
   const displayedObjects = filter === "Category" ? maturities : categories;
-
+  // constant declarations for the corresponding id's of the filters and displayed ones
   const filteredId = filter === "Category" ? "categoryId" : "maturityId";
   const displayedId = filter === "Category" ? "maturityId" : "categoryId";
-
+  // constant declaration for handling the changing of the filters
   const handleFilterChange = () => {
     if (filter === "Category") {
       setFilter("Maturity");
@@ -361,7 +364,7 @@ export default function ProgressEvaluationCard({
           </CardContent>
         </Box>
       </CardContent>
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorProgress} />
     </Card>
   );
 }

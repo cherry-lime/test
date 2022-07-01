@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { resetUser } from "../../app/userDataSlice";
 import { useLogout } from "../../api/LoginAPI/LoginAPI";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 
 type SidebarListProps = {
   userType: Map<string, boolean>;
@@ -24,9 +24,10 @@ export default function SidebarList({ userType }: SidebarListProps) {
   const dispatch = useDispatch();
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorItems = useRef<RefObject>(null);
+  const onErrorItems = getOnError(refErrorItems);
 
-  const logout = useLogout(ref);
+  const logout = useLogout(onErrorItems);
 
   return (
     <>
@@ -85,7 +86,7 @@ export default function SidebarList({ userType }: SidebarListProps) {
           <ListItemText primary="Sign Out" style={{ color: "background" }} />
         </ListItemButton>
       )}
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorItems} />
     </>
   );
 }

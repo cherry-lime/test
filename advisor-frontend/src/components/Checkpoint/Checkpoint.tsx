@@ -60,7 +60,7 @@ function Checkpoint({
   }, [selectedAnswer]);
 
   const postCheckpointAnswer = usePostSaveAssessment(assessmentId, value);
-
+  // constant declaration changeAnswerList that returns a (new) list of the answers once changing them
   const changeAnswerList = (newAnswer: string) => {
     if (setCheckpointAnswerList) {
       setCheckpointAnswerList((old) => {
@@ -74,7 +74,10 @@ function Checkpoint({
       });
     }
   };
-
+  /* 
+  constant declaration that lets you to change the answer 
+  of the checkpoints in assessments/evaluations 
+  */
   const changeCheckpointAnswer = (newValue: string) => {
     const newAssessmentCheckpoint = {
       checkpointId,
@@ -94,7 +97,10 @@ function Checkpoint({
       },
     });
   };
-
+  /*
+  constant declaration handleClick that assigns value, when clicking
+  on the radiobuttons/checkpoints, even if you switch between checkpoints / radiobutton 
+  */
   const handleClick = (newValue: string) => {
     setValue(newValue);
     changeAnswerList(newValue);

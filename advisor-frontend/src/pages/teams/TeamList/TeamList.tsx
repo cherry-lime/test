@@ -10,6 +10,7 @@ import {
   useJoinInviteTokenTeam,
 } from "../../../api/TeamAPI/TeamAPI";
 import ErrorPopup, {
+  getOnError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
 
@@ -22,15 +23,16 @@ function TeamList({ theme }: { theme: Theme }) {
   );
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorTeams = useRef<RefObject>(null);
+  const onErrorTeams = getOnError(refErrorTeams);
 
   // Team query
-  const teamResponse = useGetMyTeams(ref);
+  const teamResponse = useGetMyTeams(onErrorTeams);
 
   // Define token, setToken as a state hook in React that is set initially to empty
   const [token, setToken] = useState("");
 
-  const patchToken = useJoinInviteTokenTeam(token, ref);
+  const patchToken = useJoinInviteTokenTeam(token, onErrorTeams);
 
   const handleJoinTeam = () => {
     patchToken.mutate(undefined, {
@@ -72,7 +74,7 @@ function TeamList({ theme }: { theme: Theme }) {
         userId={Number(userId)}
         teamResponse={teamResponse}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorTeams} />
     </PageLayout>
   );
 }

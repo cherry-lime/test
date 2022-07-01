@@ -1,9 +1,7 @@
-/* eslint-disable max-lines */
 import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
 import { AssessmentType } from "../../types/AssessmentType";
-import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type AssessmentAPP = {
   id: GridRowId;
@@ -98,7 +96,7 @@ function assessmentCheckpointToAPI(
 }
 
 // Get all assessments from database
-export function useGetAssessments(ref?: React.RefObject<RefObject>) {
+export function useGetAssessments(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/assessment"],
     async () => {
@@ -112,20 +110,14 @@ export function useGetAssessments(ref?: React.RefObject<RefObject>) {
 
       return assessmentsAPP as AssessmentAPP[];
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Get all my individual assessments from database
 export function useGetMyIndividualAssessments(
   isCompleted: boolean,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/assessment/my", isCompleted],
@@ -151,13 +143,7 @@ export function useGetMyIndividualAssessments(
 
       return assessmentsAPP as AssessmentAPP[];
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
@@ -165,7 +151,7 @@ export function useGetMyIndividualAssessments(
 export function useGetMyTeamAssessments(
   isCompleted: boolean,
   teamId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/teams", teamId, "/assessments", isCompleted],
@@ -191,20 +177,14 @@ export function useGetMyTeamAssessments(
 
       return assessmentsAPP as AssessmentAPP[];
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Get assessment with id from database
 export function useGetAssessment(
   assessmentId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/assessment", assessmentId],
@@ -215,11 +195,7 @@ export function useGetAssessment(
       return assessmentToAPP(data) as AssessmentAPP;
     },
     {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
+      onError,
       enabled: !!assessmentId,
     }
   );
@@ -229,7 +205,7 @@ export function useGetAssessment(
 export function usePostAssessment(
   assessmentType: AssessmentType,
   teamId?: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useMutation(
     ["POST", "/assessment"],
@@ -250,18 +226,12 @@ export function usePostAssessment(
       // Convert data to assessmentAPP
       return assessmentToAPP(data) as AssessmentAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Patch assessment in database
-export function usePatchAssessment(ref?: React.RefObject<RefObject>) {
+export function usePatchAssessment(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/assessment", "/{assessment_id}"],
     async (assessmentAPP: AssessmentAPP) => {
@@ -277,18 +247,12 @@ export function usePatchAssessment(ref?: React.RefObject<RefObject>) {
       // Convert data to assessmentAPP
       return assessmentToAPP(data) as AssessmentAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Delete assessment from database
-export function useDeleteAssessment(ref?: React.RefObject<RefObject>) {
+export function useDeleteAssessment(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/assessment", "/{assessment_id}"],
     async (assessmentId: number) => {
@@ -298,20 +262,14 @@ export function useDeleteAssessment(ref?: React.RefObject<RefObject>) {
       // Convert data to assessmentAPP
       return assessmentToAPP(data) as AssessmentAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
 // Complete assessment in database
 export function usePostCompleteAssessment(
   assessmentId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/complete"],
@@ -322,13 +280,7 @@ export function usePostCompleteAssessment(
       // Convert data to assessmentAPP
       return assessmentToAPP(data) as AssessmentAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }
 
@@ -337,7 +289,7 @@ export function usePostCompleteAssessment(
 export function usePostSaveAssessment(
   assessmentId: number,
   oldValue: string,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/save"],
@@ -356,11 +308,7 @@ export function usePostSaveAssessment(
       return data;
     },
     {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
+      onError,
       onMutate: () => ({ oldValue }),
     }
   );
@@ -369,7 +317,7 @@ export function usePostSaveAssessment(
 // Get saved assessment checkpoints from database
 export function useGetSaveAssessment(
   assessmentId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/assessment", assessmentId, "/save"],
@@ -386,11 +334,7 @@ export function useGetSaveAssessment(
       return checkpointsAPP as AssessmentCheckpointAPP[];
     },
     {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
+      onError,
       enabled: !!assessmentId,
     }
   );
@@ -399,7 +343,7 @@ export function useGetSaveAssessment(
 // Post feedback of assessment to database
 export function usePostFeedbackAssessment(
   assessmentId: number,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useMutation(
     ["POST", "/assessment", assessmentId, "/feedback"],
@@ -415,12 +359,6 @@ export function usePostFeedbackAssessment(
       // Return response
       return assessmentAPP as AssessmentAPP;
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }

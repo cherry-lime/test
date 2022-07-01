@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 import API from "../_API";
-import { handleError, RefObject } from "../../components/ErrorPopup/ErrorPopup";
 
 export type ScoreAPP = {
   maturityId: number;
@@ -26,7 +25,7 @@ export function scoreToAPP(scoreAPI: ScoreAPI) {
 export function useGetScores(
   assessmentId: number,
   topicId: number | undefined,
-  ref?: React.RefObject<RefObject>
+  onError?: (err: unknown) => void
 ) {
   return useQuery(
     ["GET", "/assessment", assessmentId, "/score", topicId],
@@ -42,12 +41,6 @@ export function useGetScores(
       // Return response
       return scoresAPP as ScoreAPP[];
     },
-    {
-      onError: (error) => {
-        if (ref) {
-          handleError(ref, error);
-        }
-      },
-    }
+    { onError }
   );
 }

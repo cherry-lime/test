@@ -45,7 +45,10 @@ import {
   processRowUpdate,
 } from "../../functions/handlers/handlers";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 type CheckpointGridProps = {
   theme: Theme;
@@ -63,28 +66,29 @@ export default function CheckpointGrid({
   const [maturities, setMaturities] = React.useState<MaturityAPP[]>([]);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorCheckpoint = React.useRef<RefObject>(null);
+  const onErrorCheckpoint = getOnError(refErrorCheckpoint);
 
   // Checkpoint queries
   const { status: statusCheckpoints, data: dataCheckpoints } =
-    useGetCheckpoints(categoryId, undefined, ref);
+    useGetCheckpoints(categoryId, undefined, onErrorCheckpoint);
 
   const { status: statusTopics, data: dataTopics } = useGetTopics(
     templateId,
     true,
-    ref
+    onErrorCheckpoint
   );
 
   const { status: statusMaturities, data: dataMaturities } = useGetMaturities(
     templateId,
     true,
-    ref
+    onErrorCheckpoint
   );
 
   // Checkpoint mutations
-  const patchCheckpoint = usePatchCheckpoint(ref);
-  const postCheckpoint = usePostCheckpoint(categoryId, ref);
-  const deleteCheckpoint = useDeleteCheckpoint(ref);
+  const patchCheckpoint = usePatchCheckpoint(onErrorCheckpoint);
+  const postCheckpoint = usePostCheckpoint(categoryId, onErrorCheckpoint);
+  const deleteCheckpoint = useDeleteCheckpoint(onErrorCheckpoint);
 
   // Called when "status" of checkpoints query is changed
   React.useEffect(() => {
@@ -104,7 +108,7 @@ export default function CheckpointGrid({
   // Called when the 'Order' column is edited
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrder(rows, params, ref),
+      preProcessEditOrder(rows, params, onErrorCheckpoint),
     [rows]
   );
 
@@ -338,7 +342,7 @@ export default function CheckpointGrid({
           handler: handleAddDecorator,
         }}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorCheckpoint} />
     </>
   );
 }

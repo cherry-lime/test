@@ -29,7 +29,10 @@ import {
   usePostAnswer,
 } from "../../../../api/AnswerAPI/AnswerAPI";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 type AnswerGridProps = {
   theme: Theme;
@@ -40,15 +43,16 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
   const [rows, setRows] = React.useState<AnswerAPP[]>([]);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorAnswer = React.useRef<RefObject>(null);
+  const onErrorAnswer = getOnError(refErrorAnswer);
 
   // Answer query
-  const { status, data } = useGetAnswers(templateId, undefined, ref);
+  const { status, data } = useGetAnswers(templateId, undefined, onErrorAnswer);
 
   // Answer mutations
-  const patchAnswer = usePatchAnswer(ref);
-  const postAnswer = usePostAnswer(templateId, ref);
-  const deleteAnswer = useDeleteAnswer(ref);
+  const patchAnswer = usePatchAnswer(onErrorAnswer);
+  const postAnswer = usePostAnswer(templateId, onErrorAnswer);
+  const deleteAnswer = useDeleteAnswer(onErrorAnswer);
 
   // Called when "status" of answers query is changed
   React.useEffect(() => {
@@ -155,7 +159,7 @@ export default function AnswerTypeGrid({ theme, templateId }: AnswerGridProps) {
           handler: handleAddDecorator,
         }}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorAnswer} />
     </>
   );
 }

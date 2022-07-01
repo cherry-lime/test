@@ -9,6 +9,7 @@ import {
   usePatchTemplate,
 } from "../../../../api/TemplateAPI/TemplateAPI";
 import ErrorPopup, {
+  getOnError,
   RefObject,
 } from "../../../../components/ErrorPopup/ErrorPopup";
 
@@ -27,15 +28,20 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
   const [activeTeamTemplate, setActiveTeamTemplate] = useState<TemplateAPP>();
 
   // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  const refErrorTemplates = useRef<RefObject>(null);
+  const onErrorTemplates = getOnError(refErrorTemplates);
 
   // Template queries
-  const individualResponse = useGetTemplates("INDIVIDUAL");
+  const individualResponse = useGetTemplates(
+    "INDIVIDUAL",
+    undefined,
+    onErrorTemplates
+  );
 
-  const teamResponse = useGetTemplates("TEAM", undefined, ref);
+  const teamResponse = useGetTemplates("TEAM", undefined, onErrorTemplates);
 
   // Template mutation
-  const patchTemplate = usePatchTemplate(ref);
+  const patchTemplate = usePatchTemplate(onErrorTemplates);
 
   useEffect(() => {
     if (individualResponse.status === "success") {
@@ -160,7 +166,7 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
           setTemplates={setTeamTemplates}
         />
       </PageLayout>
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorTemplates} />
     </div>
   );
 }

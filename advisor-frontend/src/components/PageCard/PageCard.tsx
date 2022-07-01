@@ -10,7 +10,7 @@ a card consist of:
 title with a small logo
 a seperator line (divider)
 a body text
-optionally: an JPEG image at the right side and/or left side
+optionally: an JPEG/PNG/JPG image at the right side and/or left side
 title divider and body text are aligned left
 the card title and body text are darkgrey according style
 the logo in the title is ING orange

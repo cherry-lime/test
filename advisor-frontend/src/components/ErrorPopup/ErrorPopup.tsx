@@ -1,27 +1,31 @@
 import { Alert, Snackbar } from "@mui/material";
 import { AxiosError } from "axios";
 import { forwardRef, Ref, useImperativeHandle, useState } from "react";
-
+/*
+export referenceobject as an interface 
+containing hte errorpopup handler
+*/
 export interface RefObject {
   handleErrorPopup: (msg: string) => void;
 }
 
-export const handleError = (
-  ref: React.RefObject<RefObject>,
-  error: unknown
-) => {
-  if (ref && ref.current) {
-    if (error instanceof AxiosError) {
-      const errorMessage = `${error.response?.data.error}: ${error.response?.data.message}`;
-      ref.current.handleErrorPopup(errorMessage);
-    } else if (error instanceof Error) {
-      ref.current.handleErrorPopup(error.toString());
-    } else if (typeof error === "string") {
-      ref.current.handleErrorPopup(error);
+export const getOnError = (ref: React.RefObject<RefObject>) => {
+  const onError = (err: unknown) => {
+    if (ref && ref.current) {
+      if (err instanceof AxiosError) {
+        const errorMessage = `${err.response?.data.error}: ${err.response?.data.message}`;
+        ref.current.handleErrorPopup(errorMessage);
+      } else if (err instanceof Error) {
+        ref.current.handleErrorPopup(err.toString());
+      } else if (typeof err === "string") {
+        ref.current.handleErrorPopup(err);
+      }
     }
-  }
-};
+  };
 
+  return onError;
+};
+// constant declaration for errorpopup
 const ErrorPopup = forwardRef(
   // eslint-disable-next-line react/require-default-props
   (props: { isWarning?: boolean }, ref: Ref<RefObject>) => {
@@ -33,7 +37,7 @@ const ErrorPopup = forwardRef(
       msg: "",
       open: false,
     });
-
+    // constant declaration for errorpopup handling
     const handleErrorPopup = (msg: string) =>
       setErrorPopup({ msg, open: true });
 
@@ -45,7 +49,7 @@ const ErrorPopup = forwardRef(
       if (reason === "clickaway") {
         return;
       }
-
+      // set error popup
       setErrorPopup({ msg: "", open: false });
     };
 

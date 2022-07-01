@@ -11,7 +11,10 @@ import { UserRole } from "../../../../types/UserRole";
 
 import { handleDelete, handleInit } from "../../functions/handlers/handlers";
 
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 import {
   useDeleteMemberTeamOne,
@@ -37,15 +40,16 @@ export default function MemberGrid({
   const [rows, setRows] = React.useState<UserAPP[]>([]);
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorMember = React.useRef<RefObject>(null);
+  const onErrorMember = getOnError(refErrorMember);
 
   // Member query
   const { status, data } = forAssessors
-    ? useGetMembersTeam(teamId, "ASSESSOR", ref)
-    : useGetMembersTeam(teamId, "USER", ref);
+    ? useGetMembersTeam(teamId, "ASSESSOR", onErrorMember)
+    : useGetMembersTeam(teamId, "USER", onErrorMember);
 
   // Member mutation
-  const deleteMember = useDeleteMemberTeamOne(teamId, ref);
+  const deleteMember = useDeleteMemberTeamOne(teamId, onErrorMember);
 
   // Called when "status" of member query is changed
   React.useEffect(() => {
@@ -99,7 +103,7 @@ export default function MemberGrid({
   return (
     <>
       <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorMember} />
     </>
   );
 }

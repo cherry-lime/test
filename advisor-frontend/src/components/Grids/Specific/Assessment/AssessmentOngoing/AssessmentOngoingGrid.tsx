@@ -24,7 +24,10 @@ import {
   usePostAssessment,
 } from "../../../../../api/AssessmentAPI/AssessmentAPI";
 
-import ErrorPopup, { RefObject } from "../../../../ErrorPopup/ErrorPopup";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../../ErrorPopup/ErrorPopup";
 
 type AssessmentOngoingGridProps = {
   theme: Theme;
@@ -44,19 +47,20 @@ export default function AssessmentOngoingGrid({
   const navigate = useNavigate();
 
   // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  const refErrorAssessmentOngoing = React.useRef<RefObject>(null);
+  const onErrorAssessmentOngoing = getOnError(refErrorAssessmentOngoing);
 
   // Assessment query
   const { status, data } =
     assessmentType === "TEAM" && teamId !== undefined
-      ? useGetMyTeamAssessments(false, teamId, ref)
-      : useGetMyIndividualAssessments(false, ref);
+      ? useGetMyTeamAssessments(false, teamId, onErrorAssessmentOngoing)
+      : useGetMyIndividualAssessments(false, onErrorAssessmentOngoing);
 
   // Assessment mutation
   const postAssessment =
     assessmentType === "TEAM" && teamId !== undefined
-      ? usePostAssessment(assessmentType, teamId, ref)
-      : usePostAssessment(assessmentType, undefined, ref);
+      ? usePostAssessment(assessmentType, teamId, onErrorAssessmentOngoing)
+      : usePostAssessment(assessmentType, undefined, onErrorAssessmentOngoing);
 
   const handleContinue = (id: number) => {
     navigate(
@@ -132,7 +136,7 @@ export default function AssessmentOngoingGrid({
         }
         sortModel={[{ field: "updatedAt", sort: "desc" }]}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorAssessmentOngoing} />
     </>
   );
 }
