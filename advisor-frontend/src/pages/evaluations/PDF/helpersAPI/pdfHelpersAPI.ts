@@ -16,10 +16,6 @@ import {
   recommendationToAPP,
 } from "../../../../api/RecommendationAPI/RecommendationAPI";
 import {
-  AssessmentAPP,
-  assessmentToAPP,
-} from "../../../../api/AssessmentAPI/AssessmentAPI";
-import {
   TemplateAPP,
   templateToAPP,
 } from "../../../../api/TemplateAPI/TemplateAPI";
