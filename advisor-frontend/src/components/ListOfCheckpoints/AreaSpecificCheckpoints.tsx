@@ -147,6 +147,7 @@ function AreaSpecificCheckpoints({
     }
     return "";
   };
+
   /**
    * constant declaration that creates a checkpointcard
    */
@@ -166,6 +167,7 @@ function AreaSpecificCheckpoints({
       answers={answerList}
     />
   );
+
   /**
    * return Single / List tabs with the areaspecific checkpoints
    */

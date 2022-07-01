@@ -99,7 +99,7 @@ export default function DetailGen() {
           Finish and Log in
         </Button>
       </LoginLayout>
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorDetailGen} />
     </ThemeProvider>
   );
 }

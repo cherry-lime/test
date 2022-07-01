@@ -5,7 +5,6 @@ import { Button } from "@mui/material";
  * text = button text
  * size of the button is depending on the length of the button text string
  */
-
 function ButtonInverted({ text }: { text: string }) {
   return (
     <div>

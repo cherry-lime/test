@@ -108,7 +108,7 @@ export default function SignIn() {
           </Grid>
         </Box>
       </LoginLayout>
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorSignIn} />
     </ThemeProvider>
   );
 }

@@ -41,6 +41,7 @@ const none = new Map<string, boolean>([
   ["settings", false],
   ["template", false],
 ]);
+
 // Enum object where the different userTypes can be called through. Example: "userType.ADMIN"
 const userTypes = {
   ADMIN: admin,

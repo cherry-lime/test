@@ -27,7 +27,6 @@ function Copyright() {
  * including a copyright sign mentioning the TU/e Eindhoven
  * (Eindhoven University of Technology)
  */
-
 export default function Footer() {
   return (
     <Paper

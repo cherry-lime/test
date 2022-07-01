@@ -27,12 +27,14 @@ export default function DeleteDialog(props: SimpleDialogProps) {
    * Declare the props
    */
   const { onClose, open, deleteTemplate } = props;
+
   /**
    * A handler that takes care of only closing the dialog when pressed No
    */
   const handleClose = () => {
     onClose();
   };
+
   /**
    * A handler that takes care of deleting a template and closing the dialog when pressed Yes
    */
@@ -40,6 +42,7 @@ export default function DeleteDialog(props: SimpleDialogProps) {
     onClose();
     deleteTemplate();
   };
+
   /**
    * return a confirmation popup to make sure that an administrator gets a warning beforehand
    * for deleting templates, so for prevention purposes with buttons yes (on bottom left) and no (bottom right)

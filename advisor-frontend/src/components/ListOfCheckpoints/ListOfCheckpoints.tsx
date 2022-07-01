@@ -25,7 +25,6 @@ import AreaSpecificCheckpoints from "./AreaSpecificCheckpoints";
  * This should only be accessible to the user whose assement this belongs to
  */
 function ListOfCheckpoints({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   assessmentInfo,
   theme,
   feedback,

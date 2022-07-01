@@ -17,7 +17,6 @@ import Divider from "@mui/material/Divider";
  * the color of the JPG/PNG image must be set in the image itself (in this case also ING orange)
  * there might be an image on the left or on the right or both
  */
-
 type PageCardProps = {
   headerText: string;
   bodyText: string;
@@ -27,10 +26,12 @@ type PageCardProps = {
   isImageLeft?: boolean;
   isImageRight?: boolean;
 };
+
 const defaultProps = {
   isImageLeft: false,
   isImageRight: false,
 };
+
 /**
  * Function that displays an image
  * The size is always 33% of the viewer width
@@ -52,6 +53,7 @@ function CardImage(ch: string, img: string) {
     </div>
   );
 }
+
 /**
  * Function that displays a pagecard component consisting of
  * body text, headertext with icon next to it, optionally

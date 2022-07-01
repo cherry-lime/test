@@ -29,10 +29,7 @@ function ListOfRecommendations({
   templateId: number;
   completedAt: string;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { userId, userRole } = useSelector(
-    (state: RootState) => state.userData
-  );
+  const { userRole } = useSelector((state: RootState) => state.userData);
 
   // Ref for error popup
   const refErrorRecommendations = useRef<RefObject>(null);
@@ -48,6 +45,7 @@ function ListOfRecommendations({
   const [topicList, setTopicList] = useState<TopicAPP[]>();
 
   const [topic, setTopic] = useState<number>();
+
   // constant declaration that handles the changing of topics
   const handleTopicChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "-") setTopic(Number(event.target.value));
@@ -90,7 +88,7 @@ function ListOfRecommendations({
           theme={theme}
           assessmentId={assessmentId}
           topicId={topic}
-          isEditable={userRole === "ASSESSOR" && completedAt !== null} // TODO: Add && assessment === done later
+          isEditable={userRole === "ASSESSOR" && completedAt !== null}
         />
         <ErrorPopup ref={refErrorRecommendations} />
       </ThemeProvider>

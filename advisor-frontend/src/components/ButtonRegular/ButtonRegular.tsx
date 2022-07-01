@@ -6,7 +6,6 @@ import { Button } from "@mui/material";
  * style is filled with background fontcolor
  * size of the button is depending on the length of the button text string
  */
-
 function ButtonRegular({ text }: { text: string }) {
   return (
     <div>
