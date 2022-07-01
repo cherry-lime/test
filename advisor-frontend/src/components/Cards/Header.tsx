@@ -11,7 +11,7 @@ const defaultProps = {
 };
 
 /**
- * Header function, which will display a header, with a speific title and a background color.
+ * Header function, which will display a header, with a specific title and a background color.
  * @param name String used to display the header title.
  * @param bgColor Optional string used to give a specific background color.
  * @returns React header component.

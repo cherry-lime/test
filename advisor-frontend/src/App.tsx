@@ -26,10 +26,11 @@ import ErrorPopup, {
   RefObject,
 } from "./components/ErrorPopup/ErrorPopup";
 import ErrorPage from "./pages/ErrorPage";
-
+// type declaration for appProp that (possibly) assigns a boolean value to testRender
 type appProp = {
   testRender?: boolean;
 };
+// constant declaration for defaultProps that assigns the value of testRender to false
 const defaultProps = {
   testRender: false,
 };

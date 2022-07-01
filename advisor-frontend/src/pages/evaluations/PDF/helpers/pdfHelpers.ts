@@ -4,7 +4,7 @@ import { CheckpointAPP } from "../../../../api/CheckpointAPI/CheckpointAPI";
 import { RecommendationAPP } from "../../../../api/RecommendationAPI/RecommendationAPI";
 import { SubareaAPP } from "../../../../api/SubareaAPI/SubareaAPI";
 import { TopicAPP } from "../../../../api/TopicAPI/TopicAPI";
-import { getCheckpointsSubareas } from "../pdfHelpersAPI";
+import { getCheckpointsSubareas } from "../helpersAPI/pdfHelpersAPI";
 
 export type Section = {
   title: string;

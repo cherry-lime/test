@@ -69,7 +69,7 @@ function Team({
   const teamResponse = useGetTeam(Number(teamId), onErrorTeam);
 
   const [teamInfo, setTeamInfo] = useState<TeamAPP>();
-
+  // use useeffect hooks , so you don't have to write classes
   React.useEffect(() => {
     if (presetTeamInfo) {
       setTeamInfo(presetTeamInfo);
@@ -97,7 +97,7 @@ function Team({
       onError: onErrorTeam,
     });
   };
-
+  // constant declaration that lets you change the IT department
   const changeDept = (newDept: string) => {
     if (teamInfo) {
       const newInfo = teamInfo;
@@ -105,7 +105,7 @@ function Team({
       changeInfo(newInfo);
     }
   };
-
+  // constant declaration that lets you change the country
   const changeCountry = (newCountry: string) => {
     if (teamInfo) {
       const newInfo = teamInfo;

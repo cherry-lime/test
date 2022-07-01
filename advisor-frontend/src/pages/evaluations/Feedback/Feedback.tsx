@@ -10,7 +10,7 @@ import ListOfCheckpoints from "../../../components/ListOfCheckpoints/ListOfCheck
 import TextfieldEdit from "../../../components/TextfieldEdit/TextfieldEdit";
 import Textfield from "../../../components/Textfield/Textfield";
 import { RootState } from "../../../app/store";
-import createPDF from "../PDF/pdf";
+import createPDF from "../PDF/pdf/pdf";
 import ProgressEvaluationCard from "../../../components/PageCard/SpecificPageCards/ProgressEvaluationCard";
 import ListOfRecommendations from "../../../components/ListOfRecommendations/ListOfRecommendations";
 import {
