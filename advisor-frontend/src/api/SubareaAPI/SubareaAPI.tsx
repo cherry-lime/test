@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
 
+// APP/API types for subareas
 export type SubareaAPP = {
   id: GridRowId;
   name: string;
@@ -22,6 +23,11 @@ export type SubareaAPI = {
   disabled: boolean;
 };
 
+/**
+ * Convert API object to APP object
+ * @param subareaAPI
+ * @returns SubareaAPP object
+ */
 export function subareaToAPP(subareaAPI: SubareaAPI) {
   return {
     id: subareaAPI.subarea_id,
@@ -34,6 +40,11 @@ export function subareaToAPP(subareaAPI: SubareaAPI) {
   } as SubareaAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param subareaAPP
+ * @returns SubareaAPI object
+ */
 export function subareaToAPI(subareaAPP: SubareaAPP) {
   return {
     subarea_id: subareaAPP.id,
@@ -46,7 +57,9 @@ export function subareaToAPI(subareaAPP: SubareaAPP) {
   } as SubareaAPI;
 }
 
-// Get all subareas from database
+/**
+ * Get all subareas from database
+ */
 export function useGetSubareas(
   categoryId: number,
   enabledFilter?: boolean,
@@ -78,7 +91,9 @@ export function useGetSubareas(
   );
 }
 
-// Get subarea with id from database
+/**
+ * Get subarea with id from database
+ */
 export function useGetSubarea(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/subarea", "/{subarea_id}"],
@@ -93,7 +108,9 @@ export function useGetSubarea(onError?: (err: unknown) => void) {
   );
 }
 
-// Post subarea to database
+/**
+ * Post subarea to database
+ */
 export function usePostSubarea(
   categoryId: number,
   onError?: (err: unknown) => void
@@ -111,7 +128,9 @@ export function usePostSubarea(
   );
 }
 
-// Patch subarea in database
+/**
+ * Patch subarea in database
+ */
 export function usePatchSubarea(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/subarea", "/{subarea_id}"],
@@ -132,7 +151,9 @@ export function usePatchSubarea(onError?: (err: unknown) => void) {
   );
 }
 
-// Delete subarea from database
+/**
+ * Delete subarea from database
+ */
 export function useDeleteSubarea(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/subarea", "/{subarea_id}"],

@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import API from "../_API";
 
+// APP/API types for scores
 export type ScoreAPP = {
   maturityId: number;
   categoryId: number;
@@ -13,6 +14,11 @@ type ScoreAPI = {
   score: number;
 };
 
+/**
+ * Convert API object to APP object
+ * @param scoreAPI
+ * @returns ScoreAPP object
+ */
 export function scoreToAPP(scoreAPI: ScoreAPI) {
   return {
     maturityId: scoreAPI.maturity_id,
@@ -21,7 +27,9 @@ export function scoreToAPP(scoreAPI: ScoreAPI) {
   } as ScoreAPP;
 }
 
-// Get scores of assessment from database
+/**
+ * Get scores of assessment from database
+ */
 export function useGetScores(
   assessmentId: number,
   topicId: number | undefined,

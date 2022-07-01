@@ -3,6 +3,7 @@ import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
 import { AssessmentType } from "../../types/AssessmentType";
 
+// APP/API types for templates
 export type TemplateAPP = {
   id: GridRowId;
   name: string;
@@ -31,6 +32,11 @@ export type TemplateAPI = {
   include_no_answer: boolean;
 };
 
+/**
+ * Convert API object to APP object
+ * @param templatetAPI
+ * @returns TemplateAPP object
+ */
 export function templateToAPP(templateAPI: TemplateAPI) {
   return {
     id: templateAPI.template_id,
@@ -47,6 +53,11 @@ export function templateToAPP(templateAPI: TemplateAPI) {
   } as TemplateAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param templateAPP
+ * @returns TemplateAPI object
+ */
 export function templateToAPI(templateAPP: TemplateAPP) {
   return {
     template_id: templateAPP.id,
@@ -63,7 +74,9 @@ export function templateToAPI(templateAPP: TemplateAPP) {
   } as TemplateAPI;
 }
 
-// Get all templates from database
+/**
+ * Get all templates from database
+ */
 export function useGetTemplates(
   templateType: AssessmentType,
   enabledFilter?: boolean,
@@ -100,7 +113,9 @@ export function useGetTemplates(
   );
 }
 
-// Get template with id from database
+/**
+ * Get template with id from database
+ */
 export function useGetTemplate(
   templateId: number,
   onError?: (err: unknown) => void
@@ -120,7 +135,9 @@ export function useGetTemplate(
   );
 }
 
-// Post template to database
+/**
+ * Post template to database
+ */
 export function usePostTemplate(
   templateType: AssessmentType,
   onError?: (err: unknown) => void
@@ -140,7 +157,9 @@ export function usePostTemplate(
   );
 }
 
-// Patch template in database
+/**
+ * Patch template in database
+ */
 export function usePatchTemplate(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/template", "/{template_id}"],
@@ -161,7 +180,9 @@ export function usePatchTemplate(onError?: (err: unknown) => void) {
   );
 }
 
-// Delete template from database
+/**
+ * Delete template from database
+ */
 export function useDeleteTemplate(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/template", "/{template_id}"],
@@ -176,7 +197,9 @@ export function useDeleteTemplate(onError?: (err: unknown) => void) {
   );
 }
 
-// Duplicate template to database
+/**
+ * Duplicate template to database
+ */
 export function useDuplicateTemplate(onError?: (err: unknown) => void) {
   return useMutation(
     ["POST", "/template", "/{template_id}", "/clone"],

@@ -2,6 +2,7 @@ import { useQuery, useMutation } from "react-query";
 import { GridRowId } from "@mui/x-data-grid";
 import API from "../_API";
 
+// APP/API types for teams
 export type TeamAPP = {
   id: GridRowId;
   name: string;
@@ -18,6 +19,11 @@ type TeamAPI = {
   team_department: string;
 };
 
+/**
+ * Convert API object to APP object
+ * @param teamAPI
+ * @returns TeamAPP object
+ */
 export function teamToAPP(teamAPI: TeamAPI) {
   return {
     id: teamAPI.team_id,
@@ -28,6 +34,11 @@ export function teamToAPP(teamAPI: TeamAPI) {
   } as TeamAPP;
 }
 
+/**
+ * Convert APP object to API object
+ * @param teamAPP
+ * @returns TeamAPI object
+ */
 export function teamToAPI(teamAPP: TeamAPP) {
   return {
     team_id: teamAPP.id,
@@ -38,7 +49,9 @@ export function teamToAPI(teamAPP: TeamAPP) {
   } as TeamAPI;
 }
 
-// Get all teams from database
+/**
+ * Get all teams from database
+ */
 export function useGetMyTeams(onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/teams", "/my-teams"],
@@ -55,7 +68,9 @@ export function useGetMyTeams(onError?: (err: unknown) => void) {
   );
 }
 
-// Get team with id from database
+/**
+ * Get team with id from database
+ */
 export function useGetTeam(teamId: number, onError?: (err: unknown) => void) {
   return useQuery(
     ["GET", "/teams", teamId],
@@ -69,7 +84,9 @@ export function useGetTeam(teamId: number, onError?: (err: unknown) => void) {
   );
 }
 
-// Post team to database
+/**
+ * Post team to database
+ */
 export function usePostTeam(onError?: (err: unknown) => void) {
   return useMutation(
     ["POST", "/teams", "/create"],
@@ -84,7 +101,9 @@ export function usePostTeam(onError?: (err: unknown) => void) {
   );
 }
 
-// Patch team in database
+/**
+ * Patch team in database
+ */
 export function usePatchTeam(onError?: (err: unknown) => void) {
   return useMutation(
     ["PATCH", "/teams", "/{team_id}"],
@@ -102,7 +121,9 @@ export function usePatchTeam(onError?: (err: unknown) => void) {
   );
 }
 
-// Delete team from database
+/**
+ * Delete team from database
+ */
 export function useDeleteTeam(onError?: (err: unknown) => void) {
   return useMutation(
     ["DELETE", "/teams", "/{team_id}"],
@@ -117,7 +138,9 @@ export function useDeleteTeam(onError?: (err: unknown) => void) {
   );
 }
 
-// Get team with id from database
+/**
+ * Get team with id from database
+ */
 export function useGetInviteTokenTeam(
   teamId: number,
   onError?: (err: unknown) => void
@@ -134,7 +157,9 @@ export function useGetInviteTokenTeam(
   );
 }
 
-// Patch team in database
+/**
+ * Patch team in database
+ */
 export function useJoinInviteTokenTeam(
   inviteToken: string,
   onError?: (err: unknown) => void
