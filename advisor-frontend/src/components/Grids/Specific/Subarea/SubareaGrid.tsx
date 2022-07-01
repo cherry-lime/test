@@ -1,5 +1,4 @@
 import * as React from "react";
-
 import {
   GridActionsCellItem,
   GridRowId,
@@ -8,9 +7,7 @@ import {
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Theme } from "@mui/material/styles";
-
 import { UseMutationResult } from "react-query";
-
 import {
   processRowUpdate,
   handleDelete,
@@ -19,9 +16,7 @@ import {
   handleInit,
   handleAdd,
 } from "../../functions/handlers/handlers";
-
 import GenericGrid from "../../Generic/GenericGrid";
-
 import {
   SubareaAPP,
   usePatchSubarea,
@@ -29,7 +24,6 @@ import {
   useDeleteSubarea,
   useGetSubareas,
 } from "../../../../api/SubareaAPI/SubareaAPI";
-
 import ErrorPopup, {
   getOnError,
   RefObject,
@@ -42,37 +36,61 @@ type SubareaGridProps = {
 };
 
 export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<SubareaAPP[]>([]);
 
-  // Error handling
+  /**
+   * Ref for error popup
+   * onError function
+   */
   const refErrorSubarea = React.useRef<RefObject>(null);
   const onErrorSubarea = getOnError(refErrorSubarea);
 
-  // Subarea query
+  /**
+   * Subarea query
+   * Gets all subareas
+   */
   const { status, data } = useGetSubareas(
     categoryId,
     undefined,
     onErrorSubarea
   );
 
-  // Subarea mutations
+  /**
+   * Subarea mutations
+   * Patch subarea
+   * Post subarea
+   * Delete subarea
+   */
   const patchSubarea = usePatchSubarea(onErrorSubarea);
   const postSubarea = usePostSubarea(categoryId, onErrorSubarea);
   const deleteSubarea = useDeleteSubarea(onErrorSubarea);
 
-  // Called when "status" of subareas query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of subareas query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);
 
-  // Called when the 'Order' column is edited
+  /**
+   * Preprocesses the order when edited
+   * Called when the 'Order' column is edited
+   */
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
       preProcessEditOrder(rows, params, onErrorSubarea),
     [rows]
   );
 
-  // Called when a row is edited
+  /**
+   * Row update handler
+   * Called when a row is edited
+   */
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: SubareaAPP, oldRow: SubareaAPP) =>
       processRowUpdate(
@@ -84,7 +102,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
     []
   );
 
-  // Called when the "Upward" action is pressed
+  /**
+   * Upward order handler
+   * Called when the "Upward" action is pressed
+   */
   const handleUpwardDecorator = React.useCallback(
     (row: SubareaAPP) => () => {
       handleMove(setRows, patchSubarea as UseMutationResult, {
@@ -95,7 +116,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
     []
   );
 
-  // Called when the "Downward" action is pressed
+  /**
+   * Downward order handler
+   * Called when the "Downward" action is pressed
+   */
   const handleDownwardDecorator = React.useCallback(
     (row: SubareaAPP) => () => {
       handleMove(setRows, patchSubarea as UseMutationResult, {
@@ -106,7 +130,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(
@@ -118,7 +145,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
     []
   );
 
-  // Called when the "Add" button is pressed below the grid
+  /**
+   * Row add handler
+   * Called when the "Add" button is pressed below the grid
+   */
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postSubarea as UseMutationResult);
   }, []);

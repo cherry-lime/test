@@ -2,7 +2,6 @@ import * as React from "react";
 import { BlockPicker, ColorResult } from "react-color";
 import { UseMutationResult } from "react-query";
 import { Link } from "react-router-dom";
-
 import {
   GridActionsCellItem,
   GridColumns,
@@ -13,9 +12,7 @@ import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import GenericGrid from "../../Generic/GenericGrid";
-
 import {
   handleAdd,
   handleDelete,
@@ -25,7 +22,6 @@ import {
   preProcessEditOrder,
   processRowUpdate,
 } from "../../functions/handlers/handlers";
-
 import {
   CategoryAPP,
   useDeleteCategory,
@@ -33,7 +29,6 @@ import {
   usePatchCategory,
   usePostCategory,
 } from "../../../../api/CategoryAPI/CategoryAPI";
-
 import ErrorPopup, {
   getOnError,
   RefObject,
@@ -45,38 +40,66 @@ type CategoryGridProps = {
   templateId: number;
 };
 
+/**
+ * Grid for categories
+ * Uses theme and templateId
+ */
 export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<CategoryAPP[]>([]);
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   * onError function
+   */
   const refErrorCategory = React.useRef<RefObject>(null);
   const onErrorCategory = getOnError(refErrorCategory);
 
-  // Category query
+  /**
+   * Category query
+   * Gets all categories
+   */
   const { status, data } = useGetCategories(
     templateId,
     undefined,
     onErrorCategory
   );
 
-  // Category mutations
+  /**
+   * Category mutations
+   * Patch category
+   * Post category
+   * Delete category
+   */
   const patchCategory = usePatchCategory(onErrorCategory);
   const postCategory = usePostCategory(templateId, onErrorCategory);
   const deleteCategory = useDeleteCategory(onErrorCategory);
 
-  // Called when "status" of categories query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of categories query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);
 
-  // Called when the 'Order' column is edited
+  /**
+   * Preprocesses the order when edited
+   * Called when the 'Order' column is edited
+   */
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
       preProcessEditOrder(rows, params, onErrorCategory),
     [rows]
   );
 
-  // Called when a row is edited
+  /**
+   * Row update handler
+   * Called when a row is edited
+   */
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: CategoryAPP, oldRow: CategoryAPP) =>
       processRowUpdate(
@@ -88,7 +111,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when the "Upward" action is pressed
+  /**
+   * Upward order handler
+   * Called when the "Upward" action is pressed
+   */
   const handleUpwardDecorator = React.useCallback(
     (row: CategoryAPP) => () => {
       handleMove(setRows, patchCategory as UseMutationResult, {
@@ -99,7 +125,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when the "Downward" action is pressed
+  /**
+   * Downward order handler
+   * Called when the "Downward" action is pressed
+   */
   const handleDownwardDecorator = React.useCallback(
     (row: CategoryAPP) => () => {
       handleMove(setRows, patchCategory as UseMutationResult, {
@@ -110,7 +139,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when color picker registers a complete change
+  /**
+   * Color change handler
+   * Called when color picker registers a complete change
+   */
   const handleColorChange = React.useCallback(
     (color: ColorResult, row: CategoryAPP) => {
       handleChange(
@@ -123,7 +155,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(
@@ -135,7 +170,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when the "Add" button is pressed below the grid
+  /**
+   * Row add handler
+   * Called when the "Add" button is pressed below the grid
+   */
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postCategory as UseMutationResult);
   }, []);

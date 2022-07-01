@@ -1,6 +1,5 @@
 import * as React from "react";
 import { UseMutationResult, UseQueryResult } from "react-query";
-
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
@@ -8,15 +7,12 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link } from "react-router-dom";
-
 import GenericGrid from "../../Generic/GenericGrid";
 import { AssessmentType } from "../../../../types/AssessmentType";
-
 import ErrorPopup, {
   getOnError,
   RefObject,
 } from "../../../ErrorPopup/ErrorPopup";
-
 import {
   TemplateAPP,
   useDeleteTemplate,
@@ -24,7 +20,6 @@ import {
   usePatchTemplate,
   usePostTemplate,
 } from "../../../../api/TemplateAPI/TemplateAPI";
-
 import {
   handleAdd,
   handleDelete,
@@ -41,30 +36,53 @@ type TemplateGridProps = {
   setTemplates: React.Dispatch<React.SetStateAction<TemplateAPP[]>>;
 };
 
+/**
+ * Grid for templates
+ * Uses theme, templateType, templateResponse, setTemplates
+ */
 export default function TemplateGrid({
   theme,
   templateType,
   templateResponse,
   setTemplates,
 }: TemplateGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<TemplateAPP[]>([]);
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   * onError function
+   */
   const refErrorTemplate = React.useRef<RefObject>(null);
   const onErrorTemplate = getOnError(refErrorTemplate);
 
-  // Template mutations
+  /**
+   * Template mutations
+   * Patch template
+   * Post template
+   * Delete template
+   * Duplicate template
+   */
   const patchTemplate = usePatchTemplate(onErrorTemplate);
   const postTemplate = usePostTemplate(templateType, onErrorTemplate);
   const deleteTemplate = useDeleteTemplate(onErrorTemplate);
   const duplicateTemplate = useDuplicateTemplate(onErrorTemplate);
 
-  // Called when "status" of templates query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of templates query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, templateResponse.status, templateResponse.data);
   }, [templateResponse.status, templateResponse.data]);
 
-  // Called when a row is edited
+  /**
+   * Row update handler
+   * Called when a row is edited
+   */
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: TemplateAPP, oldRow: TemplateAPP) => {
       processRowUpdate(
@@ -86,7 +104,10 @@ export default function TemplateGrid({
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(
@@ -99,7 +120,10 @@ export default function TemplateGrid({
     []
   );
 
-  // Called when the "Duplicate" action is pressed in the menu
+  /**
+   * Row duplicate handler
+   * Called when the "Duplicate" action is pressed in the menu
+   */
   const handleDuplicateDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDuplicate(
@@ -112,12 +136,17 @@ export default function TemplateGrid({
     []
   );
 
-  // Called when the "Add" button is pressed below the grid
+  /**
+   * Row add handler
+   * Called when the "Add" button is pressed below the grid
+   */
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postTemplate as UseMutationResult, templateResponse);
   }, []);
 
-  // Delete dialog handler
+  /**
+   * Delete dialog handler
+   */
   const [open, setOpen] = React.useState(false);
   const [paramId, setParamId] = React.useState<GridRowId>(0);
   function handleClickOpen(id: GridRowId) {
