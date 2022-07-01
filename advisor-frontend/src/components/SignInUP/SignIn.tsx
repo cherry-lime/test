@@ -8,7 +8,7 @@ import { ThemeProvider } from "@mui/material";
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLogin } from "../../api/LoginAPI/LoginAPI";
-import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
+import { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
@@ -108,7 +108,7 @@ export default function SignIn() {
           </Grid>
         </Box>
       </LoginLayout>
-      <ErrorPopup ref={ref} />
+      {/* <ErrorPopup ref={ref} /> */}
     </ThemeProvider>
   );
 }
