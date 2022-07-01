@@ -10,16 +10,15 @@ import userType from "../../../../components/Sidebar/listUsersTypes";
 import TextfieldEdit from "../../../../components/TextfieldEdit/TextfieldEdit";
 import PageLayout from "../../../PageLayout";
 import TextfieldEditWeight from "../../../../components/TextfieldEditWeight/TextfieldEditWeight";
-import {
-  TemplateAPP,
-  useGetTemplate,
-  usePatchTemplate,
-} from "../../../../api/TemplateAPI/TemplateAPI";
 import ErrorPopup, {
   getOnError,
   RefObject,
 } from "../../../../components/ErrorPopup/ErrorPopup";
-
+import {
+  usePatchTemplate,
+  TemplateAPP,
+  useGetTemplate,
+} from "../../../../api/TemplateAPI/TemplateAPI";
 /**
  * Page with details regarding a certain template
  * This should only be accessible to admins
