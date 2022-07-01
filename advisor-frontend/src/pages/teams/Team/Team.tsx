@@ -97,7 +97,7 @@ function Team({
       },
     });
   };
-
+  // constant declaration that lets you change the IT department
   const changeDept = (newDept: string) => {
     if (teamInfo) {
       const newInfo = teamInfo;
@@ -105,7 +105,7 @@ function Team({
       changeInfo(newInfo);
     }
   };
-
+  // constant declaration that lets you change the country
   const changeCountry = (newCountry: string) => {
     if (teamInfo) {
       const newInfo = teamInfo;
