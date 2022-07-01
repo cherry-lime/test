@@ -3,7 +3,9 @@ import { Box, Paper } from "@mui/material";
 import { useState } from "react";
 import headerImg from "./header_img.svg";
 
-// headerProps defines the parameters background color and title used in Header().
+/**
+ * headerProps defines the parameters background color and title used in Header().
+ */
 type headerProps = { name: string; bgColor?: string };
 
 const defaultProps = {
