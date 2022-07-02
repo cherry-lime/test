@@ -96,9 +96,6 @@ function AreaSpecificCheckpoints({
    */
   const checkpointResponse = useGetCheckpoints(areaId, true, onErrorSubarea);
 
-  const [subareaComponents, setSubareaComponents] =
-    useState<React.ReactElement[]>();
-
   /**
    * set the subarea list value
    */
@@ -123,22 +120,6 @@ function AreaSpecificCheckpoints({
   React.useEffect(() => {
     setPage(1);
   }, [areaId]);
-
-  React.useEffect(() => {
-    if (subareaList !== undefined) {
-      setSubareaComponents(
-        subareaList.map((subarea) => (
-          <Subarea
-            key={`subarea${subarea.id}`}
-            theme={theme}
-            title={subarea.name}
-            summary={subarea.summary}
-            description={subarea.description}
-          />
-        ))
-      );
-    }
-  }, [subareaList]);
 
   const checkpointIdToAnswerLabel = (checkpointId: number) => {
     if (checkpointId in checkpointAnswerList) {
@@ -187,7 +168,17 @@ function AreaSpecificCheckpoints({
           </Tabs>
         </Stack>
       </Card>
-      {subareaComponents !== undefined && subareaComponents}
+
+      {subareaList &&
+        subareaList.map((subarea) => (
+          <Subarea
+            key={`subarea${subarea.id}`}
+            theme={theme}
+            title={subarea.name}
+            summary={subarea.summary}
+            description={subarea.description}
+          />
+        ))}
 
       {value === "Single" &&
         checkpointList &&
