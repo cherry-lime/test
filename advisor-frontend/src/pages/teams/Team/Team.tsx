@@ -33,6 +33,10 @@ import { UserRole } from "../../../types/UserRole";
  * Page providing team details
  * This should only be accessible to the users and assessors in the team
  * Assessors can modify team details
+ *
+ * Below, the team function is defined that consists of theme,
+ * the preset of the team information
+ * and the preset of the user role
  */
 function Team({
   theme,
@@ -60,7 +64,9 @@ function Team({
     }
   }, [gotUserRole]);
 
-  // Ref for error popup
+  /**
+   * Use React Referencs for error popup
+   */
   const refErrorTeam = useRef<RefObject>(null);
   const onErrorTeam = getOnError(refErrorTeam);
 
@@ -70,7 +76,10 @@ function Team({
 
   const [teamInfo, setTeamInfo] = useState<TeamAPP>();
 
-  // use useeffect hooks , so you don't have to write classes
+  /**
+   * use useeffect hooks,
+   * so you don't have to write classes
+   */
   React.useEffect(() => {
     if (presetTeamInfo) {
       setTeamInfo(presetTeamInfo);
@@ -99,7 +108,9 @@ function Team({
     });
   };
 
-  // constant declaration that lets you change the IT department
+  /**
+   * constant declaration that lets you change the IT department
+   */
   const changeDept = (newDept: string) => {
     if (teamInfo) {
       const newInfo = teamInfo;
@@ -108,7 +119,9 @@ function Team({
     }
   };
 
-  // constant declaration that lets you change the country
+  /**
+   * constant declaration that lets you change the country
+   */
   const changeCountry = (newCountry: string) => {
     if (teamInfo) {
       const newInfo = teamInfo;
@@ -234,7 +247,9 @@ function Team({
     </div>
   );
 }
-
+/**
+ * Define the default props of the team
+ */
 Team.defaultProps = {
   presetTeamInfo: undefined,
   presetUserRole: undefined,
