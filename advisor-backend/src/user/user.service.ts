@@ -13,7 +13,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   /**
    * Get all users
@@ -44,6 +44,7 @@ export class UserService {
     }
 
     delete user.password;
+
     return user;
   }
 
@@ -63,9 +64,9 @@ export class UserService {
       })
       .catch((error) => {
         if (error.code === 'P2025') {
-          throw new NotFoundException('Team with given team id not found');
+          throw new NotFoundException('User with given user id is not found');
         }
-        console.log(error);
+        // console.log(error);
         throw new InternalServerErrorException();
       });
     delete user.password;
@@ -81,10 +82,37 @@ export class UserService {
   async createUser(data: CreateUserDto): Promise<User> {
     // generate random usernames
     const randomWords = require('random-words');
-    const new_username = randomWords({ min: 2, max: 3, join: '_' });
+    const new_username = randomWords({
+      min: 2,
+      max: 3,
+      join: '_'
+    });
 
+    const username = await this.prisma.user
+      .findUnique({
+        where: {
+          username: new_username
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        throw new InternalServerErrorException();
+      });
+
+    if (!username) {
+      throw new NotFoundException('user not found');
+    }
+
+    // generate a uuidv4
     const myuuid = uuidv4();
-    const hashedPassword = await bcrypt.hash(myuuid, 10);
+
+    // compute hash of password
+    const salt = 10;
+    const hashedPassword = await bcrypt
+      .hash(
+        myuuid,
+        salt
+      );
 
     const user = await this.prisma.user
       .create({
@@ -96,18 +124,21 @@ export class UserService {
       })
       .catch((error) => {
         if (error.code === 'P2002') {
-          // Throw error if username already exsits
+          // Throw error if username already exists
           throw new ConflictException('Username already exists');
         } else {
-          console.log(error);
+          // console.log(error);
           throw new InternalServerErrorException();
         }
       });
 
+    // clone the created user
     const userinfos: User = { ...user };
+
+    // modify the password variable to the uuidv4
     userinfos.password = myuuid;
 
-    //delete user.password_hash;
+    // return the modified user
     return userinfos;
   }
 
@@ -130,7 +161,7 @@ export class UserService {
           // Throw error if user not found
           throw new NotFoundException('User not found');
         }
-        console.log(error);
+        // console.log(error);
         throw new InternalServerErrorException();
       });
   }

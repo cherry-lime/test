@@ -2,7 +2,7 @@ import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { aUser } from '../prisma/mock/mockUser';
+import { AssessorUser, aUser, updateUserDtoAssessor, userArray } from '../prisma/mock/mockUser';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -25,6 +25,9 @@ describe('UserController', () => {
         if (token === UserService) {
           return {
             getUser: jest.fn().mockResolvedValue(aUser),
+            findAll: jest.fn().mockResolvedValue(userArray),
+            updateUser: jest.fn().mockResolvedValue(AssessorUser),
+            delete: jest.fn().mockResolvedValue(aUser),
           };
         }
         if (typeof token === 'function') {
@@ -40,13 +43,50 @@ describe('UserController', () => {
     userController = module.get<UserController>(UserController);
   });
 
-  it('should be defined', () => {
-    expect(userController).toBeDefined();
+  describe('Should be defined:', () => {
+    it('userController', () => {
+      expect(userController).toBeDefined();
+    });
+
+    it('FindAll function', () => {
+      expect(userController.findAll).toBeDefined();
+    });
+
+    it('GetUser function', () => {
+      expect(userController.getUser).toBeDefined();
+    });
+
+    it('UpdateUser function', () => {
+      expect(userController.updateUser).toBeDefined();
+    });
+
+    it('Delete function', () => {
+      expect(userController.delete).toBeDefined();
+    });
   });
 
-  describe('getUser', () => {
+  describe('FindAll', () => {
+    it('Should return all users', async () => {
+      expect(userController.findAll()).resolves.toBe(userArray);
+    });
+  });
+
+  describe('GetUser', () => {
     it('Should return the found user', async () => {
-      expect(userController.getUser(1)).resolves.toBe(aUser);
+      expect(userController.getUser(aUser.user_id)).resolves.toBe(aUser);
+    });
+  });
+
+  describe('UpdateUser', () => {
+    it('Should return the user with role updated to Assessor', async () => {
+      expect(userController.updateUser(aUser.user_id, updateUserDtoAssessor))
+        .resolves.toBe(AssessorUser);
+    });
+  });
+
+  describe('Delete', () => {
+    it('Should return the deleted user', async () => {
+      expect(userController.delete(aUser.user_id)).resolves.toBe(aUser);
     });
   });
 });
