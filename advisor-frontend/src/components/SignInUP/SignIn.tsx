@@ -13,6 +13,7 @@ import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
 /**
+ * 
  * This component renders the whole login page
  * @returns Signin page, based on the login layout
  */
@@ -38,6 +39,7 @@ export default function SignIn() {
     <ThemeProvider theme={INGTheme}>
       {/* Import the login page layout  */}
       <LoginLayout>
+        {/* Define the box component where the textfields will be rendered */}
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -75,9 +77,10 @@ export default function SignIn() {
               setInputPassword(e.target.value);
             }}
           />
-          {/* Buttons that log in and a button that goes to the sign up page */}
+          {/* Grid component to set the row for the buttons */}
           <Grid container columns={2} spacing={0} sx={{ marginTop: 2 }}>
             <Grid>
+              {/* Define the styling of the button */}
               <Button
                 size="medium"
                 variant="contained"
@@ -98,6 +101,7 @@ export default function SignIn() {
             </Grid>
             <Grid>
               <Link to="/signup">
+                {/* Define the styling of the button */}
                 <Button
                   sx={{
                     p: 2,
