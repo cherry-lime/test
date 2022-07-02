@@ -84,7 +84,7 @@ describe("Testing PDF helper function related to tables", () => {
     ).toStrictEqual(nextY + 3 + textfieldHeight);
   });
 
-  it("check row heights when generating row", () => {
+  it("check nextY when generating row", () => {
     expect(
       helpers.generateTableRow(
         doc,
@@ -96,6 +96,6 @@ describe("Testing PDF helper function related to tables", () => {
         xPositions,
         nextY
       )
-    ).toStrictEqual([textfieldHeight, textfieldHeight]);
+    ).toStrictEqual(nextY + textfieldHeight + docProps.padding);
   });
 });
