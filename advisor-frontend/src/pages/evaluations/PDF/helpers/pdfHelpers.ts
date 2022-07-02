@@ -16,10 +16,11 @@ export type Section = {
 };
 
 /**
- * table object
- * it has a title, sections that appear before the actual table
- * the headers are the title of the columns of the table
- * the data is an array of rows, each row is an array
+ * table object, it has
+ * - a title 
+ * - sections that appear before the actual table
+ * - the headers are the title of the columns of the table
+ * - the data is an array of rows, each row is an array
  */
 export type Table = {
   title: string;
@@ -79,6 +80,7 @@ export const transformCheckpoints = (
  * transform a CategoryAPP object into
  * a table object containing subarea information,
  * checkpoints and given checkpoints answers
+ * 
  * the related information has to be given to the function
  * @param area specific area to transform into table
  * @param subareas subareas related to the area
