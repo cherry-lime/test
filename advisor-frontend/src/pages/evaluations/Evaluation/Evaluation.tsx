@@ -30,15 +30,21 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   // get the role of the user logged in
   const { userRole } = useSelector((state: RootState) => state.userData);
 
-  // if checkpointview is true, then th checkpoints are displayed
-  // otherwise recommendations are displayed
+  /**
+   * if checkpointview is true, then the checkpoints are displayed,
+   * otherwise recommendations are displayed
+   */
   const [checkpointView, setCheckpointView] = useState(true);
 
-  // main primary color of the palette
-  // this will change based on area selected  in the checkpoint view
+  /**
+   * main primary color of the palette of the theme,
+   * this will change based on area selected  in the checkpoint view
+   */
   const [primaryColor, setPrimaryColor] = useState(theme.palette.primary.main);
 
-  // theme of the page, this will change when the primary color changes
+  /**
+   * displayed theme of the page, this will change when the primary color changes
+   */
   const [currentTheme, setCurrentTheme] = useState(theme);
 
   // when the primary color changes, update theme
@@ -46,8 +52,10 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
     setCurrentTheme(() => getUpdatedTheme(primaryColor, theme));
   }, [primaryColor]);
 
-  // handle toggling between list of checkpoints and recommendations
-  // revert back to regular primary color when switching to recommendations
+  /**
+   * handle toggling between list of checkpoints and recommendations
+   * revert back to regular primary color when switching to recommendations
+   */ 
   const handleViewChange = () => {
     setCheckpointView((v) => {
       if (v) setPrimaryColor(theme.palette.primary.main);
@@ -59,19 +67,24 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   const refErrorEvaluation = useRef<RefObject>(null);
   const onErrorEvaluation = getOnError(refErrorEvaluation);
 
-  // object used to navigate to another address
+  /**
+   * object used to navigate to another address
+   */
   const navigate = useNavigate();
 
-  // fuction to complete the assessment
+  /**
+   *  API function to complete the assessment
+   */
   const postCompleteEval = usePostCompleteAssessment(
     Number(assessmentId),
     onErrorEvaluation
   );
 
-  // when user clicks the "finish evaluation" button,
-  // save the assessment on the database
-  // if there is an error, it might be because not all checkpoints
-  // have been filled in
+  /**
+   * Function called when user clicks the "finish evaluation" button,
+   * it saves the assessment on the database. 
+   * If there is an error, it might be because not all checkpoints have been filled in
+   */
   const handleClickFinish = () => {
     postCompleteEval.mutate(undefined, {
       onError: () => {
