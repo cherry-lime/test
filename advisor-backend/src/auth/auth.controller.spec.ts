@@ -2,7 +2,7 @@ import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { loginDto, mockLogin, mockLogout, mockUser, registerDto, userAuthentication, userinfo } from '../prisma/mock/mockAuthController';
+import { loginDto, mockLogin, mockLogout, registerDto, userAuthentication, userinfo } from '../prisma/mock/mockAuthController';
 
 const moduleMocker = new ModuleMocker(global);
 

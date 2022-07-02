@@ -1,26 +1,17 @@
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { PrismaService } from '../prisma/prisma.service';
-import { JwtStrategy } from './jwt.strategy';
 import { Test } from '@nestjs/testing';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { aUser } from '../prisma/mock/mockUser';
-import { InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { userAuthentication } from '../prisma/mock/mockAuthService';
 import { LocalStrategy } from './local_strategy';
 import { AuthService } from './auth.service';
-import { mockLogin } from '../prisma/mock/mockAuthController';
 import { AuthController } from './auth.controller';
-import { authenticate } from 'passport';
 import * as bcrypt from 'bcrypt';
 
 const moduleMocker = new ModuleMocker(global);
-
-var httpMocks = require('node-mocks-http');
-
-// Basic request object
-const req = httpMocks.createRequest()
 
 describe('AuthService', () => {
     let authService: AuthService;

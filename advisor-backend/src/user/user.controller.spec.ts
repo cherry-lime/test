@@ -2,7 +2,7 @@ import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { AssessorUser, aUser, updateUserDto, updateUserDtoAssessor, userArray } from '../prisma/mock/mockUser';
+import { AssessorUser, aUser, updateUserDtoAssessor, userArray } from '../prisma/mock/mockUser';
 
 const moduleMocker = new ModuleMocker(global);
 

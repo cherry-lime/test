@@ -10,11 +10,6 @@ import { userAuthentication } from '../prisma/mock/mockAuthService';
 
 const moduleMocker = new ModuleMocker(global);
 
-var httpMocks = require('node-mocks-http');
-
-// Basic request object
-const req = httpMocks.createRequest()
-
 describe('AuthService', () => {
     let prisma: PrismaService;
     let jwtStrategy: JwtStrategy;
