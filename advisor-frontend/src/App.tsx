@@ -26,6 +26,7 @@ import ErrorPopup, {
   RefObject,
 } from "./components/ErrorPopup/ErrorPopup";
 import ErrorPage from "./pages/ErrorPage";
+
 // type declaration for appProp that (possibly) assigns a boolean value to testRender
 type appProp = {
   testRender?: boolean;
@@ -35,7 +36,10 @@ const defaultProps = {
   testRender: false,
 };
 /**
+ *
  * This component is the root element for the React application.
+ * @param testRender Used to manually trigger the routing for unit tests
+ * @return The base application component, consisting of all the logic and components for the webapp
  */
 function App({ testRender }: appProp) {
   // Import the global state variables that will be used throughout the session
@@ -56,7 +60,10 @@ function App({ testRender }: appProp) {
     return (
       <div className="App" data-testid="appTest">
         <GlobalStyles />
+        {/* Define the routes to each webpage */}
         <Routes>
+          {/* Check if the user is logged in, when he accesses the site the first time.
+          Redirect to home if the user is already logged in. */}
           <Route
             path="/login"
             element={
@@ -109,7 +116,6 @@ function App({ testRender }: appProp) {
           ) : (
             <> </>
           )}
-
           {/* Only route to the assessor pages if the user has ASSESSOR rights */}
           {userRole === "ASSESSOR" ? (
             <Route path="/assessor" element={<AssessorInterface />} />
@@ -140,6 +146,8 @@ function App({ testRender }: appProp) {
           ) : (
             <> </>
           )}
+          {/* The root page of the routing hierachy.
+          Based on if the user is logged in, he sees the login page, or the home page */}
           <Route
             path="/"
             element={
@@ -150,7 +158,8 @@ function App({ testRender }: appProp) {
               )
             }
           />
-          {/* Redirect to initial page if there is an invalid URL */}
+          {/* Redirect to an Error page if there is an invalid URL.
+          If the user is not logged in, any invalid page will redirect to the login-enabled pages. */}
           <Route
             path="/*"
             element={
@@ -163,8 +172,10 @@ function App({ testRender }: appProp) {
               )
             }
           />
+          {/* Declare the error page URL address */}
           <Route path="/error" element={<ErrorPage />} />
         </Routes>
+        {/* Render the error popup component, in case of an API error  */}
         <ErrorPopup ref={refErrorApp} />
       </div>
     );
@@ -176,6 +187,8 @@ function App({ testRender }: appProp) {
     </div>
   );
 }
+// Define the default props for the testRender variable
 App.defaultProps = defaultProps;
 
+// Export the App component
 export default App;
