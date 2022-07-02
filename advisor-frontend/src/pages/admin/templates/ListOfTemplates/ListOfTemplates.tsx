@@ -30,11 +30,16 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
     useState<TemplateAPP>();
   const [activeTeamTemplate, setActiveTeamTemplate] = useState<TemplateAPP>();
 
-  // Ref for error popup
+  /**
+   * Ref for error popup
+   */
   const refErrorTemplates = useRef<RefObject>(null);
   const onErrorTemplates = getOnError(refErrorTemplates);
 
-  // Template queries
+  /**
+   * Template queries
+   * for e.g. individual and team
+   */
   const individualResponse = useGetTemplates(
     "INDIVIDUAL",
     undefined,
@@ -43,7 +48,9 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
 
   const teamResponse = useGetTemplates("TEAM", undefined, onErrorTemplates);
 
-  // Template mutation
+  /**
+   * Template mutation
+   */
   const patchTemplate = usePatchTemplate(onErrorTemplates);
 
   useEffect(() => {
