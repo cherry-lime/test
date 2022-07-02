@@ -6,6 +6,8 @@ import TemplateCard from "../../../components/PageCard/SpecificPageCards/Templat
 
 /**
  * Home page visible to anyone with the admin role
+ * containing the title: "Admin Home"
+ * with a sidebar on the left
  */
 function AdminInterface() {
   return (
