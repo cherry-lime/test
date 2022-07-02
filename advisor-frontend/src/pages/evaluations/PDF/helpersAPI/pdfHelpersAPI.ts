@@ -42,7 +42,7 @@ import {
 /**
  * Given a template id, the function retrieves a list
  * of enabled areas with their properties
- * @param templateId 
+ * @param templateId
  * @returns list of enabled areas of template presented as CategoryAPPs objects
  */
 export async function getAreas(templateId: number) {
@@ -62,9 +62,9 @@ export async function getAreas(templateId: number) {
 }
 
 /**
- * Given a template id, the function retrieves 
+ * Given a template id, the function retrieves
  * the list of available answers to checkpoints
- * @param templateId 
+ * @param templateId
  * @returns list of answers to checkpoints of template,
  *  presented as AnswerAPP objects
  */
@@ -78,9 +78,9 @@ export async function getAnswers(templateId: number) {
 }
 
 /**
- * Given a template id, the function retrieves 
+ * Given a template id, the function retrieves
  * the list of topics available in the template
- * @param templateId 
+ * @param templateId
  * @returns list of topics in the template,
  *  presented as TopicAPP objects
  */
@@ -96,7 +96,7 @@ export async function getTopics(templateId: number) {
 /**
  * Given an assessment id, the function retrieves the answers
  * that were already given to checkpoints
- * @param assessmentId 
+ * @param assessmentId
  * @returns record that maps each checkpoint id to an answer id
  *  checkpoint that were not answered do not appear
  */
@@ -119,16 +119,16 @@ export async function getAnswerDictionary(assessmentId: number) {
 }
 
 /**
- * Given an area id, the function retrieves 
+ * Given an area id, the function retrieves
  * the list of enabled checkpoints belonging to that area
- * @param areaId 
+ * @param areaId
  * @returns sorted list of enabled checkpoints as CheckpointAPP objects
  */
 export async function getCheckpoints(areaId: number) {
   // retrieve checkpoints from API
   const { data } = await API.get(`/category/${areaId}/checkpoint`);
 
-  // transform checkpoints into CheckpointAPP objects 
+  // transform checkpoints into CheckpointAPP objects
   // and sort them based on order property in ascending order
   const checkpointsAPP = data
     .map((checkpointAPI: CheckpointAPI) => checkpointToAPP(checkpointAPI))
@@ -144,7 +144,7 @@ export async function getCheckpoints(areaId: number) {
 
 /**
  * Given a template id, retrive template information
- * @param templateId 
+ * @param templateId
  * @returns template information as a TemplateAPP object
  */
 export async function getTemplate(templateId: number) {
@@ -157,7 +157,7 @@ export async function getTemplate(templateId: number) {
 
 /**
  * Given the id of an area, get the list of subareas
- * @param areaId 
+ * @param areaId
  * @returns list of enabled subareas as SubareaAPP objects
  */
 export async function getSubareas(areaId: number) {
@@ -202,9 +202,9 @@ export async function getTopicRecommendations(
 }
 
 /**
- * given an area id, return both the checkpoint list 
+ * given an area id, return both the checkpoint list
  * and the subarea list
- * @param areaId 
+ * @param areaId
  * @returns an object containing a list of checkpoints as CheckpointAPP objects
  * and a list of subareas as SubareaAPP objects
  */
