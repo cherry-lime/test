@@ -108,6 +108,10 @@ function ListOfCheckpoints({
     }
   }, [answersResponse]);
 
+  /**
+   * create an checkpoint answer dictionary where each
+   * checkpoint id maps to an answer id
+   */
   React.useEffect(() => {
     if (
       checkpointAnswerResponse.data &&

@@ -2,7 +2,7 @@
 import { createTheme, Theme } from "@mui/material";
 
 /**
- * given a hex color string (including the #), it returns a lighter or darker version of
+ * Given a hex color string (including the #), it returns a lighter or darker version of
  * that color as another hex color string
  * @param color the color to start from
  * @param amt the value used to darken or lighten, a negative number will produce a darker color
@@ -21,8 +21,8 @@ export const lightenDarkenColor = (color: string, amt: number) => {
 };
 
 /**
- * get an updated version of the theme based on a new main primary color
- * the light and dark primary colors change accordingly
+ * Get an updated version of the theme based on a new main primary color.
+ * The light and dark primary colors change accordingly
  * @param primaryColor the new main primary color
  * @param theme the theme object to update
  * @returns a new theme object with the new primary colors
