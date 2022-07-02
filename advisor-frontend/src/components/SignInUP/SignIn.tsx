@@ -13,7 +13,7 @@ import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
 /**
- * 
+ *
  * This component renders the whole login page
  * @returns Signin page, based on the login layout
  */
