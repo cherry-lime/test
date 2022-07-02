@@ -1,4 +1,9 @@
-import { TextField, ThemeOptions, ThemeProvider } from "@mui/material";
+import {
+  ClickAwayListener,
+  TextField,
+  ThemeOptions,
+  ThemeProvider,
+} from "@mui/material";
 import { useState } from "react";
 
 /**
@@ -12,43 +17,52 @@ function TextfieldEditWeight({
   weightValue,
   setWeight,
   theme,
+  error,
 }: {
   weightValue: number;
   theme: ThemeOptions;
-  setWeight: (weight: number) => void;
+  setWeight: React.Dispatch<React.SetStateAction<number | undefined>>;
+  error: boolean;
 }) {
   const initialState = weightValue.toString();
-  const [error, setError] = useState(false);
+  const [blankError, setBlankError] = useState(false);
   const [value, setValue] = useState(initialState);
-  const doSomething = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === "") {
-      setError(true);
-      setValue("");
+
+  const handleChangeWeight = () => {
+    if (value === "") {
+      setBlankError(true);
     } else {
-      const newValue = Number(event.target.value);
-      if (Number.isInteger(newValue)) {
-        setError(false);
-        setValue(newValue.toString());
-        // changes the weight value inherited
-        setWeight(newValue);
-      }
+      const newValue = Number(value);
+      setBlankError(false);
+      // changes the weight value inherited
+      setWeight(newValue);
     }
   };
+
+  const handleIntermediateChange = (newValue: string) => {
+    setValue(newValue);
+    setBlankError(!newValue);
+  };
+
+  const blankErrorLabel = "Fill in a positive integer value.";
+
   return (
     <ThemeProvider theme={theme}>
-      <TextField
-        type="number"
-        sx={{
-          width: "160px",
-          position: "relative",
-        }}
-        variant="outlined"
-        label={error ? "Error" : ""}
-        helperText={error ? "Fill in an integer value" : ""}
-        value={value}
-        onChange={doSomething}
-        error={error}
-      />
+      <ClickAwayListener onClickAway={handleChangeWeight}>
+        <TextField
+          type="number"
+          sx={{
+            width: "170px",
+            position: "relative",
+          }}
+          variant="outlined"
+          label={error || blankError ? "Invalid input (not saved)" : ""}
+          helperText={blankError ? blankErrorLabel : ""}
+          value={value}
+          onChange={(e) => handleIntermediateChange(e.target.value)}
+          error={error || blankError}
+        />
+      </ClickAwayListener>
     </ThemeProvider>
   );
 }
