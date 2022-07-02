@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { PrismaService } from '../prisma/prisma.service';
@@ -31,6 +31,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       where: {
         user_id: payload.user_id,
       },
+    }).catch((error) => {
+      console.log(error);
+      throw new InternalServerErrorException();
     });
 
     return user;

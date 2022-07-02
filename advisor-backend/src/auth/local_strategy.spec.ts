@@ -3,10 +3,17 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtStrategy } from './jwt.strategy';
 import { Test } from '@nestjs/testing';
 import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { aUser } from '../prisma/mock/mockUser';
-import { InternalServerErrorException } from '@nestjs/common';
+import { InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { userAuthentication } from '../prisma/mock/mockAuthService';
+import { LocalStrategy } from './local_strategy';
+import { AuthService } from './auth.service';
+import { mockLogin } from '../prisma/mock/mockAuthController';
+import { AuthController } from './auth.controller';
+import { authenticate } from 'passport';
+import * as bcrypt from 'bcrypt';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -16,8 +23,8 @@ var httpMocks = require('node-mocks-http');
 const req = httpMocks.createRequest()
 
 describe('AuthService', () => {
-    let prisma: PrismaService;
-    let jwtStrategy: JwtStrategy;
+    let authService: AuthService;
+    let localStrategy: LocalStrategy;
 
     beforeEach(async () => {
         process.env = {
@@ -27,21 +34,22 @@ describe('AuthService', () => {
         };
         const module = await Test.createTestingModule({
             imports: [
-                PassportModule
+                PassportModule,
             ],
             providers: [
-                JwtStrategy,
+                LocalStrategy,
                 {
                     provide: PrismaService,
                     useValue: mockPrisma,
                 },
             ],
+            controllers: [AuthController],
         })
             .useMocker((token) => {
-                if (token === JwtStrategy) {
+                if (token === AuthService) {
                     return {
-                        extractJwt: jest.fn().mockReturnValue(userAuthentication.token)
-                    };
+                        login: jest.fn().mockResolvedValue(userAuthentication)
+                    }
                 }
                 if (token === PrismaService) {
                     return mockPrisma;
@@ -55,33 +63,44 @@ describe('AuthService', () => {
                 }
             })
             .compile();
-        jwtStrategy = module.get<JwtStrategy>(JwtStrategy);
-        prisma = module.get<PrismaService>(PrismaService);
+        localStrategy = module.get<LocalStrategy>(LocalStrategy);
+        authService = module.get<AuthService>(AuthService);
     });
 
     describe('should be defined', () => {
         it('JwtStrategy', () => {
-            expect(jwtStrategy).toBeDefined();
+            expect(localStrategy).toBeDefined();
         });
 
         it('JwtStrategy validate function', async () => {
-            expect(jwtStrategy.validate({ user_id: aUser.user_id })).toBeDefined();
+            expect(localStrategy.validate(aUser.username, aUser.password)).toBeDefined();
         });
     });
 
     describe('Validate function', () => {
+        // mocking bcrypt compare method
+        const bcryptCompare =
+            jest
+                .fn().mockResolvedValue(
+                    null
+                );
+        (bcrypt.compare as jest.Mock) = bcryptCompare;
         it('Validate', async () => {
-            expect(await jwtStrategy.validate({ user_id: aUser.user_id }))
-                .toEqual(aUser);
+            expect(await localStrategy
+                .validate(
+                    userAuthentication.user.username,
+                    userAuthentication.user.password
+                ))
+                .toEqual(userAuthentication.user);
         });
 
         it('Should reject with unknown error', async () => {
             jest
-                .spyOn(prisma.user, 'findFirst')
-                .mockRejectedValueOnce({ code: 'TEST' });
+                .spyOn(authService, 'login')
+                .mockResolvedValue({ token: "something", user: null });
             expect(
-                jwtStrategy.validate({ user_id: aUser.user_id })
-            ).rejects.toThrowError(InternalServerErrorException);
+                localStrategy.validate(aUser.username, aUser.password)
+            ).rejects.toThrowError(UnauthorizedException);
         });
     });
 });
