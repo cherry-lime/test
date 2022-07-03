@@ -1,7 +1,6 @@
 import * as helpers from "../helpers";
 
 describe("Testing helper function", () => {
-
   it("initRows should sort on order", () => {
     expect(
       helpers.initRows([
