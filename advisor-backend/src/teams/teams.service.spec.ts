@@ -24,6 +24,12 @@ describe('TeamsService', () => {
   let prisma: PrismaService;
 
   beforeEach(async () => {
+    process.env = {
+      DATABASE_URL: 'postgres://localhost:5432/test',
+      JWT_SECRET: 'mycustomuselongsecret',
+      EXPIRESIN: '60 days',
+    };
+
     const moduleRef = await Test.createTestingModule({
       providers: [TeamsService],
     })
@@ -43,10 +49,6 @@ describe('TeamsService', () => {
 
     teamsService = moduleRef.get<TeamsService>(TeamsService);
     prisma = moduleRef.get<PrismaService>(PrismaService);
-
-    process.env = {
-      DATABASE_URL: '',
-    };
   });
 
   it('should be defined', () => {
