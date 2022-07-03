@@ -25,7 +25,7 @@ export const userinfo = {
   role: Role.ASSESSOR,
   created_at: myStartDate,
   updated_at: myEndDate,
-  password: "9efd1362-0f70-44df-a32c-b10a8924d826"
+  password: '9efd1362-0f70-44df-a32c-b10a8924d826',
 };
 
 // mock a user authentication
@@ -36,16 +36,16 @@ export const userAuthentication = {
 
 // mock a successful login
 export const mockLogin = {
-  msg: 'login successful'
-}
+  msg: 'login successful',
+};
 
 // mock a login dto
 export const loginDto = {
-  username: "Gerald",
-  password: "9efd1362-0f70-44df-a32c-b10a8924d826"
+  username: 'Gerald',
+  password: '9efd1362-0f70-44df-a32c-b10a8924d826',
 };
 
 // mock a successful logout
 export const mockLogout = {
-  msg: 'logout successful'
-}
+  msg: 'logout successful',
+};

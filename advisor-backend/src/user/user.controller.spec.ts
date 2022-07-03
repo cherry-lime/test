@@ -2,7 +2,12 @@ import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { AssessorUser, aUser, updateUserDtoAssessor, userArray } from '../prisma/mock/mockUser';
+import {
+  AssessorUser,
+  aUser,
+  updateUserDtoAssessor,
+  userArray,
+} from '../prisma/mock/mockUser';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -79,8 +84,9 @@ describe('UserController', () => {
 
   describe('UpdateUser', () => {
     it('Should return the user with role updated to Assessor', async () => {
-      expect(userController.updateUser(aUser.user_id, updateUserDtoAssessor))
-        .resolves.toBe(AssessorUser);
+      expect(
+        userController.updateUser(aUser.user_id, updateUserDtoAssessor)
+      ).resolves.toBe(AssessorUser);
     });
   });
 
