@@ -2,74 +2,104 @@ import * as React from "react";
 import { BlockPicker, ColorResult } from "react-color";
 import { UseMutationResult } from "react-query";
 import { Link } from "react-router-dom";
-
 import {
   GridActionsCellItem,
   GridColumns,
-  GridPreProcessEditCellProps,
   GridRowId,
+  GridPreProcessEditCellProps,
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
-import { IconButton, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
-import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
-
 import GenericGrid from "../../Generic/GenericGrid";
-
 import {
   handleAdd,
-  handleChange,
   handleDelete,
   handleInit,
   handleMove,
+  handleChange,
   preProcessEditOrder,
   processRowUpdate,
-} from "../handlers";
-
+} from "../../functions/handlers/handlers";
 import {
   CategoryAPP,
   useDeleteCategory,
   useGetCategories,
   usePatchCategory,
   usePostCategory,
-} from "../../../../api/CategoryAPI";
-
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+} from "../../../../api/CategoryAPI/CategoryAPI";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
+import { RenderEditCell } from "../columns";
 
 type CategoryGridProps = {
   theme: Theme;
   templateId: number;
 };
 
+/**
+ * Grid for categories
+ * Uses theme and templateId
+ */
 export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<CategoryAPP[]>([]);
 
-  // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  /**
+   * Ref for error popup
+   * onError function
+   */
+  const refErrorCategory = React.useRef<RefObject>(null);
+  const onErrorCategory = getOnError(refErrorCategory);
 
-  // Category query
-  const { status, data } = useGetCategories(templateId, undefined, ref);
+  /**
+   * Category query
+   * Gets all categories
+   */
+  const { status, data } = useGetCategories(
+    templateId,
+    undefined,
+    onErrorCategory
+  );
 
-  // Category mutations
-  const patchCategory = usePatchCategory(ref);
-  const postCategory = usePostCategory(templateId, ref);
-  const deleteCategory = useDeleteCategory(ref);
+  /**
+   * Category mutations
+   * Patch category
+   * Post category
+   * Delete category
+   */
+  const patchCategory = usePatchCategory(onErrorCategory);
+  const postCategory = usePostCategory(templateId, onErrorCategory);
+  const deleteCategory = useDeleteCategory(onErrorCategory);
 
-  // Called when "status" of categories query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of categories query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);
 
-  // Called when the 'Order' column is edited
+  /**
+   * Preprocesses the order when edited
+   * Called when the 'Order' column is edited
+   */
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrder(rows, params, ref),
+      preProcessEditOrder(rows, params, onErrorCategory),
     [rows]
   );
 
-  // Called when a row is edited
+  /**
+   * Row update handler
+   * Called when a row is edited
+   */
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: CategoryAPP, oldRow: CategoryAPP) =>
       processRowUpdate(
@@ -81,7 +111,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when the "Upward" action is pressed
+  /**
+   * Upward order handler
+   * Called when the "Upward" action is pressed
+   */
   const handleUpwardDecorator = React.useCallback(
     (row: CategoryAPP) => () => {
       handleMove(setRows, patchCategory as UseMutationResult, {
@@ -92,7 +125,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when the "Downward" action is pressed
+  /**
+   * Downward order handler
+   * Called when the "Downward" action is pressed
+   */
   const handleDownwardDecorator = React.useCallback(
     (row: CategoryAPP) => () => {
       handleMove(setRows, patchCategory as UseMutationResult, {
@@ -103,7 +139,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when color picker registers a complete change
+  /**
+   * Color change handler
+   * Called when color picker registers a complete change
+   */
   const handleColorChange = React.useCallback(
     (color: ColorResult, row: CategoryAPP) => {
       handleChange(
@@ -116,7 +155,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(
@@ -128,7 +170,10 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
     []
   );
 
-  // Called when the "Add" button is pressed below the grid
+  /**
+   * Row add handler
+   * Called when the "Add" button is pressed below the grid
+   */
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postCategory as UseMutationResult);
   }, []);
@@ -136,32 +181,24 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
   const columns = React.useMemo<GridColumns<CategoryAPP>>(
     () => [
       {
-        field: "",
         width: 50,
+        field: "",
         renderCell: (params: { row: CategoryAPP }) => (
-          <div className="parent">
-            <div className="child">
-              <IconButton onClick={handleUpwardDecorator(params.row)}>
-                <UpwardIcon />
-              </IconButton>
-            </div>
-            <div className="child">
-              <IconButton onClick={handleDownwardDecorator(params.row)}>
-                <DownwardIcon />
-              </IconButton>
-            </div>
-          </div>
+          <RenderEditCell
+            handleUpward={handleUpwardDecorator(params.row)}
+            handleDownward={handleDownwardDecorator(params.row)}
+          />
         ),
       },
       {
+        headerAlign: "center",
         field: "order",
         headerName: "Order",
-        headerAlign: "center",
         align: "center",
         type: "number",
+        preProcessEditCellProps: preProcessEditOrderDecorator,
         width: 75,
         editable: true,
-        preProcessEditCellProps: preProcessEditOrderDecorator,
       },
       {
         field: "name",
@@ -213,7 +250,7 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
         editable: true,
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 125,
         getActions: (params: { id: GridRowId; row: CategoryAPP }) => [
@@ -228,17 +265,17 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
             label="Visit"
           />,
           <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
             onClick={handleDeleteDecorator(params.id)}
+            icon={<DeleteIcon />}
             showInMenu
+            label="Delete"
           />,
         ],
       },
     ],
     [
-      handleUpwardDecorator,
       handleDownwardDecorator,
+      handleUpwardDecorator,
       preProcessEditOrderDecorator,
       handleColorChange,
       handleDeleteDecorator,
@@ -250,15 +287,15 @@ export default function CategoryGrid({ theme, templateId }: CategoryGridProps) {
       <GenericGrid
         theme={theme}
         rows={rows}
-        columns={columns}
-        processRowUpdate={processRowUpdateDecorator}
-        hasToolbar
         add={{
           text: "CREATE NEW AREA",
           handler: handleAddDecorator,
         }}
+        processRowUpdate={processRowUpdateDecorator}
+        columns={columns}
+        hasToolbar
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorCategory} />
     </>
   );
 }

@@ -10,16 +10,16 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { ThemeOptions } from "@mui/material/styles/experimental_extendTheme";
-import { AnswerAPP } from "../../api/AnswerAPI";
-import { TopicAPP } from "../../api/TopicAPI";
-import { usePostSaveAssessment } from "../../api/AssessmentAPI";
+import { AnswerAPP } from "../../api/AnswerAPI/AnswerAPI";
+import { TopicAPP } from "../../api/TopicAPI/TopicAPI";
+import { usePostSaveAssessment } from "../../api/AssessmentAPI/AssessmentAPI";
 
-/*
-passing parameter of the optional description of the checkpoints
-description of checkpoint = description
-description might be empty string
-main function returning a checkpoint omponent 
-*/
+/**
+ * passing parameter of the optional description of the checkpoints
+ * description of checkpoint = description
+ * description might be empty string
+ * main function returning a checkpoint omponent
+ */
 function Checkpoint({
   description,
   checkpointId,
@@ -49,10 +49,10 @@ function Checkpoint({
   theme: ThemeOptions;
   feedback: boolean;
 }) {
-  /*
-  set the value when clicking one of the radio-buttons
-  */
-
+  /**
+   * set the value when clicking on
+   * one of the radio-buttons
+   */
   const [value, setValue] = useState(selectedAnswer);
 
   React.useEffect(() => {
@@ -61,6 +61,9 @@ function Checkpoint({
 
   const postCheckpointAnswer = usePostSaveAssessment(assessmentId, value);
 
+  /**
+   * constant declaration changeAnswerList that returns a (new) list of the answers once changing them
+   */
   const changeAnswerList = (newAnswer: string) => {
     if (setCheckpointAnswerList) {
       setCheckpointAnswerList((old) => {
@@ -75,6 +78,10 @@ function Checkpoint({
     }
   };
 
+  /**
+   * constant declaration that lets you to change the answer
+   * of the checkpoints in assessments/evaluations
+   */
   const changeCheckpointAnswer = (newValue: string) => {
     const newAssessmentCheckpoint = {
       checkpointId,
@@ -85,8 +92,6 @@ function Checkpoint({
         setValue(newValue);
       },
       onError: (err, _, context) => {
-        // eslint-disable-next-line no-console
-        console.log(err);
         if (context) {
           setValue(context.oldValue);
           changeAnswerList(context.oldValue);
@@ -95,6 +100,10 @@ function Checkpoint({
     });
   };
 
+  /**
+   * constant declaration handleClick that assigns value, when clicking
+   * on the radiobuttons/checkpoints, even if you switch between checkpoints / radiobutton
+   */
   const handleClick = (newValue: string) => {
     setValue(newValue);
     changeAnswerList(newValue);
@@ -102,15 +111,15 @@ function Checkpoint({
   };
 
   return (
-    /*  
-    styling of the checkpoint
-    there are three radio-buttons Yes, No and N/A in that order
-    with horizontal direction (in a row)
-    initially the value is empty string
-    onClick update the value
-    the styling of the checkpoint/radiobutton is in line with the color scheme
-    darkgrey when not active and ING orange when selected/clicked
-    */
+    /**
+     * styling of the checkpoint
+     * there are three radio-buttons Yes, No and N/A in that order
+     * with horizontal direction (in a row)
+     * initially the value is empty string
+     * onClick update the value
+     * the styling of the checkpoint/radiobutton is in line with the color scheme
+     * darkgrey when not active and ING orange when selected/clicked
+     */
     <ThemeProvider theme={theme}>
       <Card sx={{ width: "inherit", alignSelf: "center" }}>
         <CardContent>

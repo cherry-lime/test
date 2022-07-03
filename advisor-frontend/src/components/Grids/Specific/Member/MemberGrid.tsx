@@ -1,23 +1,21 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
-
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import { Tooltip } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/HighlightOff";
-
 import GenericGrid from "../../Generic/GenericGrid";
 import { UserRole } from "../../../../types/UserRole";
-
-import { handleDelete, handleInit } from "../handlers";
-
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
-
+import { handleDelete, handleInit } from "../../functions/handlers/handlers";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 import {
   useDeleteMemberTeamOne,
   useGetMembersTeam,
   UserAPP,
-} from "../../../../api/UserAPI";
+} from "../../../../api/UserAPI/UserAPI";
 
 type MemberGridProps = {
   theme: Theme;
@@ -27,6 +25,10 @@ type MemberGridProps = {
   forAssessors: boolean; // Is the grid for assessors (true) or users (false)
 };
 
+/**
+ * Grid for members
+ * Uses theme, userId, userRole, teamId, and forAssessors
+ */
 export default function MemberGrid({
   theme,
   userId,
@@ -34,25 +36,45 @@ export default function MemberGrid({
   teamId,
   forAssessors,
 }: MemberGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<UserAPP[]>([]);
 
-  // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  /**
+   * Ref for error popup
+   * onError function
+   */
+  const refErrorMember = React.useRef<RefObject>(null);
+  const onErrorMember = getOnError(refErrorMember);
 
-  // Member query
+  /**
+   * Member queries
+   * Gets all members of a team for assessors or users
+   */
   const { status, data } = forAssessors
-    ? useGetMembersTeam(teamId, "ASSESSOR", ref)
-    : useGetMembersTeam(teamId, "USER", ref);
+    ? useGetMembersTeam(teamId, "ASSESSOR", onErrorMember)
+    : useGetMembersTeam(teamId, "USER", onErrorMember);
 
-  // Member mutation
-  const deleteMember = useDeleteMemberTeamOne(teamId, ref);
+  /**
+   * Member mutation
+   * Delete member
+   */
+  const deleteMember = useDeleteMemberTeamOne(teamId, onErrorMember);
 
-  // Called when "status" of member query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of members query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(setRows, deleteMember as UseMutationResult, rowId as number);
@@ -72,7 +94,7 @@ export default function MemberGrid({
       ...(userRole === "ASSESSOR"
         ? [
             {
-              field: "actions",
+              field: "Actions",
               type: "actions",
               width: 100,
               getActions: (params: { id: GridRowId }) =>
@@ -99,7 +121,7 @@ export default function MemberGrid({
   return (
     <>
       <GenericGrid theme={theme} rows={rows} columns={columns} hasToolbar />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorMember} />
     </>
   );
 }
