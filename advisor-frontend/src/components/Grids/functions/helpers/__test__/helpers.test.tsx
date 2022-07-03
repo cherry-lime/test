@@ -1,11 +1,6 @@
 import * as helpers from "../helpers";
 
 describe("Testing helper function", () => {
-  type Row = {
-    id: number;
-    order: number;
-    name: string;
-  };
 
   it("initRows should sort on order", () => {
     expect(
