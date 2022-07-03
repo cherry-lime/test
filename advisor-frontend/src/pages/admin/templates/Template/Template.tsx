@@ -20,7 +20,7 @@ import {
   useGetTemplate,
 } from "../../../../api/TemplateAPI/TemplateAPI";
 /**
- * 
+ *
  * Page with details regarding a certain template
  * This should only be accessible to admins
  * @param theme passes through the theming of the admin page, such as color, text and size

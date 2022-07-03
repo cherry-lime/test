@@ -4,11 +4,11 @@ import { TeamAPP } from "../api/TeamAPI/TeamAPI";
 
 /**
  * This function is used to check routes related to assessments
- * 
+ *
  * It prevents:
  *  - accessing feedback pages for uncompleted assessments
  *  - accessing the ongoing evaluation page for completed assessment
- * 
+ *
  * Moreover, it redirects the user when they don't have access rights to a certain assessment
  * @param param0 object containing:
  *  @param assessmentResponse a response to an API request for assessment information,
