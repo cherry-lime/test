@@ -59,6 +59,10 @@ describe('TeamsController', () => {
     teamController = moduleRef.get<TeamsController>(TeamsController);
     teamsService = moduleRef.get<TeamsService>(TeamsService);
     prisma = moduleRef.get<PrismaService>(PrismaService);
+
+    process.env = {
+      DATABASE_URL: '',
+    };
   });
 
   it('should be defined', () => {
