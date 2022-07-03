@@ -55,7 +55,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
   /**
    * handle toggling between list of checkpoints and recommendations
    * revert back to regular primary color when switching to recommendations
-   */ 
+   */
   const handleViewChange = () => {
     setCheckpointView((v) => {
       if (v) setPrimaryColor(theme.palette.primary.main);
@@ -82,7 +82,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
 
   /**
    * Function called when user clicks the "finish evaluation" button,
-   * it saves the assessment on the database. 
+   * it saves the assessment on the database.
    * If there is an error, it might be because not all checkpoints have been filled in
    */
   const handleClickFinish = () => {

@@ -20,31 +20,41 @@ import {
   useGetTemplate,
 } from "../../../../api/TemplateAPI/TemplateAPI";
 /**
+ *
  * Page with details regarding a certain template
  * This should only be accessible to admins
+ * @param theme passes through the theming of the admin page, such as color, text and size
+ * @return Template page, which has the features to adjust and customize a template
  */
 function Template({ theme }: { theme: Theme }) {
+  // Declare the templateId
   const { templateId } = useParams();
 
+  // Statehook to store the template info in
   const [templateInfo, setTemplateInfo] = useState<TemplateAPP>();
 
+  // Fetch the template data from the API
   const { status, data } = useGetTemplate(Number(templateId));
 
+  // Statehook to store the weight values
   const [minWeight, setMinWeight] = useState<number>();
   const [maxWeight, setMaxWeight] = useState<number>();
 
+  // Statehook to store a boolean for when the weights are invalid
   const [weightError, setWeightError] = useState(false);
 
   // Ref for error popup
   const refErrorTemplate = React.useRef<RefObject>(null);
   const onErrorTemplate = getOnError(refErrorTemplate);
 
+  // Check if there is an template active and warn when there is not, called at first render
   React.useEffect(() => {
     onErrorTemplate(
       "Warning: Editing templates will influence evaluations that use these templates."
     );
   }, []);
 
+  // Call to set the weights, everytime the status of the API changes.
   React.useEffect(() => {
     if (status === "success") {
       setTemplateInfo(data);
@@ -53,14 +63,17 @@ function Template({ theme }: { theme: Theme }) {
     }
   }, [status]);
 
+  // API hook call, used to avoid hook-in-hook error
   const patchTemplate = usePatchTemplate();
 
+  // API call to change the template data
   const changeInfoOptimistic = (newInfo: TemplateAPP, weight?: boolean) => {
     const oldInfo = templateInfo;
     setTemplateInfo(newInfo);
-
+    // Directly call the API
     patchTemplate.mutate(newInfo, {
       onSuccess: (info) => {
+        // Check if the weights are valid to be changed
         if (
           info.weightRangeMin === minWeight &&
           info.weightRangeMax === maxWeight
@@ -71,13 +84,14 @@ function Template({ theme }: { theme: Theme }) {
       onError: (error: unknown) => {
         onErrorTemplate(error);
         setTemplateInfo(oldInfo);
+        // If the set weights are invalid, throw an error popup
         if (weight) {
           setWeightError(true);
         }
       },
     });
   };
-
+  // Change weight function, which will update the set weights into the database.
   const changeWeights = () => {
     if (templateInfo && maxWeight && minWeight) {
       const newInfo = {
@@ -89,6 +103,7 @@ function Template({ theme }: { theme: Theme }) {
     }
   };
 
+  // Change and update the weights, everytime the user changes the weights. Called on weight change
   React.useEffect(() => {
     changeWeights();
   }, [minWeight, minWeight]);
@@ -107,6 +122,7 @@ function Template({ theme }: { theme: Theme }) {
             list as well as some notes or tips for the person reviewing their
             feedback.
           </p>
+          {/* Textfield box where the admin can write additional text to clarify the template */}
           <TextfieldEdit
             rows={5}
             theme={theme}
@@ -118,7 +134,7 @@ function Template({ theme }: { theme: Theme }) {
               })
             }
           />
-
+          {/* Define the grids for each component */}
           <h2> Areas </h2>
           <p style={{ margin: "0px" }}>
             To view, edit, add, or delete subareas and checkpoints belonging to
@@ -131,7 +147,7 @@ function Template({ theme }: { theme: Theme }) {
 
           <h2> Maturity Levels </h2>
           <MaturityGrid theme={theme} templateId={Number(templateId)} />
-
+          {/* Section to alter the weight range for the checkpoints in the template */}
           <h2> Weight Range </h2>
           <div
             style={{
@@ -160,7 +176,7 @@ function Template({ theme }: { theme: Theme }) {
               />
             )}
           </div>
-
+          {/* Section where the admin can enable/disable the N/A option */}
           <h2> Checkpoint Values </h2>
           <div style={{ width: "inherit" }}>
             Include N/A
@@ -196,6 +212,7 @@ function Template({ theme }: { theme: Theme }) {
           <AnswerGrid theme={theme} templateId={Number(templateId)} />
         </PageLayout>
       )}
+      {/* Define the error popup, which will be rendered in case the API returns an error */}
       <ErrorPopup ref={refErrorTemplate} isWarning />
     </div>
   );

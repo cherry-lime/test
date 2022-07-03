@@ -1,10 +1,22 @@
+/**
+ * define main container containing 
+ * a margin, minimum height,
+ * the way it is displayed,
+ * and a flex-direction 
+ */
 .main_container {
   margin: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
-
+/**
+* define css for body that contains
+* e.g. alignments, border radiusses (to make
+* pagecards having a round-shaped border at the four corners),
+* padding etc.
+* the same will hold for the body_footer 
+*/
 .body {
   width: 96%;
   margin: 0px auto;
@@ -21,6 +33,11 @@
   border-radius: 20px;
   row-gap: 15px;
 }
+/**
+* define css for the footer of the body that contains 
+* e.g. the color of shadow, margins, the way that certain content is justified,
+* (e.g. in the middle) 
+*/
 .body_footer {
   width: 96%;
   margin: 0px auto;
@@ -58,6 +75,11 @@ a:not(.buttonLink) {
 .buttonLink {
   text-decoration: none;
 }
+/**
+* important css properties that make sure that 
+* the widths of components match
+* in every page
+*/
 .widthInherited {
   width: inherit !important;
 }
