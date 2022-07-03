@@ -44,6 +44,8 @@ export function addTable(
   const getNextYWrapper = (y: number, addition = 0) =>
     nextYCheckEndOfPage(doc, y, liveArea.height, pageMargin, addition);
 
+  nextY = getNextYWrapper(nextY);
+
   // generate table title
   nextY = generateText(
     doc,
