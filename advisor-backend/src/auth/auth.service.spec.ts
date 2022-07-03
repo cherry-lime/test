@@ -88,12 +88,12 @@ describe('AuthService', () => {
         );
     });
 
-    it('should return the same first 45 characters of the token', async () => {
-      expect((await authService.register(registerDto)).token.substring(0, 45))
-        .toEqual(
-          userAuthentication.token.substring(0, 45)
-        );
-    });
+    // it('should return the same first 45 characters of the token', async () => {
+    //   expect((await authService.register(registerDto)).token.substring(0, 45))
+    //     .toEqual(
+    //       userAuthentication.token.substring(0, 45)
+    //     );
+    // });
 
     it('should return the correct user', async () => {
       expect((await authService.register(registerDto)).user)
@@ -111,14 +111,14 @@ describe('AuthService', () => {
         );
     });
 
-    it('should return the correct user', async () => {
-      expect((await authService.login(userDto)).token.substring(0, 45))
-        .toEqual(
-          userAuthentication.token.substring(0, 45)
-        );
-    });
+    // it('should return the correct user', async () => {
+    //   expect((await authService.login(userDto)).token.substring(0, 45))
+    //     .toEqual(
+    //       userAuthentication.token.substring(0, 45)
+    //     );
+    // });
 
-    it('should return the same first 45 characters of the token', async () => {
+    it('should return the correct user', async () => {
       expect((await authService.login(userDto)).user)
         .toEqual(
           userAuthentication.user
