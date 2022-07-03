@@ -116,11 +116,14 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
     handleActiveTemplateChange(teamTemplateId, { individual: false });
   };
 
-  const addTemplateMenuItem = (template: TemplateAPP) => {
-    <MenuItem key={template.name} value={template.id.toString()}>
+  const addTemplateMenuItem = (template: TemplateAPP) => (
+    <MenuItem
+      key={`template-menu-${template.id}`}
+      value={template.id.toString()}
+    >
       {template.name}
-    </MenuItem>;
-  };
+    </MenuItem>
+  );
 
   /**
    * return page with list of templates, e.g.:
