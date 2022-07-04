@@ -1,7 +1,11 @@
 /**
- * Defines the viewable content of each user type, in the form of Map<string, boolean>
+ * Defines the viewable content of each user type,
+ * in the form of Map<string, boolean>
  */
 
+/**
+ * Define constant user
+ */
 const user = new Map<string, boolean>([
   ["home", true],
   ["evaluation", true],
@@ -11,7 +15,9 @@ const user = new Map<string, boolean>([
   ["settings", true],
   ["template", false],
 ]);
-
+/**
+ * Define constant assessor / facilitator
+ */
 const assessor = new Map<string, boolean>([
   ["home", true],
   ["evaluation", false],
@@ -21,7 +27,9 @@ const assessor = new Map<string, boolean>([
   ["settings", true],
   ["template", false],
 ]);
-
+/**
+ * Define constant admin
+ */
 const admin = new Map<string, boolean>([
   ["home", true],
   ["evaluation", false],
@@ -31,7 +39,9 @@ const admin = new Map<string, boolean>([
   ["settings", true],
   ["template", true],
 ]);
-
+/**
+ * Define constant none
+ */
 const none = new Map<string, boolean>([
   ["home", true],
   ["evaluation", false],
@@ -41,7 +51,11 @@ const none = new Map<string, boolean>([
   ["settings", false],
   ["template", false],
 ]);
-// Enum object where the different userTypes can be called through. Example: "userType.ADMIN"
+
+/**
+ * Enum object where the different userTypes can be called through.
+ * Example: "userType.ADMIN"
+ */
 const userTypes = {
   ADMIN: admin,
   USER: user,

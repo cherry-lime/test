@@ -1,9 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AssessmentType } from '@prisma/client';
 import { IsBoolean, IsEnum, Min } from 'class-validator';
-/**
- * Response with template information
- */
+
+// Data Transfer Object (DTO) for assessment
+// ApiProperty decorator is used to define Swagger UI properties for this class
+// Default value is used for swagger UI as example values
+// IsBoolean decorator is used to define the property as a boolean
+// IsEnum decorator is used to define the property as an enum
+// Min decorator is used to define the minimum value for the property
 export class TemplateDto {
   @ApiProperty({ default: 1 })
   template_id: number;
@@ -28,10 +32,12 @@ export class TemplateDto {
   @IsBoolean()
   enabled: boolean;
 
+  // Used for checkpoints weights
   @ApiProperty({ default: 1 })
   @Min(0)
   weight_range_min: number;
 
+  // Used for checkpoints weights
   @ApiProperty({ default: 3 })
   weight_range_max: number;
 

@@ -68,6 +68,7 @@ export class AssessmentScoreService {
       );
     }
 
+    // Getting the ids of the maturities
     const maturityIdsList = maturityIds.map((maturity) => maturity.maturity_id);
 
     // Getting the ids of categories which are not disabled
@@ -87,6 +88,7 @@ export class AssessmentScoreService {
       );
     }
 
+    // Getting the ids of the categories
     const categoryIdsList = categoryIds.map((category) => category.category_id);
 
     const selectParam = {
@@ -153,6 +155,8 @@ export class AssessmentScoreService {
       select: selectParam,
     });
 
+    // Filtering out checkpoints which are not in topic if topic_id is specified
+    // and have category_id and maturity_id which are in categoryIds and maturityIds
     checkpoints = checkpoints.filter(
       (c) =>
         maturityIds.some((m) => m.maturity_id === c.maturity_id) &&
@@ -193,6 +197,7 @@ export class AssessmentScoreService {
     ) as ScoreDto[];
   }
 
+  // Calculate score for all topics or for one specific topic
   calculateScores(
     possibleAnswers,
     maturityIdsList,

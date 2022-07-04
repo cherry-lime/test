@@ -9,10 +9,7 @@ import { RootState } from "../../app/store";
  * Home page for anyone with the assessor role
  */
 function AssessorInterface() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { userId, userRole } = useSelector(
-    (state: RootState) => state.userData
-  );
+  const { userRole } = useSelector((state: RootState) => state.userData);
   const pageTitle = `Facilitator Home`;
 
   return (

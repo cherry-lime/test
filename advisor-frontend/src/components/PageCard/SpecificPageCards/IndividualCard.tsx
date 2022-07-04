@@ -2,6 +2,13 @@ import PersonIcon from "@mui/icons-material/Person";
 import PageCard from "../PageCard";
 import individual from "../Images/individual.png";
 
+/**
+ * return individual card containing
+ * a bodytext: "View and start evaluations",
+ * a headertext: "Individuals",
+ * and a "person"-icon with an image at the right side
+ * of the card
+ */
 export default function IndividualCard() {
   return (
     <PageCard

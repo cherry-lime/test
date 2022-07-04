@@ -1,38 +1,34 @@
 import * as React from "react";
-import { UseMutationResult } from "react-query";
-
 import {
   GridActionsCellItem,
+  GridRowId,
   GridColumns,
   GridPreProcessEditCellProps,
-  GridRowId,
 } from "@mui/x-data-grid";
-import { Theme } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
-import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
-import { IconButton } from "@mui/material";
-
-import GenericGrid from "../../Generic/GenericGrid";
-
+import { Theme } from "@mui/material/styles";
+import { UseMutationResult } from "react-query";
 import {
-  handleAdd,
+  processRowUpdate,
   handleDelete,
-  handleInit,
   handleMove,
   preProcessEditOrder,
-  processRowUpdate,
-} from "../handlers";
-
+  handleInit,
+  handleAdd,
+} from "../../functions/handlers/handlers";
+import GenericGrid from "../../Generic/GenericGrid";
 import {
   SubareaAPP,
   usePatchSubarea,
   usePostSubarea,
   useDeleteSubarea,
   useGetSubareas,
-} from "../../../../api/SubareaAPI";
-
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+} from "../../../../api/SubareaAPI/SubareaAPI";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
+import { RenderEditCell } from "../columns";
 
 type SubareaGridProps = {
   theme: Theme;
@@ -40,32 +36,61 @@ type SubareaGridProps = {
 };
 
 export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<SubareaAPP[]>([]);
 
-  // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  /**
+   * Ref for error popup
+   * onError function
+   */
+  const refErrorSubarea = React.useRef<RefObject>(null);
+  const onErrorSubarea = getOnError(refErrorSubarea);
 
-  // Subarea query
-  const { status, data } = useGetSubareas(categoryId, undefined, ref);
+  /**
+   * Subarea query
+   * Gets all subareas
+   */
+  const { status, data } = useGetSubareas(
+    categoryId,
+    undefined,
+    onErrorSubarea
+  );
 
-  // Subarea mutations
-  const patchSubarea = usePatchSubarea(ref);
-  const postSubarea = usePostSubarea(categoryId, ref);
-  const deleteSubarea = useDeleteSubarea(ref);
+  /**
+   * Subarea mutations
+   * Patch subarea
+   * Post subarea
+   * Delete subarea
+   */
+  const patchSubarea = usePatchSubarea(onErrorSubarea);
+  const postSubarea = usePostSubarea(categoryId, onErrorSubarea);
+  const deleteSubarea = useDeleteSubarea(onErrorSubarea);
 
-  // Called when "status" of subareas query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of subareas query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);
 
-  // Called when the 'Order' column is edited
+  /**
+   * Preprocesses the order when edited
+   * Called when the 'Order' column is edited
+   */
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrder(rows, params, ref),
+      preProcessEditOrder(rows, params, onErrorSubarea),
     [rows]
   );
 
-  // Called when a row is edited
+  /**
+   * Row update handler
+   * Called when a row is edited
+   */
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: SubareaAPP, oldRow: SubareaAPP) =>
       processRowUpdate(
@@ -77,7 +102,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
     []
   );
 
-  // Called when the "Upward" action is pressed
+  /**
+   * Upward order handler
+   * Called when the "Upward" action is pressed
+   */
   const handleUpwardDecorator = React.useCallback(
     (row: SubareaAPP) => () => {
       handleMove(setRows, patchSubarea as UseMutationResult, {
@@ -88,7 +116,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
     []
   );
 
-  // Called when the "Downward" action is pressed
+  /**
+   * Downward order handler
+   * Called when the "Downward" action is pressed
+   */
   const handleDownwardDecorator = React.useCallback(
     (row: SubareaAPP) => () => {
       handleMove(setRows, patchSubarea as UseMutationResult, {
@@ -99,7 +130,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(
@@ -111,7 +145,10 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
     []
   );
 
-  // Called when the "Add" button is pressed below the grid
+  /**
+   * Row add handler
+   * Called when the "Add" button is pressed below the grid
+   */
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postSubarea as UseMutationResult);
   }, []);
@@ -122,21 +159,14 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
         field: "",
         width: 50,
         renderCell: (params: { row: SubareaAPP }) => (
-          <div className="parent">
-            <div className="child">
-              <IconButton onClick={handleUpwardDecorator(params.row)}>
-                <UpwardIcon />
-              </IconButton>
-            </div>
-            <div className="child">
-              <IconButton onClick={handleDownwardDecorator(params.row)}>
-                <DownwardIcon />
-              </IconButton>
-            </div>
-          </div>
+          <RenderEditCell
+            handleUpward={handleUpwardDecorator(params.row)}
+            handleDownward={handleDownwardDecorator(params.row)}
+          />
         ),
       },
       {
+        preProcessEditCellProps: preProcessEditOrderDecorator,
         field: "order",
         headerName: "Order",
         headerAlign: "center",
@@ -144,7 +174,6 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
         type: "number",
         width: 75,
         editable: true,
-        preProcessEditCellProps: preProcessEditOrderDecorator,
       },
       {
         field: "name",
@@ -157,42 +186,42 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
         field: "summary",
         headerName: "Summary",
         type: "string",
-        flex: 1,
         editable: true,
+        flex: 1,
       },
       {
         field: "description",
         headerName: "Description",
         type: "string",
-        flex: 1,
         editable: true,
+        flex: 1,
       },
       {
         field: "enabled",
-        headerName: "Enabled",
         type: "boolean",
-        width: 75,
+        headerName: "Enabled",
         editable: true,
+        width: 75,
       },
       {
-        field: "actions",
-        type: "actions",
-        width: 75,
+        field: "Actions",
         getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
-            icon={<DeleteIcon />}
             label="Delete"
+            icon={<DeleteIcon />}
             onClick={handleDeleteDecorator(params.id)}
             showInMenu
           />,
         ],
+        type: "actions",
+        width: 75,
       },
     ],
     [
-      handleUpwardDecorator,
-      handleDownwardDecorator,
-      preProcessEditOrderDecorator,
       handleDeleteDecorator,
+      handleUpwardDecorator,
+      preProcessEditOrderDecorator,
+      handleDownwardDecorator,
     ]
   );
 
@@ -209,7 +238,7 @@ export default function SubareaGrid({ theme, categoryId }: SubareaGridProps) {
           handler: handleAddDecorator,
         }}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorSubarea} />
     </>
   );
 }

@@ -7,46 +7,24 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import {
   userDto,
-  UserWithoutPassword,
-  userAuthenticationLog,
   mockPrisma,
+  aUser,
+  registerDto,
+  userAuthentication,
 } from '../prisma/mock/mockAuthService';
 import { JwtStrategy } from './jwt.strategy';
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 
 const moduleMocker = new ModuleMocker(global);
 
 describe('AuthService', () => {
   let authService: AuthService;
   let prisma: PrismaService;
-  // ---------------- Working when using the local database (or azure) ----------------
-  // beforeEach(async () => {
-  //   authService = new AuthService(
-  //     new PrismaService(),
-  //     new JwtService({
-  //       secretOrPrivateKey: 'mycustomuselongsecret'
-  //     }),
-  //     new UserService(
-  //       new PrismaService()
-  //     )
-  //   );
-  // });
-
-  // describe('Login', () => {
-  //   // it('should return an object', () => {
-  //   //   // const loginDto = new LoginDto()
-  //   //   expect(
-  //   //     typeof authService.login(userDto)
-  //   //   ).toEqual('object')
-  //   // });
-  //   it('should return a function', () => {
-  //     // const loginDto = new LoginDto()
-  //     expect(
-  //       typeof authService.login(userDto)
-  //     ).toEqual(typeof userAuthentication)
-  //   });
-  // });
-  // ---------------- Working ----------------
 
   beforeEach(async () => {
     process.env = {
@@ -65,9 +43,7 @@ describe('AuthService', () => {
         }),
       ],
       providers: [
-        // UserService,
         JwtStrategy,
-        // LocalStrategy,
         AuthService,
         {
           provide: PrismaService,
@@ -78,7 +54,7 @@ describe('AuthService', () => {
       .useMocker((token) => {
         if (token === UserService) {
           return {
-            createUser: jest.fn().mockResolvedValue(UserWithoutPassword),
+            createUser: jest.fn().mockResolvedValue(aUser),
           };
         }
         if (typeof token === 'function') {
@@ -94,64 +70,84 @@ describe('AuthService', () => {
     prisma = module.get<PrismaService>(PrismaService);
   });
 
-  it('Authentication should be defined', () => {
-    expect(authService).toBeDefined();
+  describe('should be defined', () => {
+    it('Authentication', () => {
+      expect(authService).toBeDefined();
+    });
+
+    it('login function', () => {
+      expect(authService.login(userDto)).toBeDefined();
+    });
+
+    it('registration function', () => {
+      expect(authService.register(registerDto)).toBeDefined();
+    });
   });
 
-  it('Authentication login should be defined', () => {
-    expect(authService.login(userDto)).toBeDefined();
+  describe('When registering', () => {
+    it('should return an AuthResponse type', async () => {
+      expect(typeof authService.register(registerDto)).toEqual(
+        typeof userAuthentication
+      );
+    });
+
+    // it('should return the same first 45 characters of the token', async () => {
+    //   expect((await authService.register(registerDto)).token.substring(0, 45))
+    //     .toEqual(
+    //       userAuthentication.token.substring(0, 45)
+    //     );
+    // });
+
+    it('should return the correct user', async () => {
+      expect((await authService.register(registerDto)).user).toEqual(
+        userAuthentication.user
+      );
+    });
   });
-
-  // it('Authentication registration should be defined', () => {
-  //   expect(authService.register(registerDto)).toBeDefined();
-  // });
-
-  // describe('When registering', () => {
-  //   it('should return the correct AuthResponse type', async () => {
-  //     expect(typeof authService.register(registerDto)).toEqual(
-  //       typeof userAuthenticationReg
-  //     );
-  //   });
-  // });
 
   describe('When logging in', () => {
-    it('should return an AuthResponse type', () => {
-      // const userId = 1;
+    it('should return an AuthResponse type', async () => {
       expect(typeof authService.login(userDto)).toEqual(
-        typeof userAuthenticationLog
+        typeof userAuthentication
+      );
+    });
+
+    // it('should return the correct user', async () => {
+    //   expect((await authService.login(userDto)).token.substring(0, 45))
+    //     .toEqual(
+    //       userAuthentication.token.substring(0, 45)
+    //     );
+    // });
+
+    it('should return the correct user', async () => {
+      expect((await authService.login(userDto)).user).toEqual(
+        userAuthentication.user
       );
     });
 
     it('should reject if username is not found', async () => {
-      jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
+      jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(null);
       expect(authService.login(userDto)).rejects.toThrowError(
         NotFoundException
       );
     });
-    // it('should return an AuthResponse type', () => {
-    //   // const userId = 1;
-    //   expect(
-    //    authService.login(userDto)
-    //   ).resolves.toBe(userAuthenticationLog)
-    // })
 
-    // it("should", async () => {
-    // expect.assertions(1);
-    // try {
-    //   expect(authService.login(userDtoNotFound))
-    // } catch(error) {
-    //   expect(error.message).toBe("user not found")
-    // }
-    // expect(() => {
-    //   authService.login(userDtoNotFound);
-    // }).toThrowError("user not found");
-    // })
+    it('Should reject with unknown error', async () => {
+      jest
+        .spyOn(prisma.user, 'findUnique')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      expect(authService.login(userDto)).rejects.toThrowError(
+        InternalServerErrorException
+      );
+    });
 
-    // it('should return a NotFoundException on the user', () => {
-    //   // const userId = 1;
-    //   expect( () =>{
-    //     authService.login(userDtoNotFound);}
-    //   ).toThrow(new NotFoundException('user not found')) //.toEqual(userAuthenticationLog)
-    // })
+    it('should reject if the password is invalid', async () => {
+      // mocking bcrypt compare method
+      const bcryptCompare = jest.fn().mockResolvedValue(null);
+      (bcrypt.compare as jest.Mock) = bcryptCompare;
+      expect(authService.login(userDto)).rejects.toThrowError(
+        UnauthorizedException
+      );
+    });
   });
 });
