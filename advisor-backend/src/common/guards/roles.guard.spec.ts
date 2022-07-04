@@ -1,13 +1,8 @@
-import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { Test } from '@nestjs/testing';
-import { PassportModule } from '@nestjs/passport';
 import { createMock } from '@golevelup/ts-jest';
 import { ExecutionContext } from '@nestjs/common';
 import { RolesGuard } from './roles.guard';
 import { Role } from '@prisma/client';
 import { Reflector } from '@nestjs/core';
-
-const moduleMocker = new ModuleMocker(global);
 
 describe('RolesGuard', () => {
     let rolesGuard: RolesGuard;
@@ -17,43 +12,8 @@ describe('RolesGuard', () => {
     const mockExecutionContext = createMock<ExecutionContext>();
 
     beforeEach(async () => {
-        process.env = {
-            DATABASE_URL: 'postgres://localhost:5432/test',
-            JWT_SECRET: 'mycustomuselongsecret',
-            EXPIRESIN: '60 days',
-        };
-        const module = await Test.createTestingModule({
-            imports: [
-                PassportModule,
-                Reflector
-            ],
-            providers: [
-                RolesGuard
-            ]
-        })
-            .useMocker((token) => {
-                // if (token === RolesGuard) {
-                //     return {
-                //         canActivate: jest.fn().mockResolvedValue(true),
-                //         matchRoles: jest.fn().mockResolvedValue([Role.USER, Role.ASSESSOR])
-                //     };
-                // }
-                // if (token === Reflector) {
-                //     return {
-                //         get: jest.fn().mockReturnValue(false)
-                //     }
-                // }
-                if (typeof token === 'function') {
-                    const mockMetadata = moduleMocker.getMetadata(
-                        token
-                    ) as MockFunctionMetadata<any, any>;
-                    const Mock = moduleMocker.generateFromMetadata(mockMetadata);
-                    return new Mock();
-                }
-            })
-            .compile();
-        rolesGuard = module.get<RolesGuard>(RolesGuard);
-        reflector = module.get<Reflector>(Reflector);
+        reflector = new Reflector();
+        rolesGuard = new RolesGuard(reflector);
     });
 
     describe('should be defined', () => {
@@ -92,34 +52,20 @@ describe('RolesGuard', () => {
         });
 
         it('Reflector returns false', async () => {
-            jest
-                .spyOn(reflector, "get")
-                .mockReturnValueOnce(false);
-            expect(rolesGuard
-                .canActivate(mockExecutionContext)
-            )
-                .resolves.toEqual(true);
+            reflector.get = jest.fn().mockReturnValue([Role.USER]);
+            const context = createMock<ExecutionContext>();
+            const canActivate = rolesGuard.canActivate(context);
+            expect(canActivate)
+                .resolves.toEqual(false);
         });
 
         it('Reflector returns true', async () => {
-            jest
-                .spyOn(reflector, "get")
-                .mockReturnValueOnce(true);
-            expect(rolesGuard
-                .canActivate(mockExecutionContext)
-            )
+            reflector.get = jest.fn().mockReturnValue(false);
+            const context = createMock<ExecutionContext>();
+            const canActivate = rolesGuard.canActivate(context);
+            expect(canActivate)
                 .resolves.toEqual(true);
         });
-
-        // it('Request', async () => {
-        //     jest
-        //         .spyOn(mockExecutionContext.switchToHttp, "getRequest")
-        //         .mockReturnValueOnce();
-        //     expect(rolesGuard
-        //         .canActivate(mockExecutionContext)
-        //     )
-        //         .resolves.toEqual(true);
-        // });
     })
 
     describe('MatchRoles function', () => {
