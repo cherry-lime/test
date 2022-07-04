@@ -80,6 +80,16 @@ export const updateUserDtoAdmin = {
 // Mock single user
 export const aUser1 = userArray1[0];
 
+// Mock admin
+export const aAdmin = {
+  user_id: 1,
+  username: 'test_username',
+  password: 'test_password_hash',
+  role: Role.ADMIN,
+  created_at: new Date(),
+  updated_at: new Date(),
+};
+
 export const mockUser = {
   findMany: jest.fn().mockResolvedValue(userArray),
   findUnique: jest.fn().mockResolvedValue(aUser),

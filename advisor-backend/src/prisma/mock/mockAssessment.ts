@@ -34,6 +34,14 @@ export const aTeamAssessment = {
   team_id: 1,
 };
 
+export const aAssessmentFull = {
+  ...aAssessment,
+  feedback_text: 'test_feedback_text',
+  information: 'test_information',
+  created_at: new Date(),
+  updated_at: new Date(),
+};
+
 export const aTeamAssessmentFull = {
   assessment_id: 2,
   assessment_type: AssessmentType.TEAM,

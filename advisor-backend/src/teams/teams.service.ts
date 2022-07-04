@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -45,9 +46,6 @@ export class TeamsService {
     const teamMemberIds = temp.UserInTeam.map((a) => a.user_id);
 
     if (teamMemberIds.length === 0) {
-      // Throw error if no members are associated to the team
-      // throw new NotFoundException('No members are associated to the team');
-      // TODO
       return { team_members: [] };
     }
 
@@ -104,21 +102,15 @@ export class TeamsService {
       .catch((error) => {
         console.log(error);
         if (error.code === 'P2002') {
-          throw new InternalServerErrorException(
-            'User is already associated to the team'
-          );
+          throw new ConflictException('User is already associated to the team');
         } else {
           throw new InternalServerErrorException();
         }
       });
 
     return await this.findTeamMembers(temp.team_id).catch((error) => {
-      if (error === NotFoundException) {
-        throw new NotFoundException('Team with given team id not found');
-      } else {
-        console.log(error);
-        throw new InternalServerErrorException();
-      }
+      console.log(error);
+      throw new InternalServerErrorException();
     });
   }
 
@@ -257,15 +249,8 @@ export class TeamsService {
       });
 
     return await this.findTeamMembers(team_id).catch((error) => {
-      if (error === NotFoundException) {
-        throw new NotFoundException(
-          'Team with given team id not found or no \
-         members are associated to the team'
-        );
-      } else {
-        console.log(error);
-        throw new InternalServerErrorException();
-      }
+      console.log(error);
+      throw new InternalServerErrorException();
     });
   }
 }

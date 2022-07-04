@@ -1,3 +1,4 @@
+import { InviteTokenDto } from '../../teams/dto/invite-token.dto';
 import { aAssessment } from './mockAssessment';
 
 export const aTeam = {
@@ -14,6 +15,20 @@ export const aTeam = {
   ],
 };
 
+export const aTeamOtherMembers = {
+  team_id: 1,
+  team_name: 'test_team_name',
+  invite_token: 'test_invite_token',
+  team_country: 'test_team_country',
+  team_department: 'test_team_department',
+  UserInTeam: [
+    {
+      user_id: 2,
+      team_id: 1,
+    },
+  ],
+};
+
 export const aTeamNoMembers = {
   team_id: 1,
   team_name: 'test_team_name',
@@ -23,18 +38,20 @@ export const aTeamNoMembers = {
   UserInTeam: [],
 };
 
-export const mockCreateTeamBody = {
+export const aTeamNoMembers1 = {
+  team_id: 1,
   team_name: 'test_team_name',
+  invite_token: 'test_invite_token',
   team_country: 'test_team_country',
   team_department: 'test_team_department',
 };
 
 export const mockCreateTeamResponse = {
   team_id: 1,
-  team_name: 'test_team_name',
+  team_name: 'New Team',
   invite_token: 'test_invite_token',
-  team_country: 'test_team_country',
-  team_department: 'test_team_department',
+  team_country: '',
+  team_department: '',
 };
 
 export const aTeamWithAssessment = {
@@ -54,6 +71,10 @@ export const aCreateTeam = {
   team_department: '',
 };
 
+export const aInviteToken = {
+  invite_token: 'test_invite_token',
+} as InviteTokenDto;
+
 export const mockTeam = {
   create: jest.fn().mockResolvedValue(aCreateTeam),
   findUnique: jest.fn().mockResolvedValue(aTeam),
@@ -61,4 +82,5 @@ export const mockTeam = {
   findMany: jest.fn().mockResolvedValue([aTeam]),
   getAssessments: jest.fn().mockResolvedValue([aAssessment]),
   update: jest.fn().mockResolvedValue(aTeam),
+  delete: jest.fn().mockResolvedValue(aTeam),
 };

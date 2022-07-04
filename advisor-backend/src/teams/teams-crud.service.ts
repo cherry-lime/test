@@ -113,7 +113,6 @@ export class TeamsCRUDService {
           throw new NotFoundException('Team with given team id not found');
         } else {
           console.log(error);
-          console.log(error);
           throw new InternalServerErrorException();
         }
       });
