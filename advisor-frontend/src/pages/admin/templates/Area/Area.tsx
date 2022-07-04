@@ -6,12 +6,19 @@ import SubareaGrid from "../../../../components/Grids/Specific/Subarea/SubareaGr
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
 import CheckpointGrid from "../../../../components/Grids/Specific/Checkpoint/CheckpointGrid";
-import { CategoryAPP, useGetCategory } from "../../../../api/CategoryAPI";
+import {
+  CategoryAPP,
+  useGetCategory,
+} from "../../../../api/CategoryAPI/CategoryAPI";
 import { getUpdatedTheme } from "./colorHelpers";
 
 /**
  * Page with details regarding an area beloging to a certain template
  * This should only be accessible to admins
+ *
+ * The id's of templates, area are defined
+ * followed by usestatehooks for the color, theme and areainfo
+ * supported from React
  */
 function Area({ theme }: { theme: Theme }) {
   const { templateId } = useParams();
@@ -22,7 +29,10 @@ function Area({ theme }: { theme: Theme }) {
   const [primaryColor, setPrimaryColor] = useState(theme.palette.primary.main);
 
   const areaResponse = useGetCategory(Number(areaId));
-
+  /**
+   * react useEffect hooks,
+   * so no classes have to be written
+   */
   React.useEffect(() => {
     if (areaResponse.data && areaResponse.status === "success") {
       setAreaInfo(areaResponse.data);
@@ -34,7 +44,7 @@ function Area({ theme }: { theme: Theme }) {
   }, [areaResponse]);
 
   return (
-    <div>
+    <div data-testid="areaTest">
       {areaInfo && (
         <PageLayout
           title={`${areaInfo.name}`}

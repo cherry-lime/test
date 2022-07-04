@@ -8,17 +8,28 @@ import {
   ThemeOptions,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { AnswerAPP } from "../../api/AnswerAPI";
-import { CheckpointAPP, useGetCheckpoints } from "../../api/CheckpointAPI";
-import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI";
+import { AnswerAPP } from "../../api/AnswerAPI/AnswerAPI";
+import {
+  CheckpointAPP,
+  useGetCheckpoints,
+} from "../../api/CheckpointAPI/CheckpointAPI";
+import { SubareaAPP, useGetSubareas } from "../../api/SubareaAPI/SubareaAPI";
 import Checkpoint from "../Checkpoint/Checkpoint";
 import Subarea from "../Subarea/Subarea";
-import { TopicAPP } from "../../api/TopicAPI";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import { TopicAPP } from "../../api/TopicAPI/TopicAPI";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 
 /**
  * Page with a self evaluation that can be filled in
  * This should only be accessible to the user whose assement this belongs to
+ * It contains the assessmentId,
+ * the list of topics,
+ * the id of an area,
+ * the list of answers,
+ * a list of checkpointanswers,
+ * a list that sets the answers of the checkpoints,
+ * the 'global' theme,
+ * and feedback
  */
 function AreaSpecificCheckpoints({
   assessmentId,
@@ -41,6 +52,9 @@ function AreaSpecificCheckpoints({
   theme: ThemeOptions;
   feedback: boolean;
 }) {
+  /**
+   * using react useState hook it sets up a page and the changes of a page
+   */
   const [page, setPage] = React.useState(1);
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -48,37 +62,52 @@ function AreaSpecificCheckpoints({
   ) => {
     setPage(value);
   };
-
+  /**
+   * set the value initially to the "Single" tab on the page
+   */
   const [value, setValue] = React.useState("Single");
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
-    // here we need to send new value to API
+    /**
+     * here we need to send new value to API
+     */
   };
 
-  // GET ASSESSMENT INFORMATION
+  /**
+   * GET ASSESSMENT INFORMATION
+   */
 
-  // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  /**
+   * Ref for error popup
+   */
+  const refErrorSubarea = useRef<RefObject>(null);
+  const onErrorSubarea = getOnError(refErrorSubarea);
 
   const [subareaList, setSubareaList] = useState<SubareaAPP[]>();
   const [checkpointList, setCheckpointList] = useState<CheckpointAPP[]>();
-  // get answer list from API
-  const subareasResponse = useGetSubareas(areaId, true, ref);
 
-  // get checkpoint list from API
-  const checkpointResponse = useGetCheckpoints(areaId, true, ref);
+  /**
+   * get answer list from API
+   */
+  const subareasResponse = useGetSubareas(areaId, true, onErrorSubarea);
 
-  const [subareaComponents, setSubareaComponents] =
-    useState<React.ReactElement[]>();
+  /**
+   * get checkpoint list from API
+   */
+  const checkpointResponse = useGetCheckpoints(areaId, true, onErrorSubarea);
 
-  // set the subarea list value
+  /**
+   * set the subarea list value
+   */
   React.useEffect(() => {
     if (subareasResponse.data && subareasResponse.status === "success") {
       setSubareaList(subareasResponse.data);
     }
   }, [subareasResponse]);
 
-  // set the checkpoint list value
+  /**
+   * set the checkpoint list value
+   */
   React.useEffect(() => {
     if (checkpointResponse.data && checkpointResponse.status === "success") {
       const orderedCheckpoints = checkpointResponse.data.sort(
@@ -92,22 +121,6 @@ function AreaSpecificCheckpoints({
     setPage(1);
   }, [areaId]);
 
-  React.useEffect(() => {
-    if (subareaList !== undefined) {
-      setSubareaComponents(
-        subareaList.map((subarea) => (
-          <Subarea
-            key={`subarea${subarea.id}`}
-            theme={theme}
-            title={subarea.name}
-            summary={subarea.summary}
-            description={subarea.description}
-          />
-        ))
-      );
-    }
-  }, [subareaList]);
-
   const checkpointIdToAnswerLabel = (checkpointId: number) => {
     if (checkpointId in checkpointAnswerList) {
       const answer = checkpointAnswerList[checkpointId] || "-";
@@ -116,6 +129,9 @@ function AreaSpecificCheckpoints({
     return "";
   };
 
+  /**
+   * constant declaration that creates a checkpointcard
+   */
   const createCheckpointCard = (checkpoint: CheckpointAPP) => (
     <Checkpoint
       key={`checkpoint-card-${checkpoint.id}`}
@@ -133,6 +149,9 @@ function AreaSpecificCheckpoints({
     />
   );
 
+  /**
+   * return Single / List tabs with the areaspecific checkpoints
+   */
   return (
     <div style={{ width: "inherit", display: "contents" }}>
       <Card
@@ -149,7 +168,17 @@ function AreaSpecificCheckpoints({
           </Tabs>
         </Stack>
       </Card>
-      {subareaComponents !== undefined && subareaComponents}
+
+      {subareaList &&
+        subareaList.map((subarea) => (
+          <Subarea
+            key={`subarea${subarea.id}`}
+            theme={theme}
+            title={subarea.name}
+            summary={subarea.summary}
+            description={subarea.description}
+          />
+        ))}
 
       {value === "Single" &&
         checkpointList &&
@@ -177,7 +206,7 @@ function AreaSpecificCheckpoints({
           </Grid>
         </Grid>
       )}
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorSubarea} />
     </div>
   );
 }

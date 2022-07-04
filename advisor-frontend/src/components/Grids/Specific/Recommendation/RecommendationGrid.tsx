@@ -1,65 +1,90 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
-
 import { GridColumns, GridPreProcessEditCellProps } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
-import { IconButton } from "@mui/material";
-import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
-import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
-
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 import GenericGrid from "../../Generic/GenericGrid";
-
 import {
   handleInit,
   handleMove,
   preProcessEditOrder,
   processRowUpdate,
-} from "../handlers";
-
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+} from "../../functions/handlers/handlers";
 import {
   RecommendationAPP,
   useGetRecommendations,
   usePatchRecommendation,
-} from "../../../../api/RecommendationAPI";
+} from "../../../../api/RecommendationAPI/RecommendationAPI";
+import { RenderEditCell } from "../columns";
 
 type RecommendationGridProps = {
   theme: Theme;
   assessmentId: number;
   topicId: number | undefined;
-  isEditable: boolean;
+  isEditable: boolean; // Is this grid editable?
 };
 
+/**
+ * Grid for recommendations
+ * Uses theme, assessmentId, topicId, and isEditable
+ */
 export default function RecommendationGrid({
   theme,
   assessmentId,
   topicId,
   isEditable,
 }: RecommendationGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<RecommendationAPP[]>([]);
 
-  // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  /**
+   * Ref for error popup
+   * onError function
+   */
+  const refErrorRecommendation = React.useRef<RefObject>(null);
+  const onErrorRecommendation = getOnError(refErrorRecommendation);
 
   // Recommendation query
-  const { status, data } = useGetRecommendations(assessmentId, topicId, ref);
+  const { status, data } = useGetRecommendations(
+    assessmentId,
+    topicId,
+    onErrorRecommendation
+  );
 
-  // Recommendation mutation
-  const patchRecommendation = usePatchRecommendation(ref);
+  /**
+   * Recommendation query
+   * Gets all recommendations
+   */
+  const patchRecommendation = usePatchRecommendation(onErrorRecommendation);
 
-  // Called when "status" of recommendation query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of recommendations query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);
 
-  // Called when the 'Order' column is edited
+  /**
+   * Preprocesses the order when edited
+   * Called when the 'Order' column is edited
+   */
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrder(rows, params, ref),
+      preProcessEditOrder(rows, params, onErrorRecommendation),
     [rows]
   );
 
-  // Called when a row is edited
+  /**
+   * Row update handler
+   * Called when a row is edited
+   */
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: RecommendationAPP, oldRow: RecommendationAPP) =>
       processRowUpdate(
@@ -71,7 +96,10 @@ export default function RecommendationGrid({
     []
   );
 
-  // Called when the "Upward" action is pressed
+  /**
+   * Upward order handler
+   * Called when the "Upward" action is pressed
+   */
   const handleUpwardDecorator = React.useCallback(
     (row: RecommendationAPP) => () => {
       handleMove(setRows, patchRecommendation as UseMutationResult, {
@@ -82,7 +110,10 @@ export default function RecommendationGrid({
     []
   );
 
-  // Called when the "Downward" action is pressed
+  /**
+   * Downward order handler
+   * Called when the "Downward" action is pressed
+   */
   const handleDownwardDecorator = React.useCallback(
     (row: RecommendationAPP) => () => {
       handleMove(setRows, patchRecommendation as UseMutationResult, {
@@ -101,18 +132,10 @@ export default function RecommendationGrid({
               field: "",
               width: 50,
               renderCell: (params: { row: RecommendationAPP }) => (
-                <div className="parent">
-                  <div className="child">
-                    <IconButton onClick={handleUpwardDecorator(params.row)}>
-                      <UpwardIcon />
-                    </IconButton>
-                  </div>
-                  <div className="child">
-                    <IconButton onClick={handleDownwardDecorator(params.row)}>
-                      <DownwardIcon />
-                    </IconButton>
-                  </div>
-                </div>
+                <RenderEditCell
+                  handleUpward={handleUpwardDecorator(params.row)}
+                  handleDownward={handleDownwardDecorator(params.row)}
+                />
               ),
             },
           ]
@@ -157,7 +180,7 @@ export default function RecommendationGrid({
         processRowUpdate={processRowUpdateDecorator}
         hasToolbar
       />
-      <ErrorPopup />
+      <ErrorPopup ref={refErrorRecommendation} />
     </>
   );
 }

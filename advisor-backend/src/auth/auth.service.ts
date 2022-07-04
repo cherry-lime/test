@@ -1,5 +1,6 @@
 import {
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -27,14 +28,22 @@ export class AuthService {
    * @throws password is invalid
    */
   async login({ username, password }: LoginDto): Promise<AuthResponse> {
-    const user = await this.prismaService.user.findUnique({
-      where: { username },
-    });
+    const user = await this.prismaService.user
+      .findUnique({
+        where: {
+          username,
+        },
+      })
+      .catch((error) => {
+        console.log(error);
+        throw new InternalServerErrorException();
+      });
 
     if (!user) {
       throw new NotFoundException('user not found');
     }
 
+    // compare the hashes of the given password
     const validatePassword = await bcrypt.compare(password, user.password);
 
     if (!validatePassword) {
@@ -42,7 +51,6 @@ export class AuthService {
     }
 
     return {
-      // token,
       token: await this.jwtService.signAsync({
         user_id: user.user_id,
       }),
@@ -57,8 +65,11 @@ export class AuthService {
    */
   async register(createUserDto: CreateUserDto): Promise<AuthResponse> {
     const user = await this.usersService.createUser(createUserDto);
+
     return {
-      token: this.jwtService.sign({ user_id: user.user_id }),
+      token: this.jwtService.sign({
+        user_id: user.user_id,
+      }),
       user,
     };
   }

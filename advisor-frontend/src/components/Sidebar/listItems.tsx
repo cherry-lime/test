@@ -12,22 +12,44 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { resetUser } from "../../app/userDataSlice";
-import { useLogout } from "../../api/LoginAPI";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
-
+import { useLogout } from "../../api/LoginAPI/LoginAPI";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
+/**
+ * define type called SidebarListProps,
+ * which is a map for strings
+ * to its corresponding boolean
+ */
 type SidebarListProps = {
   userType: Map<string, boolean>;
 };
-
+/**
+ * export function sidebarlist that consists
+ * of the userrole and the dispatch
+ */
 export default function SidebarList({ userType }: SidebarListProps) {
   const { userRole } = useSelector((state: RootState) => state.userData);
   const dispatch = useDispatch();
 
-  // Ref for error popup
-  const ref = useRef<RefObject>(null);
-
-  const logout = useLogout(ref);
-
+  /**
+   * Ref for error popup
+   */
+  const refErrorItems = useRef<RefObject>(null);
+  const onErrorItems = getOnError(refErrorItems);
+  /**
+   * declaration of constant logout
+   */
+  const logout = useLogout(onErrorItems);
+  /**
+   * return the sidebar containing the list names
+   * home,
+   * evaluation,
+   * individluals,
+   * teams,
+   * templates,
+   * and signout
+   * From top to bottom
+   * NOTE: users can't see the templates
+   */
   return (
     <>
       {userType.get("home") && (
@@ -85,7 +107,7 @@ export default function SidebarList({ userType }: SidebarListProps) {
           <ListItemText primary="Sign Out" style={{ color: "background" }} />
         </ListItemButton>
       )}
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorItems} />
     </>
   );
 }

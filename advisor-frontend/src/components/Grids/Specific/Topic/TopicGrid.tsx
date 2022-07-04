@@ -1,54 +1,78 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
-
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import GenericGrid from "../../Generic/GenericGrid";
-
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
-
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 import {
   handleAdd,
   handleDelete,
   handleInit,
   processRowUpdate,
-} from "../handlers";
-
+} from "../../functions/handlers/handlers";
 import {
   TopicAPP,
   useDeleteTopic,
   useGetTopics,
   usePatchTopic,
   usePostTopic,
-} from "../../../../api/TopicAPI";
+} from "../../../../api/TopicAPI/TopicAPI";
 
 type TopicGridProps = {
   theme: Theme;
   templateId: number;
 };
 
+/**
+ * Grid for topics
+ * Uses theme and templateId
+ */
 export default function TopicGrid({ theme, templateId }: TopicGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<TopicAPP[]>([]);
 
-  // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  /**
+   * Ref for error popup
+   * onError function
+   */
+  const refErrorTopic = React.useRef<RefObject>(null);
+  const onErrorTopic = getOnError(refErrorTopic);
 
-  // Topic query
-  const { status, data } = useGetTopics(templateId, undefined, ref);
+  /**
+   * Topic query
+   * Gets all topics
+   */
+  const { status, data } = useGetTopics(templateId, undefined, onErrorTopic);
 
-  // Topic mutations
-  const patchTopic = usePatchTopic(ref);
-  const postTopic = usePostTopic(templateId, ref);
-  const deleteTopic = useDeleteTopic(ref);
+  /**
+   * Topic mutations
+   * Patch topic
+   * Post topic
+   * Delete topic
+   */
+  const patchTopic = usePatchTopic(onErrorTopic);
+  const postTopic = usePostTopic(templateId, onErrorTopic);
+  const deleteTopic = useDeleteTopic(onErrorTopic);
 
-  // Called when "status" of templates query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of topics query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);
 
-  // Called when a row is edited
+  /**
+   * Row update handler
+   * Called when a row is edited
+   */
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: TopicAPP, oldRow: TopicAPP) =>
       processRowUpdate(
@@ -60,7 +84,10 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(setRows, deleteTopic as UseMutationResult, rowId as number);
@@ -68,7 +95,10 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
     []
   );
 
-  // Called when the "Add" button is pressed below the grid
+  /**
+   * Row add handler
+   * Called when the "Add" button is pressed below the grid
+   */
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postTopic as UseMutationResult);
   }, []);
@@ -76,22 +106,22 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   const columns = React.useMemo<GridColumns<TopicAPP>>(
     () => [
       {
+        editable: true,
         field: "name",
-        headerName: "Name",
         type: "string",
+        headerName: "Name",
         flex: 1,
-        editable: true,
       },
       {
-        field: "enabled",
         headerName: "Enabled",
+        field: "enabled",
         type: "boolean",
-        width: 75,
         editable: true,
+        width: 75,
       },
       {
-        field: "actions",
         type: "actions",
+        field: "Actions",
         width: 100,
         getActions: (params: { id: GridRowId }) => [
           <GridActionsCellItem
@@ -109,9 +139,9 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
   return (
     <>
       <GenericGrid
+        columns={columns}
         theme={theme}
         rows={rows}
-        columns={columns}
         processRowUpdate={processRowUpdateDecorator}
         hasToolbar
         add={{
@@ -119,7 +149,7 @@ export default function TopicGrid({ theme, templateId }: TopicGridProps) {
           handler: handleAddDecorator,
         }}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorTopic} />
     </>
   );
 }

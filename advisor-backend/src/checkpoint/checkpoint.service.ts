@@ -100,7 +100,7 @@ export class CheckpointService {
         if (error.code === 'P2002') {
           // Throw error ïf name and type not unique
           throw new ConflictException(
-            'Checkpoint with this description and category already exists'
+            'Checkpoint with this description already exists'
           );
         }
         console.log(error);

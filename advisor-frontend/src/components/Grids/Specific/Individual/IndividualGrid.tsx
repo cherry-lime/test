@@ -1,6 +1,5 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
-
 import { GridActionsCellItem, GridColumns, GridRowId } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import {
@@ -11,51 +10,76 @@ import {
   Tooltip,
 } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/HighlightOff";
-
 import GenericGrid from "../../Generic/GenericGrid";
-import { handleChange, handleDelete, handleInit } from "../handlers";
+import {
+  handleChange,
+  handleDelete,
+  handleInit,
+} from "../../functions/handlers/handlers";
 import {
   useDeleteUser,
   useGetUsers,
   usePatchUser,
-} from "../../../../api/UserAPI";
-
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
-
-// Define type for the rows in the grid
-type Row = {
-  id: number;
-  name: string;
-  role: string;
-};
+  UserAPP,
+} from "../../../../api/UserAPI/UserAPI";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
 
 type IndividualGridProps = {
   theme: Theme;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/**
+ * Grid for individuals
+ * Uses theme
+ */
 export default function IndividualGrid({ theme }: IndividualGridProps) {
-  const [rows, setRows] = React.useState<Row[]>([]);
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
+  const [rows, setRows] = React.useState<UserAPP[]>([]);
+
+  // Roles of users
   const roles = ["USER", "ASSESSOR", "ADMIN"];
 
-  // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  /**
+   * Ref for error popup
+   * onError function
+   */
+  const refErrorIndividual = React.useRef<RefObject>(null);
+  const onErrorIndividual = getOnError(refErrorIndividual);
 
-  // User query
-  const { status, data } = useGetUsers(undefined, ref);
+  /**
+   * User query
+   * Gets all users
+   */
+  const { status, data } = useGetUsers(undefined, onErrorIndividual);
 
-  // User mutations
-  const patchUser = usePatchUser(ref);
-  const deleteUser = useDeleteUser(ref);
+  /**
+   * User mutations
+   * Patch user
+   * Delete user
+   */
+  const patchUser = usePatchUser(onErrorIndividual);
+  const deleteUser = useDeleteUser(onErrorIndividual);
 
-  // Called when "status" of user query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of users query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, status, data);
   }, [status, data]);
 
-  // Called when maturity level changes
+  /**
+   * Role change handler
+   * Called when role is edited
+   */
   const handleRoleChange = React.useCallback(
-    (row: Row, event: SelectChangeEvent<string>) => {
+    (row: UserAPP, event: SelectChangeEvent<string>) => {
       handleChange(
         setRows,
         patchUser as UseMutationResult,
@@ -66,7 +90,10 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(setRows, deleteUser as UseMutationResult, rowId as number);
@@ -74,7 +101,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
     []
   );
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColumns<UserAPP>>(
     () => [
       {
         field: "name",
@@ -87,7 +114,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         headerName: "Role",
         type: "string",
         flex: 1,
-        renderCell: (params: { row: Row }) => (
+        renderCell: (params: { row: UserAPP }) => (
           <FormControl sx={{ m: 1, width: 200 }}>
             <Select
               value={params.row.role}
@@ -97,7 +124,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
             >
               {roles.map((role) => (
                 <MenuItem key={role} value={role}>
-                  {role}
+                  {role === "ASSESSOR" ? "FACILITATOR" : role}
                 </MenuItem>
               ))}
             </Select>
@@ -105,20 +132,23 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         ),
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 100,
-        getActions: (params: { id: GridRowId }) => [
-          <GridActionsCellItem
-            icon={
-              <Tooltip title="Remove">
-                <RemoveIcon />
-              </Tooltip>
-            }
-            label="Remove"
-            onClick={handleDeleteDecorator(params.id)}
-          />,
-        ],
+        getActions: (params: { id: GridRowId; row: UserAPP }) =>
+          params.row.role !== "ADMIN"
+            ? [
+                <GridActionsCellItem
+                  icon={
+                    <Tooltip title="Remove">
+                      <RemoveIcon />
+                    </Tooltip>
+                  }
+                  label="Remove"
+                  onClick={handleDeleteDecorator(params.id)}
+                />,
+              ]
+            : [],
       },
     ],
     [handleRoleChange, handleDeleteDecorator]
@@ -133,7 +163,7 @@ export default function IndividualGrid({ theme }: IndividualGridProps) {
         hasToolbar
         sortModel={[{ field: "name", sort: "asc" }]}
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorIndividual} />
     </>
   );
 }

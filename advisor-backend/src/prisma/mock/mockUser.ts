@@ -4,24 +4,53 @@ import { Role, User } from '@prisma/client';
 export const userArray = [
   {
     user_id: 1,
-    user_name: 'test_user_name',
-    password_hash: 'fdsfdsfds',
+    username: 'test_user_name',
+    password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
+    created_at: new Date(),
+    updated_at: new Date(),
+    role: Role.USER,
   },
   {
     user_id: 2,
-    password_hash: 'fdsfdsdfdfdsdsfss',
+    username: 'garry_freak_noname',
+    password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
+    created_at: new Date(),
+    updated_at: new Date(),
+    role: Role.USER,
   },
 ];
+
 // Mock single user
 export const aUser = userArray[0];
 
+// Mock a user
 export const aFullUser: User = {
   username: 'test_user_name',
-  password: 'fdsfdsfds',
+  password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
   user_id: 1,
   created_at: new Date(),
   updated_at: new Date(),
   role: Role.USER,
+};
+
+// Mock an Assessor
+export const AssessorUser = {
+  username: 'test_user_name',
+  password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
+  user_id: 1,
+  created_at: new Date(),
+  updated_at: new Date(),
+  role: Role.ASSESSOR,
+};
+
+// Mock an Admin
+export const AdminUser = {
+  username: 'test_user_name',
+  password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
+  user_id: 1,
+  created_at: new Date(),
+  updated_at: new Date(),
+  role: Role.ADMIN,
 };
 
 // Mock users array
@@ -35,6 +64,19 @@ export const userArray1 = [
     updated_at: new Date(),
   },
 ];
+
+export const updateUserDto = {
+  role: Role.USER,
+};
+
+export const updateUserDtoAssessor = {
+  role: Role.USER,
+};
+
+export const updateUserDtoAdmin = {
+  role: Role.ADMIN,
+};
+
 // Mock single user
 export const aUser1 = userArray1[0];
 
