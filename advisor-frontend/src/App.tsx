@@ -18,9 +18,10 @@ import GlobalStyles from "./GlobalStyles";
 import INGTheme from "./Theme";
 // import SignIn from "./components/SignInUP/SignIn";
 // import Chooserole from "./components/SignInUP/Chooserole";
+// import DetailGen from "./components/SignInUP/DetailGen";
 import { RootState } from "./app/store";
 import { authProfile } from "./api/LoginAPI/LoginAPI";
-// import DetailGen from "./components/SignInUP/DetailGen";
+
 import ErrorPopup, {
   getOnError,
   RefObject,

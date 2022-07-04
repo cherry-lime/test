@@ -16,7 +16,8 @@ import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
-export default function Chooserole() {
+// eslint-disable-next-line import/prefer-default-export
+export function Chooserole() {
   /**
    * Defines the role state to keep track of the selected role
    */
