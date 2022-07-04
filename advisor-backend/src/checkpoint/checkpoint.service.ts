@@ -20,6 +20,7 @@ export class CheckpointService {
   ) {}
 
   formatTopics(checkpoint: any) {
+    console.log(checkpoint);
     checkpoint.topics = checkpoint.CheckpointInTopic.map((c) => c.topic_id);
     delete checkpoint.CheckpointInTopic;
     return checkpoint;
@@ -55,7 +56,7 @@ export class CheckpointService {
 
     const maturity = await this.prisma.maturity.findFirst({
       where: {
-        template_id: category.Template.template_id,
+        template_id: category.template_id,
         disabled: false,
       },
     });
@@ -102,10 +103,6 @@ export class CheckpointService {
             'Checkpoint with this description already exists'
           );
         }
-        if (error.code === 'P2025') {
-          // Throw error if category not found
-          throw new NotFoundException('Maturity not found');
-        }
         console.log(error);
         throw new InternalServerErrorException();
       });
@@ -118,33 +115,27 @@ export class CheckpointService {
    * @returns all checkpoints in category
    */
   async findAll(category_id: number, role: Role) {
-    const disabledMaturities = await this.prisma.maturity.findMany({
-      where: {
-        disabled: true,
-      },
-    });
+    const where: Prisma.CheckpointWhereInput = {
+      category_id,
+    };
+
+    if (role !== Role.ADMIN) {
+      where.Maturity = {
+        disabled: false,
+      };
+      where.disabled = false;
+    }
 
     const data: Prisma.CheckpointFindManyArgs = {
-      where: {
-        category_id,
-      },
+      where,
       include: {
         CheckpointInTopic: true,
       },
     };
 
-    let foundCheckpoints = await this.prisma.checkpoint.findMany(data);
+    const checkpoints = await this.prisma.checkpoint.findMany(data);
 
-    if (role != Role.ADMIN) {
-      foundCheckpoints = foundCheckpoints
-        .filter((c) => !c.disabled)
-        .filter(
-          (c) =>
-            !disabledMaturities.some((m) => m.maturity_id === c.maturity_id)
-        );
-    }
-
-    return foundCheckpoints.map((c) => this.formatTopics(c));
+    return checkpoints.map((c) => this.formatTopics(c));
   }
 
   /**

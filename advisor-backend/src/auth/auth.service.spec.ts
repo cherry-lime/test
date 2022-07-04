@@ -13,7 +13,11 @@ import {
   userAuthentication,
 } from '../prisma/mock/mockAuthService';
 import { JwtStrategy } from './jwt.strategy';
-import { InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 const moduleMocker = new ModuleMocker(global);
@@ -50,7 +54,7 @@ describe('AuthService', () => {
       .useMocker((token) => {
         if (token === UserService) {
           return {
-            createUser: jest.fn().mockResolvedValue(aUser)
+            createUser: jest.fn().mockResolvedValue(aUser),
           };
         }
         if (typeof token === 'function') {
@@ -82,66 +86,54 @@ describe('AuthService', () => {
 
   describe('When registering', () => {
     it('should return an AuthResponse type', async () => {
-      expect(typeof authService.register(registerDto))
-        .toEqual(
-          typeof userAuthentication
-        );
+      expect(typeof authService.register(registerDto)).toEqual(
+        typeof userAuthentication
+      );
     });
 
     it('should return the correct user', async () => {
-      expect((await authService.register(registerDto)).user)
-        .toEqual(
-          userAuthentication.user
-        );
+      expect((await authService.register(registerDto)).user).toEqual(
+        userAuthentication.user
+      );
     });
   });
 
   describe('When logging in', () => {
     it('should return an AuthResponse type', async () => {
-      expect(typeof authService.login(userDto))
-        .toEqual(
-          typeof userAuthentication
-        );
+      expect(typeof authService.login(userDto)).toEqual(
+        typeof userAuthentication
+      );
     });
 
     it('should return the correct user', async () => {
-      expect((await authService.login(userDto)).user)
-        .toEqual(
-          userAuthentication.user
-        );
+      expect((await authService.login(userDto)).user).toEqual(
+        userAuthentication.user
+      );
     });
 
     it('should reject if username is not found', async () => {
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(null);
-      expect(authService.login(userDto))
-        .rejects
-        .toThrowError(
-          NotFoundException
-        );
+      expect(authService.login(userDto)).rejects.toThrowError(
+        NotFoundException
+      );
     });
 
     it('Should reject with unknown error', async () => {
       jest
         .spyOn(prisma.user, 'findUnique')
         .mockRejectedValueOnce({ code: 'TEST' });
-      expect(
-        authService.login(userDto)
-      ).rejects.toThrowError(InternalServerErrorException);
+      expect(authService.login(userDto)).rejects.toThrowError(
+        InternalServerErrorException
+      );
     });
 
     it('should reject if the password is invalid', async () => {
       // mocking bcrypt compare method
-      const bcryptCompare =
-        jest
-          .fn().mockResolvedValue(
-            null
-          );
+      const bcryptCompare = jest.fn().mockResolvedValue(null);
       (bcrypt.compare as jest.Mock) = bcryptCompare;
-      expect(authService.login(userDto))
-        .rejects
-        .toThrowError(
-          UnauthorizedException
-        );
+      expect(authService.login(userDto)).rejects.toThrowError(
+        UnauthorizedException
+      );
     });
   });
 });

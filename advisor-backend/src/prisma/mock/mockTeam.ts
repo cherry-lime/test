@@ -58,6 +58,7 @@ export const mockTeam = {
   create: jest.fn().mockResolvedValue(aCreateTeam),
   findUnique: jest.fn().mockResolvedValue(aTeam),
   findOne: jest.fn().mockResolvedValue(aTeam),
+  findMany: jest.fn().mockResolvedValue([aTeam]),
   getAssessments: jest.fn().mockResolvedValue([aAssessment]),
   update: jest.fn().mockResolvedValue(aTeam),
 };

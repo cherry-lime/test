@@ -8,6 +8,11 @@ import { mockUser } from './mockUser';
 import { mockUserInTeam } from './mockUserInTeam';
 import { mockSubarea } from './mockSubarea';
 import { mockCheckpoint } from './mockCheckpoint';
+import { mockTopic } from './mockTopic';
+import { mockCheckpointInTopic } from './mockCheckpointInTopic';
+import { mockAnswer } from './mockAnswer';
+import { mockFeedback } from './mockFeedback';
+import { mockCheckpointAndAnswersInAssessment } from './mockCheckpointAndAnswersInAssessments';
 
 export const mockPrisma = {
   template: mockTemplate,
@@ -20,4 +25,9 @@ export const mockPrisma = {
   maturity: mockMaturity,
   subArea: mockSubarea,
   checkpoint: mockCheckpoint,
+  topic: mockTopic,
+  checkpointInTopic: mockCheckpointInTopic,
+  answer: mockAnswer,
+  feedback: mockFeedback,
+  checkpointAndAnswersInAssessments: mockCheckpointAndAnswersInAssessment,
 };

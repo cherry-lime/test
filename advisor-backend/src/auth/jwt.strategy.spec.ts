@@ -21,9 +21,7 @@ describe('AuthService', () => {
             EXPIRESIN: '60 days',
         };
         const module = await Test.createTestingModule({
-            imports: [
-                PassportModule
-            ],
+            imports: [PassportModule],
             providers: [
                 JwtStrategy,
                 {
@@ -35,7 +33,7 @@ describe('AuthService', () => {
             .useMocker((token) => {
                 if (token === JwtStrategy) {
                     return {
-                        extractJwt: jest.fn().mockReturnValue(userAuthentication.token)
+                        extractJwt: jest.fn().mockReturnValue(userAuthentication.token),
                     };
                 }
                 if (token === PrismaService) {
@@ -66,8 +64,9 @@ describe('AuthService', () => {
 
     describe('Validate function', () => {
         it('Validate', async () => {
-            expect(await jwtStrategy.validate({ user_id: aUser.user_id }))
-                .toEqual(aUser);
+            expect(await jwtStrategy.validate({ user_id: aUser.user_id })).toEqual(
+                aUser
+            );
         });
     });
 });

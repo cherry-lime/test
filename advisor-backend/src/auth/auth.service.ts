@@ -18,7 +18,7 @@ export class AuthService {
     private readonly prismaService: PrismaService,
     private jwtService: JwtService,
     private readonly usersService: UserService
-  ) { }
+  ) {}
 
   /**
    * Log in
@@ -28,36 +28,32 @@ export class AuthService {
    * @throws password is invalid
    */
   async login({ username, password }: LoginDto): Promise<AuthResponse> {
-    const user = await this.prismaService.user.findUnique({
-      where: {
-        username
-      },
-    })
+    const user = await this.prismaService.user
+      .findUnique({
+        where: {
+          username,
+        },
+      })
       .catch((error) => {
-        console.log(error)
-        throw new InternalServerErrorException()
+        console.log(error);
+        throw new InternalServerErrorException();
       });
 
     if (!user) {
       throw new NotFoundException('user not found');
     }
 
-    // compare the hashes of the given password 
-    const validatePassword = await bcrypt
-      .compare(
-        password,
-        user.password
-      );
+    // compare the hashes of the given password
+    const validatePassword = await bcrypt.compare(password, user.password);
 
     if (!validatePassword) {
       throw new UnauthorizedException('invalid password');
     }
 
     return {
-      token: await this.jwtService
-        .signAsync({
-          user_id: user.user_id,
-        }),
+      token: await this.jwtService.signAsync({
+        user_id: user.user_id,
+      }),
       user,
     };
   }
@@ -68,16 +64,12 @@ export class AuthService {
    * @returns a generated token and user information
    */
   async register(createUserDto: CreateUserDto): Promise<AuthResponse> {
-    const user = await this.usersService
-      .createUser(
-        createUserDto
-      );
+    const user = await this.usersService.createUser(createUserDto);
 
     return {
-      token: this.jwtService
-        .sign({
-          user_id: user.user_id
-        }),
+      token: this.jwtService.sign({
+        user_id: user.user_id,
+      }),
       user,
     };
   }

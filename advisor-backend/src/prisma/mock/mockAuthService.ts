@@ -13,7 +13,7 @@ export const userArray = [
     role: Role.USER,
     created_at: myStartDate,
     updated_at: myEndDate,
-  }
+  },
 ];
 
 // Mock single user

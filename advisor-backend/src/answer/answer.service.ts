@@ -72,8 +72,8 @@ export class AnswerService {
       answers.push({
         disabled: false,
         template_id: template_id,
-        answer_text: "N/A",
-      })
+        answer_text: 'N/A',
+      });
     }
 
     return answers;

@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from '../auth/dto/register-user.dto';
@@ -85,7 +86,7 @@ export class UserService {
     const new_username = randomWords({
       min: 2,
       max: 3,
-      join: '_'
+      join: '_',
     });
 
     const username = await this.prisma.user
@@ -95,8 +96,8 @@ export class UserService {
         }
       });
 
-    if (!username) {
-      throw new NotFoundException('user not found');
+    if (username) {
+      throw new BadRequestException('user exists');
     }
 
     // generate a uuidv4
@@ -104,11 +105,7 @@ export class UserService {
 
     // compute hash of password
     const salt = 10;
-    const hashedPassword = await bcrypt
-      .hash(
-        myuuid,
-        salt
-      );
+    const hashedPassword = await bcrypt.hash(myuuid, salt);
 
     const user = await this.prisma.user
       .create({

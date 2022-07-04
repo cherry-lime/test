@@ -85,9 +85,7 @@
     "typescript": "^4.3.5"
   },
   "jest": {
-    "coveragePathIgnorePatterns": [
-      "/src/main.ts"
-    ],
+    "coveragePathIgnorePatterns": [],
     "moduleFileExtensions": [
       "js",
       "json",

@@ -1,11 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TemplateController } from './template.controller';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import {
-  aTemplate,
-  updateTemplate,
-  updateTemplateDto,
-} from '../prisma/mock/mockTemplate';
+import { aTemplate } from '../prisma/mock/mockTemplate';
 import { TemplateService } from './template.service';
 import { CategoryService } from '../category/category.service';
 import { aCategory } from '../prisma/mock/mockCategory';
@@ -13,6 +9,10 @@ import { aMaturity } from '../prisma/mock/mockMaturity';
 import { MaturityService } from '../maturity/maturity.service';
 import { CloneTemplateService } from './clone-template.service';
 import { aFullUser } from '../prisma/mock/mockUser';
+import { aTopic } from '../prisma/mock/mockTopic';
+import { TopicService } from '../topic/topic.service';
+import { AnswerService } from '../answer/answer.service';
+import { aAnswer } from '../prisma/mock/mockAnswer';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -31,7 +31,7 @@ describe('TemplateController', () => {
           return {
             create: jest.fn().mockResolvedValue(aTemplate),
             findOne: jest.fn().mockResolvedValue(aTemplate),
-            update: jest.fn().mockResolvedValue(updateTemplate),
+            update: jest.fn().mockResolvedValue(aTemplate),
             findAll: jest.fn().mockResolvedValue([aTemplate]),
             delete: jest.fn().mockResolvedValue(aTemplate),
           };
@@ -51,6 +51,18 @@ describe('TemplateController', () => {
           return {
             create: jest.fn().mockResolvedValue(aMaturity),
             findAll: jest.fn().mockResolvedValue([aMaturity]),
+          };
+        }
+        if (token === TopicService) {
+          return {
+            create: jest.fn().mockResolvedValue(aTopic),
+            findAll: jest.fn().mockResolvedValue([aTopic]),
+          };
+        }
+        if (token === AnswerService) {
+          return {
+            create: jest.fn().mockResolvedValue(aAnswer),
+            findAll: jest.fn().mockResolvedValue([aAnswer]),
           };
         }
         if (typeof token === 'function') {
@@ -88,9 +100,7 @@ describe('TemplateController', () => {
 
   describe('updateTemplate', () => {
     it('Should return the updated template', async () => {
-      expect(templateController.update(1, updateTemplateDto)).resolves.toBe(
-        updateTemplate
-      );
+      expect(templateController.update(1, aTemplate)).resolves.toBe(aTemplate);
     });
   });
 
@@ -139,6 +149,34 @@ describe('TemplateController', () => {
       expect(
         templateController.findAllMaturities(1, aFullUser)
       ).resolves.toEqual([aMaturity]);
+    });
+  });
+
+  describe('findAllTopics', () => {
+    it('Should return the topics', async () => {
+      expect(templateController.findAllTopics(1, aFullUser)).resolves.toEqual([
+        aTopic,
+      ]);
+    });
+  });
+
+  describe('createTopic', () => {
+    it('Should return the created topic', async () => {
+      expect(templateController.createTopic(1)).resolves.toBe(aTopic);
+    });
+  });
+
+  describe('getAnswers', () => {
+    it('Should return the answers', async () => {
+      expect(templateController.getAnswers(1, aFullUser)).resolves.toEqual([
+        aAnswer,
+      ]);
+    });
+  });
+
+  describe('createAnswer', () => {
+    it('Should return the created answer', async () => {
+      expect(templateController.createAnswer(1)).resolves.toBe(aAnswer);
     });
   });
 });

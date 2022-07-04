@@ -2,17 +2,24 @@ import { Test, TestingModule } from '../../node_modules/@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import { loginDto, mockLogin, mockLogout, registerDto, userAuthentication, userinfo } from '../prisma/mock/mockAuthController';
+import {
+  loginDto,
+  mockLogin,
+  mockLogout,
+  registerDto,
+  userAuthentication,
+  userinfo,
+} from '../prisma/mock/mockAuthController';
 
 const moduleMocker = new ModuleMocker(global);
 
-var httpMocks = require('node-mocks-http');
+const httpMocks = require('node-mocks-http');
 
 // Basic request object
-const req = httpMocks.createRequest()
+const req = httpMocks.createRequest();
 
 // Basic response object
-req.res = httpMocks.createResponse()
+req.res = httpMocks.createResponse();
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -33,7 +40,7 @@ describe('AuthController', () => {
             register: jest.fn().mockResolvedValue(userAuthentication),
             login: jest.fn().mockResolvedValue(mockLogin),
             logout: jest.fn().mockResolvedValue(mockLogout),
-            getLoggedUser: jest.fn().mockResolvedValue(userinfo)
+            getLoggedUser: jest.fn().mockResolvedValue(userinfo),
           };
         }
         if (typeof token === 'function') {
@@ -70,42 +77,30 @@ describe('AuthController', () => {
   describe('register', () => {
     it('Should return the username of the created user', async () => {
       expect(
-        ((await authController.register(registerDto, req.res)).username)
-      )
-        .toEqual(
-          userinfo.username
-        );
+        (await authController.register(registerDto, req.res)).username
+      ).toEqual(userinfo.username);
     });
   });
 
   describe('register', () => {
     it('Should return the password of the created user', async () => {
       expect(
-        ((await authController.register(registerDto, req.res)).password)
-      )
-        .toEqual(
-          userinfo.password
-        );
+        (await authController.register(registerDto, req.res)).password
+      ).toEqual(userinfo.password);
     });
   });
 
   describe('login', () => {
     it('Should return a message showing a successful login', async () => {
-      expect(
-        ((await authController.login(loginDto, req.res)).msg)
-      )
-        .toEqual(
-          mockLogin.msg
-        );
+      expect((await authController.login(loginDto, req.res)).msg).toEqual(
+        mockLogin.msg
+      );
     });
   });
 
   describe('get a user', () => {
     it('Should return user information', async () => {
-      expect(authController.getLoggedUser(userinfo))
-        .toEqual(
-          userinfo
-        );
+      expect(authController.getLoggedUser(userinfo)).toEqual(userinfo);
     });
   });
 });

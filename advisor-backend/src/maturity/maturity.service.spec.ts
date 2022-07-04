@@ -74,7 +74,7 @@ describe('MaturityService', () => {
 
   describe('findAll', () => {
     it('should return all categories', async () => {
-      expect(maturityService.findAll(1, Role.ADMIN)).resolves.toEqual([
+      expect(maturityService.findAll(1, Role.USER)).resolves.toEqual([
         aMaturity,
       ]);
     });
@@ -95,13 +95,16 @@ describe('MaturityService', () => {
 
   describe('update', () => {
     it('should return the updated maturity', async () => {
+      const aTempMaturity = {
+        ...aMaturity,
+      };
+      aTempMaturity.order = 9;
+      jest.spyOn(prisma.maturity, 'count').mockResolvedValueOnce(10);
       expect(maturityService.update(1, aMaturity)).resolves.toBe(aMaturity);
     });
 
     it('should throw NotFoundException on not existing maturity_id', async () => {
-      jest
-        .spyOn(prisma.maturity, 'update')
-        .mockRejectedValueOnce({ code: 'P2025' });
+      jest.spyOn(prisma.maturity, 'findUnique').mockResolvedValueOnce(null);
       expect(maturityService.update(0, aMaturity)).rejects.toThrowError(
         NotFoundException
       );

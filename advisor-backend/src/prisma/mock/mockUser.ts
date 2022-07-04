@@ -8,7 +8,7 @@ export const userArray = [
     password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
     created_at: new Date(),
     updated_at: new Date(),
-    role: Role.USER
+    role: Role.USER,
   },
   {
     user_id: 2,
@@ -16,7 +16,7 @@ export const userArray = [
     password: '$2b$10$FJY.t/6f8WXgoRCX/tyEfeg.O1x4zWD7q7XcDPn5IiyHtvsG9B9iq',
     created_at: new Date(),
     updated_at: new Date(),
-    role: Role.USER
+    role: Role.USER,
   },
 ];
 
@@ -53,7 +53,6 @@ export const AdminUser = {
   role: Role.ADMIN,
 };
 
-
 // Mock users array
 export const userArray1 = [
   {
@@ -67,16 +66,16 @@ export const userArray1 = [
 ];
 
 export const updateUserDto = {
-  role: Role.USER
-}
+  role: Role.USER,
+};
 
 export const updateUserDtoAssessor = {
   role: Role.USER,
-}
+};
 
 export const updateUserDtoAdmin = {
-  role: Role.ADMIN
-}
+  role: Role.ADMIN,
+};
 
 // Mock single user
 export const aUser1 = userArray1[0];

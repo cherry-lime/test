@@ -67,12 +67,7 @@ export class SaveService {
     }
 
     // Upsert checkpoint and answer
-    await this.prisma.checkpointAndAnswersInAssessments
-      .upsert(upsertData)
-      .catch(() => {
-        // Throw BadRequestException if anything doesn't exist
-        throw new BadRequestException();
-      });
+    await this.prisma.checkpointAndAnswersInAssessments.upsert(upsertData);
 
     return {
       msg: 'Checkpoint saved',
