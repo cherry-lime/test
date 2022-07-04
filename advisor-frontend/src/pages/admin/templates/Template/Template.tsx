@@ -91,7 +91,10 @@ function Template({ theme }: { theme: Theme }) {
       },
     });
   };
-  // Change weight function, which will update the set weights into the database.
+  /**
+   * Change weight function,
+   * which will update the set weights into the database.
+   */
   const changeWeights = () => {
     if (templateInfo && maxWeight && minWeight) {
       const newInfo = {
@@ -103,7 +106,10 @@ function Template({ theme }: { theme: Theme }) {
     }
   };
 
-  // Change and update the weights, everytime the user changes the weights. Called on weight change
+  /**
+   * Change and update the weights,
+   * everytime the user changes the weights. Called on weight change
+   */
   React.useEffect(() => {
     changeWeights();
   }, [minWeight, minWeight]);
