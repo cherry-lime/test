@@ -11,26 +11,26 @@ import INGTheme from "../Theme";
  * @returns All the admin routes
  */
 export default [
-      // Admin interface
-      <Route path="/admin" element={<AdminInterface />} />,
-      // List of individuals
-      <Route
-        path="/admin/individuals"
-        element={<ListOfIndividuals theme={INGTheme} />}
-      />,
-      // List of templates
-      <Route
-        path="/admin/templates"
-        element={<ListOfTemplates theme={INGTheme} />}
-      />,
-      // Template
-      <Route
-        path="/admin/templates/:templateId"
-        element={<Template theme={INGTheme} />}
-      />,
-      // Area
-      <Route
-        path="/admin/templates/:templateId/:areaId"
-        element={<Area theme={INGTheme} />}
-      />
+  // Admin interface
+  <Route path="/admin" element={<AdminInterface />} />,
+  // List of individuals
+  <Route
+    path="/admin/individuals"
+    element={<ListOfIndividuals theme={INGTheme} />}
+  />,
+  // List of templates
+  <Route
+    path="/admin/templates"
+    element={<ListOfTemplates theme={INGTheme} />}
+  />,
+  // Template
+  <Route
+    path="/admin/templates/:templateId"
+    element={<Template theme={INGTheme} />}
+  />,
+  // Area
+  <Route
+    path="/admin/templates/:templateId/:areaId"
+    element={<Area theme={INGTheme} />}
+  />,
 ];

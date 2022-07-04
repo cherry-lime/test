@@ -10,21 +10,21 @@ import INGTheme from "../Theme";
  * @returns All the user routes
  */
 export default [
-      // User interface
-      <Route path="/user" element={<UserInterface />} />,
-      // List of evaluations
-      <Route
-        path="/user/self_evaluations"
-        element={<ListOfSelfEvals theme={INGTheme} />}
-      />,
-      // Evaluation
-      <Route
-        path="/user/self_evaluations/:assessmentId"
-        element={<Evaluation team={false} theme={INGTheme} />}
-      />,
-      // Feedback
-      <Route
-        path="/user/self_evaluations/feedback/:assessmentId"
-        element={<Feedback team={false} theme={INGTheme} />}
-      />
-]
+  // User interface
+  <Route path="/user" element={<UserInterface />} />,
+  // List of evaluations
+  <Route
+    path="/user/self_evaluations"
+    element={<ListOfSelfEvals theme={INGTheme} />}
+  />,
+  // Evaluation
+  <Route
+    path="/user/self_evaluations/:assessmentId"
+    element={<Evaluation team={false} theme={INGTheme} />}
+  />,
+  // Feedback
+  <Route
+    path="/user/self_evaluations/feedback/:assessmentId"
+    element={<Feedback team={false} theme={INGTheme} />}
+  />,
+];

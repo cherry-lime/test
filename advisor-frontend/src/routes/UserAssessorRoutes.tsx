@@ -10,21 +10,18 @@ import INGTheme from "../Theme";
  * @returns All the assessor routes
  */
 export default [
-      // Teams List
-      <Route path="/teams" element={<TeamList theme={INGTheme} />} />,
-      // Team
-      <Route
-        path="/teams/:teamId"
-        element={<Team theme={INGTheme} />}
-      />,
-      // Evaluation
-      <Route
-        path="/teams/:teamId/:assessmentId"
-        element={<Evaluation team theme={INGTheme} />}
-      />,
-      // Feedback
-      <Route
-        path="/teams/:teamId/feedback/:assessmentId"
-        element={<Feedback team theme={INGTheme} />}
-      />
+  // Teams List
+  <Route path="/teams" element={<TeamList theme={INGTheme} />} />,
+  // Team
+  <Route path="/teams/:teamId" element={<Team theme={INGTheme} />} />,
+  // Evaluation
+  <Route
+    path="/teams/:teamId/:assessmentId"
+    element={<Evaluation team theme={INGTheme} />}
+  />,
+  // Feedback
+  <Route
+    path="/teams/:teamId/feedback/:assessmentId"
+    element={<Feedback team theme={INGTheme} />}
+  />,
 ];
