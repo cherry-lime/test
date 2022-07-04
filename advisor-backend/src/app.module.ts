@@ -24,6 +24,7 @@ import { FeedbackModule } from './feedback/feedback.module';
 // Module for application routes
 @Module({
   imports: [
+    // global module
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     UserModule,
@@ -43,4 +44,4 @@ import { FeedbackModule } from './feedback/feedback.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

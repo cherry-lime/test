@@ -1,9 +1,12 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { Request as RequestType } from 'express';
 
+/** 
+ * Strategy used for authentication with jwt and cookies
+*/
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly prismaService: PrismaService) {
@@ -27,16 +30,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @returns user
    */
   async validate(payload: { user_id: number }) {
-    const user = await this.prismaService.user
-      .findFirst({
-        where: {
-          user_id: payload.user_id,
-        },
-      })
-      .catch((error) => {
-        console.log(error);
-        throw new InternalServerErrorException();
-      });
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        user_id: payload.user_id,
+      },
+    })
 
     return user;
   }

@@ -14,7 +14,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   /**
    * Get all users
@@ -92,12 +92,8 @@ export class UserService {
     const username = await this.prisma.user
       .findUnique({
         where: {
-          username: new_username,
-        },
-      })
-      .catch((error) => {
-        console.log(error);
-        throw new InternalServerErrorException();
+          username: new_username
+        }
       });
 
     if (username) {
