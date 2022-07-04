@@ -12,7 +12,7 @@ const API =
   !process.env.NODE_ENV || process.env.NODE_ENV === "development"
     ? axios.create({
         withCredentials: true,
-        baseURL: "https://tabackend.azurewebsites.net",
+        baseURL: "http://localhost:5000/",
       })
     : axios.create({
         withCredentials: true,
