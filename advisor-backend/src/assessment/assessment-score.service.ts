@@ -68,6 +68,7 @@ export class AssessmentScoreService {
       );
     }
 
+    // Getting the ids of the maturities
     const maturityIdsList = maturityIds.map((maturity) => maturity.maturity_id);
 
     // Getting the ids of categories which are not disabled
@@ -87,6 +88,7 @@ export class AssessmentScoreService {
       );
     }
 
+    // Getting the ids of the categories
     const categoryIdsList = categoryIds.map((category) => category.category_id);
 
     const selectParam = {
@@ -153,6 +155,8 @@ export class AssessmentScoreService {
       select: selectParam,
     });
 
+    // Filtering out checkpoints which are not in topic if topic_id is specified
+    // and have category_id and maturity_id which are in categoryIds and maturityIds
     checkpoints = checkpoints.filter(
       (c) =>
         maturityIds.some((m) => m.maturity_id === c.maturity_id) &&
@@ -193,6 +197,7 @@ export class AssessmentScoreService {
     ) as ScoreDto[];
   }
 
+  // Calculate score for all topics or for one specific topic
   calculateScores(
     possibleAnswers,
     maturityIdsList,
@@ -313,23 +318,22 @@ export class AssessmentScoreService {
 
     // Calculating overall score for the assessment
     let sum = 0;
-    let nrMaturitiesAndCategoriesWithOverallScore = 0; // Number of maturities and categories that have overall scores
-    for (let i = 0; i < categoryIdsList.length; i++) {
-      if (scores[maturityIdsList.length][i] !== -1) {
-        nrMaturitiesAndCategoriesWithOverallScore++;
-        sum += scores[maturityIdsList.length][i];
-      }
-    }
+    let sumWeights = 0;
     for (let i = 0; i < maturityIdsList.length; i++) {
-      if (scores[i][categoryIdsList.length] !== -1) {
-        nrMaturitiesAndCategoriesWithOverallScore++;
-        sum += scores[i][categoryIdsList.length];
+      for (let j = 0; j < categoryIdsList.length; j++) {
+        if (scores[i][j] !== -1) {
+          sumWeights += calculateScorePerCatoryPerMaturity[i][j][0];
+          sum += calculateScorePerCatoryPerMaturity[i][j][1];
+        }
       }
     }
     scores[maturityIdsList.length][categoryIdsList.length] =
-      sum / nrMaturitiesAndCategoriesWithOverallScore;
+      (sum / sumWeights) * 100;
+    if (sumWeights === 0) {
+      scores[maturityIdsList.length][categoryIdsList.length] = -1;
+    }
 
-    const output = [];
+    const output: any = [];
 
     for (let i = 0; i < maturityIdsList.length; i++) {
       for (let j = 0; j < categoryIdsList.length; j++) {

@@ -20,11 +20,19 @@ import { MaturityDto } from './dto/maturity.dto';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 
+// NestJS Controller class
+// Controller decorator is used to define routes for the controller
+// ApiTags decorator is used to define Swagger UI tags for this class
 @Controller('maturity')
 @ApiTags('maturity')
 export class MaturityController {
   constructor(private readonly maturityService: MaturityService) {}
 
+  /*
+   * [GET] /maturity/{maturity_id}
+   * @param maturity_id maturity_id
+   * @returns MaturityDto
+   */
   @Get(':maturity_id')
   @ApiResponse({ description: 'Found maturity', type: MaturityDto })
   @ApiNotFoundResponse({ description: 'Maturity not found' })
@@ -32,6 +40,13 @@ export class MaturityController {
     return this.maturityService.findOne(id);
   }
 
+  /*
+   * [PATCH] /maturity/{maturity_id}
+   * @param maturity_id maturity_id
+   * @param updateMaturityDto UpdateMaturityDto
+   * @returns MaturityDto
+   * Permission: ADMIN
+   */
   @Patch(':maturity_id')
   @ApiResponse({ description: 'Updated maturity', type: MaturityDto })
   @ApiNotFoundResponse({ description: 'Maturity not found' })
@@ -50,6 +65,12 @@ export class MaturityController {
     return this.maturityService.update(id, updateMaturityDto);
   }
 
+  /*
+   * [DELETE] /maturity/{maturity_id}
+   * @param maturity_id maturity_id
+   * @returns MaturityDto
+   * Permission: ADMIN
+   */
   @Delete(':maturity_id')
   @ApiResponse({ description: 'Deleted maturity', type: MaturityDto })
   @ApiNotFoundResponse({ description: 'Maturity not found' })

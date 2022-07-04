@@ -41,8 +41,7 @@ export class AuthController {
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response
   ) {
-    // : Promise<AuthResponse>
-    const token = (await this.authService.login(loginDto)).token; //getJwtToken(req.user as User);
+    const token = (await this.authService.login(loginDto)).token;
 
     const secretData = {
       token,
@@ -50,7 +49,7 @@ export class AuthController {
     };
 
     res.cookie('token', secretData, cookieOptions);
-    return { msg: 'login successful' }; // this.authService.login(loginDto);
+    return { msg: 'login successful' };
   }
 
   /**
@@ -68,7 +67,7 @@ export class AuthController {
     @Body() createUserDto: CreateUserDto,
     @Res({ passthrough: true }) res: Response
   ) {
-    const register = await this.authService.register(createUserDto); //getJwtToken(req.user as User);
+    const register = await this.authService.register(createUserDto);
 
     const token = register.token;
     const user = register.user;
@@ -82,6 +81,10 @@ export class AuthController {
     return { username: user.username, password: user.password };
   }
 
+  /**
+   * [POST] /logout
+   * @returns a response which clears browser cookies
+   */
   @Post('/logout')
   async logout(@Res() res: Response) {
     res.clearCookie('token', cookieOptions).send({ msg: 'logout successful' });

@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
@@ -7,7 +7,21 @@ import { store } from "./app/store";
 
 const queryClient = new QueryClient();
 
-test("app rendering/navigating to user interface", async () => {
+test("app showing login screen", async () => {
+  render(
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App testRender />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </Provider>
+  );
+  const apphtml = screen.getByTestId("appTest");
+  expect(apphtml).toBeInTheDocument();
+});
+
+test("app showing blank page", async () => {
   render(
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
@@ -17,28 +31,9 @@ test("app rendering/navigating to user interface", async () => {
       </QueryClientProvider>
     </Provider>
   );
-
-  // const button = screen.getByTestId("user");
-  // fireEvent.click(button);
-  // expect(
-  //   screen.getByText(/View and start individual evaluations/i)
-  // ).toBeInTheDocument();
+  const apphtml = screen.getByTestId("emptyPage");
+  expect(apphtml).toBeInTheDocument();
 });
-
-// test("app rendering/navigating to admin interface", async () => {
-//   render(
-//     <Provider store={store}>
-//       <QueryClientProvider client={queryClient}>
-//         <BrowserRouter>
-//           <App />
-//         </BrowserRouter>
-//       </QueryClientProvider>
-//     </Provider>
-//   );
-//   const button = screen.getByTestId("admin");
-//   fireEvent.click(button);
-//   expect(screen.getByText(/Admin Home/i)).toBeInTheDocument();
-// });
 
 // test("app rendering/navigating to assessor interface", async () => {
 //   render(

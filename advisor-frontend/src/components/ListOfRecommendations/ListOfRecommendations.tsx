@@ -8,10 +8,10 @@ import {
 } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { TopicAPP, useGetTopics } from "../../api/TopicAPI";
+import { TopicAPP, useGetTopics } from "../../api/TopicAPI/TopicAPI";
 import { RootState } from "../../app/store";
 import INGTheme from "../../Theme";
-import ErrorPopup, { RefObject } from "../ErrorPopup/ErrorPopup";
+import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import RecommendationGrid from "../Grids/Specific/Recommendation/RecommendationGrid";
 
 /**
@@ -29,27 +29,38 @@ function ListOfRecommendations({
   templateId: number;
   completedAt: string;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { userId, userRole } = useSelector(
-    (state: RootState) => state.userData
+  const { userRole } = useSelector((state: RootState) => state.userData);
+
+  /**
+   * Ref for error popup
+   */
+  const refErrorRecommendations = useRef<RefObject>(null);
+  const onErrorRecommendations = getOnError(refErrorRecommendations);
+
+  /**
+   * Fetch the GetTopics API
+   */
+  const { status, data } = useGetTopics(
+    templateId,
+    undefined,
+    onErrorRecommendations
   );
-
-  // Ref for error popup
-  const ref = useRef<RefObject>(null);
-
-  // Fetch the GetTopics API
-  const { status, data } = useGetTopics(templateId, undefined, ref);
 
   const [topicList, setTopicList] = useState<TopicAPP[]>();
 
   const [topic, setTopic] = useState<number>();
 
+  /**
+   * constant declaration that handles the changing of topics
+   */
   const handleTopicChange = (event: SelectChangeEvent<string>) => {
     if (event.target.value !== "-") setTopic(Number(event.target.value));
     else setTopic(undefined);
   };
 
-  // first render: get the area list and set the area
+  /**
+   * first render: get the area list and set the area
+   */
   React.useEffect(() => {
     if (status === "success") {
       setTopicList(data);
@@ -57,7 +68,10 @@ function ListOfRecommendations({
   }, [status]);
 
   return (
-    <div style={{ width: "inherit", display: "contents" }}>
+    <div
+      style={{ width: "inherit", display: "contents" }}
+      data-testid="recommendationTest"
+    >
       <ThemeProvider theme={INGTheme}>
         {topicList !== undefined && (
           <FormControl sx={{ width: "inherit" }}>
@@ -82,9 +96,9 @@ function ListOfRecommendations({
           theme={theme}
           assessmentId={assessmentId}
           topicId={topic}
-          isEditable={userRole === "ASSESSOR" && completedAt !== null} // TODO: Add && assessment === done later
+          isEditable={userRole === "ASSESSOR" && completedAt !== null}
         />
-        <ErrorPopup ref={ref} />
+        <ErrorPopup ref={refErrorRecommendations} />
       </ThemeProvider>
     </div>
   );

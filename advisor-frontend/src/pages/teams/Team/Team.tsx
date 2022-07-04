@@ -5,7 +5,7 @@ import {
   OutlinedInput,
   Theme,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import React, { useRef, useState } from "react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -17,61 +17,100 @@ import AssessmentOngoingGrid from "../../../components/Grids/Specific/Assessment
 import AssessmentCompletedGrid from "../../../components/Grids/Specific/Assessment/AssessmentCompleted/AssessmentCompletedGrid";
 import { RootState } from "../../../app/store";
 import Textfield from "../../../components/Textfield/Textfield";
-import { TeamAPP, useGetTeam, usePatchTeam } from "../../../api/TeamAPI";
+import {
+  TeamAPP,
+  useGetTeam,
+  usePatchTeam,
+} from "../../../api/TeamAPI/TeamAPI";
 import ErrorPopup, {
+  getOnError,
   RefObject,
 } from "../../../components/ErrorPopup/ErrorPopup";
+import { checkTeamRouting } from "../../routingHelpers";
+import { UserRole } from "../../../types/UserRole";
 
 /**
  * Page providing team details
  * This should only be accessible to the users and assessors in the team
  * Assessors can modify team details
+ *
+ * Below, the team function is defined that consists of theme,
+ * the preset of the team information
+ * and the preset of the user role
  */
-function Team({ theme }: { theme: Theme }) {
+function Team({
+  theme,
+  presetTeamInfo,
+  presetUserRole,
+}: {
+  theme: Theme;
+  presetTeamInfo?: TeamAPP | undefined;
+  presetUserRole?: UserRole;
+}) {
   const { teamId } = useParams();
+  const [userRole, setUserRole] = useState<UserRole>();
 
-  const { userRole, userId } = useSelector(
+  React.useEffect(() => {
+    setUserRole(presetUserRole);
+  }, [presetUserRole]);
+
+  const { userRole: gotUserRole, userId } = useSelector(
     (state: RootState) => state.userData
   );
 
-  // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  React.useEffect(() => {
+    if (!presetUserRole) {
+      setUserRole(gotUserRole);
+    }
+  }, [gotUserRole]);
 
-  const { status, data, error } = useGetTeam(Number(teamId), ref);
+  /**
+   * Use React Referencs for error popup
+   */
+  const refErrorTeam = useRef<RefObject>(null);
+  const onErrorTeam = getOnError(refErrorTeam);
+
+  const navigate = useNavigate();
+
+  const teamResponse = useGetTeam(Number(teamId), onErrorTeam);
 
   const [teamInfo, setTeamInfo] = useState<TeamAPP>();
 
-  // Called when "status" of team query is changed
+  /**
+   * use useeffect hooks,
+   * so you don't have to write classes
+   */
   React.useEffect(() => {
-    switch (status) {
-      case "error":
-        // eslint-disable-next-line no-console
-        console.log(error);
-        break;
-      case "success":
-        if (data) {
-          setTeamInfo(data);
-        }
-        break;
-      default:
-        break;
+    if (presetTeamInfo) {
+      setTeamInfo(presetTeamInfo);
     }
-  }, [status, data]);
+  }, [presetTeamInfo]);
 
-  const patchTeam = usePatchTeam(ref);
+  React.useEffect(() => {
+    const rerouting = checkTeamRouting(teamResponse);
+    if (rerouting) {
+      navigate(rerouting);
+    }
+
+    if (teamResponse.data && teamResponse.status === "success") {
+      setTeamInfo(teamResponse.data);
+    }
+  }, [teamResponse]);
+
+  const patchTeam = usePatchTeam(onErrorTeam);
 
   const changeInfo = (newInfo: TeamAPP) => {
     patchTeam.mutate(newInfo, {
       onSuccess: (teamAPP: TeamAPP) => {
         setTeamInfo(teamAPP);
       },
-      onError: (e: unknown) => {
-        // eslint-disable-next-line no-console
-        console.log(e);
-      },
+      onError: onErrorTeam,
     });
   };
 
+  /**
+   * constant declaration that lets you change the IT department
+   */
   const changeDept = (newDept: string) => {
     if (teamInfo) {
       const newInfo = teamInfo;
@@ -80,6 +119,9 @@ function Team({ theme }: { theme: Theme }) {
     }
   };
 
+  /**
+   * constant declaration that lets you change the country
+   */
   const changeCountry = (newCountry: string) => {
     if (teamInfo) {
       const newInfo = teamInfo;
@@ -87,30 +129,29 @@ function Team({ theme }: { theme: Theme }) {
       changeInfo(newInfo);
     }
   };
-  /*
-  return page with e.g. the following: 
-  team information, country, IT Area/ Department, 
-  grids for ongoing evaluations, completed evaluations,
-  grids for members, assessors that contains e.g. the name(s)
-  of team members / assessors
-  */
+
+  /**
+   * return page with e.g. the following:
+   * team information, country, IT Area/ Department,
+   * grids for ongoing evaluations, completed evaluations,
+   * grids for members, assessors that contains e.g. the name(s)
+   * of team members / assessors
+   */
   return (
     <div>
-      {teamInfo && (
+      {teamInfo && userRole && (
         <PageLayout title={teamInfo.name} sidebarType={userTypes[userRole]}>
           <h2> Team Information </h2>
           <h3> Country </h3>
 
-          {userRole === "ASSESSOR" && (
+          {userRole === "ASSESSOR" ? (
             <TextfieldEdit
               text={teamInfo.country}
               theme={theme}
               rows={1}
               handleSave={changeCountry}
             />
-          )}
-
-          {userRole !== "ASSESSOR" && (
+          ) : (
             <Textfield
               text={teamInfo.country}
               theme={theme}
@@ -121,16 +162,14 @@ function Team({ theme }: { theme: Theme }) {
 
           <h3> IT Area / Department </h3>
 
-          {userRole === "ASSESSOR" && (
+          {userRole === "ASSESSOR" ? (
             <TextfieldEdit
               text={teamInfo.department}
               theme={theme}
               rows={1}
               handleSave={changeDept}
             />
-          )}
-
-          {userRole !== "ASSESSOR" && (
+          ) : (
             <Textfield
               text={teamInfo.department}
               theme={theme}
@@ -139,31 +178,37 @@ function Team({ theme }: { theme: Theme }) {
             />
           )}
 
-          {userRole === "ASSESSOR" && <h3>Invite Token</h3>}
-
           {userRole === "ASSESSOR" && (
-            <FormControl sx={{ width: "inherit" }} variant="standard">
-              <OutlinedInput
-                readOnly
-                sx={{ backgroundColor: "white" }}
-                id="token"
-                value={teamInfo.inviteToken}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <IconButton
-                      onClick={() =>
-                        navigator.clipboard.writeText(
-                          teamInfo.inviteToken.toString()
-                        )
-                      }
-                    >
-                      <ContentCopyIcon />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
+            <div
+              id="token-info"
+              style={{ width: "inherit", display: "contents" }}
+            >
+              <h3>Invite Token</h3>
+              <FormControl sx={{ width: "inherit" }} variant="standard">
+                <OutlinedInput
+                  readOnly
+                  sx={{ backgroundColor: "white" }}
+                  id="token"
+                  value={teamInfo.inviteToken}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <IconButton
+                        data-testid="copy-token"
+                        onClick={() =>
+                          navigator.clipboard.writeText(
+                            teamInfo.inviteToken.toString()
+                          )
+                        }
+                      >
+                        <ContentCopyIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </div>
           )}
+
           <h3>Facilitators</h3>
           <MemberGrid
             theme={theme}
@@ -172,6 +217,7 @@ function Team({ theme }: { theme: Theme }) {
             teamId={Number(teamId)}
             forAssessors
           />
+
           <h3>Members</h3>
           <MemberGrid
             theme={theme}
@@ -195,11 +241,18 @@ function Team({ theme }: { theme: Theme }) {
             teamId={Number(teamId)}
             assessmentType="TEAM"
           />
-          <ErrorPopup ref={ref} />
+          <ErrorPopup ref={refErrorTeam} />
         </PageLayout>
       )}
     </div>
   );
 }
+/**
+ * Define the default props of the team
+ */
+Team.defaultProps = {
+  presetTeamInfo: undefined,
+  presetUserRole: undefined,
+};
 
 export default Team;

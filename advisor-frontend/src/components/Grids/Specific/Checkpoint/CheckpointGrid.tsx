@@ -1,6 +1,5 @@
 import * as React from "react";
 import { UseMutationResult } from "react-query";
-
 import {
   GridActionsCellItem,
   GridColumns,
@@ -9,29 +8,25 @@ import {
 } from "@mui/x-data-grid";
 import { Theme } from "@mui/material/styles";
 import {
-  FormControl,
-  IconButton,
   MenuItem,
-  Select,
+  FormControl,
   SelectChangeEvent,
+  Select,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UpwardIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
-import DownwardIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
-
 import GenericGrid from "../../Generic/GenericGrid";
-
-import { TopicAPP, useGetTopics } from "../../../../api/TopicAPI";
-import { MaturityAPP, useGetMaturities } from "../../../../api/MaturityAPI";
-
+import { TopicAPP, useGetTopics } from "../../../../api/TopicAPI/TopicAPI";
+import {
+  MaturityAPP,
+  useGetMaturities,
+} from "../../../../api/MaturityAPI/MaturityAPI";
 import {
   CheckpointAPP,
   useDeleteCheckpoint,
   useGetCheckpoints,
   usePatchCheckpoint,
   usePostCheckpoint,
-} from "../../../../api/CheckpointAPI";
-
+} from "../../../../api/CheckpointAPI/CheckpointAPI";
 import {
   handleAdd,
   handleChange,
@@ -40,9 +35,12 @@ import {
   handleMove,
   preProcessEditOrder,
   processRowUpdate,
-} from "../handlers";
-
-import ErrorPopup, { RefObject } from "../../../ErrorPopup/ErrorPopup";
+} from "../../functions/handlers/handlers";
+import ErrorPopup, {
+  getOnError,
+  RefObject,
+} from "../../../ErrorPopup/ErrorPopup";
+import { RenderEditCell } from "../columns";
 
 type CheckpointGridProps = {
   theme: Theme;
@@ -50,62 +48,109 @@ type CheckpointGridProps = {
   categoryId: number;
 };
 
+/**
+ * Grid for checkpoints
+ * Uses theme, templateId, and categoryId
+ */
 export default function CheckpointGrid({
   theme,
   templateId,
   categoryId,
 }: CheckpointGridProps) {
+  /**
+   * State of the rows
+   * State setter of the rows
+   */
   const [rows, setRows] = React.useState<CheckpointAPP[]>([]);
+
+  /**
+   * State of the topics
+   * State setter of the topics
+   */
   const [topics, setTopics] = React.useState<TopicAPP[]>([]);
+
+  /**
+   * State of the maturities
+   * State setter of the maturities
+   */
   const [maturities, setMaturities] = React.useState<MaturityAPP[]>([]);
 
-  // Ref for error popup
-  const ref = React.useRef<RefObject>(null);
+  /**
+   * Ref for error popup
+   * onError function
+   */
+  const refErrorCheckpoint = React.useRef<RefObject>(null);
+  const onErrorCheckpoint = getOnError(refErrorCheckpoint);
 
-  // Checkpoint queries
+  /**
+   * Checkpoint queries
+   * Gets all checkpoints
+   * Gets all enabled topics
+   * Gets all enabled maturities
+   */
   const { status: statusCheckpoints, data: dataCheckpoints } =
-    useGetCheckpoints(categoryId, undefined, ref);
+    useGetCheckpoints(categoryId, undefined, onErrorCheckpoint);
 
   const { status: statusTopics, data: dataTopics } = useGetTopics(
     templateId,
     true,
-    ref
+    onErrorCheckpoint
   );
 
   const { status: statusMaturities, data: dataMaturities } = useGetMaturities(
     templateId,
     true,
-    ref
+    onErrorCheckpoint
   );
 
-  // Checkpoint mutations
-  const patchCheckpoint = usePatchCheckpoint(ref);
-  const postCheckpoint = usePostCheckpoint(categoryId, ref);
-  const deleteCheckpoint = useDeleteCheckpoint(ref);
+  /**
+   * Checkpoint mutations
+   * Patch checkpoint
+   * Post checkpoint
+   * Delete checkpoint
+   */
+  const patchCheckpoint = usePatchCheckpoint(onErrorCheckpoint);
+  const postCheckpoint = usePostCheckpoint(categoryId, onErrorCheckpoint);
+  const deleteCheckpoint = useDeleteCheckpoint(onErrorCheckpoint);
 
-  // Called when "status" of checkpoints query is changed
+  /**
+   * useEffect for initialization of rows
+   * Called when "status" of checkpoints query is changed
+   */
   React.useEffect(() => {
     handleInit(setRows, statusCheckpoints, dataCheckpoints);
   }, [statusCheckpoints, dataCheckpoints]);
 
-  // Called when "status" of topics query is changed
+  /**
+   * useEffect for initialization of topics
+   * Called when "status" of topics query is changed
+   */
   React.useEffect(() => {
     handleInit(setTopics, statusTopics, dataTopics);
   }, [statusTopics, dataTopics]);
 
-  // Called when "status" of maturities query is changed
+  /**
+   * useEffect for initialization of maturities
+   * Called when "status" of  maturities query is changed
+   */
   React.useEffect(() => {
     handleInit(setMaturities, statusMaturities, dataMaturities);
   }, [statusMaturities, dataMaturities]);
 
-  // Called when the 'Order' column is edited
+  /**
+   * Preprocesses the order when edited
+   * Called when the 'Order' column is edited
+   */
   const preProcessEditOrderDecorator = React.useCallback(
     (params: GridPreProcessEditCellProps) =>
-      preProcessEditOrder(rows, params, ref),
+      preProcessEditOrder(rows, params, onErrorCheckpoint),
     [rows]
   );
 
-  // Called when a row is edited
+  /**
+   * Row update handler
+   * Called when a row is edited
+   */
   const processRowUpdateDecorator = React.useCallback(
     async (newRow: CheckpointAPP, oldRow: CheckpointAPP) =>
       processRowUpdate(
@@ -117,7 +162,10 @@ export default function CheckpointGrid({
     []
   );
 
-  // Called when the "Upward" action is pressed
+  /**
+   * Upward order handler
+   * Called when the "Upward" action is pressed
+   */
   const handleUpwardDecorator = React.useCallback(
     (row: CheckpointAPP) => () => {
       handleMove(setRows, patchCheckpoint as UseMutationResult, {
@@ -128,7 +176,10 @@ export default function CheckpointGrid({
     []
   );
 
-  // Called when the "Downward" action is pressed
+  /**
+   * Downward order handler
+   * Called when the "Downward" action is pressed
+   */
   const handleDownwardDecorator = React.useCallback(
     (row: CheckpointAPP) => () => {
       handleMove(setRows, patchCheckpoint as UseMutationResult, {
@@ -139,7 +190,10 @@ export default function CheckpointGrid({
     []
   );
 
-  // Called when topic changes
+  /**
+   * Topic change handler
+   * Called when topic changes
+   */
   const handleTopicsChange = React.useCallback(
     (row: CheckpointAPP, event: SelectChangeEvent<string[]>) => {
       const { value } = event.target;
@@ -158,7 +212,10 @@ export default function CheckpointGrid({
     []
   );
 
-  // Called when maturity level changes
+  /**
+   * Maturity change handler
+   * Called when maturity level changes
+   */
   const handleMaturityChange = React.useCallback(
     (row: CheckpointAPP, event: SelectChangeEvent<string>) => {
       const maturityId = parseInt(event.target.value, 10);
@@ -173,7 +230,10 @@ export default function CheckpointGrid({
     []
   );
 
-  // Called when the "Delete" action is pressed in the menu
+  /**
+   * Row delete handler
+   * Called when the "Delete" action is pressed in the menu
+   */
   const handleDeleteDecorator = React.useCallback(
     (rowId: GridRowId) => () => {
       handleDelete(
@@ -185,7 +245,10 @@ export default function CheckpointGrid({
     []
   );
 
-  // Called when the "Add" button is pressed below the grid
+  /**
+   * Row add handler
+   * Called when the "Add" button is pressed below the grid
+   */
   const handleAddDecorator = React.useCallback(() => {
     handleAdd(setRows, postCheckpoint as UseMutationResult);
   }, []);
@@ -196,18 +259,10 @@ export default function CheckpointGrid({
         field: "",
         width: 50,
         renderCell: (params: { row: CheckpointAPP }) => (
-          <div className="parent">
-            <div className="child">
-              <IconButton onClick={handleUpwardDecorator(params.row)}>
-                <UpwardIcon />
-              </IconButton>
-            </div>
-            <div className="child">
-              <IconButton onClick={handleDownwardDecorator(params.row)}>
-                <DownwardIcon />
-              </IconButton>
-            </div>
-          </div>
+          <RenderEditCell
+            handleUpward={handleUpwardDecorator(params.row)}
+            handleDownward={handleDownwardDecorator(params.row)}
+          />
         ),
       },
       {
@@ -297,15 +352,15 @@ export default function CheckpointGrid({
         editable: true,
       },
       {
-        field: "actions",
+        field: "Actions",
         type: "actions",
         width: 75,
         getActions: (params: { id: GridRowId; row: CheckpointAPP }) => [
           <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteDecorator(params.id)}
             showInMenu
+            icon={<DeleteIcon />}
+            onClick={handleDeleteDecorator(params.id)}
+            label="Delete"
           />,
         ],
       },
@@ -327,15 +382,15 @@ export default function CheckpointGrid({
       <GenericGrid
         theme={theme}
         rows={rows}
-        columns={columns}
-        processRowUpdate={processRowUpdateDecorator}
-        hasToolbar
         add={{
           text: "CREATE CHECKPOINT",
           handler: handleAddDecorator,
         }}
+        columns={columns}
+        processRowUpdate={processRowUpdateDecorator}
+        hasToolbar
       />
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorCheckpoint} />
     </>
   );
 }

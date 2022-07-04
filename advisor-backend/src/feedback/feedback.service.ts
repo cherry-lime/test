@@ -10,7 +10,7 @@ import { SaveService } from '../save/save.service';
 import { RecommendationDto } from './dto/recommendation.dto';
 import { UpdateRecommendationDto } from './dto/UpdateRecommendation.dto';
 
-interface ISort {
+export interface ISort {
   data: RecommendationDto;
   answerWeight: number;
   maturityOrder: number;
@@ -49,7 +49,9 @@ export class FeedbackService {
       });
 
       if (newOrder > maxOrder) {
-        throw new BadRequestException('Order is too high');
+        throw new BadRequestException(
+          `Order of ${newOrder} is too high, maximum order is ${maxOrder}`
+        );
       }
     }
 
@@ -108,7 +110,7 @@ export class FeedbackService {
     }
   }
 
-  async getRecommendations(assessment: Assessment, topic_id: number) {
+  async getRecommendations(assessment: Assessment, topic_id?: number) {
     let recommendations: RecommendationDto[] = [];
     if (!assessment.completed_at) {
       recommendations = await this.calculateRecommendations(assessment);

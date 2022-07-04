@@ -1,6 +1,12 @@
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { Test, TestingModule } from '@nestjs/testing';
-import { aAssessment, aTeamAssessment } from '../prisma/mock/mockAssessment';
+import {
+  aAssessment,
+  aAssessmentWithOtherParticipants,
+  aTeamAssessment,
+  aTeamAssessmentWithOtherParticipants,
+  aTeamAssessmentWithParticipants,
+} from '../prisma/mock/mockAssessment';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { PrismaService } from '../prisma/prisma.service';
 import { AssessmentService } from './assessment.service';
@@ -14,16 +20,18 @@ import { aTeam } from '../prisma/mock/mockTeam';
 import { AssessmentType } from '@prisma/client';
 import { aFullUser } from '../prisma/mock/mockUser';
 import { SaveService } from '../save/save.service';
+import { AssessmentScoreService } from './assessment-score.service';
 
 const moduleMocker = new ModuleMocker(global);
 
 describe('AssessmentService', () => {
   let assessmentService: AssessmentService;
   let prisma: PrismaService;
+  let saveService: SaveService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AssessmentService],
+      providers: [AssessmentService, AssessmentScoreService],
     })
       .useMocker((token) => {
         if (token === PrismaService) {
@@ -46,6 +54,7 @@ describe('AssessmentService', () => {
 
     assessmentService = module.get<AssessmentService>(AssessmentService);
     prisma = module.get<PrismaService>(PrismaService);
+    saveService = module.get<SaveService>(SaveService);
   });
 
   it('should be defined', () => {
@@ -110,6 +119,13 @@ describe('AssessmentService', () => {
       expect(
         assessmentService.create(aTeamAssessment, aFullUser)
       ).resolves.toBe(aAssessment);
+    });
+
+    it('Should reject with BadRequestException if no active templates were found', async () => {
+      jest.spyOn(prisma.template, 'findFirst').mockResolvedValueOnce(null);
+      expect(
+        assessmentService.create(aAssessment, aFullUser)
+      ).rejects.toThrowError(BadRequestException);
     });
   });
 
@@ -226,6 +242,124 @@ describe('AssessmentService', () => {
         .mockRejectedValueOnce({ code: 'TEST' });
       expect(
         assessmentService.complete(aAssessment.template_id)
+      ).rejects.toThrowError(InternalServerErrorException);
+    });
+
+    it('Should throw error if user is not in assessment', async () => {
+      jest.spyOn(prisma.assessment, 'findUnique').mockResolvedValueOnce(null);
+      expect(
+        assessmentService.complete(aAssessment.template_id)
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('Should throw error if not all checkpoints are filled when trying to \
+       mark assessment as complete', async () => {
+      jest
+        .spyOn(saveService, 'areAllAnswersFilled')
+        .mockResolvedValueOnce(false);
+      expect(
+        assessmentService.complete(aAssessment.template_id)
+      ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('findUserAssessments', () => {
+    it('Should return the user assessments', async () => {
+      expect(assessmentService.findUserAssessments(aFullUser)).resolves.toEqual(
+        [aAssessment]
+      );
+    });
+  });
+
+  describe('userInAssessment', () => {
+    it('Should return assessment', async () => {
+      jest
+        .spyOn(prisma.assessment, 'findUnique')
+        .mockResolvedValueOnce(aTeamAssessmentWithOtherParticipants);
+      expect.assertions(1);
+      jest.spyOn(prisma.team, 'findMany').mockResolvedValueOnce([aTeam]);
+      expect(
+        assessmentService.userInAssessment(
+          aTeamAssessmentWithOtherParticipants.assessment_id,
+          aFullUser
+        )
+      ).resolves.toBe(aTeamAssessmentWithOtherParticipants);
+    });
+
+    it('Should return assessment if user is in assessment', async () => {
+      jest
+        .spyOn(prisma.assessment, 'findUnique')
+        .mockResolvedValueOnce(aTeamAssessmentWithParticipants);
+      expect(
+        assessmentService.userInAssessment(
+          aTeamAssessmentWithParticipants.assessment_id,
+          aFullUser
+        )
+      ).resolves.toBe(aTeamAssessmentWithParticipants);
+    });
+
+    it('Should return null if no assessment is found', async () => {
+      jest.spyOn(prisma.assessment, 'findUnique').mockResolvedValueOnce(null);
+      expect(
+        assessmentService.userInAssessment(aAssessment.assessment_id, aFullUser)
+      ).resolves.toBe(null);
+    });
+
+    it('Should return null if there are no participants in given assessment', async () => {
+      jest
+        .spyOn(prisma.assessment, 'findUnique')
+        .mockResolvedValueOnce(aTeamAssessmentWithOtherParticipants);
+      jest.spyOn(prisma.team, 'findMany').mockResolvedValueOnce(null);
+      expect(
+        assessmentService.userInAssessment(
+          aTeamAssessmentWithParticipants.assessment_id,
+          aFullUser
+        )
+      ).resolves.toBe(null);
+    });
+
+    it('Should return null if user not in team and assessment is individual', async () => {
+      jest
+        .spyOn(prisma.assessment, 'findUnique')
+        .mockResolvedValueOnce(aAssessmentWithOtherParticipants);
+      jest.spyOn(prisma.team, 'findMany').mockResolvedValueOnce(null);
+      expect(
+        assessmentService.userInAssessment(
+          aAssessmentWithOtherParticipants.assessment_id,
+          aFullUser
+        )
+      ).resolves.toBe(null);
+    });
+  });
+
+  describe('Add feedback to assessment', () => {
+    it('Should return the feedback', async () => {
+      expect(
+        assessmentService.feedback(aTeamAssessment.assessment_id, {
+          feedback_text: 'test_feedback_text',
+        })
+      ).resolves.toStrictEqual(aAssessment);
+    });
+
+    it('Should throw NotFoundException if assessment not found', async () => {
+      jest
+        .spyOn(prisma.assessment, 'update')
+        .mockRejectedValueOnce({ code: 'P2025' });
+      expect(
+        assessmentService.feedback(aTeamAssessment.assessment_id, {
+          feedback_text: 'test_feedback_text',
+        })
+      ).rejects.toThrowError(NotFoundException);
+    });
+
+    it('Should throw NotFoundException if assessment not found', async () => {
+      jest
+        .spyOn(prisma.assessment, 'update')
+        .mockRejectedValueOnce({ code: 'TEST' });
+      expect(
+        assessmentService.feedback(aTeamAssessment.assessment_id, {
+          feedback_text: 'test_feedback_text',
+        })
       ).rejects.toThrowError(InternalServerErrorException);
     });
   });

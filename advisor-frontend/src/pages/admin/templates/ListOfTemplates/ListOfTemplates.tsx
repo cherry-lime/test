@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormControl, MenuItem, Select, Theme } from "@mui/material";
 import userType from "../../../../components/Sidebar/listUsersTypes";
 import PageLayout from "../../../PageLayout";
@@ -7,8 +7,9 @@ import {
   TemplateAPP,
   useGetTemplates,
   usePatchTemplate,
-} from "../../../../api/TemplateAPI";
+} from "../../../../api/TemplateAPI/TemplateAPI";
 import ErrorPopup, {
+  getOnError,
   RefObject,
 } from "../../../../components/ErrorPopup/ErrorPopup";
 
@@ -17,6 +18,9 @@ import ErrorPopup, {
  * This should only be accessible to admins
  */
 function ListOfTemplates({ theme }: { theme: Theme }) {
+  /**
+   * Use states for templates and active templates
+   */
   const [individualTemplates, setIndividualTemplates] = useState<TemplateAPP[]>(
     []
   );
@@ -26,16 +30,28 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
     useState<TemplateAPP>();
   const [activeTeamTemplate, setActiveTeamTemplate] = useState<TemplateAPP>();
 
-  // Ref for error popup
-  const ref = useRef<RefObject>(null);
+  /**
+   * Ref for error popup
+   */
+  const refErrorTemplates = useRef<RefObject>(null);
+  const onErrorTemplates = getOnError(refErrorTemplates);
 
-  // Template queries
-  const individualResponse = useGetTemplates("INDIVIDUAL");
+  /**
+   * Template queries
+   * for e.g. individual and team
+   */
+  const individualResponse = useGetTemplates(
+    "INDIVIDUAL",
+    undefined,
+    onErrorTemplates
+  );
 
-  const teamResponse = useGetTemplates("TEAM", undefined, ref);
+  const teamResponse = useGetTemplates("TEAM", undefined, onErrorTemplates);
 
-  // Template mutation
-  const patchTemplate = usePatchTemplate(ref);
+  /**
+   * Template mutation
+   */
+  const patchTemplate = usePatchTemplate(onErrorTemplates);
 
   useEffect(() => {
     if (individualResponse.status === "success") {
@@ -65,51 +81,54 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
     }
   }, [teamResponse.status, teamResponse.data]);
 
-  const handleActiveIndividualTemplateChange = useCallback(
-    (event) => {
-      const templateId = parseInt(event.target.value, 10);
+  const handleActiveTemplateChange = (
+    templateId: number,
+    options: { individual: boolean }
+  ) => {
+    const { individual } = options;
+    const templates = individual ? individualTemplates : teamTemplates;
+    const oldTemplate = templates.find(
+      (template) => template.id === templateId
+    );
 
-      const oldTemplate = individualTemplates.find(
-        (template) => template.id === templateId
-      );
+    if (oldTemplate) {
+      const newTemplate = { ...oldTemplate, enabled: true };
 
-      if (oldTemplate) {
-        const newTemplate = { ...oldTemplate, enabled: true };
-
-        patchTemplate.mutate(newTemplate, {
-          onSuccess: (templateAPP: TemplateAPP) => {
+      patchTemplate.mutate(newTemplate, {
+        onSuccess: (templateAPP: TemplateAPP) => {
+          if (individual) {
             setActiveIndividualTemplate(templateAPP);
-          },
-        });
-      }
-    },
-    [activeIndividualTemplate]
-  );
-
-  const handleActiveTeamTemplateChange = useCallback(
-    (event) => {
-      const templateId = parseInt(event.target.value, 10);
-
-      const oldTemplate = teamTemplates.find(
-        (template) => template.id === templateId
-      );
-
-      if (oldTemplate) {
-        const newTemplate = { ...oldTemplate, enabled: true };
-
-        patchTemplate.mutate(newTemplate, {
-          onSuccess: (templateAPP: TemplateAPP) => {
+          } else {
             setActiveTeamTemplate(templateAPP);
-          },
-        });
-      }
-    },
-    [activeIndividualTemplate]
+          }
+        },
+      });
+    }
+  };
+
+  const handleActiveIndividualTemplateChange = (
+    individualTemplateId: number
+  ) => {
+    handleActiveTemplateChange(individualTemplateId, { individual: true });
+  };
+
+  const handleActiveTeamTemplateChange = (teamTemplateId: number) => {
+    handleActiveTemplateChange(teamTemplateId, { individual: false });
+  };
+
+  const addTemplateMenuItem = (template: TemplateAPP) => (
+    <MenuItem
+      key={`template-menu-${template.id}`}
+      value={template.id.toString()}
+    >
+      {template.name}
+    </MenuItem>
   );
-  /*
-  return page with list of templates, e.g.:
-  individual templates, team templates 
-  */
+
+  /**
+   * return page with list of templates, e.g.:
+   * individual templates, team templates
+   */
   return (
     <div>
       <PageLayout title="Templates" sidebarType={userType.ADMIN}>
@@ -120,13 +139,13 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         <FormControl sx={{ width: "inherit" }}>
           <Select
             value={activeIndividualTemplate ? activeIndividualTemplate.id : ""}
-            onChange={handleActiveIndividualTemplateChange}
+            onChange={(e) =>
+              handleActiveIndividualTemplateChange(Number(e.target.value))
+            }
           >
-            {individualTemplates.map((template) => (
-              <MenuItem key={template.name} value={template.id.toString()}>
-                {template.name}
-              </MenuItem>
-            ))}
+            {individualTemplates.map((individualTemplate) =>
+              addTemplateMenuItem(individualTemplate)
+            )}
           </Select>
         </FormControl>
 
@@ -144,13 +163,13 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
         <FormControl sx={{ width: "inherit" }}>
           <Select
             value={activeTeamTemplate ? activeTeamTemplate.id : ""}
-            onChange={handleActiveTeamTemplateChange}
+            onChange={(e) =>
+              handleActiveTeamTemplateChange(Number(e.target.value))
+            }
           >
-            {teamTemplates.map((template) => (
-              <MenuItem key={template.name} value={template.id.toString()}>
-                {template.name}
-              </MenuItem>
-            ))}
+            {teamTemplates.map((teamTemplate) =>
+              addTemplateMenuItem(teamTemplate)
+            )}
           </Select>
         </FormControl>
         <TemplateGrid
@@ -160,7 +179,7 @@ function ListOfTemplates({ theme }: { theme: Theme }) {
           setTemplates={setTeamTemplates}
         />
       </PageLayout>
-      <ErrorPopup ref={ref} />
+      <ErrorPopup ref={refErrorTemplates} />
     </div>
   );
 }

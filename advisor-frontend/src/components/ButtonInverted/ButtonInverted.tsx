@@ -1,20 +1,19 @@
 import { Button } from "@mui/material";
 
-/*
-function that returns component button in inverted color scheme
-text = button text
-size of the button is depending on the length of the button text string
-*/
-
+/**
+ * function that returns component button in inverted color scheme
+ * text = button text
+ * size of the button is depending on the length of the button text string
+ */
 function ButtonInverted({ text }: { text: string }) {
   return (
     <div>
       <Button
-        /*
-        set background color of inverted button to white
-        style is outlined
-        fonttext is bold
-        */
+        /**
+         * set background color of inverted button to white
+         * style is outlined
+         * fonttext is bold
+         */
         sx={{
           backgroundColor: "white",
         }}
