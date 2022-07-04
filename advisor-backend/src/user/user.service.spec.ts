@@ -151,15 +151,6 @@ describe('UserService', () => {
       ).rejects.toThrowError(NotFoundException);
     });
 
-    it('Should reject with unknown error', async () => {
-      jest
-        .spyOn(prisma.user, 'findUnique')
-        .mockRejectedValueOnce({ code: 'TEST' });
-      expect(
-        userService.createUser(registerDto)
-      ).rejects.toThrowError(InternalServerErrorException);
-    });
-
     it('Should throw ConflictException', async () => {
       jest
         .spyOn(prisma.user, 'create')

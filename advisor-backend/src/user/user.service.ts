@@ -93,10 +93,6 @@ export class UserService {
         where: {
           username: new_username
         }
-      })
-      .catch((error) => {
-        console.log(error);
-        throw new InternalServerErrorException();
       });
 
     if (!username) {
