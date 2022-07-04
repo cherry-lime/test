@@ -27,14 +27,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @returns user
    */
   async validate(payload: { user_id: number }) {
-    const user = await this.prismaService.user.findFirst({
-      where: {
-        user_id: payload.user_id,
-      },
-    }).catch((error) => {
-      console.log(error);
-      throw new InternalServerErrorException();
-    });
+    const user = await this.prismaService.user
+      .findFirst({
+        where: {
+          user_id: payload.user_id,
+        },
+      })
+      .catch((error) => {
+        console.log(error);
+        throw new InternalServerErrorException();
+      });
 
     return user;
   }
