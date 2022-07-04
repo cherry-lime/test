@@ -17,8 +17,10 @@ import { AnswerModule } from './answer/answer.module';
 import { SaveModule } from './save/save.module';
 import { FeedbackModule } from './feedback/feedback.module';
 
+// all modules needed for the entire application
 @Module({
   imports: [
+    // global module
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     UserModule,
@@ -38,4 +40,4 @@ import { FeedbackModule } from './feedback/feedback.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

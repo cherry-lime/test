@@ -69,14 +69,5 @@ describe('AuthService', () => {
             expect(await jwtStrategy.validate({ user_id: aUser.user_id }))
                 .toEqual(aUser);
         });
-
-        it('Should reject with unknown error', async () => {
-            jest
-                .spyOn(prisma.user, 'findFirst')
-                .mockRejectedValueOnce({ code: 'TEST' });
-            expect(
-                jwtStrategy.validate({ user_id: aUser.user_id })
-            ).rejects.toThrowError(InternalServerErrorException);
-        });
     });
 });

@@ -4,6 +4,9 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import { Request as RequestType } from 'express';
 
+/** 
+ * Strategy used for authentication with jwt and cookies
+*/
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly prismaService: PrismaService) {
@@ -31,10 +34,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       where: {
         user_id: payload.user_id,
       },
-    }).catch((error) => {
-      console.log(error);
-      throw new InternalServerErrorException();
-    });
+    })
 
     return user;
   }

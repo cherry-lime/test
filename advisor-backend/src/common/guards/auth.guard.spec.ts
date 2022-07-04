@@ -41,7 +41,7 @@ describe('AuthGuard', () => {
             })
             .compile();
         authGuard = module.get<AuthGuard>(AuthGuard);
-        reflector = module.get<any>(Reflector);
+        reflector = module.get<Reflector>(Reflector);
     });
 
     describe('should be defined', () => {

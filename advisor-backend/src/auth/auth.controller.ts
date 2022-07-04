@@ -13,7 +13,7 @@ import {
 } from '@nestjs/swagger';
 import { CookieOptions, Response } from 'express';
 import { ProfileDto } from '../user/dto/profile.dto';
-import { Unauthorized } from '../common/decorators/unauthorized.decorrator';
+import { Unauthorized } from '../common/decorators/unauthorized.decorator';
 
 // Cookie options
 const cookieOptions: CookieOptions = {

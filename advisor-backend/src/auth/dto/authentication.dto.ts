@@ -4,6 +4,7 @@ import { IsIn, IsString } from 'class-validator';
 
 /**
  * Response with authentication information
+ * Used as template by other authentication dtos
  */
 export class AuthenticationDto {
   @ApiProperty({ default: 'bf30b88f-a641-4194-9c5a-95b801884440' })
