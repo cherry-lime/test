@@ -4,7 +4,7 @@ import { TeamsService } from './teams.service';
 import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
 import { aTeam } from '../prisma/mock/mockTeam';
 import { aTeamMembers } from '../prisma/mock/mockTeamMembers';
-import { aAssessment } from '../prisma/mock/mockAssessment';
+import { aAssessment, aAssessmentFull } from '../prisma/mock/mockAssessment';
 import { InviteTokenDto } from './dto/invite-token.dto';
 import { aUser1 } from '../prisma/mock/mockUser';
 import { PrismaService } from '../prisma/prisma.service';
@@ -31,7 +31,7 @@ describe('TeamsController', () => {
 
     const moduleRef = await Test.createTestingModule({
       controllers: [TeamsController],
-      providers: [TeamsService, PrismaService],
+      providers: [TeamsService],
     })
       .useMocker((token) => {
         if (token === TeamsService) {
@@ -73,12 +73,16 @@ describe('TeamsController', () => {
 
   describe('Get the user teams', () => {
     it('should return the user teams', async () => {
-      expect(teamController.getTeams(aUser1)).resolves.toBe([aTeam]);
+      jest.spyOn(teamsService, 'getTeams').mockResolvedValueOnce([aTeam]);
+      expect(teamController.getTeams(aUser1)).resolves.toStrictEqual([aTeam]);
     });
   });
 
   describe('getTeamMembers', () => {
     it('Should return the team members', async () => {
+      jest
+        .spyOn(teamsService, 'findTeamMembers')
+        .mockResolvedValueOnce(aTeamMembers);
       expect(teamController.findTeamMembers(aUser1, 1)).resolves.toBe(
         aTeamMembers
       );
@@ -106,10 +110,20 @@ describe('TeamsController', () => {
         InternalServerErrorException
       );
     });
+
+    it('Should throw error if team not found', async () => {
+      jest.spyOn(teamsService, 'isUserInTeam').mockResolvedValueOnce(false);
+      expect(teamController.findTeamMembers(aUser1, 1)).rejects.toThrow(
+        ForbiddenException
+      );
+    });
   });
 
   describe('addTeamMember', () => {
     it('Should return the team members', async () => {
+      jest
+        .spyOn(teamsService, 'addTeamMember')
+        .mockResolvedValueOnce(aTeamMembers);
       expect(teamController.addTeamMember(aUser1, 'test')).resolves.toBe(
         aTeamMembers
       );
@@ -138,12 +152,22 @@ describe('TeamsController', () => {
         InternalServerErrorException
       );
     });
+
+    it('Should throw error if team not found', async () => {
+      jest.spyOn(teamsService, 'isUserInTeam').mockResolvedValueOnce(false);
+      expect(teamController.getInviteToken(aUser1, 1)).rejects.toThrow(
+        ForbiddenException
+      );
+    });
   });
 
   describe('getAssessments', () => {
     it('Should return the assessments', async () => {
+      jest
+        .spyOn(teamsService, 'getAssessments')
+        .mockResolvedValueOnce([aAssessmentFull]);
       expect(teamController.getTeamAssessments(aUser1, 1)).resolves.toEqual([
-        aAssessment,
+        aAssessmentFull,
       ]);
     });
 
@@ -162,10 +186,20 @@ describe('TeamsController', () => {
         InternalServerErrorException
       );
     });
+
+    it('Should throw error if team not found', async () => {
+      jest.spyOn(teamsService, 'isUserInTeam').mockResolvedValueOnce(false);
+      expect(teamController.getTeamAssessments(aUser1, 1)).rejects.toThrow(
+        ForbiddenException
+      );
+    });
   });
 
   describe('deleteTeamMember', () => {
     it('Should return the team members', async () => {
+      jest
+        .spyOn(teamsService, 'removeTeamMember')
+        .mockResolvedValueOnce(aTeamMembers);
       expect(teamController.deleteTeamMember(aUser1, 1, 1)).resolves.toBe(
         aTeamMembers
       );
@@ -189,6 +223,13 @@ describe('TeamsController', () => {
 
     it('Should throw error if user has role user and tries to remove other merror', async () => {
       expect(teamController.deleteTeamMember(aUser1, 1, 2)).rejects.toThrow(
+        ForbiddenException
+      );
+    });
+
+    it('Should throw error if team not found', async () => {
+      jest.spyOn(teamsService, 'isUserInTeam').mockResolvedValueOnce(false);
+      expect(teamController.deleteTeamMember(aUser1, 1, 1)).rejects.toThrow(
         ForbiddenException
       );
     });

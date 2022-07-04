@@ -19,6 +19,14 @@ export const aTeamAssessment = {
   team_id: 1,
 };
 
+export const aAssessmentFull = {
+  ...aAssessment,
+  feedback_text: 'test_feedback_text',
+  information: 'test_information',
+  created_at: new Date(),
+  updated_at: new Date(),
+};
+
 export const mockAssessment = {
   count: jest.fn().mockResolvedValue(1),
   create: jest.fn().mockResolvedValue(aAssessment),

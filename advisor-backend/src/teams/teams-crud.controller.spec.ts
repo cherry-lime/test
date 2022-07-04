@@ -29,7 +29,7 @@ describe('TeamsCRUDController', () => {
 
     const moduleRef = await Test.createTestingModule({
       controllers: [TeamsCRUDController],
-      providers: [TeamsService, PrismaService],
+      providers: [TeamsService],
     })
       .useMocker((token) => {
         if (token === TeamsCRUDService) {
@@ -101,14 +101,15 @@ describe('TeamsCRUDController', () => {
     });
 
     it('Should throw error if user not part of the team', async () => {
-      jest.spyOn(teamsService, 'isUserInTeam').mockReturnValueOnce(
-        new Promise(() => {
-          return false;
-        })
-      );
+      jest.spyOn(teamsService, 'isUserInTeam').mockResolvedValueOnce(false);
       expect(teamsCRUDController.findOne(aUser1, 1)).rejects.toThrow(
         ForbiddenException
       );
+    });
+
+    it('Should return the team', async () => {
+      jest.spyOn(teamsService, 'isUserInTeam').mockResolvedValueOnce(false);
+      expect(teamsCRUDController.findOne(aAdmin, 1)).resolves.toBe(aTeam);
     });
   });
 
@@ -134,6 +135,13 @@ describe('TeamsCRUDController', () => {
         teamsCRUDController.updateTeam(aAdmin, 1, aUpdateTeam)
       ).rejects.toThrow(InternalServerErrorException);
     });
+
+    it('Should throw error if user not part of the team', async () => {
+      jest.spyOn(teamsService, 'isUserInTeam').mockResolvedValueOnce(false);
+      expect(
+        teamsCRUDController.updateTeam(aUser1, 1, aUpdateTeam)
+      ).rejects.toThrow(ForbiddenException);
+    });
   });
 
   describe('deleteTeam', () => {
@@ -154,6 +162,13 @@ describe('TeamsCRUDController', () => {
         .mockRejectedValueOnce({ code: 'TEST' });
       expect(teamsCRUDController.deleteTeam(aAdmin, 1)).rejects.toThrow(
         InternalServerErrorException
+      );
+    });
+
+    it('Should throw error if user not part of the team', async () => {
+      jest.spyOn(teamsService, 'isUserInTeam').mockResolvedValueOnce(false);
+      expect(teamsCRUDController.deleteTeam(aUser1, 1)).rejects.toThrow(
+        ForbiddenException
       );
     });
   });

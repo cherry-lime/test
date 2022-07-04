@@ -223,4 +223,10 @@ describe('TeamsService', () => {
       );
     });
   });
+
+  describe('getTeams', () => {
+    it('Should return the teams', async () => {
+      expect(teamsService.getTeams(1)).resolves.toStrictEqual([aTeam]);
+    });
+  });
 });
