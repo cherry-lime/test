@@ -24,6 +24,7 @@ import { TopicService } from '../topic/topic.service';
     SaveService,
     CheckpointService,
     TopicService,
+    SaveService,
   ],
 })
 export class AssessmentModule {}

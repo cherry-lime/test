@@ -14,7 +14,6 @@ import { SubareaModule } from './subarea/subarea.module';
 import { MaturityModule } from './maturity/maturity.module';
 import { TopicModule } from './topic/topic.module';
 import { AnswerModule } from './answer/answer.module';
-import { SaveModule } from './save/save.module';
 import { FeedbackModule } from './feedback/feedback.module';
 
 // NestJS Module System helps structure application code into domain areas
@@ -38,7 +37,6 @@ import { FeedbackModule } from './feedback/feedback.module';
     CheckpointModule,
     TopicModule,
     AnswerModule,
-    SaveModule,
     FeedbackModule,
   ],
   controllers: [AppController],
