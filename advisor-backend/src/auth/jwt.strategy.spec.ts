@@ -5,7 +5,6 @@ import { Test } from '@nestjs/testing';
 import { PassportModule } from '@nestjs/passport';
 import { mockPrisma } from '../prisma/mock/mockPrisma';
 import { aUser } from '../prisma/mock/mockUser';
-import { InternalServerErrorException } from '@nestjs/common';
 import { userAuthentication } from '../prisma/mock/mockAuthService';
 
 const moduleMocker = new ModuleMocker(global);
