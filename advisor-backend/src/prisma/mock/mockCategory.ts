@@ -2,8 +2,12 @@ export const aCategory = {
   category_id: 1,
   category_name: 'Category 1',
   color: '#FF0000',
+  disabled: false,
   template_id: 1,
   order: 1,
+  Template: {
+    weight_range_min: 1,
+  },
 };
 
 export const mockCategory = {

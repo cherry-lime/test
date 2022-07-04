@@ -9,7 +9,10 @@ import { mockUserInTeam } from './mockUserInTeam';
 import { mockSubarea } from './mockSubarea';
 import { mockCheckpoint } from './mockCheckpoint';
 import { mockTopic } from './mockTopic';
-import { mockAnswser } from './mockAnswer';
+import { mockCheckpointInTopic } from './mockCheckpointInTopic';
+import { mockAnswer } from './mockAnswer';
+import { mockFeedback } from './mockFeedback';
+import { mockCheckpointAndAnswersInAssessment } from './mockCheckpointAndAnswersInAssessments';
 
 export const mockPrisma = {
   template: mockTemplate,
@@ -23,5 +26,8 @@ export const mockPrisma = {
   subArea: mockSubarea,
   checkpoint: mockCheckpoint,
   topic: mockTopic,
-  answer: mockAnswser,
+  checkpointInTopic: mockCheckpointInTopic,
+  answer: mockAnswer,
+  feedback: mockFeedback,
+  checkpointAndAnswersInAssessments: mockCheckpointAndAnswersInAssessment,
 };
