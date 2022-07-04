@@ -44,6 +44,27 @@ function App({ testRender }: appProp) {
     auth.mutate();
   }, []);
 
+  /**
+   * Routing for the application based on the user role
+   * @param userRole The user role
+   * @returns The routing for the application
+   */
+  function getRoutes(userRole: string) {
+    // Only route to the teams pages if the user has USER or ASSESSOR rights
+    switch (userRole) {
+      // Only route to the user pages if the user has USER rights
+      case "USER":
+        return [...userRoutes, ...userAssessorRoutes];
+      // Only route to the assessor pages if the user has ASSESSOR rights
+      case "ASSESSOR":
+        return [...assessorRoutes, ...userAssessorRoutes];
+      // Only route to the admin pages if the user has ADMIN rights
+      case "ADMIN":
+        return adminRoutes;
+    }
+    return;
+  }
+
   // If the authentication is done, render the routing
   if (auth.isSuccess || auth.isError || testRender) {
     return (
@@ -65,14 +86,7 @@ function App({ testRender }: appProp) {
           />
           <Route path="/signup" element={<Chooserole />} />
           <Route path="/signup/details" element={<DetailGen />} />
-          {/* Only route to the user pages if the user has USER rights */}
-          {userRole === "USER" ? userRoutes : <></>}
-          {/* Only route to the teams pages if the user has USER or ASSESSOR rights */}
-          {userRole === "USER" || userRole === "ASSESSOR" ? userAssessorRoutes : <></>}
-          {/* Only route to the assessor pages if the user has ASSESSOR rights */}
-          {userRole === "ASSESSOR" ? assessorRoutes : <></>}
-          {/* Only route to the admin pages if the user has ADMIN rights */}
-          {userRole === "ADMIN" ? adminRoutes : <></>}
+          {getRoutes(userRole)}
           {/* The root page of the routing hierachy.
           Based on if the user is logged in, he sees the login page, or the home page */}
           <Route
