@@ -136,9 +136,6 @@ export class MaturityService {
         if (error.code === 'P2002') {
           // Throw error ïf name not unique
           throw new ConflictException('Maturity with this name already exists');
-        } else if (error.code === 'P2025') {
-          // Throw error if template not found
-          throw new NotFoundException('Template not found');
         }
         console.log(error);
         throw new InternalServerErrorException();
