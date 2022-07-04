@@ -16,16 +16,18 @@ import Area from "./pages/admin/templates/Area/Area";
 import Template from "./pages/admin/templates/Template/Template";
 import GlobalStyles from "./GlobalStyles";
 import INGTheme from "./Theme";
-import SignIn from "./components/SignInUP/SignIn";
-import Chooserole from "./components/SignInUP/Chooserole";
+// import SignIn from "./components/SignInUP/SignIn";
+// import Chooserole from "./components/SignInUP/Chooserole";
+// import DetailGen from "./components/SignInUP/DetailGen";
 import { RootState } from "./app/store";
 import { authProfile } from "./api/LoginAPI/LoginAPI";
-import DetailGen from "./components/SignInUP/DetailGen";
+
 import ErrorPopup, {
   getOnError,
   RefObject,
 } from "./components/ErrorPopup/ErrorPopup";
 import ErrorPage from "./pages/ErrorPage";
+import { SignIn, Chooserole, DetailGen } from "./components/SignInUP/index";
 
 // type declaration for appProp that (possibly) assigns a boolean value to testRender
 type appProp = {

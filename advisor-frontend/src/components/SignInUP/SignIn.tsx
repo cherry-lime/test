@@ -17,7 +17,8 @@ import LoginLayout from "./LoginLayout";
  * This component renders the whole login page
  * @returns Signin page, based on the login layout
  */
-export default function SignIn() {
+// eslint-disable-next-line import/prefer-default-export
+export function SignIn() {
   // Prevents the textfield to automatically refresh the page, after input
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

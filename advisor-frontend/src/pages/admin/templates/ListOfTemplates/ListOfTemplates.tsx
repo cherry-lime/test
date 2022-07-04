@@ -14,7 +14,9 @@ import ErrorPopup, {
 } from "../../../../components/ErrorPopup/ErrorPopup";
 
 /**
- * Page containing the list of all existing templates
+ * This is basically a page that is containing
+ * the list of all existing templates
+ * Important note:
  * This should only be accessible to admins
  */
 function ListOfTemplates({ theme }: { theme: Theme }) {

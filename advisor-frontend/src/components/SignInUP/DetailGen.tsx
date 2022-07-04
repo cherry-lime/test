@@ -20,7 +20,8 @@ import ErrorPopup, { getOnError, RefObject } from "../ErrorPopup/ErrorPopup";
 import INGTheme from "../../Theme";
 import LoginLayout from "./LoginLayout";
 
-export default function DetailGen() {
+// eslint-disable-next-line import/prefer-default-export
+export function DetailGen() {
   /**
    * Make global state variables accessible
    */
