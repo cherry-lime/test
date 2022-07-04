@@ -9,7 +9,7 @@ import INGTheme from "../Theme";
  * Assessor routes
  * @returns All the assessor routes
  */
-export const userAssessorRoutes = [
+export default [
       // Teams List
       <Route path="/teams" element={<TeamList theme={INGTheme} />} />,
       // Team

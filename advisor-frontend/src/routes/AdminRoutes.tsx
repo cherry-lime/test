@@ -10,7 +10,7 @@ import INGTheme from "../Theme";
  * Admin routes
  * @returns All the admin routes
  */
-export const adminRoutes =  [
+export default [
       // Admin interface
       <Route path="/admin" element={<AdminInterface />} />,
       // List of individuals

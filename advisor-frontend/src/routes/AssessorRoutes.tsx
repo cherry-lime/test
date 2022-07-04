@@ -5,7 +5,7 @@ import AssessorInterface from "../pages/assessor/AssessorInterface";
  * Assessor routes
  * @returns All the assessor routes
  */
-export const assessorRoutes = [
+export default [
       // Assessor interface
       <Route path="/assessor" element={<AssessorInterface />} />
 ];

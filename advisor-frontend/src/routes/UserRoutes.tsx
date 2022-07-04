@@ -9,7 +9,7 @@ import INGTheme from "../Theme";
  * User routes
  * @returns All the user routes
  */
-export const userRoutes = [
+export default [
       // User interface
       <Route path="/user" element={<UserInterface />} />,
       // List of evaluations

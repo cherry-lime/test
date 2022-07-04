@@ -11,10 +11,10 @@ import ErrorPopup, {
 } from "./components/ErrorPopup/ErrorPopup";
 import ErrorPage from "./pages/ErrorPage";
 import { SignIn, Chooserole, DetailGen } from "./components/SignInUP/index";
-import { userRoutes } from "./routes/UserRoutes";
-import { userAssessorRoutes } from "./routes/UserAssessorRoutes";
-import { assessorRoutes } from "./routes/AssessorRoutes";
-import { adminRoutes } from "./routes/AdminRoutes";
+import UserRoutes from "./routes/UserRoutes";
+import UserAssessorRoutes from "./routes/UserAssessorRoutes";
+import AssessorRoutes from "./routes/AssessorRoutes";
+import AdminRoutes from "./routes/AdminRoutes";
 
 // type declaration for appProp that (possibly) assigns a boolean value to testRender
 type appProp = {
@@ -46,23 +46,24 @@ function App({ testRender }: appProp) {
 
   /**
    * Routing for the application based on the user role
-   * @param userRole The user role
+   * @param role The user role
    * @returns The routing for the application
    */
-  function getRoutes(userRole: string) {
+  function getRoutes(role: string) {
     // Only route to the teams pages if the user has USER or ASSESSOR rights
-    switch (userRole) {
+    switch (role) {
       // Only route to the user pages if the user has USER rights
       case "USER":
-        return [...userRoutes, ...userAssessorRoutes];
+        return [...UserRoutes, ...UserAssessorRoutes];
       // Only route to the assessor pages if the user has ASSESSOR rights
       case "ASSESSOR":
-        return [...assessorRoutes, ...userAssessorRoutes];
+        return [...AssessorRoutes, ...UserAssessorRoutes];
       // Only route to the admin pages if the user has ADMIN rights
       case "ADMIN":
-        return adminRoutes;
+        return AdminRoutes;
+      default:
+        return [];
     }
-    return;
   }
 
   // If the authentication is done, render the routing
