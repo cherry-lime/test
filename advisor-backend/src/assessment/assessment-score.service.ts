@@ -10,7 +10,7 @@ import { ScoreDto } from './dto/score.dto';
 
 @Injectable()
 export class AssessmentScoreService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   /**
    * Calculate score for assessment for all topics or for one specific topic
@@ -39,12 +39,14 @@ export class AssessmentScoreService {
       },
     });
 
+    // Assessment was not found
     if (!temp) {
       throw new NotFoundException(
         `Assessment with id ${assessment_id} not found`
       );
     }
 
+    // Individual assessments should not have a score
     if (temp.assessment_type === AssessmentType.INDIVIDUAL) {
       throw new ForbiddenException('Individual assessment cannot be scored');
     } else if (!temp.completed_at) {
@@ -62,6 +64,7 @@ export class AssessmentScoreService {
       },
     });
 
+    // No maturities were found with respect to the template
     if (maturityIds.length === 0) {
       throw new BadRequestException(
         'No enabled maturities found associated to this template'
@@ -81,6 +84,7 @@ export class AssessmentScoreService {
       },
     });
 
+    // No categories were found with respect to the template 
     if (categoryIds.length === 0) {
       throw new BadRequestException(
         'No enabled categories found associated to this template'
@@ -120,6 +124,7 @@ export class AssessmentScoreService {
         },
       });
 
+      // No topics were found with respect to the template
       if (!topic) {
         throw new BadRequestException(
           'Topic not found or not enabled for this template'
@@ -138,7 +143,7 @@ export class AssessmentScoreService {
       };
     }
 
-    // Getting the ids of checkpoints which have are not disabled and are in
+    // Getting the ids of checkpoints which are not disabled and are in
     //   maturityIds and categoryIds
     let checkpoints = await this.prisma.checkpoint.findMany({
       where: {
@@ -160,6 +165,7 @@ export class AssessmentScoreService {
         (!topic_id || c.CheckpointInTopic.length > 0)
     );
 
+    // No checkpoints were found with respect to the template
     if (checkpoints.length === 0) {
       throw new BadRequestException(
         'No enabled checkpoints found associated to this template'
@@ -178,6 +184,7 @@ export class AssessmentScoreService {
       },
     });
 
+    // No possible answers were found with respect to the template
     if (possibleAnswers.length === 0) {
       throw new BadRequestException(
         'No enabled possible answers found associated to this template'
@@ -193,6 +200,7 @@ export class AssessmentScoreService {
     ) as ScoreDto[];
   }
 
+  // computes the possible scores for each
   calculateScores(
     possibleAnswers,
     maturityIdsList,
@@ -269,6 +277,7 @@ export class AssessmentScoreService {
       }
     });
 
+    // Score per category per maturity
     const scores = calculateScorePerCatoryPerMaturity.map((maturityIndex) =>
       maturityIndex.map(function (categoryIndex) {
         if (categoryIndex[0] === 0 || categoryIndex[0] === -1) {
@@ -331,6 +340,7 @@ export class AssessmentScoreService {
 
     const output = [];
 
+    // output based on maturities and categories
     for (let i = 0; i < maturityIdsList.length; i++) {
       for (let j = 0; j < categoryIdsList.length; j++) {
         output.push({
@@ -341,6 +351,7 @@ export class AssessmentScoreService {
       }
     }
 
+    // output based on categories alone
     for (let i = 0; i < categoryIdsList.length; i++) {
       output.push({
         category_id: categoryIdsList[i],
@@ -349,6 +360,7 @@ export class AssessmentScoreService {
       });
     }
 
+    // output based on maturities alone
     for (let i = 0; i < maturityIdsList.length; i++) {
       output.push({
         category_id: null,
@@ -357,6 +369,7 @@ export class AssessmentScoreService {
       });
     }
 
+    // output based on neither maturities or categories
     output.push({
       maturity_id: null,
       category_id: null,
