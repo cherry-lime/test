@@ -89,7 +89,7 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
     postCompleteEval.mutate(undefined, {
       onError: () => {
         onErrorEvaluation(
-          "Error: unable to complete the evaluation. Make sure you filled in all the checkpoints."
+          "Unable to complete the evaluation. Make sure you filled in all the checkpoints in all areas."
         );
       },
       // if it's saved successfully, redirect to feedback page
