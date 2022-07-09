@@ -100,7 +100,7 @@ export default function AssessmentOngoingGrid({
   /**
    * reroute to new assessment when one is created
    */
-   React.useEffect(() => {
+  React.useEffect(() => {
     if (postAssessment.isSuccess && postAssessment.data) {
       const assessment = postAssessment.data;
       const routing = assessment.teamId

@@ -1,6 +1,8 @@
 import { Button, Theme, ThemeProvider } from "@mui/material";
 import { useSelector } from "react-redux";
 import React, { useRef, useState } from "react";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useNavigate, useParams } from "react-router-dom";
 import ListOfCheckpoints from "../../../components/ListOfCheckpoints/ListOfCheckpoints";
 import userTypes from "../../../components/Sidebar/listUsersTypes";
@@ -160,7 +162,13 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
                 width: "inherit",
               }}
             >
-              <Button onClick={handleViewChange} variant="contained">
+              <Button
+                onClick={handleViewChange}
+                startIcon={
+                  checkpointView ? <ViewListIcon /> : <BorderColorIcon />
+                }
+                variant="contained"
+              >
                 {checkpointView
                   ? "See Recommendations"
                   : "Go back to checkpoints"}
@@ -188,11 +196,14 @@ function Evaluation({ team, theme }: { team: boolean; theme: Theme }) {
             <div
               style={{
                 width: "inherit",
-                display: "flex",
-                justifyContent: "flex-end",
+                display: "contents",
               }}
             >
-              <Button variant="contained" onClick={handleClickFinish}>
+              <Button
+                sx={{ width: "inherit" }}
+                variant="contained"
+                onClick={handleClickFinish}
+              >
                 {" "}
                 Finish Evaluation{" "}
               </Button>
