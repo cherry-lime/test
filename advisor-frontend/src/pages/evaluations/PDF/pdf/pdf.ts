@@ -73,9 +73,12 @@ export function addTable(
     );
 
     // generate sections texts
-    section.text.forEach((t) => {
-      nextY = generateText(doc, t, docProps, textFontSize, nextY);
-    });
+    section.text
+      .map((t) => t.split("\n"))
+      .flat()
+      .forEach((t) => {
+        nextY = generateText(doc, t, docProps, textFontSize, nextY);
+      });
 
     // add some padding
     nextY += 7 + padding;
