@@ -68,9 +68,10 @@ export function useGetCategories(
       const { data } = await API.get(`/template/${templateId}/category`);
 
       // Convert data to csategoriesAPP
-      const categoriesAPP = data.map((categoryAPI: CategoryAPI) =>
-        categoryToAPP(categoryAPI)
-      );
+      // make sure they are ordered
+      const categoriesAPP = data
+        .map((categoryAPI: CategoryAPI) => categoryToAPP(categoryAPI))
+        .sort((a: CategoryAPP, b: CategoryAPP) => a.order - b.order);
 
       // If defined, filter on enabled/disabled
       if (enabledFilter !== undefined) {

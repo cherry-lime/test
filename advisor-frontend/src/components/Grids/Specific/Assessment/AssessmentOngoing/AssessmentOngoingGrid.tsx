@@ -97,6 +97,19 @@ export default function AssessmentOngoingGrid({
     handleAdd(setRows, postAssessment as UseMutationResult);
   }, []);
 
+  /**
+   * reroute to new assessment when one is created
+   */
+  React.useEffect(() => {
+    if (postAssessment.isSuccess && postAssessment.data) {
+      const assessment = postAssessment.data;
+      const routing = assessment.teamId
+        ? `/teams/${assessment.teamId}/${assessment.id}`
+        : `/user/self_evaluations/${assessment.id}`;
+      navigate(routing);
+    }
+  }, [postAssessment.data]);
+
   const columns = React.useMemo<GridColumns<AssessmentAPP>>(
     () => [
       {

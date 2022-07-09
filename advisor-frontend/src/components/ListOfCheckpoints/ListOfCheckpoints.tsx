@@ -5,7 +5,10 @@ import {
   MenuItem,
   SelectChangeEvent,
   ThemeProvider,
+  Button,
 } from "@mui/material";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import React, { useRef, useState } from "react";
 import { AnswerAPP, useGetAnswers } from "../../api/AnswerAPI/AnswerAPI";
 import {
@@ -35,7 +38,7 @@ function ListOfCheckpoints({
   feedback: boolean;
   setPrimaryColor?: React.Dispatch<React.SetStateAction<string>> | undefined;
 }) {
-  const [activeArea, setActiveArea] = useState<number>();
+  const [activeArea, setActiveArea] = useState<CategoryAPP>();
 
   /**
    * GET ASSESSMENT INFORMATION
@@ -47,13 +50,15 @@ function ListOfCheckpoints({
     useState<Record<number, number | undefined>>();
 
   const handleAreaChange = (event: SelectChangeEvent<number>) => {
-    setActiveArea(Number(event.target.value));
+    if (areaList) {
+      const newArea = areaList.filter((a) => a.id === event.target.value)[0];
+      setActiveArea(newArea);
+    }
   };
 
   React.useEffect(() => {
-    if (areaList && setPrimaryColor) {
-      const newColor = areaList.filter((a) => a.id === activeArea)[0].color;
-      setPrimaryColor(newColor);
+    if (setPrimaryColor && activeArea) {
+      setPrimaryColor(activeArea.color);
     }
   }, [activeArea]);
 
@@ -99,6 +104,30 @@ function ListOfCheckpoints({
   }, [areasResponse]);
 
   /**
+   * go back to previous area
+   */
+  const handlePreviousArea = () => {
+    if (areaList && activeArea) {
+      // index of active area in array is order - 1
+      // so index of previous area is order - 2
+      const prevArea = areaList[activeArea.order - 2];
+      setActiveArea(prevArea);
+    }
+  };
+
+  /**
+   * go to the next area
+   */
+  const handleNextArea = () => {
+    if (areaList && activeArea) {
+      // index of area in array is order - 1
+      // so index of next area is order
+      const nextArea = areaList[activeArea.order];
+      setActiveArea(nextArea);
+    }
+  };
+
+  /**
    * set the answer list value
    * using the useEffect hooks from React
    */
@@ -139,7 +168,7 @@ function ListOfCheckpoints({
 
   React.useEffect(() => {
     if (areaList && areaList.length > 0) {
-      setActiveArea(Number(areaList[0].id));
+      setActiveArea(areaList[0]);
     }
   }, [areaList]);
 
@@ -148,9 +177,9 @@ function ListOfCheckpoints({
       <ThemeProvider theme={theme}>
         {areaList !== undefined && activeArea !== undefined && (
           <FormControl sx={{ width: "inherit" }}>
-            <Select value={activeArea} onChange={handleAreaChange}>
+            <Select value={Number(activeArea.id)} onChange={handleAreaChange}>
               {areaList.map((a) => (
-                <MenuItem key={`menu-area-${a.id}`} value={a.id}>
+                <MenuItem key={`menu-area-${a.id}`} value={Number(a.id)}>
                   {a.name}
                 </MenuItem>
               ))}
@@ -167,7 +196,7 @@ function ListOfCheckpoints({
           <AreaSpecificCheckpoints
             theme={theme}
             topicList={topicList}
-            areaId={activeArea}
+            areaId={Number(activeArea.id)}
             answerList={answerList}
             checkpointAnswerList={checkpointAnswerList}
             setCheckpointAnswerList={setCheckpointAnswerList}
@@ -175,6 +204,38 @@ function ListOfCheckpoints({
             assessmentId={Number(assessmentInfo.id)}
           />
         )}
+
+      {activeArea && areaList && (
+        <div
+          style={{
+            width: "inherit",
+          }}
+        >
+          {activeArea.id !== areaList[0].id && (
+            <Button
+              sx={{ float: "left" }}
+              variant="contained"
+              startIcon={<ArrowBackIosNewIcon />}
+              onClick={handlePreviousArea}
+            >
+              {" "}
+              Go To Previous Area{" "}
+            </Button>
+          )}
+
+          {activeArea.id !== areaList[areaList.length - 1].id && (
+            <Button
+              sx={{ float: "right" }}
+              variant="contained"
+              endIcon={<ArrowForwardIosIcon />}
+              onClick={handleNextArea}
+            >
+              {" "}
+              Go To Next Area{" "}
+            </Button>
+          )}
+        </div>
+      )}
       <ErrorPopup ref={refErrorCheckpoints} />
     </div>
   );
