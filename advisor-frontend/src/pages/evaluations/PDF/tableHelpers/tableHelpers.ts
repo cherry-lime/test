@@ -169,11 +169,17 @@ export function generateText(
     const { liveArea, pageMargin } = docProps;
 
     // split text based on width of live area of the document
-    const textfield = doc.splitTextToSize(String(text), liveArea.width);
+    const textfield = doc.splitTextToSize(text, liveArea.width - pageMargin);
     const textfieldHeight = textfield.length * doc.getLineHeight();
 
     // get next Y based on whether there is space in the page
-    nextY = nextYCheckEndOfPage(doc, nextY, liveArea.height, textfieldHeight);
+    nextY = nextYCheckEndOfPage(
+      doc,
+      nextY,
+      liveArea.height,
+      pageMargin,
+      textfieldHeight
+    );
 
     // add text to the document
     doc.text(textfield, pageMargin, nextY);
